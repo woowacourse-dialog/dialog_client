@@ -1,34 +1,99 @@
-# Gradle files
+# Gradle
 .gradle/
 build/
+!/gradle/wrapper/gradle-wrapper.jar
 
-# Local configuration file (sdk path, etc)
+# Local configuration
 local.properties
+/*/local.properties
 
-# Log/OS Files
+# Log / OS Files
 *.log
+.DS_Store
 
-# Android Studio generated files and folders
+# Android Studio generated files
 captures/
 .externalNativeBuild/
 .cxx/
-*.aab
-*.apk
 output-metadata.json
+*.apk
+*.aab
 
-# IntelliJ
+# IntelliJ / Android Studio project files
 *.iml
 .idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
+.idea/caches/
+.idea/libraries/
+.idea/shelf/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/
+.idea/dictionaries/
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+.idea/datasources.xml
+.idea/dataSources.ids
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+.idea/assetWizardSettings.xml
+.idea/gradle.xml
+.idea/jarRepositories.xml
+.idea/navEditor.xml
 
-# Keystore files
+.navigation/
+
+# Build directories (recursive)
+*/build/
+*/*/build
+*/*/production
+/*/out
+
+# Temporary / Swap
+*~
+*.swp
+
+# Keystore (DO NOT COMMIT)
 *.jks
 *.keystore
 
-# Google Services (e.g. APIs or Firebase)
+# Google Services
 google-services.json
 
-# Android Profiling
+# Profiling
 *.hprof
+
+# Generated binary files
+bin/
+gen/
+*.class
+*.dex
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+*.xcworkspace
+*.xcscheme
+**/xcshareddata/WorkspaceSettings.xcsettings
+*.xcuserstate
+xcuserdata/
+
+# CocoaPods
+Pods/
+
+# iOS packaging
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+# Android packaging
+*.ap_
+*.apk
+*.aab
