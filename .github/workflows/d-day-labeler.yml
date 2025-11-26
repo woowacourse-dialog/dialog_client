@@ -1,0 +1,17 @@
+# https://github.com/naver/d-day-labeler
+# token: Required GitHub에서 제공하는 토큰
+# skipDraft: Optional Draft PR을 라벨 업데이트에서 제외할지 여부를 결정합니다. 기본값: false
+
+name: Update D-n Labels
+on:
+  schedule:
+    - cron: '0 15 * * *' # 매일 밤 12시에 실행 (KST 기준)
+jobs:
+  d-day-labeler:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Update D-n Labels
+        uses: naver/d-day-labeler@latest
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          skipDraft: true # Draft PR을 건너뛰려면 true로 설정 (선택사항)
