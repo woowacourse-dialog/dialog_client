@@ -22,7 +22,6 @@ jobs:
             const LABEL_D0 = "D-0";
             const LABEL_D1 = "D-1";
 
-            // 👉 github.rest.pulls.list 로 변경
             const { data: prs } = await github.rest.pulls.list({
               owner,
               repo,
