@@ -22,7 +22,8 @@ jobs:
             const LABEL_D0 = "D-0";
             const LABEL_D1 = "D-1";
 
-            const { data: prs } = await github.pulls.list({
+            // 👉 github.rest.pulls.list 로 변경
+            const { data: prs } = await github.rest.pulls.list({
               owner,
               repo,
               state: "open",
@@ -34,9 +35,11 @@ jobs:
 
             prs.forEach(pr => {
               const labels = pr.labels.map(l => l.name);
-              const reviewers = pr.requested_reviewers.length > 0
-                ? pr.requested_reviewers.map(r => `@${r.login}`).join(", ")
-                : "없음";
+
+              const reviewers =
+                pr.requested_reviewers.length > 0
+                  ? pr.requested_reviewers.map(r => `@${r.login}`).join(", ")
+                  : "없음";
 
               const field = {
                 name: `#${pr.number} ${pr.title}`,
