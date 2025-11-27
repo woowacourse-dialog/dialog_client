@@ -8,13 +8,6 @@ on:
   pull_request:
     types: [opened, ready_for_review]
 
-  workflow_dispatch:
-    inputs:
-      pr_number:
-        description: "라벨을 붙일 PR 번호"
-        required: true
-        type: number
-
 permissions:
   contents: read
   pull-requests: write
