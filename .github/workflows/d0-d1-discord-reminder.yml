@@ -87,7 +87,7 @@ jobs:
       - name: Send D-1 Discord Embed
         if: steps.fetch_prs.outputs.has_d1 == 'true'
         env:
-          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL_FOR_PR_DDAY }}
           FIELDS_JSON: ${{ steps.fetch_prs.outputs.d1_json }}
         run: |
           payload=$(jq -n \
