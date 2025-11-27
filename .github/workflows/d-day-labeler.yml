@@ -7,7 +7,12 @@ on:
   schedule:
     - cron: '0 15 * * *' # 매일 밤 12시에 실행 (KST 기준)
   workflow_dispatch:
-  
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   d-day-labeler:
     runs-on: [ubuntu-latest]

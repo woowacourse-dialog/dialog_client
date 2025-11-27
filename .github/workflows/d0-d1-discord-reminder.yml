@@ -17,15 +17,12 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const core = require("@actions/core");
-
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-
             const LABEL_D0 = "D-0";
             const LABEL_D1 = "D-1";
 
-            const { data: prs } = await github.pulls.list({
+            const { data: prs } = await github.rest.pulls.list({
               owner,
               repo,
               state: "open",
@@ -37,13 +34,15 @@ jobs:
 
             prs.forEach(pr => {
               const labels = pr.labels.map(l => l.name);
-              const reviewers = pr.requested_reviewers.length > 0
-                ? pr.requested_reviewers.map(r => `@${r.login}`).join(", ")
-                : "없음";
+
+              const reviewers =
+                pr.requested_reviewers.length > 0
+                  ? pr.requested_reviewers.map(r => `@${r.login}`).join(", ")
+                  : "없음";
 
               const field = {
                 name: `#${pr.number} ${pr.title}`,
-                value: `작성자: @${pr.user.login}\n리뷰어: ${reviewers}\n🔗 ${pr.html_url}`
+                value: `작성자: @${pr.user.login}\n리뷰어: ${reviewers}\n${pr.html_url}`
               };
 
               if (labels.includes(LABEL_D0)) d0.push(field);
@@ -61,7 +60,7 @@ jobs:
       - name: Send D-0 Discord Embed
         if: steps.fetch_prs.outputs.has_d0 == 'true'
         env:
-          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL_FOR_PR_DDAY }}
           FIELDS_JSON: ${{ steps.fetch_prs.outputs.d0_json }}
         run: |
           payload=$(jq -n \
@@ -69,15 +68,13 @@ jobs:
             '{
               embeds: [
                 {
-                  title: "⏰ D-0 PR 리뷰 마감 임박",
+                  title: "⏰ [D-0] PR 리뷰 마감 임박",
                   description: "오늘 리뷰 마감인 PR 목록입니다.\n빠른 확인 부탁드립니다!",
                   color: 16734296,
-                  fields: $fields,
-                  footer: { text: "남은 기간: D-0" }
+                  fields: $fields
                 }
               ]
             }')
-
           curl -X POST \
             -H "Content-Type: application/json" \
             -d "$payload" \
@@ -89,7 +86,7 @@ jobs:
       - name: Send D-1 Discord Embed
         if: steps.fetch_prs.outputs.has_d1 == 'true'
         env:
-          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL_FOR_PR_DDAY }}
           FIELDS_JSON: ${{ steps.fetch_prs.outputs.d1_json }}
         run: |
           payload=$(jq -n \
@@ -97,15 +94,13 @@ jobs:
             '{
               embeds: [
                 {
-                  title: "📌 D-1 PR 리뷰 사전 알림",
+                  title: "📌 [D-1] PR 리뷰 사전 알림",
                   description: "내일 리뷰 마감인 PR 목록입니다.\n미리 검토 부탁드립니다!",
                   color: 3447003,
-                  fields: $fields,
-                  footer: { text: "남은 기간: D-1" }
+                  fields: $fields
                 }
               ]
             }')
-
           curl -X POST \
             -H "Content-Type: application/json" \
             -d "$payload" \
