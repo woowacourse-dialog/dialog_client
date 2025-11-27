@@ -42,7 +42,7 @@ jobs:
 
               const field = {
                 name: `#${pr.number} ${pr.title}`,
-                value: `작성자: @${pr.user.login}\n리뷰어: ${reviewers}\n🔗 ${pr.html_url}`
+                value: `작성자: @${pr.user.login}\n리뷰어: ${reviewers}\n${pr.html_url}`
               };
 
               if (labels.includes(LABEL_D0)) d0.push(field);
@@ -68,11 +68,10 @@ jobs:
             '{
               embeds: [
                 {
-                  title: "⏰ D-0 PR 리뷰 마감 임박",
+                  title: "⏰ [D-0] PR 리뷰 마감 임박",
                   description: "오늘 리뷰 마감인 PR 목록입니다.\n빠른 확인 부탁드립니다!",
                   color: 16734296,
-                  fields: $fields,
-                  footer: { text: "남은 기간: D-0" }
+                  fields: $fields
                 }
               ]
             }')
@@ -95,11 +94,10 @@ jobs:
             '{
               embeds: [
                 {
-                  title: "📌 D-1 PR 리뷰 사전 알림",
+                  title: "📌 [D-1] PR 리뷰 사전 알림",
                   description: "내일 리뷰 마감인 PR 목록입니다.\n미리 검토 부탁드립니다!",
                   color: 3447003,
-                  fields: $fields,
-                  footer: { text: "남은 기간: D-1" }
+                  fields: $fields
                 }
               ]
             }')
