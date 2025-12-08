@@ -14,3 +14,6 @@ ktlint = disabled
 
 [**/src/test/kotlin/**/*.kt]
 ktlint = disabled
+
+[composeApp/src/iosMain/kotlin/**/*.kt]
+ktlint = disabled
