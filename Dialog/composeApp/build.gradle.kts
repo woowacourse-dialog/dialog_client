@@ -32,7 +32,6 @@ kotlin {
 
 android {
     namespace = libs.versions.packageName.get()
-    compileSdk = libs.versions.compileSdk.get().toInt()
 
     buildTypes {
         getByName("debug") {
@@ -55,10 +54,5 @@ android {
                 "proguard-rules.pro",
             )
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
     }
 }
