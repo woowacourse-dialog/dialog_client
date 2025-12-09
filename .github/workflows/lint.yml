@@ -9,6 +9,11 @@ jobs:
     name: Ktlint Check
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./Dialog
+        shell: bash
+
     permissions:
       contents: read
 
