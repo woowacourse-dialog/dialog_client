@@ -9,8 +9,12 @@ ktlint = disabled
 [**/*.gradle.kts]
 ktlint = disabled
 
+[**/src/iosMain/kotlin/**.kt]
+ktlint_standard_function-naming = disabled
+
 [**/src/commonTest/kotlin/**/*.kt]
 ktlint = disabled
 
 [**/src/test/kotlin/**/*.kt]
 ktlint = disabled
+
