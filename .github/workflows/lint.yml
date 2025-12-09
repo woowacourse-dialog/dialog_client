@@ -1,8 +1,7 @@
 name: Lint
 
 on:
-  pull_request:
-    branches: [ "develop" ]
+  workflow_call:
 
 jobs:
   ktlint:
@@ -13,9 +12,6 @@ jobs:
       run:
         working-directory: ./Dialog
         shell: bash
-
-    permissions:
-      contents: read
 
     steps:
       - uses: actions/checkout@v4
