@@ -1,8 +1,7 @@
-name: iOS CI
+name: iOS Build
 
 on:
-  pull_request:
-    branches: [ "develop" ]
+  workflow_call:
 
 jobs:
   ios-build:

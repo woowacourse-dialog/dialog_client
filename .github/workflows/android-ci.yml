@@ -1,8 +1,7 @@
-name: Android CI
+name: Android Build
 
 on:
-  pull_request:
-    branches: [ "develop" ]
+  workflow_call:
 
 jobs:
   build:
