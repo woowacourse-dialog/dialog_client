@@ -5,13 +5,9 @@ on:
     branches: [ "develop" ]
 
 jobs:
-  lint:
-    uses: ./.github/workflows/lint.yml
-
   build:
     name: Build Android APK
     runs-on: ubuntu-latest
-    needs: lint
 
     defaults:
       run:

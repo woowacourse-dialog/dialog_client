@@ -5,13 +5,9 @@ on:
     branches: [ "develop" ]
 
 jobs:
-  lint:
-    uses: ./.github/workflows/lint.yml
-
   ios-build:
     name: Build iOS XCFramework
     runs-on: macos-15
-    needs: lint
 
     defaults:
       run:
