@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFrameworkConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -15,6 +17,8 @@ kotlin {
         }
     }
 
+    val xcf: XCFrameworkConfig = XCFramework("ComposeApp")
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -22,6 +26,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            xcf.add(this)
         }
     }
 
