@@ -6,7 +6,7 @@ on:
 jobs:
   ios-build:
     name: Build iOS XCFramework
-    runs-on: macos-15
+    runs-on: macos-latest
 
     defaults:
       run:
