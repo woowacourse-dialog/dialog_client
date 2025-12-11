@@ -1,5 +1,7 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFrameworkConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -11,10 +13,12 @@ plugins {
 kotlin {
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
-    
+
+    val xcf: XCFrameworkConfig = XCFramework("ComposeApp")
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -22,9 +26,10 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            xcf.add(this)
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -57,23 +62,56 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     buildTypes {
-        getByName("release") {
+        debug {
             isMinifyEnabled = false
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = ".debug"
+
+            manifestPlaceholders["appName"] = "Dialog.debug"
+
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"${gradleLocalProperties(rootDir, providers).getProperty("debug_base_url")}\""
+            )
+        }
+
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+
+            // TODO Proguard 추가
+
+            signingConfig = signingConfigs.getByName("debug")
+            manifestPlaceholders["appName"] = "Dialog"
+
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"${gradleLocalProperties(rootDir, providers).getProperty("release_base_url")}\""
+            )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-
