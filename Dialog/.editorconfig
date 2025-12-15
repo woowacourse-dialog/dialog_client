@@ -9,8 +9,12 @@ ktlint = disabled
 [**/*.gradle.kts]
 ktlint = disabled
 
+[composeApp/src/iosMain/kotlin/**/*.kt]
+ktlint = disabled
+
 [**/src/commonTest/kotlin/**/*.kt]
 ktlint = disabled
 
 [**/src/test/kotlin/**/*.kt]
 ktlint = disabled
+
