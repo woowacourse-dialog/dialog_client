@@ -50,15 +50,9 @@ jobs:
           echo "release_base_url=${{ secrets.RELEASE_BASE_URL }}" >> ./composeApp/local.properties
 
       - name: Build XCFramework
-        run: ./gradlew :composeApp:assembleComposeAppDebugXCFramework --stacktrace
+        run: ./gradlew :composeApp:linkDebugFrameworkIosArm64 --stacktrace
 
       - name: Verify XCFramework
         run: |
           echo "Checking XCFramework output..."
           ls -la ./composeApp/build/XCFrameworks/debug/ || echo "Debug directory not found"
-
-      - name: Upload iOS Framework
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-xcframework
-          path: Dialog/composeApp/build/XCFrameworks/debug/**
