@@ -50,9 +50,3 @@ jobs:
 
       - name: Build iOS Debug Framework
         run: ./gradlew :composeApp:linkDebugFrameworkIosArm64 --stacktrace
-
-      - name: Verify iOS Debug Framework
-        run: |
-          echo "Checking iOS Debug Framework output"
-          ls -la ./composeApp/build/XCFrameworks/debug/ || echo "Debug directory not found"
-      
