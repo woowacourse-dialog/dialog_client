@@ -46,8 +46,7 @@ jobs:
 
       - name: Create local.properties
         run: |
-          echo "debug_base_url=${{ secrets.DEBUG_BASE_URL }}" > ./composeApp/local.properties
-          echo "release_base_url=${{ secrets.RELEASE_BASE_URL }}" >> ./composeApp/local.properties
+          echo "LOCAL_PROPERTIES=${{ secrets.LOCAL_PROPERTIES }}" > ./composeApp/local.properties
 
       - name: Build XCFramework
         run: ./gradlew :composeApp:linkDebugFrameworkIosArm64 --stacktrace
