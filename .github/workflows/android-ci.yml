@@ -37,7 +37,7 @@ jobs:
 
       - name: Create local.properties
         run: |
-          echo "LOCAL_PROPERTIES=${{ secrets.LOCAL_PROPERTIES }}" > ./composeApp/local.properties
+          echo "LOCAL_PROPERTIES=${{ secrets.LOCAL_PROPERTIES }}" > ./local.properties
 
       - name: Build APK
         run: ./gradlew :composeApp:assembleDebug --stacktrace
