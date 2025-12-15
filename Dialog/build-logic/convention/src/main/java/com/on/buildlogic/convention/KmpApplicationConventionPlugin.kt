@@ -7,6 +7,7 @@ import com.on.buildlogic.convention.extension.configureIosFrameworkForApp
 import com.on.buildlogic.convention.extension.library
 import com.on.buildlogic.convention.extension.libs
 import com.on.buildlogic.convention.extension.versionInt
+import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -27,10 +28,11 @@ internal class KmpApplicationConventionPlugin : Plugin<Project> {
             sourceSets.named("commonMain") {
                 dependencies {
                     implementation(libs.library("koin-core"))
+                    implementation(libs.library("napier"))
                 }
             }
 
-            sourceSets.matching { it.name == "androidMain" }.all {
+            sourceSets.named("androidMain") {
                 dependencies {
                     implementation(libs.library("koin-android"))
                     implementation(libs.library("koin-compose"))
@@ -46,7 +48,15 @@ internal class KmpApplicationConventionPlugin : Plugin<Project> {
                 minSdk = libs.versionInt("minSdk")
                 targetSdk = libs.versionInt("targetSdk")
             }
-            buildFeatures { compose = true }
+            buildFeatures {
+                compose = true
+                buildConfig = true
+            }
+
+            compileOptions {
+                sourceCompatibility = JavaVersion.VERSION_21
+                targetCompatibility = JavaVersion.VERSION_21
+            }
         }
     }
 }

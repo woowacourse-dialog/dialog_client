@@ -27,15 +27,6 @@ internal class KmpComposeConventionPlugin : Plugin<Project> {
                     implementation(libs.library("koin-compose"))
                 }
             }
-
-            sourceSets
-                .matching { it.name == "androidMain" }
-                .all {
-                    dependencies {
-                        implementation(compose.dependencies.preview)
-                        implementation(libs.library("androidx.activity.compose"))
-                    }
-                }
         }
 
         dependencies {

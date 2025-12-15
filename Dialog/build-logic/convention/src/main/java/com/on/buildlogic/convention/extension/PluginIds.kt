@@ -7,4 +7,6 @@ internal object PluginIds {
 
     const val COMPOSE_MULTIPLATFORM = "org.jetbrains.compose"
     const val KOTLIN_COMPOSE = "org.jetbrains.kotlin.plugin.compose"
+
+    const val KOTLINX_SERIALIZATION = "org.jetbrains.kotlin.plugin.serialization"
 }
