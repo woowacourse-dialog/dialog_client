@@ -13,6 +13,54 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
+/**
+ * KMP 기반 **Android Application 모듈**을 위한 Convention Plugin.
+ *
+ * ## 역할
+ * - Kotlin Multiplatform + Android Application 환경을 함께 구성한다.
+ * - Compose Multiplatform 기반 앱(`composeApp`)에 필요한 공통/플랫폼별 설정을 일괄 적용한다.
+ * - 앱 전용 iOS Framework 설정과 멀티플랫폼 타겟 구성을 담당한다.
+ *
+ * ## 적용되는 플러그인
+ * - `org.jetbrains.kotlin.multiplatform`
+ * - `com.android.application`
+ * - `dialog.convention.kmp.compose`
+ *
+ * ## Kotlin Multiplatform 설정
+ * - `configureDialogTargets()`를 통해 Android / iOS 타겟을 구성한다.
+ * - `configureIosFrameworkForApp()`을 통해 iOS 앱에서 사용될 Framework를 설정한다.
+ *
+ * ### SourceSet 구성
+ * - `commonMain`
+ *   - KMP 공통 의존성 주입을 위한 `koin-core`
+ *   - 멀티플랫폼 로깅을 위한 `napier`
+ *
+ * - `androidMain`
+ *   - Android 전용 Koin 확장 (`koin-android`)
+ *   - Compose 환경에서의 DI 지원
+ *     - `koin-compose`
+ *     - `koin-compose-viewmodel`
+ *     - `koin-compose-viewmodel-navigation`
+ *
+ * ## Android Application 설정
+ * - compileSdk / minSdk / targetSdk 버전을 Version Catalog 기준으로 통일한다.
+ * - Compose 및 BuildConfig 생성을 활성화한다.
+ * - Java 21 컴파일 옵션을 적용한다.
+ *
+ * ## 사용 대상
+ * - Compose Multiplatform 기반의 **KMP 앱 모듈**
+ * - Android + iOS 앱을 동시에 제공하는 최상위 Application 모듈
+ *
+ * ## 사용 예시
+ * ```kotlin
+ * plugins {
+ *     id("dialog.convention.kmp.application")
+ * }
+ * ```
+ *
+ * > 이 플러그인은 **라이브러리 모듈이 아닌 앱 모듈 전용**이며,
+ * > `KmpLibraryConventionPlugin`과 명확히 역할이 분리된다.
+ */
 internal class KmpApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         pluginManager.apply {
