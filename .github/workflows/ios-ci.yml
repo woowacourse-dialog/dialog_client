@@ -48,10 +48,11 @@ jobs:
         run: |
           echo "LOCAL_PROPERTIES=${{ secrets.LOCAL_PROPERTIES }}" > ./local.properties
 
-      - name: Build XCFramework
+      - name: Build iOS Debug Framework
         run: ./gradlew :composeApp:linkDebugFrameworkIosArm64 --stacktrace
 
-      - name: Verify XCFramework
+      - name: Verify iOS Debug Framework
         run: |
-          echo "Checking XCFramework output..."
+          echo "Checking iOS Debug Framework output"
           ls -la ./composeApp/build/XCFrameworks/debug/ || echo "Debug directory not found"
+      
