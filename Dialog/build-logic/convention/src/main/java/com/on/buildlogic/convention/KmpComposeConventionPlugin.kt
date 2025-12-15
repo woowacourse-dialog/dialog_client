@@ -24,6 +24,7 @@ internal class KmpComposeConventionPlugin : Plugin<Project> {
                     implementation(compose.dependencies.ui)
                     implementation(compose.dependencies.components.resources)
                     implementation(compose.dependencies.components.uiToolingPreview)
+                    implementation(libs.library("koin-compose"))
                 }
             }
 

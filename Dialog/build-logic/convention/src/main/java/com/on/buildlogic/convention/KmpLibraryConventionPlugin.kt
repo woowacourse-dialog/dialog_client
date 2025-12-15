@@ -4,6 +4,7 @@ import com.android.build.api.dsl.LibraryExtension
 import com.on.buildlogic.convention.extension.PluginIds
 import com.on.buildlogic.convention.extension.configureDialogTargets
 import com.on.buildlogic.convention.extension.configureIosFrameworkForLibrary
+import com.on.buildlogic.convention.extension.library
 import com.on.buildlogic.convention.extension.libs
 import com.on.buildlogic.convention.extension.versionInt
 import org.gradle.api.Plugin
@@ -20,6 +21,12 @@ internal class KmpLibraryConventionPlugin : Plugin<Project> {
             extensions.configure<KotlinMultiplatformExtension> {
                 configureDialogTargets()
                 configureIosFrameworkForLibrary(project)
+
+                sourceSets.named("commonMain") {
+                    dependencies {
+                        implementation(libs.library("koin-core"))
+                    }
+                }
             }
 
             extensions.configure<LibraryExtension> {

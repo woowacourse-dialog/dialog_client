@@ -4,6 +4,7 @@ import com.android.build.api.dsl.ApplicationExtension
 import com.on.buildlogic.convention.extension.PluginIds
 import com.on.buildlogic.convention.extension.configureDialogTargets
 import com.on.buildlogic.convention.extension.configureIosFrameworkForApp
+import com.on.buildlogic.convention.extension.library
 import com.on.buildlogic.convention.extension.libs
 import com.on.buildlogic.convention.extension.versionInt
 import org.gradle.api.Plugin
@@ -22,6 +23,21 @@ internal class KmpApplicationConventionPlugin : Plugin<Project> {
         extensions.configure<KotlinMultiplatformExtension> {
             configureDialogTargets()
             configureIosFrameworkForApp()
+
+            sourceSets.named("commonMain") {
+                dependencies {
+                    implementation(libs.library("koin-core"))
+                }
+            }
+
+            sourceSets.matching { it.name == "androidMain" }.all {
+                dependencies {
+                    implementation(libs.library("koin-android"))
+                    implementation(libs.library("koin-compose"))
+                    implementation(libs.library("koin-compose-viewmodel"))
+                    implementation(libs.library("koin-compose-viewmodel-navigation"))
+                }
+            }
         }
 
         extensions.configure<ApplicationExtension> {
