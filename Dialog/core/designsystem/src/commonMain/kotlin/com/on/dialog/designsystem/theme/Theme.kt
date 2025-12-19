@@ -101,13 +101,18 @@ fun DialogTheme(
                 getDynamicColorScheme(darkTheme) ?: if (darkTheme) darkScheme else lightScheme
             }
 
-            darkTheme -> darkScheme
-            else -> lightScheme
+            darkTheme -> {
+                darkScheme
+            }
+
+            else -> {
+                lightScheme
+            }
         }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppTypography,
+        typography = DialogTypography,
         content = content,
     )
 }
