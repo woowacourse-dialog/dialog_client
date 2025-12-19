@@ -59,7 +59,6 @@ internal class KmpLibraryConventionPlugin : Plugin<Project> {
         with(target) {
             plugins.apply(PluginIds.KOTLIN_MULTIPLATFORM)
             plugins.apply(PluginIds.ANDROID_LIBRARY)
-            plugins.apply("dialog.convention.kotlin.serialization")
 
             extensions.configure<KotlinMultiplatformExtension> {
                 configureDialogTargets()
