@@ -19,6 +19,7 @@ android {
         getByName("debug") {
             isDebuggable = true
             applicationIdSuffix = ".dev"
+            versionNameSuffix = ".dev"
             manifestPlaceholders += mapOf(
                 "appName" to "@string/app_name_dev",
             )
