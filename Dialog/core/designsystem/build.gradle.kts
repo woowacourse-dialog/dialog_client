@@ -6,3 +6,11 @@ plugins {
 android {
     namespace = "com.on.dialog.core.designsystem"
 }
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(compose.materialIconsExtended)
+        }
+    }
+}
