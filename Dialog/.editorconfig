@@ -2,14 +2,13 @@ root = true
 
 [*.{kt,kts}]
 ktlint_function_naming_ignore_when_annotated_with = Composable
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_function-signature = disabled
 
 [**/build/**/*.kt]
 ktlint = disabled
 
 [**/*.gradle.kts]
-ktlint = disabled
-
-[composeApp/src/iosMain/kotlin/**/*.kt]
 ktlint = disabled
 
 [**/src/commonTest/kotlin/**/*.kt]
@@ -18,3 +17,5 @@ ktlint = disabled
 [**/src/test/kotlin/**/*.kt]
 ktlint = disabled
 
+[composeApp/src/iosMain/kotlin/**/*.kt]
+ktlint = disabled
