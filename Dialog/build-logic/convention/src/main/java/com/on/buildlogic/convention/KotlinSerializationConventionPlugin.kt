@@ -37,7 +37,7 @@ import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
  * > 이 플러그인은 Android / iOS 설정을 포함하지 않으며,
  * > 순수하게 **직렬화 플러그인 + 공통 의존성**만을 책임진다.
  */
-internal class KotlinSerializationPlugin : Plugin<Project> {
+internal class KotlinSerializationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project): Unit = with(target) {
         plugins.apply(PluginIds.KOTLINX_SERIALIZATION)
 
