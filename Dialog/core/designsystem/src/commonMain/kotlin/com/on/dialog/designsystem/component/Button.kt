@@ -186,7 +186,7 @@ fun DialogButtonLeadingIconPreview() {
     }
 }
 
-object DialogButtonDefaults {
+private object DialogButtonDefaults {
     const val DISABLED_OUTLINED_BUTTON_BORDER_ALPHA = 0.12f
     val CornerRadius = 8.dp
     val OutlinedButtonBorderWidth = 1.dp

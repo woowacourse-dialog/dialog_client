@@ -12,7 +12,7 @@ import dialog.core.designsystem.generated.resources.pretendard_semibold
 import org.jetbrains.compose.resources.Font
 
 @Composable
-fun pretendardFontFamily() =
+internal fun pretendardFontFamily() =
     FontFamily(
         Font(Res.font.pretendard_light, FontWeight.Light),
         Font(Res.font.pretendard_medium, FontWeight.Medium),
