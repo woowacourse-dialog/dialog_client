@@ -76,7 +76,7 @@ fun DialogNavigationBar(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Gray400,
                 ),
-                interactionSource = remember { NoRippleInteractionSource },
+                interactionSource = NoRippleInteractionSource,
             )
         }
     }
