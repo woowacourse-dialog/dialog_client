@@ -91,24 +91,9 @@ expect fun getDynamicColorScheme(darkTheme: Boolean): ColorScheme?
 @Composable
 fun DialogTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme =
-        when {
-            dynamicColor -> {
-                getDynamicColorScheme(darkTheme) ?: if (darkTheme) darkScheme else lightScheme
-            }
-
-            darkTheme -> {
-                darkScheme
-            }
-
-            else -> {
-                lightScheme
-            }
-        }
+    val colorScheme = if (darkTheme) darkScheme else lightScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
