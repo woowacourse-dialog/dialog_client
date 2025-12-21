@@ -1,7 +1,5 @@
 package com.on.dialog.designsystem.component
 
-import androidx.compose.foundation.interaction.Interaction
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
@@ -24,8 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.Gray400
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 data class NavigationItem(
@@ -110,12 +106,4 @@ private fun DialogNavigationBarPreview() {
             onSelectedIndexChange = { selectedIndex = it },
         )
     }
-}
-
-private object NoRippleInteractionSource : MutableInteractionSource {
-    override val interactions: Flow<Interaction> = emptyFlow()
-
-    override suspend fun emit(interaction: Interaction) {}
-
-    override fun tryEmit(interaction: Interaction) = true
 }
