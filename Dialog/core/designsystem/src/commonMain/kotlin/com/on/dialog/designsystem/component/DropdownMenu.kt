@@ -57,7 +57,7 @@ fun DialogDropdownMenu(
         ) {
             options.forEachIndexed { index, option ->
                 DropdownMenuItem(
-                    text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
+                    text = { Text(text = option, style = MaterialTheme.typography.bodyLarge) },
                     onClick = {
                         onSelectedIndexChange(index)
                         textFieldState.setTextAndPlaceCursorAtEnd(options[index])
