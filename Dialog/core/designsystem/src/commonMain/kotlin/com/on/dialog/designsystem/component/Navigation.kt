@@ -84,7 +84,7 @@ fun DialogNavigationBar(
 
 @Preview(showBackground = true)
 @Composable
-fun DialogNavigationBarPreview() {
+private fun DialogNavigationBarPreview() {
     var selectedIndex by remember { mutableStateOf(0) }
     DialogTheme {
         DialogNavigationBar(

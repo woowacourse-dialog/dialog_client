@@ -72,7 +72,7 @@ fun DialogDropdownMenu(
 
 @Preview(showBackground = true)
 @Composable
-fun DialogDropdownMenuPreview() {
+private fun DialogDropdownMenuPreview() {
     DialogTheme {
         DialogDropdownMenu(
             options = listOf("안드로이드", "백엔드", "프론트엔드"),

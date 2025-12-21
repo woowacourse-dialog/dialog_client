@@ -1,4 +1,4 @@
-package com.on.dialog.designsystem.component
+package com.on.dialog.designsystem.component.button
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -158,7 +158,7 @@ private fun DialogButtonContext(
 
 @Preview(showBackground = true)
 @Composable
-fun DialogButtonPreview() {
+private fun DialogButtonPreview() {
     DialogTheme {
         DialogButton(onClick = {}, text = { Text("다이얼로그") })
     }
@@ -166,7 +166,7 @@ fun DialogButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun DialogOutlinedButtonPreview() {
+private fun DialogOutlinedButtonPreview() {
     DialogTheme {
         DialogOutlinedButton(onClick = {}, text = { Text("로그인") })
     }
@@ -174,7 +174,7 @@ fun DialogOutlinedButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun DialogButtonLeadingIconPreview() {
+private fun DialogButtonLeadingIconPreview() {
     DialogTheme {
         DialogButton(
             onClick = {},
