@@ -5,6 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.on.dialog.designsystem.theme.preview.TypographyDarkPreview
+import com.on.dialog.designsystem.theme.preview.TypographyPreview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 internal val DialogTypography
     @Composable
@@ -135,3 +138,15 @@ internal val DialogTypography
                     letterSpacing = 0.5.sp,
                 ),
         )
+
+@Preview(name = "Light Typography", heightDp = 1200)
+@Composable
+internal fun TypographyPreview() {
+    TypographyPreview()
+}
+
+@Preview(name = "Dark Typography", heightDp = 1200)
+@Composable
+internal fun TypographyDarkPreview() {
+    TypographyDarkPreview()
+}

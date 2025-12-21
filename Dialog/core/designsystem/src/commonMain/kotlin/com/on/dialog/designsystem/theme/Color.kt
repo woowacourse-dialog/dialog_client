@@ -1,6 +1,10 @@
 package com.on.dialog.designsystem.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.on.dialog.designsystem.theme.preview.ColorPaletteDarkPreview
+import com.on.dialog.designsystem.theme.preview.ColorPalettePreview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 internal val primaryLight = Color(0xFF1B2838)
 internal val onPrimaryLight = Color(0xFFFFFFFF)
@@ -75,3 +79,15 @@ internal val surfaceContainerHighDark = Color(0xFF2A2A2B)
 internal val surfaceContainerHighestDark = Color(0xFF343536)
 
 internal val Gray400 = Color(0xFFBDBDBD)
+
+@Preview(name = "Light Colors", heightDp = 2000)
+@Composable
+private fun ColorPalettePreview() {
+    ColorPalettePreview()
+}
+
+@Preview(name = "Dark Colors", heightDp = 2000)
+@Composable
+private fun ColorPreview() {
+    ColorPaletteDarkPreview()
+}

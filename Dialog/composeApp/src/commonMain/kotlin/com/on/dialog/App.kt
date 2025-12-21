@@ -16,7 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.on.dialog.designsystem.component.DialogButton
+import com.on.dialog.designsystem.component.button.DialogButton
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.composeapp.generated.resources.Res
 import dialog.composeapp.generated.resources.compose_multiplatform
