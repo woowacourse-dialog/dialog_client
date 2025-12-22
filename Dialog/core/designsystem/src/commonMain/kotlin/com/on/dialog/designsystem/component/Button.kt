@@ -1,4 +1,4 @@
-package com.on.dialog.designsystem.component.button
+package com.on.dialog.designsystem.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
