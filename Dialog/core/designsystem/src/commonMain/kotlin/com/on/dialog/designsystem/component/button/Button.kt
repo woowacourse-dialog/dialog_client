@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
@@ -27,7 +28,7 @@ fun DialogButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
-    shape: Shape = RoundedCornerShape(DialogButtonDefaults.CornerRadius),
+    shape: Shape = RoundedCornerShape(DialogButtonDefaults.Default.cornerRadius),
     content: @Composable RowScope.() -> Unit,
 ) {
     Button(
@@ -76,7 +77,7 @@ fun DialogOutlinedButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
-    shape: Shape = RoundedCornerShape(DialogButtonDefaults.CornerRadius),
+    shape: Shape = RoundedCornerShape(DialogButtonDefaults.Default.cornerRadius),
     content: @Composable RowScope.() -> Unit,
 ) {
     OutlinedButton(
@@ -89,13 +90,13 @@ fun DialogOutlinedButton(
             ),
         border =
             BorderStroke(
-                width = DialogButtonDefaults.OutlinedButtonBorderWidth,
+                width = DialogButtonDefaults.Default.outlinedButtonBorderWidth,
                 color =
                     if (enabled) {
                         MaterialTheme.colorScheme.outline
                     } else {
                         MaterialTheme.colorScheme.onSurface.copy(
-                            alpha = DialogButtonDefaults.DISABLED_OUTLINED_BUTTON_BORDER_ALPHA,
+                            alpha = DialogButtonDefaults.Default.disabledOutlinedButtonBorderAlpha,
                         )
                     },
             ),
@@ -186,8 +187,16 @@ private fun DialogButtonLeadingIconPreview() {
     }
 }
 
-private object DialogButtonDefaults {
-    const val DISABLED_OUTLINED_BUTTON_BORDER_ALPHA = 0.12f
-    val CornerRadius = 8.dp
-    val OutlinedButtonBorderWidth = 1.dp
+data class DialogButtonDefaults(
+    val disabledOutlinedButtonBorderAlpha: Float,
+    val cornerRadius: Dp,
+    val outlinedButtonBorderWidth: Dp,
+) {
+    companion object {
+        val Default = DialogButtonDefaults(
+            disabledOutlinedButtonBorderAlpha = 0.12f,
+            cornerRadius = 8.dp,
+            outlinedButtonBorderWidth = 1.dp,
+        )
+    }
 }
