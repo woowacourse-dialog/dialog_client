@@ -6,6 +6,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 
 private val lightScheme =
     lightColorScheme(
@@ -95,9 +97,21 @@ fun DialogTheme(
 ) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = DialogTypography,
-        content = content,
-    )
+    CompositionLocalProvider(
+        LocalSpacing provides Spacing(),
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = DialogTypography,
+            shapes = DialogShapes,
+            content = content,
+        )
+    }
+}
+
+object DialogTheme {
+    val spacing: Spacing
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalSpacing.current
 }
