@@ -2,17 +2,13 @@ package com.on.dialog.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.preview.TypographyDarkPreview
 import com.on.dialog.designsystem.theme.preview.TypographyPreview
+import com.on.dialog.designsystem.util.dpToSp
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-@Composable
-private fun dpToSp(dp: Dp) = with(LocalDensity.current) { dp.toSp() }
 
 internal val DialogTypography
     @Composable
