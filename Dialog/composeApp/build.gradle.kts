@@ -2,6 +2,14 @@ plugins {
     id("dialog.convention.kmp.application")
 }
 
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(project(":core:designsystem"))
+        }
+    }
+}
+
 android {
     namespace = "com.on.dialog"
 
