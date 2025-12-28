@@ -1,6 +1,5 @@
 plugins {
     id("dialog.convention.kmp.library")
-    id("dialog.convention.kmp.compose")
 }
 
 android {
