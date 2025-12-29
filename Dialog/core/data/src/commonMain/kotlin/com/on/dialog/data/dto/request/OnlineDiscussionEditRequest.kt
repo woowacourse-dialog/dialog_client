@@ -6,11 +6,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class OnlineDiscussionEditRequest(
     @SerialName("category")
-    val category: String?,
+    val category: String,
     @SerialName("content")
-    val content: String?,
+    val content: String,
     @SerialName("endDate")
-    val endDate: String?,
+    val endDate: String,
     @SerialName("title")
-    val title: String?,
+    val title: String,
 )
