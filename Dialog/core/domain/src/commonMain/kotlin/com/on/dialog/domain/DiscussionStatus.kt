@@ -1,0 +1,18 @@
+package com.on.dialog.domain
+
+enum class DiscussionStatus {
+    UNDEFINED,
+    RECRUITING,
+    RECRUITCOMPLETE,
+    INDISCUSSION,
+    DISCUSSIONCOMPLETE,
+    ;
+
+    fun set(discussionType: String): DiscussionStatus = when (discussionType) {
+        "RECRUITING" -> RECRUITING
+        "RECRUITCOMPLETE" -> RECRUITCOMPLETE
+        "INDISCUSSION" -> INDISCUSSION
+        "DISCUSSIONCOMPLETE" -> DISCUSSIONCOMPLETE
+        else -> UNDEFINED
+    }
+}
