@@ -29,6 +29,9 @@ androidx-startup = "1.2.0"
 androidx-activity-compose = "1.12.1"
 jetbrains-androidx-navigation = "2.9.1"
 
+# Ktor
+ktor = "2.3.12"
+
 # Room Database
 androidx-room = "2.8.4"
 androidx-sqlite = "2.6.2"
@@ -47,6 +50,10 @@ junit-android = "1.3.0"
 kotest = "6.0.7"
 mockk = "1.14.7"
 espressoCore = "3.7.0"
+kotlinStdlib = "2.2.21"
+kotlinTest = "2.2.21"
+runner = "1.7.0"
+core = "1.7.0"
 
 [libraries]
 
@@ -79,6 +86,13 @@ androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle
 androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "jetbrains-androidx-navigation" }
 androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test"}
 
+# Ktor
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+
 # Room Database
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidx-room" }
@@ -108,6 +122,10 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 kotest-framework = { group = "io.kotest", name = "kotest-runner-junit5-jvm", version.ref = "kotest" }
 kotest-assertion = { group = "io.kotest", name = "kotest-assertions-core-jvm", version.ref = "kotest" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 [plugins]
 # Kotlin
@@ -133,6 +151,7 @@ ksp-gradle-plugin = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 # Test
 android-test = { id = "com.android.test", version.ref = "android-gradle-plugin" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle-plugin" }
 
 [bundles]
 plugins = [
