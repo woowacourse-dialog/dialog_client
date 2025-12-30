@@ -1,10 +1,10 @@
-package com.on.dialog.data.datasource
+package com.on.dialog.data.service
 
 import com.on.dialog.data.dto.request.OfflineDiscussionEditRequest
 import com.on.dialog.data.dto.request.OnlineDiscussionEditRequest
 import com.on.dialog.data.dto.response.DiscussionCreateResponse
 
-interface DiscussionUpdateDatasource {
+interface DiscussionUpdateService {
     suspend fun updateOfflineDiscussion(
         id: Long,
         request: OfflineDiscussionEditRequest,
