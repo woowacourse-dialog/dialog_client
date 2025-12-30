@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SummaryResponse(
+data class DiscussionSummaryResponse(
     @SerialName("data")
     val data: DiscussionSummaryCreateResponse,
 )

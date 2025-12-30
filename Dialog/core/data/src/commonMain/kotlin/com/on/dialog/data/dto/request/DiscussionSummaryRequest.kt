@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SummaryRequest(
+data class DiscussionSummaryRequest(
     @SerialName("discussionId")
     val discussionId: Int,
 )
