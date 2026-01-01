@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -38,13 +37,13 @@ fun DialogNavigationBar(
     modifier: Modifier = Modifier,
 ) {
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.onPrimary,
+        containerColor = DialogTheme.colorScheme.onPrimary,
         modifier = modifier,
     ) {
         items.forEachIndexed { index, item ->
             val isSelected = selectedIndex == index
-            val iconColor = if (isSelected) MaterialTheme.colorScheme.primary else Gray400
-            val textColor = if (isSelected) MaterialTheme.colorScheme.primary else Gray400
+            val iconColor = if (isSelected) DialogTheme.colorScheme.primary else Gray400
+            val textColor = if (isSelected) DialogTheme.colorScheme.primary else Gray400
 
             NavigationBarItem(
                 selected = isSelected,
@@ -62,14 +61,14 @@ fun DialogNavigationBar(
                         )
                         Text(
                             text = item.label,
-                            style = MaterialTheme.typography.labelLarge,
+                            style = DialogTheme.typography.labelLarge,
                             color = textColor,
                         )
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = Color.Transparent,
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedIconColor = DialogTheme.colorScheme.primary,
                     unselectedIconColor = Gray400,
                 ),
                 interactionSource = NoRippleInteractionSource,

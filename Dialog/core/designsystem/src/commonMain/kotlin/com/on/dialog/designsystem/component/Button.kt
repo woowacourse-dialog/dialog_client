@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +36,7 @@ fun DialogButton(
         enabled = enabled,
         colors =
             ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                containerColor = DialogTheme.colorScheme.primaryContainer,
             ),
         contentPadding = contentPadding,
         content = content,
@@ -86,16 +85,16 @@ fun DialogOutlinedButton(
         enabled = enabled,
         colors =
             ButtonDefaults.outlinedButtonColors(
-                contentColor = MaterialTheme.colorScheme.onBackground,
+                contentColor = DialogTheme.colorScheme.onBackground,
             ),
         border =
             BorderStroke(
                 width = DialogButtonDefaults.Default.outlinedButtonBorderWidth,
                 color =
                     if (enabled) {
-                        MaterialTheme.colorScheme.outline
+                        DialogTheme.colorScheme.outline
                     } else {
-                        MaterialTheme.colorScheme.onSurface.copy(
+                        DialogTheme.colorScheme.onSurface.copy(
                             alpha = DialogButtonDefaults.Default.disabledOutlinedButtonBorderAlpha,
                         )
                     },
