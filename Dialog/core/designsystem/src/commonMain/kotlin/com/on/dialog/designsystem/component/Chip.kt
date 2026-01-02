@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -88,6 +89,7 @@ fun DialogChip(
             Text(
                 text = text,
                 style = DialogTheme.typography.labelSmall,
+                fontWeight = FontWeight.SemiBold,
             )
             if (onRemove != null) {
                 Spacer(Modifier.width(4.dp))
@@ -110,12 +112,14 @@ fun DialogChip(
  *
  * @param chips 표시할 ChipCategory 리스트.
  * @param onChipsChange 칩 목록이 변경되었을 때 호출되는 콜백.
+ * @param readOnly true일 경우 삭제 아이콘을 표시하지 않습니다.
  * @param modifier FlowRow에 적용할 Modifier.
  */
 @Composable
 fun DialogChipGroup(
     chips: List<ChipCategory>,
     onChipsChange: (List<ChipCategory>) -> Unit,
+    readOnly: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     FlowRow(
@@ -126,7 +130,12 @@ fun DialogChipGroup(
         chips.forEach { chip ->
             DialogChip(
                 chip = chip,
-                onRemove = { onChipsChange(chips - chip) },
+                onRemove =
+                    if (readOnly) {
+                        null
+                    } else {
+                        { onChipsChange(chips - chip) }
+                    },
             )
         }
     }

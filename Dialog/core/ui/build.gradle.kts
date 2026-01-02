@@ -6,3 +6,11 @@ plugins {
 android {
     namespace = "com.on.dialog.core.ui"
 }
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(project(":core:designsystem"))
+        }
+    }
+}

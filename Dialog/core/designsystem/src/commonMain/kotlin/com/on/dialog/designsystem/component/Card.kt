@@ -37,7 +37,7 @@ enum class DialogCardTone { Primary, Secondary, White }
 fun DialogCard(
     modifier: Modifier = Modifier,
     tone: DialogCardTone = DialogCardTone.Secondary,
-    contentPadding: PaddingValues = PaddingValues(DialogTheme.spacing.small),
+    contentPadding: PaddingValues = PaddingValues(DialogTheme.spacing.medium),
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
