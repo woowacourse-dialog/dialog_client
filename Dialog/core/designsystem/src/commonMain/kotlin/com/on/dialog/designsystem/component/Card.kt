@@ -22,7 +22,7 @@ import com.on.dialog.designsystem.theme.ShadowLevel
 import com.on.dialog.designsystem.theme.dropShadow
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-enum class DialogCardTone { Primary, Secondary, White }
+enum class DialogCardTone { Primary, Secondary, Surface }
 
 /**
  * 그림자와 둥근 모서리를 가진 카드 컴포넌트입니다.
@@ -45,7 +45,7 @@ fun DialogCard(
         when (tone) {
             DialogCardTone.Primary -> DialogTheme.colorScheme.primary
             DialogCardTone.Secondary -> DialogTheme.colorScheme.secondary
-            DialogCardTone.White -> Color.White
+            DialogCardTone.Surface -> DialogTheme.colorScheme.surface
         }
 
     Box(
@@ -80,7 +80,7 @@ private fun Modifier.clickableCard(
                     when (tone) {
                         DialogCardTone.Primary -> DialogTheme.colorScheme.primary
                         DialogCardTone.Secondary -> DialogTheme.colorScheme.secondary
-                        DialogCardTone.White -> Color.White
+                        DialogCardTone.Surface -> DialogTheme.colorScheme.surface
                     },
             ),
     )
@@ -113,8 +113,8 @@ private fun DialogCardPreviewContent() {
         DialogCard(tone = DialogCardTone.Secondary, onClick = {}) {
             Text("Secondary Card")
         }
-        DialogCard(tone = DialogCardTone.White, onClick = {}) {
-            Text("White Card")
+        DialogCard(tone = DialogCardTone.Surface, onClick = {}) {
+            Text("Surface Card", color = DialogTheme.colorScheme.onSurface)
         }
     }
 }
