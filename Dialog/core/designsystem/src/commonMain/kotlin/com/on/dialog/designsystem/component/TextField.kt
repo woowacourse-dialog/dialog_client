@@ -26,6 +26,24 @@ import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.Gray200
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * Dialog 디자인 시스템의 커스텀 텍스트 필드입니다.
+ *
+ * @param value 텍스트 필드에 표시될 텍스트.
+ * @param onValueChange 텍스트가 변경될 때 호출되는 콜백.
+ * @param modifier 컴포넌트에 적용할 [Modifier].
+ * @param placeholder 입력란이 비어있을 때 표시될 텍스트.
+ * @param label 텍스트 필드 위에 표시될 라벨.
+ * @param supportingText 텍스트 필드 아래에 표시될 보조 텍스트 (힌트 또는 에러 메시지).
+ * @param singleLine `true`이면 한 줄로, `false`이면 여러 줄로 입력됩니다.
+ * @param readOnly `true`이면 읽기 전용으로 설정됩니다.
+ * @param isError `true`이면 에러 상태로 표시됩니다 (보조 텍스트가 빨간색으로 변경).
+ * @param enabled `false`이면 비활성화되어 입력 및 포커스가 불가능합니다.
+ * @param keyboardOptions 키보드 타입, IME 액션 등 키보드 관련 설정.
+ * @param keyboardActions 키보드 액션(예: 완료, 다음)에 대한 콜백.
+ * @param leadingIcon 텍스트 필드 앞에 표시될 아이콘.
+ * @param trailingIcon 텍스트 필드 뒤에 표시될 아이콘.
+ */
 @Composable
 fun DialogTextField(
     value: String,

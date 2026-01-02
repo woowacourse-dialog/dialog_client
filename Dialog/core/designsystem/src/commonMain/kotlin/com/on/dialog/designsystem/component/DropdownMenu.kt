@@ -20,6 +20,20 @@ import androidx.compose.ui.Modifier
 import com.on.dialog.designsystem.theme.DialogTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * Dialog 디자인 시스템의 드롭다운 메뉴 컴포넌트.
+ *
+ * 클릭 시 선택 가능한 옵션 목록을 보여주는 텍스트 필드 형태의 메뉴입니다.
+ *
+ * @param options 드롭다운 메뉴에 표시될 문자열 목록.
+ * @param onSelectedIndexChange 옵션이 선택되었을 때 호출되는 콜백. 선택된 아이템의 인덱스를 전달합니다.
+ * @param modifier 컴포넌트에 적용할 [Modifier].
+ * @param selectedIndex 현재 선택된 아이템의 인덱스. `null`이면 플레이스홀더가 표시됩니다.
+ * @param label 텍스트 필드 위에 표시될 라벨.
+ * @param placeholder 선택된 항목이 없을 때 텍스트 필드 내부에 표시될 텍스트.
+ * @param supportingText 텍스트 필드 아래에 표시될 보조 텍스트.
+ * @param enabled 컴포넌트 활성화 여부. `false`일 경우 비활성화됩니다.
+ */
 @Composable
 fun DialogDropdownMenu(
     options: List<String>,
