@@ -9,6 +9,6 @@
     <string name="discussion_type_offline">오프라인</string>
 
     <!-- DiscussionCard.kt -->
-    <string name="discussion_card_author">개설자: %s</string>
-    <string name="discussion_card_endAt">종료일: %s</string>
+    <string name="discussion_card_author">개설자: %1$s</string>
+    <string name="discussion_card_endAt">종료일: %1$s</string>
 </resources>
