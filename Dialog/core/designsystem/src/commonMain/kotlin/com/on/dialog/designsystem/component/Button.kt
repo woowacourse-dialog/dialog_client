@@ -97,6 +97,37 @@ private fun DialogButtonContext(
     }
 }
 
+@Composable
+private fun buttonColorsByStyle(style: DialogButtonStyle) =
+    when (style) {
+        DialogButtonStyle.Primary -> {
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            )
+        }
+
+        DialogButtonStyle.Secondary -> {
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            )
+        }
+
+        DialogButtonStyle.None -> {
+            ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                contentColor = DialogTheme.colorScheme.primary,
+                disabledContentColor = Gray400,
+            )
+        }
+    }
+
 @Preview(showBackground = true)
 @Composable
 private fun DialogButtonPreviewLight() {
@@ -131,34 +162,3 @@ private fun DialogButtonPreviewContent() {
         )
     }
 }
-
-@Composable
-private fun buttonColorsByStyle(style: DialogButtonStyle) =
-    when (style) {
-        DialogButtonStyle.Primary -> {
-            ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            )
-        }
-
-        DialogButtonStyle.Secondary -> {
-            ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary,
-                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            )
-        }
-
-        DialogButtonStyle.None -> {
-            ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                contentColor = DialogTheme.colorScheme.primary,
-                disabledContentColor = Gray400,
-            )
-        }
-    }
