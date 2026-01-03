@@ -43,7 +43,7 @@ fun DialogTopAppBar(
 ) {
     val colors =
         TopAppBarDefaults.topAppBarColors(
-            containerColor = DialogTheme.colorScheme.surfaceContainer,
+            containerColor = DialogTheme.colorScheme.surface,
             titleContentColor = DialogTheme.colorScheme.onSurface,
         )
 
@@ -51,8 +51,7 @@ fun DialogTopAppBar(
         @Composable {
             Text(
                 text = title,
-                style = DialogTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
+                style = DialogTheme.typography.titleMedium,
             )
         }
 

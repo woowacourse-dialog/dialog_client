@@ -1,6 +1,5 @@
 package com.on.dialog.designsystem.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.designsystem.theme.Gray200
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
@@ -85,12 +83,11 @@ fun DialogTextField(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(DialogTheme.shapes.small)
-                .background(Gray200),
+                .clip(DialogTheme.shapes.small),
             readOnly = readOnly,
             enabled = enabled,
             textStyle = DialogTheme.typography.bodyLarge.copy(
-                color = Color.Black,
+                color = DialogTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold,
             ),
             leadingIcon = leadingIcon,
@@ -98,9 +95,9 @@ fun DialogTextField(
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Gray200,
-                unfocusedContainerColor = Gray200,
-                disabledContainerColor = Gray200,
+                focusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
+                unfocusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
+                disabledContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,

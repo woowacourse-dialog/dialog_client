@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -74,6 +75,7 @@ private fun DiscussionCardFooter(
         }
         InteractionIndicator(
             icon = DialogIcons.Chat,
+            iconTint = LocalContentColor.current,
             count = discussionCount,
         )
     }

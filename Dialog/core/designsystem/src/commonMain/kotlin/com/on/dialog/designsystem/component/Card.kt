@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,7 +24,33 @@ import com.on.dialog.designsystem.theme.ShadowLevel
 import com.on.dialog.designsystem.theme.dropShadow
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-enum class DialogCardTone { Primary, Secondary, Surface }
+sealed interface DialogCardTone {
+    val backgroundColor: Color
+        @Composable get
+    val contentColor: Color
+        @Composable get
+
+    data object Primary : DialogCardTone {
+        override val backgroundColor: Color
+            @Composable get() = DialogTheme.colorScheme.primary
+        override val contentColor: Color
+            @Composable get() = DialogTheme.colorScheme.onPrimary
+    }
+
+    data object Secondary : DialogCardTone {
+        override val backgroundColor: Color
+            @Composable get() = DialogTheme.colorScheme.secondary
+        override val contentColor: Color
+            @Composable get() = DialogTheme.colorScheme.onSecondary
+    }
+
+    data object Surface : DialogCardTone {
+        override val backgroundColor: Color
+            @Composable get() = DialogTheme.colorScheme.surface
+        override val contentColor: Color
+            @Composable get() = DialogTheme.colorScheme.onSurface
+    }
+}
 
 /**
  * 그림자와 둥근 모서리를 가진 카드 컴포넌트입니다.
@@ -41,26 +69,21 @@ fun DialogCard(
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val background =
-        when (tone) {
-            DialogCardTone.Primary -> DialogTheme.colorScheme.primary
-            DialogCardTone.Secondary -> DialogTheme.colorScheme.secondary
-            DialogCardTone.Surface -> DialogTheme.colorScheme.surface
-        }
-
-    Box(
-        modifier =
-            modifier
-                .dropShadow(level = ShadowLevel.SMALL)
-                .clip(shape = DialogTheme.shapes.medium)
-                .background(color = background)
-                .clickableCard(
-                    enabled = onClick != null,
-                    tone = tone,
-                ) { onClick?.invoke() }
-                .padding(contentPadding),
-        content = content,
-    )
+    CompositionLocalProvider(LocalContentColor provides tone.contentColor) {
+        Box(
+            modifier =
+                modifier
+                    .dropShadow(level = ShadowLevel.SMALL)
+                    .clip(shape = DialogTheme.shapes.medium)
+                    .background(color = tone.backgroundColor)
+                    .clickableCard(
+                        enabled = onClick != null,
+                        tone = tone,
+                    ) { onClick?.invoke() }
+                    .padding(contentPadding),
+            content = content,
+        )
+    }
 }
 
 @Composable
@@ -76,12 +99,7 @@ private fun Modifier.clickableCard(
         indication =
             ripple(
                 bounded = true,
-                color =
-                    when (tone) {
-                        DialogCardTone.Primary -> DialogTheme.colorScheme.primary
-                        DialogCardTone.Secondary -> DialogTheme.colorScheme.secondary
-                        DialogCardTone.Surface -> DialogTheme.colorScheme.surface
-                    },
+                color = tone.backgroundColor,
             ),
     )
 
@@ -108,13 +126,13 @@ private fun DialogCardPreviewContent() {
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         DialogCard(tone = DialogCardTone.Primary, onClick = {}) {
-            Text("Primary Card", color = Color.White)
+            Text("Primary Card")
         }
         DialogCard(tone = DialogCardTone.Secondary, onClick = {}) {
             Text("Secondary Card")
         }
         DialogCard(tone = DialogCardTone.Surface, onClick = {}) {
-            Text("Surface Card", color = DialogTheme.colorScheme.onSurface)
+            Text("Surface Card")
         }
     }
 }

@@ -46,7 +46,7 @@ fun DialogNavigationBar(
     modifier: Modifier = Modifier,
 ) {
     NavigationBar(
-        containerColor = DialogTheme.colorScheme.surfaceContainer,
+        containerColor = DialogTheme.colorScheme.surface,
         contentColor = DialogTheme.colorScheme.onSurface,
         modifier = modifier,
     ) {
