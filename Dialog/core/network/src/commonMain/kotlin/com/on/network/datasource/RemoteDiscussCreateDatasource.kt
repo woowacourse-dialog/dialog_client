@@ -1,4 +1,4 @@
-package datasource
+package com.on.network.datasource
 
 import com.on.dialog.data.datasource.DiscussionCreateDatasource
 import com.on.dialog.data.dto.request.CreateOfflineDiscussionRequest

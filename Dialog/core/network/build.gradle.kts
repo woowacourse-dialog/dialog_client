@@ -32,11 +32,5 @@ kotlin {
 }
 
 dependencies {
-    //Android
     kspAndroid(libs.ktorfit.ksp)
-
-    //Ios
-    kspIosSimulatorArm64(libs.ktorfit.ksp)
-    kspIosArm64(libs.ktorfit.ksp)
-    kspIosSimulatorArm64(libs.ktorfit.ksp)
 }

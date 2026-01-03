@@ -7,7 +7,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 actual object HttpClientFactory {
-
     actual fun create(): HttpClient =
         HttpClient(OkHttp) {
             install(ContentNegotiation) {
@@ -16,7 +15,7 @@ actual object HttpClientFactory {
                         ignoreUnknownKeys = true
                         isLenient = true
                         encodeDefaults = true
-                    }
+                    },
                 )
             }
         }

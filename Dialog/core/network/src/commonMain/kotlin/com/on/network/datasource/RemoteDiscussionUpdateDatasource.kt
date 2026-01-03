@@ -1,4 +1,4 @@
-package datasource
+package com.on.network.datasource
 
 import com.on.dialog.data.datasource.DiscussionUpdateDatasource
 import com.on.dialog.data.dto.request.OfflineDiscussionEditRequest
