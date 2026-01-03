@@ -1,7 +1,7 @@
 package com.on.dialog
 
-class Greeting {
-    private val platform = getPlatform()
+import com.on.dialog.core.common.currentPlatform
 
-    fun greet(): String = "Hello, ${platform.name}!"
+class Greeting {
+    fun greet(): String = "Hello, ${currentPlatform.name}!"
 }
