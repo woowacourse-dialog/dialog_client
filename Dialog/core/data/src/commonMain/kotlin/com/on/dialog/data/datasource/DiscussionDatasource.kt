@@ -3,10 +3,9 @@ package com.on.dialog.data.datasource
 import com.on.dialog.data.dto.query.DiscussionQuery
 import com.on.dialog.data.dto.response.discussiondetail.DiscussionDetailResponse
 import com.on.dialog.data.dto.response.discussionlookup.DiscussionCursorPageResponse
-import com.on.dialog.domain.Discussion
 
 interface DiscussionDatasource {
-    suspend fun getDiscussion(id: Long): Result<DiscussionDetailResponse>
+    suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetailResponse>
 
     suspend fun getDiscussions(): Result<DiscussionCursorPageResponse>
 
