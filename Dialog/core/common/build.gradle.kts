@@ -5,3 +5,11 @@ plugins {
 android {
     namespace = "com.on.dialog.core.common"
 }
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.datetime)
+        }
+    }
+}
