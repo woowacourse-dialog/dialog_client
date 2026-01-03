@@ -5,18 +5,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OfflineDiscussionEditRequest(
-    @SerialName("category")
-    val category: String,
-    @SerialName("content")
-    val content: String,
-    @SerialName("endAt")
-    val endAt: String,
-    @SerialName("maxParticipantCount")
-    val maxParticipantCount: Int,
-    @SerialName("place")
-    val place: String,
-    @SerialName("startAt")
-    val startAt: String,
     @SerialName("title")
     val title: String,
+    @SerialName("content")
+    val content: String,
+    @SerialName("startAt")
+    val startAt: String,
+    @SerialName("endAt")
+    val endAt: String,
+    @SerialName("place")
+    val place: String,
+    @SerialName("maxParticipantCount")
+    val maxParticipantCount: Int,
+    @SerialName("category")
+    val category: String,
 )
