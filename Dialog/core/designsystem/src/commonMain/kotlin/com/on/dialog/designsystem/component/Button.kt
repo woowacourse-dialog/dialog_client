@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
@@ -163,13 +162,3 @@ private fun buttonColorsByStyle(style: DialogButtonStyle) =
             )
         }
     }
-
-data class DialogButtonDefaults(
-    val outlinedButtonBorderWidth: Dp,
-) {
-    companion object {
-        val Default = DialogButtonDefaults(
-            outlinedButtonBorderWidth = 1.dp,
-        )
-    }
-}
