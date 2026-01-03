@@ -1,11 +1,10 @@
-package com.on.dialog.data.dto.response
-
+package com.on.dialog.data.dto.response.common
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DiscussionCreateResponse(
+data class DataResponse<T>(
     @SerialName("data")
-    val discussionCreate: DiscussionCreate
+    val data: T?,
 )

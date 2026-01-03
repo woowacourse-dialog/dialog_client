@@ -13,25 +13,25 @@ import org.koin.dsl.module
 val serviceModule = module {
     single<DiscussionCreateService> {
         DefaultDiscussionCreateService(
-            client = get()
+            client = get(),
         )
     }
 
     single<DiscussionService> {
         DefaultDiscussionService(
-            client = get()
+            client = get(),
         )
     }
 
     single<DiscussionSummaryService> {
         DefaultDiscussionSummaryService(
-            client = get()
+            client = get(),
         )
     }
 
     single<DiscussionUpdateService> {
         DefaultDiscussionUpdateService(
-            client = get()
+            client = get(),
         )
     }
 }

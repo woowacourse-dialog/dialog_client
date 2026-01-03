@@ -1,12 +1,12 @@
-package com.on.dialog.data.dto.response
+package com.on.dialog.data.dto.response.discussiondetail
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ProfileImageResponse(
+data class ProfileImage(
     @SerialName("basicImageUri")
-    val basicImageUri: String,
+    val basicImageUri: String?,
     @SerialName("customImageUri")
-    val customImageUri: String,
+    val customImageUri: String?,
 )

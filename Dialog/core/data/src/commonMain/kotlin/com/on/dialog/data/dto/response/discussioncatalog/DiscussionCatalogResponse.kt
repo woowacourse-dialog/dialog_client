@@ -1,12 +1,13 @@
-package com.on.dialog.data.dto.response
+package com.on.dialog.data.dto.response.discussioncatalog
 
+import com.on.dialog.data.dto.response.discussioncatalog.Content
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DiscussionCursorPageResponse(
+data class DiscussionCatalogResponse(
     @SerialName("content")
-    val discussionPreviewResponse: List<DiscussionPreviewResponse>,
+    val content: List<Content>,
     @SerialName("hasNext")
     val hasNext: Boolean,
     @SerialName("nextCursor")
