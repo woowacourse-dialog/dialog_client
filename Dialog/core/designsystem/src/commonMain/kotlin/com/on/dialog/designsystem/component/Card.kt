@@ -24,33 +24,7 @@ import com.on.dialog.designsystem.theme.ShadowLevel
 import com.on.dialog.designsystem.theme.dropShadow
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-sealed interface DialogCardTone {
-    val backgroundColor: Color
-        @Composable get
-    val contentColor: Color
-        @Composable get
-
-    data object Primary : DialogCardTone {
-        override val backgroundColor: Color
-            @Composable get() = DialogTheme.colorScheme.primary
-        override val contentColor: Color
-            @Composable get() = DialogTheme.colorScheme.onPrimary
-    }
-
-    data object Secondary : DialogCardTone {
-        override val backgroundColor: Color
-            @Composable get() = DialogTheme.colorScheme.secondary
-        override val contentColor: Color
-            @Composable get() = DialogTheme.colorScheme.onSecondary
-    }
-
-    data object Surface : DialogCardTone {
-        override val backgroundColor: Color
-            @Composable get() = DialogTheme.colorScheme.surface
-        override val contentColor: Color
-            @Composable get() = DialogTheme.colorScheme.onSurface
-    }
-}
+enum class DialogCardTone { Primary, Secondary, Surface }
 
 /**
  * 그림자와 둥근 모서리를 가진 카드 컴포넌트입니다.
@@ -69,13 +43,13 @@ fun DialogCard(
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    CompositionLocalProvider(LocalContentColor provides tone.contentColor) {
+    CompositionLocalProvider(LocalContentColor provides tone.contentColor()) {
         Box(
             modifier =
                 modifier
                     .dropShadow(level = ShadowLevel.SMALL)
                     .clip(shape = DialogTheme.shapes.medium)
-                    .background(color = tone.backgroundColor)
+                    .background(color = tone.backgroundColor())
                     .clickableCard(
                         enabled = onClick != null,
                         tone = tone,
@@ -99,9 +73,23 @@ private fun Modifier.clickableCard(
         indication =
             ripple(
                 bounded = true,
-                color = tone.backgroundColor,
+                color = tone.backgroundColor(),
             ),
     )
+
+@Composable
+private fun DialogCardTone.backgroundColor(): Color = when (this) {
+    DialogCardTone.Primary -> DialogTheme.colorScheme.primary
+    DialogCardTone.Secondary -> DialogTheme.colorScheme.secondary
+    DialogCardTone.Surface -> DialogTheme.colorScheme.surface
+}
+
+@Composable
+private fun DialogCardTone.contentColor(): Color = when (this) {
+    DialogCardTone.Primary -> DialogTheme.colorScheme.onPrimary
+    DialogCardTone.Secondary -> DialogTheme.colorScheme.onSecondary
+    DialogCardTone.Surface -> DialogTheme.colorScheme.onSurface
+}
 
 @Preview(showBackground = true)
 @Composable
