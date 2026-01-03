@@ -1,9 +1,9 @@
 package com.on.network.service
 
-import com.on.dialog.data.dto.request.CreateOfflineDiscussionRequest
-import com.on.dialog.data.dto.request.CreateOnlineDiscussionRequest
-import com.on.dialog.data.dto.response.common.DataResponse
-import com.on.dialog.data.dto.response.discussioncreate.DiscussionCreateResponse
+import com.on.network.dto.request.CreateOfflineDiscussionRequest
+import com.on.network.dto.request.CreateOnlineDiscussionRequest
+import com.on.network.dto.response.common.DataResponse
+import com.on.network.dto.response.discussioncreate.DiscussionCreateResponse
 import de.jensklingenberg.ktorfit.Response
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.POST

@@ -5,8 +5,8 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core:designsystem"))
-            implementation(project(":core:data"))
+            implementation(projects.core.designsystem)
+            implementation(projects.core.network)
         }
     }
 }

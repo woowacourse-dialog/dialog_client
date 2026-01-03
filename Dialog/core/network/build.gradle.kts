@@ -20,7 +20,7 @@ kotlin {
             implementation(libs.ktorfit)
 
             // project
-            implementation(project(":core:data"))
+            implementation(projects.core.domain)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
@@ -32,5 +32,5 @@ kotlin {
 }
 
 dependencies {
-    kspAndroid(libs.ktorfit.ksp)
+    add("kspCommonMainMetadata", libs.ktorfit.ksp)
 }

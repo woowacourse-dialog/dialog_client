@@ -1,8 +1,8 @@
 package com.on.network.service
 
-import com.on.dialog.data.dto.request.OfflineDiscussionEditRequest
-import com.on.dialog.data.dto.request.OnlineDiscussionEditRequest
-import com.on.dialog.data.dto.response.common.DataResponse
+import com.on.network.dto.request.OfflineDiscussionEditRequest
+import com.on.network.dto.request.OnlineDiscussionEditRequest
+import com.on.network.dto.response.common.DataResponse
 import de.jensklingenberg.ktorfit.Response
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.PATCH

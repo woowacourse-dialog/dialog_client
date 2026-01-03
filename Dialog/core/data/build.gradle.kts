@@ -9,11 +9,14 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.domain)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
+
+            // project
+            implementation(projects.core.network)
+            implementation(projects.core.domain)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)

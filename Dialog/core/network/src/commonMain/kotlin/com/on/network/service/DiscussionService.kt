@@ -1,8 +1,8 @@
 package com.on.network.service
 
-import com.on.dialog.data.dto.response.common.DataResponse
-import com.on.dialog.data.dto.response.discussiondetail.DiscussionDetailResponse
-import com.on.dialog.data.dto.response.discussionlookup.DiscussionCursorPageResponse
+import com.on.network.dto.response.common.DataResponse
+import com.on.network.dto.response.discussiondetail.DiscussionDetailResponse
+import com.on.network.dto.response.discussionlookup.DiscussionCursorPageResponse
 import de.jensklingenberg.ktorfit.Response
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
