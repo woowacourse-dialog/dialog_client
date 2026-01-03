@@ -65,7 +65,7 @@ sealed interface DialogCardTone {
 fun DialogCard(
     modifier: Modifier = Modifier,
     tone: DialogCardTone = DialogCardTone.Secondary,
-    contentPadding: PaddingValues = PaddingValues(DialogTheme.spacing.medium),
+    contentPadding: PaddingValues = PaddingValues(DialogTheme.spacing.large),
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
