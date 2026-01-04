@@ -22,9 +22,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun InteractionIndicator(
     icon: ImageVector,
     count: Int,
-    contentDescription: String? = null,
     modifier: Modifier = Modifier,
     iconTint: Color = DialogTheme.colorScheme.primary,
+    contentDescription: String? = null,
 ) {
     Row(
         modifier = modifier,
