@@ -1,5 +1,6 @@
 package com.on.dialog.di
 
+import com.on.network.di.datasourceModule
 import com.on.network.di.networkModule
 import com.on.network.di.serviceModule
 import org.koin.core.module.Module
@@ -9,7 +10,7 @@ expect val platformModule: Module
 
 val coreModule =
     module {
-        includes(networkModule, serviceModule)
+        includes(networkModule, serviceModule, datasourceModule)
     }
 
 val featureModule =
