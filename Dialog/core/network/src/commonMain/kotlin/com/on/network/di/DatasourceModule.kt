@@ -4,23 +4,23 @@ import com.on.network.datasource.DiscussionCreateDatasource
 import com.on.network.datasource.DiscussionDatasource
 import com.on.network.datasource.DiscussionSummaryDatasource
 import com.on.network.datasource.DiscussionUpdateDatasource
-import com.on.network.datasourceimpl.RemoteDiscussCreateDatasource
-import com.on.network.datasourceimpl.RemoteDiscussionDatasource
-import com.on.network.datasourceimpl.RemoteDiscussionSummaryDatasource
-import com.on.network.datasourceimpl.RemoteDiscussionUpdateDatasource
+import com.on.network.datasourceimpl.DiscussCreateRemoteDatasource
+import com.on.network.datasourceimpl.DiscussionRemoteDatasource
+import com.on.network.datasourceimpl.DiscussionSummaryRemoteDatasource
+import com.on.network.datasourceimpl.DiscussionUpdateRemoteDatasource
 import org.koin.dsl.module
 
 val datasourceModule = module {
     single<DiscussionCreateDatasource>{
-        RemoteDiscussCreateDatasource(get())
+        DiscussCreateRemoteDatasource(get())
     }
     single<DiscussionDatasource> {
-        RemoteDiscussionDatasource(get())
+        DiscussionRemoteDatasource(get())
     }
     single<DiscussionSummaryDatasource> {
-        RemoteDiscussionSummaryDatasource(get())
+        DiscussionSummaryRemoteDatasource(get())
     }
     single<DiscussionUpdateDatasource>{
-        RemoteDiscussionUpdateDatasource(get())
+        DiscussionUpdateRemoteDatasource(get())
     }
 }

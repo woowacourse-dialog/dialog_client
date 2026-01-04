@@ -7,7 +7,7 @@ import com.on.network.dto.response.discussiondetail.DiscussionDetailResponse
 import com.on.network.dto.response.discussionlookup.DiscussionCursorPageResponse
 import com.on.network.service.DiscussionService
 
-class RemoteDiscussionDatasource(
+class DiscussionRemoteDatasource(
     private val discussionService: DiscussionService
 ) : DiscussionDatasource {
     override suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetailResponse> =
