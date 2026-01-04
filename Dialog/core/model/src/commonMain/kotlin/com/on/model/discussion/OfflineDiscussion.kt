@@ -1,5 +1,7 @@
-package com.on.model
+package com.on.model.discussion
 
+import com.on.model.discussion.offline.Participant
+import com.on.model.discussion.Content
 import kotlinx.datetime.LocalDateTime
 
 data class OfflineDiscussion(

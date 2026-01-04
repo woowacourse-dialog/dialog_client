@@ -1,4 +1,4 @@
-package com.on.model
+package com.on.model.discussion.draft
 
 data class OfflineDiscussionDraft(
     val title: String,

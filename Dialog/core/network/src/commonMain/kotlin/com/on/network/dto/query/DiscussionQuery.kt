@@ -1,6 +1,6 @@
 package com.on.network.dto.query
 
-import com.on.model.DiscussionCriteria
+import com.on.model.discussion.criteria.DiscussionCriteria
 
 data class DiscussionQuery(
     val discussionCriteria: DiscussionCriteria,

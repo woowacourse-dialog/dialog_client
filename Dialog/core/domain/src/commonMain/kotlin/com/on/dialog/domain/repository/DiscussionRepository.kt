@@ -1,7 +1,7 @@
 package com.on.dialog.domain.repository
 
-import com.on.model.Discussion
-import com.on.model.DiscussionCriteria
+import com.on.model.discussion.Discussion
+import com.on.model.discussion.criteria.DiscussionCriteria
 
 interface DiscussionRepository {
     suspend fun getDiscussionDetail(id: Long): Result<Discussion>

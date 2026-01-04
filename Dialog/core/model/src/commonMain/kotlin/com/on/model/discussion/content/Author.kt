@@ -1,4 +1,4 @@
-package com.on.model
+package com.on.model.discussion.content
 
 data class Author(
     val id: Int,

@@ -1,5 +1,6 @@
-package com.on.model
+package com.on.model.discussion
 
+import com.on.model.discussion.Content
 import kotlinx.datetime.LocalDate
 
 data class OnlineDiscussion(

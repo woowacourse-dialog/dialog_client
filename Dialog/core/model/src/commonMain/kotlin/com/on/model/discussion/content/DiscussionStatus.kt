@@ -1,4 +1,4 @@
-package com.on.model
+package com.on.model.discussion.content
 
 enum class DiscussionStatus {
     UNDEFINED,
