@@ -40,19 +40,7 @@ fun DialogTopAppBar(
     actions: @Composable RowScope.() -> Unit = {},
     centerAligned: Boolean = true,
 ) {
-    val colors =
-        TopAppBarDefaults.topAppBarColors(
-            containerColor = DialogTheme.colorScheme.surface,
-            titleContentColor = DialogTheme.colorScheme.onSurface,
-        )
-
-    val titleContent =
-        @Composable {
-            Text(
-                text = title,
-                style = DialogTheme.typography.titleMedium,
-            )
-        }
+    val titleContent = @Composable { Text(text = title) }
 
     if (centerAligned) {
         CenterAlignedTopAppBar(
@@ -60,7 +48,6 @@ fun DialogTopAppBar(
             title = titleContent,
             navigationIcon = navigationIcon ?: {},
             actions = actions,
-            colors = colors,
         )
     } else {
         TopAppBar(
@@ -68,7 +55,6 @@ fun DialogTopAppBar(
             title = titleContent,
             navigationIcon = navigationIcon ?: {},
             actions = actions,
-            colors = colors,
         )
     }
 }
