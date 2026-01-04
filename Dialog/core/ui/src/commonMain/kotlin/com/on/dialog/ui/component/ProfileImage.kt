@@ -6,9 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImagePainter
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.no_profile
@@ -20,9 +18,9 @@ fun ProfileImage(
     contentDescription: String,
     modifier: Modifier = Modifier,
     crossfade: Boolean = true,
-    onSuccess: ((AsyncImagePainter.State.Success) -> Unit)? = null,
-    onLoading: ((AsyncImagePainter.State.Loading) -> Unit)? = null,
-    onError: ((AsyncImagePainter.State.Error) -> Unit)? = null,
+    onSuccess: () -> Unit = {},
+    onLoading: () -> Unit = {},
+    onError: () -> Unit = {},
 ) {
     DialogAsyncImage(
         imageUrl = imageUrl,
