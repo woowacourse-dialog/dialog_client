@@ -6,7 +6,7 @@ enum class DiscussionType {
     OFFLINE,
     ;
 
-    fun set(discussionType: String): DiscussionType = when (discussionType) {
+    fun of(discussionType: String): DiscussionType = when (discussionType) {
         "ONLINE" -> ONLINE
         "OFFLINE" -> OFFLINE
         else -> UNDEFINED

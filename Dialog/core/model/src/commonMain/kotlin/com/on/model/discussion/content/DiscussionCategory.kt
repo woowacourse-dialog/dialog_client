@@ -7,7 +7,7 @@ enum class DiscussionCategory {
     FRONTEND,
     ;
 
-    fun set(category: String): DiscussionCategory = when (category) {
+    fun of(category: String): DiscussionCategory = when (category) {
         "ANDROID" -> ANDROID
         "BACKEND" -> BACKEND
         "FRONTEND" -> FRONTEND

@@ -8,7 +8,7 @@ enum class DiscussionStatus {
     DISCUSSIONCOMPLETE,
     ;
 
-    fun set(discussionType: String): DiscussionStatus = when (discussionType) {
+    fun of(discussionType: String): DiscussionStatus = when (discussionType) {
         "RECRUITING" -> RECRUITING
         "RECRUITCOMPLETE" -> RECRUITCOMPLETE
         "INDISCUSSION" -> INDISCUSSION
