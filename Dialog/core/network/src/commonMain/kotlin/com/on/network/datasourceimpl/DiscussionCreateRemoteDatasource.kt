@@ -7,7 +7,7 @@ import com.on.network.dto.request.CreateOnlineDiscussionRequest
 import com.on.network.dto.response.discussioncreate.DiscussionCreateResponse
 import com.on.network.service.DiscussionService
 
-class DiscussCreateRemoteDatasource(
+class DiscussionCreateRemoteDatasource(
     private val discussionService: DiscussionService
 ) : DiscussionCreateDatasource {
     override suspend fun createOfflineDiscussion(request: CreateOfflineDiscussionRequest): Result<DiscussionCreateResponse> =
