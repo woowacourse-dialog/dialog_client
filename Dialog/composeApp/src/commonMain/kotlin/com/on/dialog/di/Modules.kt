@@ -1,5 +1,6 @@
 package com.on.dialog.di
 
+import com.on.dialog.data.di.repositoryModule
 import com.on.network.di.datasourceModule
 import com.on.network.di.networkModule
 import com.on.network.di.serviceModule
@@ -10,7 +11,7 @@ expect val platformModule: Module
 
 val coreModule =
     module {
-        includes(networkModule, serviceModule, datasourceModule)
+        includes(networkModule, serviceModule, datasourceModule, repositoryModule)
     }
 
 val featureModule =
