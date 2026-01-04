@@ -36,9 +36,7 @@ fun App() {
                     .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            DialogButton(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
+            DialogButton(text = "Click Me!", onClick = { showContent = !showContent })
             AnimatedVisibility(showContent) {
                 val greeting = remember { Greeting().greet() }
                 Column(

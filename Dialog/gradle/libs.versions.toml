@@ -41,6 +41,12 @@ androidx-sqlite = "2.6.2"
 # DI
 koin = "4.1.1"
 
+# Network
+ktor = "3.3.0"
+
+# Image
+coil = "3.3.0"
+
 # Util
 napier = "2.7.1"
 ksp = "2.1.20-1.0.32"
@@ -109,6 +115,15 @@ koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = 
 koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
 koin-compose-viewmodel-navigation = { group = "io.insert-koin", name = "koin-compose-viewmodel-navigation", version.ref = "koin" }
+
+# Network
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
+
+# Image
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 
 # Util
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
