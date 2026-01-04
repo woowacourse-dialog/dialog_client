@@ -13,7 +13,7 @@ fun Modifier.noRippleClickable(
     composed {
         this.clickable(
             indication = null,
-            interactionSource = remember { MutableInteractionSource() },
+            interactionSource = null,
         ) {
             if (enabled) onClick()
         }
