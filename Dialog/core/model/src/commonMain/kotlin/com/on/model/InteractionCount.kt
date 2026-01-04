@@ -1,4 +1,4 @@
-package com.on.dialog.domain
+package com.on.model
 
 data class InteractionCount(
     val likeCount: Int,

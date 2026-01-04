@@ -1,8 +1,8 @@
 package com.on.network.dto.query
 
-import com.on.dialog.domain.DiscussionCategory
-import com.on.dialog.domain.DiscussionStatus
-import com.on.dialog.domain.DiscussionType
+import com.on.model.DiscussionCategory
+import com.on.model.DiscussionStatus
+import com.on.model.DiscussionType
 
 data class DiscussionQuery(
     val categories: List<DiscussionCategory>?,
