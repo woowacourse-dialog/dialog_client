@@ -10,10 +10,10 @@ val networkModule = module {
     }
 
     single<Ktorfit> {
-        Ktorfit.Builder()
+        Ktorfit
+            .Builder()
             .httpClient(get<HttpClient>())
             .baseUrl("")
             .build()
     }
 }
-

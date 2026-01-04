@@ -7,7 +7,7 @@ import com.on.network.dto.request.OnlineDiscussionEditRequest
 import com.on.network.service.DiscussionService
 
 class DiscussionUpdateRemoteDatasource(
-    private val discussionService: DiscussionService
+    private val discussionService: DiscussionService,
 ) : DiscussionUpdateDatasource {
     override suspend fun updateOfflineDiscussion(
         id: Long,

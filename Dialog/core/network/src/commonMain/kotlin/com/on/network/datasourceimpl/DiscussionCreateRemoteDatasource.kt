@@ -8,11 +8,10 @@ import com.on.network.dto.response.discussioncreate.DiscussionCreateResponse
 import com.on.network.service.DiscussionService
 
 class DiscussionCreateRemoteDatasource(
-    private val discussionService: DiscussionService
+    private val discussionService: DiscussionService,
 ) : DiscussionCreateDatasource {
     override suspend fun createOfflineDiscussion(request: CreateOfflineDiscussionRequest): Result<DiscussionCreateResponse> =
         safeApiCall { discussionService.postOfflineDiscussion(request) }
-
 
     override suspend fun createOnlineDiscussion(request: CreateOnlineDiscussionRequest): Result<DiscussionCreateResponse> =
         safeApiCall { discussionService.postOnlineDiscussion(request) }

@@ -8,7 +8,7 @@ import com.on.network.dto.response.discussionlookup.DiscussionCursorPageResponse
 import com.on.network.service.DiscussionService
 
 class DiscussionRemoteDatasource(
-    private val discussionService: DiscussionService
+    private val discussionService: DiscussionService,
 ) : DiscussionDatasource {
     override suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetailResponse> =
         safeApiCall { discussionService.getDiscussionDetail(id) }

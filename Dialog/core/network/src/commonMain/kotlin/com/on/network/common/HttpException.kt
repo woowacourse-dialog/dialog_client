@@ -8,7 +8,7 @@ import de.jensklingenberg.ktorfit.Response
  **/
 
 class HttpException(
-    response: Response<*>
+    response: Response<*>,
 ) : RuntimeException(getMessage(response)) {
     companion object {
         private fun getMessage(response: Response<*>): String {
