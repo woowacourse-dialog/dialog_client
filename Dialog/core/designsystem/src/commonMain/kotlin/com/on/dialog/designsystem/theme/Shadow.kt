@@ -33,15 +33,13 @@ enum class ShadowLevel(
     internal val offsetY: Dp,
     internal val color: Color,
 ) {
-    NONE(0.dp, 0.dp, 4.dp, 4.dp, Color.Transparent),
-    SMALL(4.dp, 2.dp, 4.dp, 4.dp, Color.Black.copy(alpha = 0.1f)),
-    MEDIUM(8.dp, 4.dp, 4.dp, 4.dp, Color.Black.copy(alpha = 0.15f)),
-    LARGE(12.dp, 6.dp, 4.dp, 4.dp, Color.Black.copy(alpha = 0.2f)),
-    EXTRA_LARGE(16.dp, 8.dp, 4.dp, 4.dp, Color.Black.copy(alpha = 0.25f)),
+    SMALL(4.dp, 2.dp, 0.dp, 4.dp, Color.Black.copy(alpha = 0.1f)),
+    MEDIUM(8.dp, 4.dp, 0.dp, 4.dp, Color.Black.copy(alpha = 0.15f)),
+    LARGE(12.dp, 6.dp, 0.dp, 4.dp, Color.Black.copy(alpha = 0.2f)),
 }
 
 fun Modifier.dropShadow(
-    level: ShadowLevel,
+    level: ShadowLevel = ShadowLevel.SMALL,
     shape: Shape = RectangleShape,
 ) = this.dropShadow(
     shape = shape,
@@ -70,11 +68,9 @@ private fun ShadowPreview() {
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
 
-                ShadowItem("NONE", ShadowLevel.NONE)
                 ShadowItem("SMALL", ShadowLevel.SMALL)
                 ShadowItem("MEDIUM", ShadowLevel.MEDIUM)
                 ShadowItem("LARGE", ShadowLevel.LARGE)
-                ShadowItem("EXTRA_LARGE", ShadowLevel.EXTRA_LARGE)
             }
         }
     }
