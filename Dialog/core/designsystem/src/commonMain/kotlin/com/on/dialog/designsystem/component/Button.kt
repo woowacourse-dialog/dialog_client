@@ -24,12 +24,12 @@ enum class DialogButtonStyle { Primary, Secondary, None }
 
 @Composable
 fun DialogButton(
-    text: @Composable () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     style: DialogButtonStyle = DialogButtonStyle.Primary,
     enabled: Boolean = true,
     leadingIcon: @Composable (() -> Unit)? = null,
+    text: @Composable () -> Unit,
 ) {
     DialogButton(
         onClick = onClick,
