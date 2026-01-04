@@ -25,32 +25,11 @@ enum class DialogButtonStyle { Primary, Secondary, None }
 
 @Composable
 fun DialogButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    style: DialogButtonStyle = DialogButtonStyle.Primary,
-    enabled: Boolean = true,
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
-    shape: Shape = DialogTheme.shapes.small,
-    content: @Composable RowScope.() -> Unit,
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        enabled = enabled,
-        colors = buttonColorsByStyle(style),
-        contentPadding = contentPadding,
-        content = content,
-        shape = shape,
-    )
-}
-
-@Composable
-fun DialogButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    style: DialogButtonStyle = DialogButtonStyle.Primary,
-    enabled: Boolean = true,
     text: @Composable () -> Unit,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    style: DialogButtonStyle = DialogButtonStyle.Primary,
+    enabled: Boolean = true,
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     DialogButton(
@@ -73,26 +52,43 @@ fun DialogButton(
 }
 
 @Composable
+private fun DialogButton(
+    onClick: () -> Unit,
+    style: DialogButtonStyle,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    content: @Composable RowScope.() -> Unit,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        enabled = enabled,
+        colors = buttonColorsByStyle(style),
+        contentPadding = contentPadding,
+        content = content,
+        shape = DialogTheme.shapes.small,
+    )
+}
+
+@Composable
 private fun DialogButtonContext(
     text: @Composable () -> Unit,
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
-    if (leadingIcon != null) {
-        Box(Modifier.sizeIn(maxHeight = ButtonDefaults.IconSize)) {
+    val startPadding =
+        if (leadingIcon != null) {
+            ButtonDefaults.IconSpacing
+        } else {
+            0.dp
+        }
+
+    leadingIcon?.let {
+        Box(modifier = Modifier.sizeIn(maxHeight = ButtonDefaults.IconSize)) {
             leadingIcon()
         }
     }
-    Box(
-        Modifier
-            .padding(
-                start =
-                    if (leadingIcon != null) {
-                        ButtonDefaults.IconSpacing
-                    } else {
-                        0.dp
-                    },
-            ),
-    ) {
+    Box(modifier = Modifier.padding(start = startPadding)) {
         text()
     }
 }
