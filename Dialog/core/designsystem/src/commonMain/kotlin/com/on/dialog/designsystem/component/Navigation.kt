@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -20,8 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.icon.DialogIcons
+import com.on.dialog.designsystem.source.NoRippleInteractionSource
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.Gray400
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 data class NavigationItem(
@@ -30,21 +32,32 @@ data class NavigationItem(
     val selectedIcon: ImageVector = icon,
 )
 
+/**
+ * 다이얼로그 디자인 시스템의 하단 내비게이션 바.
+ * 화면 하단에 메뉴 목록을 표시하고, 선택된 메뉴를 강조합니다.
+ *
+ * @param items 표시할 [NavigationItem] 리스트. 각 아이템은 라벨, 기본 아이콘, 선택 아이콘으로 구성됩니다.
+ * @param selectedIndex 현재 선택된 아이템의 인덱스.
+ * @param onSelectedIndexChange 아이템을 클릭했을 때 호출될 콜백. 클릭된 아이템의 인덱스를 전달합니다.
+ * @param modifier 내비게이션 바에 적용할 [Modifier].
+ */
 @Composable
 fun DialogNavigationBar(
-    items: List<NavigationItem>,
+    items: ImmutableList<NavigationItem>,
     selectedIndex: Int,
     onSelectedIndexChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.onPrimary,
+        containerColor = DialogTheme.colorScheme.surface,
+        contentColor = DialogTheme.colorScheme.onSurface,
         modifier = modifier,
     ) {
         items.forEachIndexed { index, item ->
             val isSelected = selectedIndex == index
-            val iconColor = if (isSelected) MaterialTheme.colorScheme.primary else Gray400
-            val textColor = if (isSelected) MaterialTheme.colorScheme.primary else Gray400
+            val primaryColor = DialogTheme.colorScheme.primary
+            val iconColor = if (isSelected) primaryColor else primaryColor.copy(alpha = 0.3f)
+            val textColor = if (isSelected) primaryColor else primaryColor.copy(alpha = 0.3f)
 
             NavigationBarItem(
                 selected = isSelected,
@@ -62,14 +75,14 @@ fun DialogNavigationBar(
                         )
                         Text(
                             text = item.label,
-                            style = MaterialTheme.typography.labelLarge,
+                            style = DialogTheme.typography.labelLarge,
                             color = textColor,
                         )
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = Color.Transparent,
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedIconColor = DialogTheme.colorScheme.primary,
                     unselectedIconColor = Gray400,
                 ),
                 interactionSource = NoRippleInteractionSource,
@@ -78,32 +91,45 @@ fun DialogNavigationBar(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0)
 @Composable
-private fun DialogNavigationBarPreview() {
-    var selectedIndex by remember { mutableStateOf(0) }
+private fun DialogNavigationBarPreviewLight() {
     DialogTheme {
-        DialogNavigationBar(
-            items = listOf(
-                NavigationItem(
-                    label = "홈",
-                    icon = DialogIcons.Home,
-                ),
-                NavigationItem(
-                    label = "검색",
-                    icon = DialogIcons.Search,
-                ),
-                NavigationItem(
-                    label = "스크랩",
-                    icon = DialogIcons.Bookmark,
-                ),
-                NavigationItem(
-                    label = "프로필",
-                    icon = DialogIcons.Person,
-                ),
-            ),
-            selectedIndex = selectedIndex,
-            onSelectedIndexChange = { selectedIndex = it },
-        )
+        DialogNavigationBarPreviewContent()
     }
+}
+
+@Preview(showBackground = true, backgroundColor = 0)
+@Composable
+private fun DialogNavigationBarPreviewDark() {
+    DialogTheme(darkTheme = true) {
+        DialogNavigationBarPreviewContent()
+    }
+}
+
+@Composable
+private fun DialogNavigationBarPreviewContent() {
+    var selectedIndex by remember { mutableStateOf(0) }
+    DialogNavigationBar(
+        items = persistentListOf(
+            NavigationItem(
+                label = "홈",
+                icon = DialogIcons.Home,
+            ),
+            NavigationItem(
+                label = "검색",
+                icon = DialogIcons.Search,
+            ),
+            NavigationItem(
+                label = "스크랩",
+                icon = DialogIcons.Bookmark,
+            ),
+            NavigationItem(
+                label = "프로필",
+                icon = DialogIcons.Person,
+            ),
+        ),
+        selectedIndex = selectedIndex,
+        onSelectedIndexChange = { selectedIndex = it },
+    )
 }

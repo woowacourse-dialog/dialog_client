@@ -82,7 +82,7 @@ internal val DialogTypography
             titleMedium =
                 TextStyle(
                     fontFamily = pretendardFontFamily(),
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                     fontSize = dpToSp(16.dp),
                     lineHeight = dpToSp(24.dp),
                     letterSpacing = dpToSp(0.15.dp),
@@ -90,7 +90,7 @@ internal val DialogTypography
             titleSmall =
                 TextStyle(
                     fontFamily = pretendardFontFamily(),
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                     fontSize = dpToSp(14.dp),
                     lineHeight = dpToSp(20.dp),
                     letterSpacing = dpToSp(0.1.dp),
@@ -203,14 +203,17 @@ private fun TypographyContent() {
             TypographyItem(
                 label = "Headline Large",
                 style = MaterialTheme.typography.headlineLarge,
+                sampleText = "Headline Large 32sp / 40sp / 0sp",
             )
             TypographyItem(
                 label = "Headline Medium",
                 style = MaterialTheme.typography.headlineMedium,
+                sampleText = "Headline Medium 28sp / 36sp / 0sp",
             )
             TypographyItem(
                 label = "Headline Small",
                 style = MaterialTheme.typography.headlineSmall,
+                sampleText = "Headline Small 24sp / 32sp / 0sp",
             )
         }
 
@@ -218,14 +221,17 @@ private fun TypographyContent() {
             TypographyItem(
                 label = "Title Large",
                 style = MaterialTheme.typography.titleLarge,
+                sampleText = "Title Large 22sp / 28sp / 0sp",
             )
             TypographyItem(
                 label = "Title Medium",
                 style = MaterialTheme.typography.titleMedium,
+                sampleText = "Title Medium 16sp / 24sp / 0.15sp",
             )
             TypographyItem(
                 label = "Title Small",
                 style = MaterialTheme.typography.titleSmall,
+                sampleText = "Title Small 14sp / 20sp / 0.1sp",
             )
         }
 

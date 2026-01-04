@@ -1,0 +1,14 @@
+<resources>
+    <!-- Category -->
+    <string name="category_android">안드로이드</string>
+    <string name="category_backend">백엔드</string>
+    <string name="category_frontend">프론트엔드</string>
+
+    <!-- Discussion Type -->
+    <string name="discussion_type_online">온라인</string>
+    <string name="discussion_type_offline">오프라인</string>
+
+    <!-- DiscussionCard.kt -->
+    <string name="discussion_card_author">개설자: %1$s</string>
+    <string name="discussion_card_endAt">종료일: %1$s</string>
+</resources>
