@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Content(
     @SerialName("id")
-    val id: Int?,
+    val id: Long,
     @SerialName("discussionType")
     val discussionType: String,
     @SerialName("commonDiscussionInfo")

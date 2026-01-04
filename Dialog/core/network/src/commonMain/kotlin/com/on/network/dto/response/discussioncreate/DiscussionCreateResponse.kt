@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DiscussionCreateResponse(
     @SerialName("discussionId")
-    val discussionId: Int,
+    val discussionId: Long,
 )

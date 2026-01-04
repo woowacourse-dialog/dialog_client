@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Author(
     @SerialName("id")
-    val id: Int,
+    val id: Long,
     @SerialName("name")
     val name: String,
     @SerialName("profileImage")
