@@ -11,16 +11,16 @@ import com.on.network.datasourceimpl.RemoteDiscussionUpdateDatasource
 import org.koin.dsl.module
 
 val datasourceModule = module {
-    single<DiscussionDatasource> {
-        RemoteDiscussionDatasource(get())
-    }
-    single<DiscussionUpdateDatasource>{
-        RemoteDiscussionUpdateDatasource(get())
-    }
     single<DiscussionCreateDatasource>{
         RemoteDiscussCreateDatasource(get())
     }
+    single<DiscussionDatasource> {
+        RemoteDiscussionDatasource(get())
+    }
     single<DiscussionSummaryDatasource> {
         RemoteDiscussionSummaryDatasource(get())
+    }
+    single<DiscussionUpdateDatasource>{
+        RemoteDiscussionUpdateDatasource(get())
     }
 }
