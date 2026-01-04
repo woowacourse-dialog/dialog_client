@@ -4,11 +4,11 @@ import com.on.network.common.safeApiCall
 import com.on.network.datasource.DiscussionSummaryDatasource
 import com.on.network.dto.request.DiscussionSummaryRequest
 import com.on.network.dto.response.discussionsummary.DiscussionSummaryResponse
-import com.on.network.service.DiscussionSummaryService
+import com.on.network.service.DiscussionService
 
 class RemoteDiscussionSummaryDatasource(
-    private val discussionSummaryService: DiscussionSummaryService
+    private val discussionService: DiscussionService
 ) : DiscussionSummaryDatasource {
     override suspend fun createDiscussionSummary(request: DiscussionSummaryRequest): Result<DiscussionSummaryResponse> =
-        safeApiCall { discussionSummaryService.postDiscussionSummary(request) }
+        safeApiCall { discussionService.postDiscussionSummary(request) }
 }

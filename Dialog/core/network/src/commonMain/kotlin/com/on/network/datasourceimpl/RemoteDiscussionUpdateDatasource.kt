@@ -4,20 +4,20 @@ import com.on.network.common.safeApiCall
 import com.on.network.datasource.DiscussionUpdateDatasource
 import com.on.network.dto.request.OfflineDiscussionEditRequest
 import com.on.network.dto.request.OnlineDiscussionEditRequest
-import com.on.network.service.DiscussionUpdateService
+import com.on.network.service.DiscussionService
 
 class RemoteDiscussionUpdateDatasource(
-    private val discussionUpdateService: DiscussionUpdateService
+    private val discussionService: DiscussionService
 ) : DiscussionUpdateDatasource {
     override suspend fun updateOfflineDiscussion(
         id: Long,
         request: OfflineDiscussionEditRequest,
     ): Result<Unit> =
-        safeApiCall { discussionUpdateService.updateOfflineDiscussion(id, request) }
+        safeApiCall { discussionService.updateOfflineDiscussion(id, request) }
 
     override suspend fun updateOnlineDiscussion(
         id: Long,
         request: OnlineDiscussionEditRequest,
     ): Result<Unit> =
-        safeApiCall { discussionUpdateService.updateOnlineDiscussion(id, request) }
+        safeApiCall { discussionService.updateOnlineDiscussion(id, request) }
 }
