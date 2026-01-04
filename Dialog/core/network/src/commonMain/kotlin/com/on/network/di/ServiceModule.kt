@@ -1,6 +1,6 @@
 package com.on.network.di
 
-import com.on.network.service.*
+import com.on.network.service.DiscussionService
 import de.jensklingenberg.ktorfit.Ktorfit
 import org.koin.dsl.module
 
