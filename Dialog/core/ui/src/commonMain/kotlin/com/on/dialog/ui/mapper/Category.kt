@@ -2,7 +2,7 @@ package com.on.dialog.ui.mapper
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.on.dialog.designsystem.component.ChipCategory
+import com.on.dialog.ui.component.ChipCategory
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.category_android
 import dialog.core.ui.generated.resources.category_backend
