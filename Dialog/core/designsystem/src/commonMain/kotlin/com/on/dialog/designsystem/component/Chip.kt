@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
@@ -37,6 +40,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
  * @property textColor 칩 텍스트의 색상.
  * @property backgroundColor 칩의 배경 색상.
  */
+@Immutable
 data class ChipCategory(
     val text: String,
     val textColor: Color,
@@ -117,7 +121,7 @@ fun DialogChip(
  */
 @Composable
 fun DialogChipGroup(
-    chips: List<ChipCategory>,
+    chips: ImmutableList<ChipCategory>,
     onChipsChange: (List<ChipCategory>) -> Unit,
     readOnly: Boolean = true,
     modifier: Modifier = Modifier,
@@ -203,7 +207,7 @@ private fun DialogChipGroupPreview() {
     }
     DialogTheme {
         DialogChipGroup(
-            chips = chips,
+            chips = chips.toImmutableList(),
             onChipsChange = { chips = it },
             modifier = Modifier.padding(16.dp),
         )

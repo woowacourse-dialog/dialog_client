@@ -12,6 +12,9 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core:designsystem"))
 
+            // Kotlinx
+            implementation(libs.kotlinx.collections.immutable)
+
             // Image
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)

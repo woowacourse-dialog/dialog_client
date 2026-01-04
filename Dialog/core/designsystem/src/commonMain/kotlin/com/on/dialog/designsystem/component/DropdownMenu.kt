@@ -18,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.on.dialog.designsystem.theme.DialogTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
@@ -36,7 +38,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
  */
 @Composable
 fun DialogDropdownMenu(
-    options: List<String>,
+    options: ImmutableList<String>,
     onSelectedIndexChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
     selectedIndex: Int? = null,
@@ -103,7 +105,7 @@ private fun DialogDropdownMenuPreviewDark() {
 @Composable
 private fun DialogDropdownMenuPreviewContent() {
     DialogDropdownMenu(
-        options = listOf("안드로이드", "백엔드", "프론트엔드"),
+        options = persistentListOf("안드로이드", "백엔드", "프론트엔드"),
         onSelectedIndexChange = {},
         label = "트랙",
         placeholder = "트랙을 선택해주세요",

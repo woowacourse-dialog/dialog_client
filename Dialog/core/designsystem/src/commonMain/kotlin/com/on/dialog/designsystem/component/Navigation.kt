@@ -22,6 +22,8 @@ import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.source.NoRippleInteractionSource
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.Gray400
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 data class NavigationItem(
@@ -41,7 +43,7 @@ data class NavigationItem(
  */
 @Composable
 fun DialogNavigationBar(
-    items: List<NavigationItem>,
+    items: ImmutableList<NavigationItem>,
     selectedIndex: Int,
     onSelectedIndexChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -109,7 +111,7 @@ private fun DialogNavigationBarPreviewDark() {
 private fun DialogNavigationBarPreviewContent() {
     var selectedIndex by remember { mutableStateOf(0) }
     DialogNavigationBar(
-        items = listOf(
+        items = persistentListOf(
             NavigationItem(
                 label = "홈",
                 icon = DialogIcons.Home,

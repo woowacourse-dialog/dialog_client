@@ -23,13 +23,15 @@ import com.on.dialog.ui.mapper.toChipCategory
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.discussion_card_author
 import dialog.core.ui.generated.resources.discussion_card_endAt
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DiscussionCard(
-    chips: List<ChipCategory>,
-    onChipsChange: (List<ChipCategory>) -> Unit,
+    chips: ImmutableList<ChipCategory>,
+    onChipsChange: (ImmutableList<ChipCategory>) -> Unit,
     title: String,
     author: String,
     endAt: String,
@@ -99,7 +101,7 @@ private fun DiscussionCardPreviewDark() {
 
 @Composable
 private fun DiscussionCardPreviewContent() {
-    val chips: List<ChipCategory> = listOf(
+    val chips: ImmutableList<ChipCategory> = persistentListOf(
         Category.ONLINE.toChipCategory(),
         Category.ANDROID.toChipCategory(),
         Category.FRONTEND.toChipCategory(),

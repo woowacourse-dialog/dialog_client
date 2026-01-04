@@ -11,6 +11,9 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(compose.materialIconsExtended)
+
+            // Kotlinx
+            implementation(libs.kotlinx.collections.immutable)
         }
     }
 }
