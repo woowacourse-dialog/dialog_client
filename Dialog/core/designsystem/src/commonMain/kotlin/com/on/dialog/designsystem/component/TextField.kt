@@ -2,9 +2,7 @@ package com.on.dialog.designsystem.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -66,7 +64,7 @@ fun DialogTextField(
                 color = DialogTheme.colorScheme.primary,
                 style = DialogTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(DialogTheme.spacing.extraSmall),
+                modifier = Modifier.padding(DialogTheme.spacing.small),
             )
         }
         TextField(
@@ -105,11 +103,11 @@ fun DialogTextField(
             ),
         )
         supportingText?.let {
-            Spacer(Modifier.height(DialogTheme.spacing.extraSmall))
             Text(
                 text = it,
                 color = if (isError) Color.Red else DialogTheme.colorScheme.primary,
                 style = DialogTheme.typography.labelSmall,
+                modifier = Modifier.padding(DialogTheme.spacing.small),
             )
         }
     }
