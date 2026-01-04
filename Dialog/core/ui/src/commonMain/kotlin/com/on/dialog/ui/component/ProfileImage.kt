@@ -6,12 +6,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.request.ImageRequest
-import coil3.request.crossfade
+import coil3.compose.AsyncImagePainter
 import com.on.dialog.designsystem.theme.DialogTheme
+import dialog.core.ui.generated.resources.Res
+import dialog.core.ui.generated.resources.no_profile
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -20,15 +20,20 @@ fun ProfileImage(
     contentDescription: String,
     modifier: Modifier = Modifier,
     crossfade: Boolean = true,
+    onSuccess: ((AsyncImagePainter.State.Success) -> Unit)? = null,
+    onLoading: ((AsyncImagePainter.State.Loading) -> Unit)? = null,
+    onError: ((AsyncImagePainter.State.Error) -> Unit)? = null,
 ) {
-    AsyncImage(
-        model =
-            ImageRequest
-                .Builder(LocalPlatformContext.current)
-                .data(imageUrl)
-                .crossfade(crossfade)
-                .build(),
+    DialogAsyncImage(
+        imageUrl = imageUrl,
         contentDescription = contentDescription,
+        placeholder = Res.drawable.no_profile,
+        fallback = Res.drawable.no_profile,
+        error = Res.drawable.no_profile,
+        crossfade = crossfade,
+        onSuccess = onSuccess,
+        onLoading = onLoading,
+        onError = onError,
         modifier = modifier
             .border(width = 0.5.dp, color = DialogTheme.colorScheme.onSurface, shape = CircleShape)
             .clip(CircleShape),
