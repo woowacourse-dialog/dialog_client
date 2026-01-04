@@ -37,16 +37,11 @@ fun DiscussionCard(
     endAt: String,
     discussionCount: Int,
     modifier: Modifier = Modifier,
-    tone: DialogCardTone = DialogCardTone.Surface,
 ) {
-    DialogCard(
-        modifier = modifier,
-        tone = tone,
-    ) {
+    DialogCard(modifier = modifier) {
         Column(
             verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
         ) {
-            DialogChipGroup(chips = chips, onChipsChange = {})
             Text(text = title, style = DialogTheme.typography.titleMedium)
             DiscussionCardFooter(author, endAt, discussionCount)
         }
