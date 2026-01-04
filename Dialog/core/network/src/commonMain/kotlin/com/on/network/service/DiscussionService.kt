@@ -13,7 +13,7 @@ import de.jensklingenberg.ktorfit.http.QueryMap
 interface DiscussionService {
     @GET("api/discussions/{id}")
     suspend fun getDiscussionDetail(
-        @Path("id") id: Int,
+        @Path("id") id: Long,
     ): Response<DataResponse<DiscussionDetailResponse>>
 
     @GET("api/discussions")
