@@ -153,6 +153,7 @@ private fun DialogButtonPreviewContent() {
             text = { Text("Secondary") },
             style = DialogButtonStyle.Secondary,
         )
+        DialogButton(onClick = {}, text = { Text("None") }, style = DialogButtonStyle.None)
         DialogButton(
             onClick = {},
             text = { Text("Icon") },
