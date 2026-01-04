@@ -38,24 +38,20 @@ fun DialogIconButton(
     shape: Shape = DialogTheme.shapes.medium,
     content: @Composable () -> Unit,
 ) {
-    val background =
-        dialogIconButtonBackground(
-            enabled = enabled,
-            tone = tone,
-        )
-
     IconButton(
         onClick = onClick,
         enabled = enabled,
+        content = content,
         shape = shape,
         modifier =
             modifier.background(
-                color = background,
                 shape = shape,
+                color = dialogIconButtonBackground(
+                    enabled = enabled,
+                    tone = tone,
+                ),
             ),
-    ) {
-        content()
-    }
+    )
 }
 
 @Composable
