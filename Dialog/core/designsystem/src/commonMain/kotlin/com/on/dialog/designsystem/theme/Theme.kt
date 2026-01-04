@@ -96,9 +96,7 @@ fun DialogTheme(
 ) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme
 
-    CompositionLocalProvider(
-        LocalSpacing provides Spacing(),
-    ) {
+    CompositionLocalProvider {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = DialogTypography,
