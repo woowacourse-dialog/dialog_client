@@ -12,10 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.on.dialog.designsystem.component.ChipCategory
 import com.on.dialog.designsystem.component.DialogCard
-import com.on.dialog.designsystem.component.DialogCardTone
-import com.on.dialog.designsystem.component.DialogChipGroup
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.mapper.Category
