@@ -10,7 +10,7 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core:designsystem"))
+            implementation(projects.core.designsystem)
 
             // Kotlinx
             implementation(libs.kotlinx.collections.immutable)
