@@ -1,6 +1,5 @@
 package com.on.network.dto.discussioncatalog
 
-import com.on.model.discussion.Discussion
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

@@ -1,6 +1,5 @@
 package com.on.model.discussion
 
-import com.on.model.discussion.Content
 import com.on.model.discussion.offline.Participant
 import kotlinx.datetime.LocalDateTime
 
