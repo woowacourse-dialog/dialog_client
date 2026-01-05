@@ -1,10 +1,12 @@
-package com.on.network.dto.request
+package com.on.network.dto.discussionsummary
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DiscussionSummaryRequest(
+data class DiscussionSummaryResponse(
     @SerialName("discussionId")
     val discussionId: Long,
+    @SerialName("summary")
+    val summary: String,
 )

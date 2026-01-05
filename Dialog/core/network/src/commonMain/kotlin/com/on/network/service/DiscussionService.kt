@@ -1,15 +1,15 @@
 package com.on.network.service
 
-import com.on.network.dto.request.CreateOfflineDiscussionRequest
-import com.on.network.dto.request.CreateOnlineDiscussionRequest
-import com.on.network.dto.request.DiscussionSummaryRequest
-import com.on.network.dto.request.OfflineDiscussionEditRequest
-import com.on.network.dto.request.OnlineDiscussionEditRequest
-import com.on.network.dto.response.common.DataResponse
-import com.on.network.dto.response.discussioncreate.DiscussionCreateResponse
-import com.on.network.dto.response.discussiondetail.DiscussionDetailResponse
-import com.on.network.dto.response.discussionlookup.DiscussionCursorPageResponse
-import com.on.network.dto.response.discussionsummary.DiscussionSummaryResponse
+import com.on.network.dto.discussioncreate.CreateOfflineDiscussionRequest
+import com.on.network.dto.discussioncreate.CreateOnlineDiscussionRequest
+import com.on.network.dto.discussionsummary.DiscussionSummaryRequest
+import com.on.network.dto.discussionedit.OfflineDiscussionEditRequest
+import com.on.network.dto.discussionedit.OnlineDiscussionEditRequest
+import com.on.network.dto.common.DataResponse
+import com.on.network.dto.discussioncreate.DiscussionCreateResponse
+import com.on.network.dto.discussiondetail.DiscussionDetailResponse
+import com.on.network.dto.discussionlookup.DiscussionCursorPageResponse
+import com.on.network.dto.discussionsummary.DiscussionSummaryResponse
 import de.jensklingenberg.ktorfit.Response
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE

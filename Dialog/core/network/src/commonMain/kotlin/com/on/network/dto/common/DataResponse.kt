@@ -1,4 +1,4 @@
-package com.on.network.dto.response.common
+package com.on.network.dto.common
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

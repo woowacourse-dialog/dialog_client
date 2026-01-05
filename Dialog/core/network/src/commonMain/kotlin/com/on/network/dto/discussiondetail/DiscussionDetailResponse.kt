@@ -1,4 +1,4 @@
-package com.on.network.dto.response.discussiondetail
+package com.on.network.dto.discussiondetail
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

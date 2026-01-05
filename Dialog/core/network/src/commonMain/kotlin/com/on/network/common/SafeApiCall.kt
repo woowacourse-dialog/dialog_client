@@ -1,6 +1,6 @@
 package com.on.network.common
 
-import com.on.network.dto.response.common.DataResponse
+import com.on.network.dto.common.DataResponse
 import de.jensklingenberg.ktorfit.Response
 import kotlin.coroutines.cancellation.CancellationException
 

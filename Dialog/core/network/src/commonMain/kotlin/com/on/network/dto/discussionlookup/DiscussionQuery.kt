@@ -1,4 +1,4 @@
-package com.on.network.dto.query
+package com.on.network.dto.discussionlookup
 
 import com.on.model.discussion.criteria.DiscussionCriteria
 

@@ -1,4 +1,4 @@
-package com.on.network.dto.request
+package com.on.network.dto.discussionedit
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
