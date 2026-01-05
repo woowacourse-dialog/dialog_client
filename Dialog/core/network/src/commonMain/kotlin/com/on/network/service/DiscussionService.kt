@@ -20,7 +20,7 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import de.jensklingenberg.ktorfit.http.QueryMap
 
-interface DiscussionService {
+internal interface DiscussionService {
     @POST("api/discussions/offline")
     suspend fun postOfflineDiscussion(
         @Body request: CreateOfflineDiscussionRequest,

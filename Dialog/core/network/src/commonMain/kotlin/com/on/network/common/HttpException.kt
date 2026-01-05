@@ -7,7 +7,7 @@ import de.jensklingenberg.ktorfit.Response
  Retrofit의 HttpException을 참고하여 간단하게 구현
  **/
 
-class HttpException(
+internal class HttpException(
     response: Response<*>,
 ) : RuntimeException(getMessage(response)) {
     companion object {
