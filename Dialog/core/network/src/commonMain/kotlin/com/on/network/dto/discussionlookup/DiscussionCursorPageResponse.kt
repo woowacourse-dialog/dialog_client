@@ -70,7 +70,5 @@ data class DiscussionCursorPageResponse(
             @SerialName("endDate")
             val endDate: String,
         )
-
     }
-
 }

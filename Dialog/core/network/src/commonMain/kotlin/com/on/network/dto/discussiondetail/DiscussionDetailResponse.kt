@@ -43,7 +43,7 @@ data class DiscussionDetailResponse(
             val name: String,
             @SerialName("profileImage")
             val profileImage: ProfileImage?,
-        ){
+        ) {
             @Serializable
             data class ProfileImage(
                 @SerialName("basicImageUri")
@@ -51,7 +51,6 @@ data class DiscussionDetailResponse(
                 @SerialName("customImageUri")
                 val customImageUri: String?,
             )
-
         }
     }
 

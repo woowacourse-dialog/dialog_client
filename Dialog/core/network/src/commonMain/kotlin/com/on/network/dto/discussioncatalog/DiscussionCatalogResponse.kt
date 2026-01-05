@@ -1,5 +1,6 @@
 package com.on.network.dto.discussioncatalog
 
+import com.on.model.discussion.Discussion
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -64,6 +65,7 @@ data class DiscussionCatalogResponse(
             @SerialName("startAt")
             val startAt: String,
         )
+
         @Serializable
         data class OnlineDiscussionInfo(
             @SerialName("endDate")
