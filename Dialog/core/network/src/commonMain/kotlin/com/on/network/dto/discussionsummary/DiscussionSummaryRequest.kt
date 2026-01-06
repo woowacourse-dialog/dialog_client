@@ -9,7 +9,7 @@ data class DiscussionSummaryRequest(
     val discussionId: Long,
 ) {
     companion object {
-        fun Long.toResponse(): DiscussionSummaryRequest =
+        fun Long.toRequest(): DiscussionSummaryRequest =
             DiscussionSummaryRequest(
                 discussionId = this,
             )

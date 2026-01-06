@@ -23,7 +23,7 @@ data class OfflineDiscussionEditRequest(
     val category: String,
 ) {
     companion object {
-        fun OfflineDiscussionDraft.toResponse(): OfflineDiscussionEditRequest =
+        fun OfflineDiscussionDraft.toEditRequest(): OfflineDiscussionEditRequest =
             OfflineDiscussionEditRequest(
                 title = title,
                 content = content,

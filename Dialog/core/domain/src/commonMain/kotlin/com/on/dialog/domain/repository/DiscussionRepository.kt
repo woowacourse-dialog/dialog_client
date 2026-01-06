@@ -1,6 +1,7 @@
 package com.on.dialog.domain.repository
 
 import com.on.model.discussion.criteria.DiscussionCriteria
+import com.on.model.discussion.cursorpage.DiscussionCatalogCursorPage
 import com.on.model.discussion.detail.DiscussionDetail
 import com.on.model.discussion.draft.OfflineDiscussionDraft
 import com.on.model.discussion.draft.OnlineDiscussionDraft
@@ -13,9 +14,9 @@ interface DiscussionRepository {
         discussionCriteria: DiscussionCriteria,
         cursor: String,
         size: Int,
-    ): Result<List<DiscussionDetail>>
+    ): Result<DiscussionCatalogCursorPage>
 
-    suspend fun getMyDiscussions(): Result<List<DiscussionDetail>>
+    suspend fun getMyDiscussions(): Result<DiscussionCatalogCursorPage>
 
     suspend fun searchDiscussions(
         searchBy: Int,
@@ -23,11 +24,11 @@ interface DiscussionRepository {
         discussionCriteria: DiscussionCriteria,
         cursor: String,
         size: Int,
-    ): Result<List<DiscussionDetail>>
+    ): Result<DiscussionCatalogCursorPage>
 
-    suspend fun createOfflineDiscussion(request: OfflineDiscussionDraft): Result<Unit>
+    suspend fun createOfflineDiscussion(request: OfflineDiscussionDraft): Result<Long>
 
-    suspend fun createOnlineDiscussion(request: OnlineDiscussionDraft): Result<Unit>
+    suspend fun createOnlineDiscussion(request: OnlineDiscussionDraft): Result<Long>
 
     suspend fun createDiscussionSummary(
         discussionId: Long,
@@ -35,12 +36,12 @@ interface DiscussionRepository {
 
     suspend fun updateOfflineDiscussion(
         id: Long,
-        request: OfflineDiscussionDraft,
+        offlineDiscussionDraft: OfflineDiscussionDraft,
     ): Result<Unit>
 
     suspend fun updateOnlineDiscussion(
         id: Long,
-        request: OnlineDiscussionDraft,
+        onlineDiscussionDraft: OnlineDiscussionDraft,
     ): Result<Unit>
 
     suspend fun deleteDiscussion(id: Long): Result<Unit>

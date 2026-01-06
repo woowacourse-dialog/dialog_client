@@ -23,7 +23,7 @@ data class CreateOfflineDiscussionRequest(
     val category: String,
 ) {
     companion object{
-        fun OfflineDiscussionDraft.toResponse(): CreateOfflineDiscussionRequest =
+        fun OfflineDiscussionDraft.toCreationRequest(): CreateOfflineDiscussionRequest =
             CreateOfflineDiscussionRequest(
                 title = title,
                 content = content,

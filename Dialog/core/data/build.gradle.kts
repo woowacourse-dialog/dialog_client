@@ -17,6 +17,7 @@ kotlin {
             // project
             implementation(projects.core.network)
             implementation(projects.core.domain)
+            implementation(projects.core.model)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
