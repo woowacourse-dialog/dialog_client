@@ -27,6 +27,7 @@ private fun Json.prettyJson(json: String): String = try {
     val parsed = parseToJsonElement(json)
     encodeToString(JsonElement.serializer(), parsed)
 } catch (e: Exception) {
+    Napier.e(tag = "KtorLogger", throwable = e, message = e.message.orEmpty())
     json
 }
 
