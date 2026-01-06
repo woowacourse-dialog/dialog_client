@@ -17,7 +17,7 @@ import com.on.network.dto.discussionsummary.DiscussionSummaryRequest.Companion.t
 
 class DiscussionDefaultRepository(
     private val discussionDatasource: DiscussionDatasource,
-): DiscussionRepository {
+) : DiscussionRepository {
     override suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetail> =
         discussionDatasource.getDiscussionDetail(id).mapCatching { it.toDomain() }
 
@@ -26,7 +26,7 @@ class DiscussionDefaultRepository(
         cursor: String,
         size: Int,
     ): Result<DiscussionCatalogCursorPage> =
-        discussionDatasource.getDiscussions(discussionCriteria.toQuery(cursor,size)).mapCatching { it.toDomain() }
+        discussionDatasource.getDiscussions(discussionCriteria.toQuery(cursor, size)).mapCatching { it.toDomain() }
 
     override suspend fun getMyDiscussions(): Result<DiscussionCatalogCursorPage> =
         discussionDatasource.getMyDiscussions().mapCatching { it.toDomain() }
@@ -38,7 +38,7 @@ class DiscussionDefaultRepository(
         cursor: String,
         size: Int,
     ): Result<DiscussionCatalogCursorPage> =
-        discussionDatasource.searchDiscussions(searchBy, keyword, discussionCriteria.toQuery(cursor,size)).mapCatching { it.toDomain()}
+        discussionDatasource.searchDiscussions(searchBy, keyword, discussionCriteria.toQuery(cursor, size)).mapCatching { it.toDomain() }
 
     override suspend fun createOfflineDiscussion(request: OfflineDiscussionDraft): Result<Long> =
         discussionDatasource.createOfflineDiscussion(request.toCreationRequest()).mapCatching { it.discussionId }

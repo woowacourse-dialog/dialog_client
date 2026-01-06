@@ -22,7 +22,7 @@ data class CreateOfflineDiscussionRequest(
     @SerialName("category")
     val category: String,
 ) {
-    companion object{
+    companion object {
         fun OfflineDiscussionDraft.toCreationRequest(): CreateOfflineDiscussionRequest =
             CreateOfflineDiscussionRequest(
                 title = title,
