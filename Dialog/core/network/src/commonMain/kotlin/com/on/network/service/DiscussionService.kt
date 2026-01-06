@@ -1,10 +1,10 @@
 package com.on.network.service
 
-import com.on.model.discussion.cursorpage.DiscussionCatalogCursorPage
 import com.on.network.dto.common.DataResponse
 import com.on.network.dto.discussioncreate.CreateOfflineDiscussionRequest
 import com.on.network.dto.discussioncreate.CreateOnlineDiscussionRequest
-import com.on.network.dto.discussioncreate.DiscussionCreateResponse
+import com.on.network.dto.discussioncreate.OfflineDiscussionCreateResponse
+import com.on.network.dto.discussioncreate.OnlineDiscussionCreateResponse
 import com.on.network.dto.discussiondetail.DiscussionDetailResponse
 import com.on.network.dto.discussionedit.OfflineDiscussionEditRequest
 import com.on.network.dto.discussionedit.OnlineDiscussionEditRequest
@@ -24,12 +24,12 @@ internal interface DiscussionService {
     @POST("api/discussions/offline")
     suspend fun postOfflineDiscussion(
         @Body request: CreateOfflineDiscussionRequest,
-    ): DataResponse<DiscussionCreateResponse>
+    ): DataResponse<OfflineDiscussionCreateResponse>
 
     @POST("api/discussions/online")
     suspend fun postOnlineDiscussion(
         @Body request: CreateOnlineDiscussionRequest,
-    ): DataResponse<DiscussionCreateResponse>
+    ): DataResponse<OnlineDiscussionCreateResponse>
 
     @GET("api/discussions/{id}")
     suspend fun getDiscussionDetail(

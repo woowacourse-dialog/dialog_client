@@ -2,7 +2,8 @@ package com.on.network.datasource
 
 import com.on.network.dto.discussioncreate.CreateOfflineDiscussionRequest
 import com.on.network.dto.discussioncreate.CreateOnlineDiscussionRequest
-import com.on.network.dto.discussioncreate.DiscussionCreateResponse
+import com.on.network.dto.discussioncreate.OfflineDiscussionCreateResponse
+import com.on.network.dto.discussioncreate.OnlineDiscussionCreateResponse
 import com.on.network.dto.discussiondetail.DiscussionDetailResponse
 import com.on.network.dto.discussionedit.OfflineDiscussionEditRequest
 import com.on.network.dto.discussionedit.OnlineDiscussionEditRequest
@@ -30,9 +31,9 @@ interface DiscussionDatasource {
         size: Int,
     ): Result<DiscussionCursorPageResponse>
 
-    suspend fun createOfflineDiscussion(request: CreateOfflineDiscussionRequest): Result<DiscussionCreateResponse>
+    suspend fun createOfflineDiscussion(request: CreateOfflineDiscussionRequest): Result<OfflineDiscussionCreateResponse>
 
-    suspend fun createOnlineDiscussion(request: CreateOnlineDiscussionRequest): Result<DiscussionCreateResponse>
+    suspend fun createOnlineDiscussion(request: CreateOnlineDiscussionRequest): Result<OnlineDiscussionCreateResponse>
 
     suspend fun createDiscussionSummary(
         request: DiscussionSummaryRequest,

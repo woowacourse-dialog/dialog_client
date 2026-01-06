@@ -4,7 +4,8 @@ import com.on.network.common.safeApiCall
 import com.on.network.datasource.DiscussionDatasource
 import com.on.network.dto.discussioncreate.CreateOfflineDiscussionRequest
 import com.on.network.dto.discussioncreate.CreateOnlineDiscussionRequest
-import com.on.network.dto.discussioncreate.DiscussionCreateResponse
+import com.on.network.dto.discussioncreate.OfflineDiscussionCreateResponse
+import com.on.network.dto.discussioncreate.OnlineDiscussionCreateResponse
 import com.on.network.dto.discussiondetail.DiscussionDetailResponse
 import com.on.network.dto.discussionedit.OfflineDiscussionEditRequest
 import com.on.network.dto.discussionedit.OnlineDiscussionEditRequest
@@ -39,10 +40,10 @@ internal class DiscussionRemoteDatasource(
     ): Result<DiscussionCursorPageResponse> =
         safeApiCall { discussionService.searchDiscussions(searchBy, keyword, query.toQueryMap(), cursor, size) }
 
-    override suspend fun createOfflineDiscussion(request: CreateOfflineDiscussionRequest): Result<DiscussionCreateResponse> =
+    override suspend fun createOfflineDiscussion(request: CreateOfflineDiscussionRequest): Result<OfflineDiscussionCreateResponse> =
         safeApiCall { discussionService.postOfflineDiscussion(request) }
 
-    override suspend fun createOnlineDiscussion(request: CreateOnlineDiscussionRequest): Result<DiscussionCreateResponse> =
+    override suspend fun createOnlineDiscussion(request: CreateOnlineDiscussionRequest): Result<OnlineDiscussionCreateResponse> =
         safeApiCall { discussionService.postOnlineDiscussion(request) }
 
     override suspend fun createDiscussionSummary(request: DiscussionSummaryRequest): Result<DiscussionSummaryResponse> =
