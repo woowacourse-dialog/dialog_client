@@ -20,7 +20,11 @@ internal class DiscussionRemoteDatasource(
     override suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetailResponse> =
         safeApiCall { discussionService.getDiscussionDetail(id) }
 
-    override suspend fun getDiscussions(query: DiscussionQuery): Result<DiscussionCursorPageResponse> =
+    override suspend fun getDiscussions(
+        query: DiscussionQuery,
+        cursor: String?,
+        size: Int,
+    ): Result<DiscussionCursorPageResponse> =
         safeApiCall { discussionService.getDiscussions(query.toQueryMap()) }
 
     override suspend fun getMyDiscussions(): Result<DiscussionCursorPageResponse> =
@@ -30,8 +34,10 @@ internal class DiscussionRemoteDatasource(
         searchBy: Int,
         keyword: String,
         query: DiscussionQuery,
+        cursor: String?,
+        size: Int,
     ): Result<DiscussionCursorPageResponse> =
-        safeApiCall { discussionService.searchDiscussions(searchBy, keyword, query.toQueryMap()) }
+        safeApiCall { discussionService.searchDiscussions(searchBy, keyword, query.toQueryMap(), cursor, size) }
 
     override suspend fun createOfflineDiscussion(request: CreateOfflineDiscussionRequest): Result<DiscussionCreateResponse> =
         safeApiCall { discussionService.postOfflineDiscussion(request) }

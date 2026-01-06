@@ -14,7 +14,11 @@ import com.on.network.dto.discussionsummary.DiscussionSummaryResponse
 interface DiscussionDatasource {
     suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetailResponse>
 
-    suspend fun getDiscussions(query: DiscussionQuery): Result<DiscussionCursorPageResponse>
+    suspend fun getDiscussions(
+        query: DiscussionQuery,
+        cursor: String?,
+        size: Int
+    ): Result<DiscussionCursorPageResponse>
 
     suspend fun getMyDiscussions(): Result<DiscussionCursorPageResponse>
 
@@ -22,6 +26,8 @@ interface DiscussionDatasource {
         searchBy: Int,
         keyword: String,
         query: DiscussionQuery,
+        cursor: String?,
+        size: Int,
     ): Result<DiscussionCursorPageResponse>
 
     suspend fun createOfflineDiscussion(request: CreateOfflineDiscussionRequest): Result<DiscussionCreateResponse>

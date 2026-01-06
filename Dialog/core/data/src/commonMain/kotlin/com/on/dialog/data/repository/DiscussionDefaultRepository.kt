@@ -23,10 +23,10 @@ internal class DiscussionDefaultRepository(
 
     override suspend fun getDiscussions(
         discussionCriteria: DiscussionCriteria,
-        cursor: String,
+        cursor: String?,
         size: Int,
     ): Result<DiscussionCatalogCursorPage> =
-        discussionDatasource.getDiscussions(discussionCriteria.toQuery(cursor, size)).mapCatching { it.toDomain() }
+        discussionDatasource.getDiscussions(discussionCriteria.toQuery(), cursor, size).mapCatching { it.toDomain() }
 
     override suspend fun getMyDiscussions(): Result<DiscussionCatalogCursorPage> =
         discussionDatasource.getMyDiscussions().mapCatching { it.toDomain() }
@@ -35,10 +35,10 @@ internal class DiscussionDefaultRepository(
         searchBy: Int,
         keyword: String,
         discussionCriteria: DiscussionCriteria,
-        cursor: String,
+        cursor: String?,
         size: Int,
     ): Result<DiscussionCatalogCursorPage> =
-        discussionDatasource.searchDiscussions(searchBy, keyword, discussionCriteria.toQuery(cursor, size)).mapCatching { it.toDomain() }
+        discussionDatasource.searchDiscussions(searchBy, keyword, discussionCriteria.toQuery(), cursor, size).mapCatching { it.toDomain() }
 
     override suspend fun createOfflineDiscussion(request: OfflineDiscussionDraft): Result<Long> =
         discussionDatasource.createOfflineDiscussion(request.toCreationRequest()).mapCatching { it.discussionId }

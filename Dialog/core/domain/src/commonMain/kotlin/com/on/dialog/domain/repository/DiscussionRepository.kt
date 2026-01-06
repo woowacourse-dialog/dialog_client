@@ -12,7 +12,7 @@ interface DiscussionRepository {
 
     suspend fun getDiscussions(
         discussionCriteria: DiscussionCriteria,
-        cursor: String,
+        cursor: String?,
         size: Int,
     ): Result<DiscussionCatalogCursorPage>
 
@@ -22,7 +22,7 @@ interface DiscussionRepository {
         searchBy: Int,
         keyword: String,
         discussionCriteria: DiscussionCriteria,
-        cursor: String,
+        cursor: String?,
         size: Int,
     ): Result<DiscussionCatalogCursorPage>
 

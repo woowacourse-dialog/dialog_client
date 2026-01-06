@@ -1,5 +1,6 @@
 package com.on.network.service
 
+import com.on.model.discussion.cursorpage.DiscussionCatalogCursorPage
 import com.on.network.dto.common.DataResponse
 import com.on.network.dto.discussioncreate.CreateOfflineDiscussionRequest
 import com.on.network.dto.discussioncreate.CreateOnlineDiscussionRequest
@@ -48,6 +49,8 @@ internal interface DiscussionService {
         @Query searchBy: Int,
         @Query keyword: String,
         @QueryMap query: Map<String, List<String>>,
+        @Query cursor: String?,
+        @Query size: Int,
     ): DataResponse<DiscussionCursorPageResponse>
 
     @PATCH("api/discussions/offline/{id}")
