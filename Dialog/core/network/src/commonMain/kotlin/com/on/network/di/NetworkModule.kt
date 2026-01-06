@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 val networkModule = module {
     single<HttpClient> {
-        HttpClientFactory.create()
+        createHttpClient()
     }
 
     single<Ktorfit> {
