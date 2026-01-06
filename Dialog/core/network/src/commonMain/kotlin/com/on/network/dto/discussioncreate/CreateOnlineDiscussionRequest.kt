@@ -16,10 +16,10 @@ data class CreateOnlineDiscussionRequest(
     @SerialName("category")
     val category: String,
 ) {
-    fun OnlineDiscussionDraft.toDto(): CreateOnlineDiscussionRequest  = CreateOnlineDiscussionRequest(
+    fun OnlineDiscussionDraft.toDto(): CreateOnlineDiscussionRequest = CreateOnlineDiscussionRequest(
         title = title,
         content = content,
         endDate = endDate.formatToString(),
-        category = category
+        category = category,
     )
 }

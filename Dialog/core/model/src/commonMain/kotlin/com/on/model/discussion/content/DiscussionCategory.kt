@@ -7,7 +7,7 @@ enum class DiscussionCategory {
     FRONTEND,
     ;
 
-    companion object{
+    companion object {
         fun of(category: String): DiscussionCategory = when (category) {
             "ANDROID" -> ANDROID
             "BACKEND" -> BACKEND

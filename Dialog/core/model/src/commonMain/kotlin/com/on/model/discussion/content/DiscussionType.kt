@@ -6,7 +6,7 @@ enum class DiscussionType {
     OFFLINE,
     ;
 
-    companion object{
+    companion object {
         fun of(discussionType: String): DiscussionType = when (discussionType) {
             "ONLINE" -> ONLINE
             "OFFLINE" -> OFFLINE

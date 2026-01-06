@@ -24,7 +24,7 @@ data class DiscussionCursorPageResponse(
         DiscussionCatalogCursorPage(
             discussionCatalog = contentDto.map { it.toDomain() },
             hasNext = hasNext,
-            nextCursor = nextCursor
+            nextCursor = nextCursor,
         )
 
     @Serializable
@@ -55,9 +55,10 @@ data class DiscussionCursorPageResponse(
                             commentCount = commonDiscussionInfoDto.commentCount,
                             profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
                         ),
-                        endDate = onlineDiscussionInfoDto!!.endDate
+                        endDate = onlineDiscussionInfoDto!!.endDate,
                     )
                 }
+
                 "OFFLINE" -> {
                     OfflineDiscussionCatalog(
                         catalogContent = CatalogContent(
@@ -75,13 +76,15 @@ data class DiscussionCursorPageResponse(
                         endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
                         place = offlineDiscussionInfoDto.place,
                         maxParticipantCount = offlineDiscussionInfoDto.maxParticipantCount,
-                        participantCount = offlineDiscussionInfoDto.participantCount
+                        participantCount = offlineDiscussionInfoDto.participantCount,
                     )
                 }
+
                 else -> {
                     throw IllegalArgumentException("없는 타입입니다.")
                 }
             }
+
         @Serializable
         data class CommonDiscussionInfoDto(
             @SerialName("title")
@@ -109,7 +112,7 @@ data class DiscussionCursorPageResponse(
                 fun toDomain(): ProfileImage? =
                     ProfileImage(
                         basicImageUri = basicImageUri,
-                        customImageUri = customImageUri
+                        customImageUri = customImageUri,
                     )
             }
         }

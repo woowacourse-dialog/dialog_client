@@ -8,7 +8,7 @@ enum class DiscussionStatus {
     DISCUSSIONCOMPLETE,
     ;
 
-    companion object{
+    companion object {
         fun of(discussionType: String): DiscussionStatus = when (discussionType) {
             "RECRUITING" -> RECRUITING
             "RECRUITCOMPLETE" -> RECRUITCOMPLETE

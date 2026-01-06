@@ -21,7 +21,6 @@ data class OnlineDiscussionEditRequest(
             title = title,
             content = content,
             endDate = endDate.formatToString(),
-            category = category
+            category = category,
         )
-
 }

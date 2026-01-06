@@ -14,7 +14,7 @@ data class DetailContent(
     val modifiedAt: LocalDateTime,
 ) {
     val status: DiscussionStatus get() =
-        when(createdAt > modifiedAt) {
+        when (createdAt > modifiedAt) {
             true -> DiscussionStatus.DISCUSSIONCOMPLETE
             false -> DiscussionStatus.INDISCUSSION
         }

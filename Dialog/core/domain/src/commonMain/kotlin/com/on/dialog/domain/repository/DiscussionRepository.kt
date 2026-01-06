@@ -1,7 +1,7 @@
 package com.on.dialog.domain.repository
 
-import com.on.model.discussion.detail.DiscussionDetail
 import com.on.model.discussion.criteria.DiscussionCriteria
+import com.on.model.discussion.detail.DiscussionDetail
 import com.on.model.discussion.draft.OfflineDiscussionDraft
 import com.on.model.discussion.draft.OnlineDiscussionDraft
 import com.on.model.discussion.summary.DiscussionSummary

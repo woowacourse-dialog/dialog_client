@@ -14,7 +14,7 @@ data class CatalogContent(
     val profileImage: ProfileImage?,
 ) {
     val status: DiscussionStatus get() =
-        when(createdAt > modifiedAt) {
+        when (createdAt > modifiedAt) {
             true -> DiscussionStatus.DISCUSSIONCOMPLETE
             false -> DiscussionStatus.INDISCUSSION
         }

@@ -27,50 +27,50 @@ data class DiscussionDetailResponse(
     @SerialName("onlineDiscussionInfo")
     val onlineDiscussionInfoDto: OnlineDiscussionInfoDto?,
 ) {
-    fun toDomain(): DiscussionDetail {
-        return when(discussionType) {
-            "ONLINE" -> {
-                OnlineDiscussionDetail(
-                    detailContent = DetailContent(
-                        id = id,
-                        discussionType = DiscussionType.of(discussionType),
-                        title = commonDiscussionInfoDto.title,
-                        author = commonDiscussionInfoDto.authorDto.toDomain(),
-                        category = DiscussionCategory.of(commonDiscussionInfoDto.category),
-                        content = commonDiscussionInfoDto.content,
-                        createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
-                        likeCount = commonDiscussionInfoDto.likeCount,
-                        modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
-                    ),
-                    summary = commonDiscussionInfoDto.summary,
-                    endDate = onlineDiscussionInfoDto!!.endDate.toIsoLocalDate()
-                )
-            }
-            "OFFLINE" -> {
-                OfflineDiscussionDetail(
-                    detailContent = DetailContent(
-                        id = id,
-                        discussionType = DiscussionType.of(discussionType),
-                        title = commonDiscussionInfoDto.title,
-                        author = commonDiscussionInfoDto.authorDto.toDomain(),
-                        category = DiscussionCategory.of(commonDiscussionInfoDto.category),
-                        content = commonDiscussionInfoDto.content,
-                        createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
-                        likeCount = commonDiscussionInfoDto.likeCount,
-                        modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
-                    ),
-                    summary = commonDiscussionInfoDto.summary,
-                    startAt = offlineDiscussionInfoDto!!.startAt.toIsoLocalDateTime(),
-                    endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
-                    currentParticipantCount = offlineDiscussionInfoDto.participantCount,
-                    maxParticipantCount = offlineDiscussionInfoDto.maxParticipantCount,
-                    place = offlineDiscussionInfoDto.place,
-                    participants = offlineDiscussionInfoDto.participantsDto.map { it.toDomain() }
-                )
-            }
-            else -> {
-                throw IllegalArgumentException("없는 타입입니다.")
-            }
+    fun toDomain(): DiscussionDetail = when (discussionType) {
+        "ONLINE" -> {
+            OnlineDiscussionDetail(
+                detailContent = DetailContent(
+                    id = id,
+                    discussionType = DiscussionType.of(discussionType),
+                    title = commonDiscussionInfoDto.title,
+                    author = commonDiscussionInfoDto.authorDto.toDomain(),
+                    category = DiscussionCategory.of(commonDiscussionInfoDto.category),
+                    content = commonDiscussionInfoDto.content,
+                    createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
+                    likeCount = commonDiscussionInfoDto.likeCount,
+                    modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
+                ),
+                summary = commonDiscussionInfoDto.summary,
+                endDate = onlineDiscussionInfoDto!!.endDate.toIsoLocalDate(),
+            )
+        }
+
+        "OFFLINE" -> {
+            OfflineDiscussionDetail(
+                detailContent = DetailContent(
+                    id = id,
+                    discussionType = DiscussionType.of(discussionType),
+                    title = commonDiscussionInfoDto.title,
+                    author = commonDiscussionInfoDto.authorDto.toDomain(),
+                    category = DiscussionCategory.of(commonDiscussionInfoDto.category),
+                    content = commonDiscussionInfoDto.content,
+                    createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
+                    likeCount = commonDiscussionInfoDto.likeCount,
+                    modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
+                ),
+                summary = commonDiscussionInfoDto.summary,
+                startAt = offlineDiscussionInfoDto!!.startAt.toIsoLocalDateTime(),
+                endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
+                currentParticipantCount = offlineDiscussionInfoDto.participantCount,
+                maxParticipantCount = offlineDiscussionInfoDto.maxParticipantCount,
+                place = offlineDiscussionInfoDto.place,
+                participants = offlineDiscussionInfoDto.participantsDto.map { it.toDomain() },
+            )
+        }
+
+        else -> {
+            throw IllegalArgumentException("없는 타입입니다.")
         }
     }
 
@@ -106,8 +106,9 @@ data class DiscussionDetailResponse(
                 Author(
                     id = id,
                     nickname = name,
-                    profileImage = profileImageDto?.toDomain()
+                    profileImage = profileImageDto?.toDomain(),
                 )
+
             @Serializable
             data class ProfileImageDto(
                 @SerialName("basicImageUri")
@@ -118,7 +119,7 @@ data class DiscussionDetailResponse(
                 fun toDomain(): ProfileImage? =
                     ProfileImage(
                         basicImageUri = basicImageUri,
-                        customImageUri = customImageUri
+                        customImageUri = customImageUri,
                     )
             }
         }
@@ -149,7 +150,7 @@ data class DiscussionDetailResponse(
             fun toDomain(): Participant =
                 Participant(
                     id = id,
-                    name = name
+                    name = name,
                 )
         }
     }

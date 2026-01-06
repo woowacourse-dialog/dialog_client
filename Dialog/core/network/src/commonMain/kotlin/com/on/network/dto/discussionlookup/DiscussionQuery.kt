@@ -22,10 +22,10 @@ data class DiscussionQuery(
     fun DiscussionCriteria.toQuery(
         cursor: String,
         size: Int,
-        ): DiscussionQuery =
+    ): DiscussionQuery =
         DiscussionQuery(
             discussionCriteria = this,
             cursor = cursor,
-            size = size
+            size = size,
         )
 }

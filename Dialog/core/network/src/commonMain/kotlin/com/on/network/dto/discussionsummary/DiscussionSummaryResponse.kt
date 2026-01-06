@@ -14,6 +14,6 @@ data class DiscussionSummaryResponse(
     fun toDomain(): DiscussionSummary =
         DiscussionSummary(
             discussionId = discussionId,
-            summary = summary
+            summary = summary,
         )
 }

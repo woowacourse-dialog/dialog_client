@@ -10,6 +10,6 @@ data class DiscussionSummaryRequest(
 ) {
     fun Long.toDto(): DiscussionSummaryRequest =
         DiscussionSummaryRequest(
-            discussionId = this
+            discussionId = this,
         )
 }

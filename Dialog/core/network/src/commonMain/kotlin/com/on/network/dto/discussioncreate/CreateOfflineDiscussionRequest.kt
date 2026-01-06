@@ -30,6 +30,6 @@ data class CreateOfflineDiscussionRequest(
             endAt = endAt.formatToString(),
             place = place,
             maxParticipantCount = maxParticipantCount,
-            category = category
+            category = category,
         )
 }
