@@ -75,7 +75,7 @@ private object PrettyLogger : Logger {
             rawBody
         }
 
-        val before: String = message.substring(0, bodyStart)
+        val before: String = message.take(bodyStart)
         val after: String = message.substring(endIndex)
 
         return buildString {
