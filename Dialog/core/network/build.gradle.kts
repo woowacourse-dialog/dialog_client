@@ -36,6 +36,10 @@ buildkonfig {
     }
 }
 
+tasks.named("runKtlintFormatOverCommonMainSourceSet") {
+    dependsOn("kspCommonMainKotlinMetadata")
+}
+
 kotlin {
     sourceSets {
         commonMain.dependencies {
@@ -59,11 +63,9 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
-            implementation(libs.ktor.client.logging)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
-            implementation(libs.ktor.client.logging)
         }
     }
 }
