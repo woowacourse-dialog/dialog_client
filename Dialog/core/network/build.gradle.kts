@@ -19,8 +19,7 @@ buildkonfig {
         buildConfigField(
             STRING,
             "BASE_URL",
-            "\"${gradleLocalProperties(rootDir, providers)
-            .getProperty("debug_base_url")}\""
+            "${gradleLocalProperties(rootDir, providers).getProperty("debug_base_url")}"
         )
         buildConfigField(BOOLEAN, "IS_DEBUG", "true")
     }
@@ -29,8 +28,7 @@ buildkonfig {
         buildConfigField(
             STRING,
             "BASE_URL",
-            "\"${gradleLocalProperties(rootDir, providers)
-            .getProperty("release_base_url")}\""
+            "${gradleLocalProperties(rootDir, providers).getProperty("release_base_url")}"
         )
         buildConfigField(BOOLEAN, "IS_DEBUG", "false")
     }
