@@ -1,10 +1,36 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 plugins {
     id("dialog.convention.kmp.library")
     alias(libs.plugins.ksp.gradle.plugin)
+    alias(libs.plugins.buildkonfig)
 }
 
 android {
     namespace = "com.on.dialog.core.network"
+}
+
+buildkonfig {
+    packageName = "com.on.dialog.core.network"
+
+    defaultConfigs {
+        buildConfigField(
+            STRING,
+            "BASE_URL",
+            "\"${gradleLocalProperties(rootDir, providers)
+            .getProperty("debug_base_url")}\""
+        )
+    }
+
+    defaultConfigs("release") {
+        buildConfigField(
+            STRING,
+            "BASE_URL",
+            "\"${gradleLocalProperties(rootDir, providers)
+            .getProperty("release_base_url")}\""
+        )
+    }
 }
 
 kotlin {

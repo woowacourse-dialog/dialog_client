@@ -1,5 +1,6 @@
 package com.on.network.di
 
+import com.on.dialog.core.network.BuildKonfig
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import org.koin.dsl.module
@@ -13,7 +14,7 @@ val networkModule = module {
         Ktorfit
             .Builder()
             .httpClient(get<HttpClient>())
-            .baseUrl("")
+            .baseUrl(BuildKonfig.BASE_URL)
             .build()
     }
 }

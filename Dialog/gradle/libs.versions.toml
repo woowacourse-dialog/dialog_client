@@ -40,6 +40,9 @@ koin = "4.1.1"
 ktor = "3.3.0"
 ktorfit = "2.7.1"
 
+# BuildKonfig
+build-konfig = "0.17.1"
+
 # Image
 coil = "3.3.0"
 
@@ -161,6 +164,9 @@ androidx-room = { id = "androidx.room", version.ref = "androidx-room" }
 
 # Util
 ksp-gradle-plugin = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+# Buildkonfig
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "build-konfig" }
 
 # Test
 android-test = { id = "com.android.test", version.ref = "android-gradle-plugin" }
