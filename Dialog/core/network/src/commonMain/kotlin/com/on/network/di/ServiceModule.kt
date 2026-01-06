@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val serviceModule = module {
     single<DiscussionService> {
-        get<Ktorfit>().create()
+        get<Ktorfit>().create<DiscussionService>()
     }
 }
