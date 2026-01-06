@@ -171,7 +171,6 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "build-konfig
 
 # Test
 android-test = { id = "com.android.test", version.ref = "android-gradle-plugin" }
-android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle-plugin" }
 
 [bundles]
 plugins = [
