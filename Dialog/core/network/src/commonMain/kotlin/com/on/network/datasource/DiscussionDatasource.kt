@@ -18,7 +18,7 @@ interface DiscussionDatasource {
     suspend fun getDiscussions(
         query: DiscussionQuery,
         cursor: String?,
-        size: Int
+        size: Int,
     ): Result<DiscussionCursorPageResponse>
 
     suspend fun getMyDiscussions(): Result<DiscussionCursorPageResponse>

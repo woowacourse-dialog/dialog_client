@@ -7,6 +7,7 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
@@ -29,6 +30,7 @@ private fun Json.prettyJson(json: String): String = try {
     json
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 private object PrettyLogger : Logger {
     private val jsonConfiguration = Json {
         prettyPrintIndent = "\t"

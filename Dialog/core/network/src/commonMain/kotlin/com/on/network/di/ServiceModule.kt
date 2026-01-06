@@ -4,6 +4,7 @@ import com.on.network.service.DiscussionService
 import de.jensklingenberg.ktorfit.Ktorfit
 import org.koin.dsl.module
 
+@Suppress("DEPRECATION")
 val serviceModule = module {
     single<DiscussionService> {
         get<Ktorfit>().create()

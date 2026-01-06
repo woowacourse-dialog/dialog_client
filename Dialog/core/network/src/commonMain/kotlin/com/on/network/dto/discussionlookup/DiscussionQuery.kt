@@ -16,8 +16,7 @@ data class DiscussionQuery(
     }
 
     companion object {
-        fun DiscussionCriteria.toQuery(
-        ): DiscussionQuery =
+        fun DiscussionCriteria.toQuery(): DiscussionQuery =
             DiscussionQuery(discussionCriteria = this)
     }
 }
