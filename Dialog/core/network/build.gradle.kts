@@ -36,10 +36,6 @@ buildkonfig {
     }
 }
 
-tasks.named("runKtlintFormatOverCommonMainSourceSet") {
-    dependsOn("kspCommonMainKotlinMetadata")
-}
-
 kotlin {
     sourceSets {
         commonMain.dependencies {

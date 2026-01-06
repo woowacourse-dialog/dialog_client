@@ -17,4 +17,15 @@ subprojects {
     configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
         debug.set(true)
     }
+
+    pluginManager.withPlugin("com.google.devtools.ksp") {
+        val kspCommonMainMetadataTasks = tasks.matching { it.name == "kspCommonMainKotlinMetadata" }
+
+        tasks
+            .withType<org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask>()
+            .matching { it.name.endsWith("OverCommonMainSourceSet") }
+            .configureEach {
+                dependsOn(kspCommonMainMetadataTasks)
+            }
+    }
 }
