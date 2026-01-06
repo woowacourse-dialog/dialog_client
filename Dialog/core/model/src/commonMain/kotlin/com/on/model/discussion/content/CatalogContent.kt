@@ -7,7 +7,7 @@ data class CatalogContent(
     val discussionType: String,
     val title: String,
     val author: String,
-    val category: String,
+    val category: DiscussionCategory,
     val createdAt: LocalDateTime,
     val modifiedAt: LocalDateTime,
     val commentCount: Int,
