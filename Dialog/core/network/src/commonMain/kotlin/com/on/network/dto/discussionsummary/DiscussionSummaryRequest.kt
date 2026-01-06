@@ -7,4 +7,9 @@ import kotlinx.serialization.Serializable
 data class DiscussionSummaryRequest(
     @SerialName("discussionId")
     val discussionId: Long,
-)
+) {
+    fun Long.toDto(): DiscussionSummaryRequest =
+        DiscussionSummaryRequest(
+            discussionId = this
+        )
+}

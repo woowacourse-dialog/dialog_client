@@ -1,5 +1,7 @@
 package com.on.network.dto.discussioncreate
 
+import com.on.dialog.core.common.extension.formatToString
+import com.on.model.discussion.draft.OfflineDiscussionDraft
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -19,4 +21,15 @@ data class CreateOfflineDiscussionRequest(
     val maxParticipantCount: Int,
     @SerialName("category")
     val category: String,
-)
+) {
+    fun OfflineDiscussionDraft.toDto(): CreateOfflineDiscussionRequest =
+        CreateOfflineDiscussionRequest(
+            title = title,
+            content = content,
+            startAt = startAt.formatToString(),
+            endAt = endAt.formatToString(),
+            place = place,
+            maxParticipantCount = maxParticipantCount,
+            category = category
+        )
+}
