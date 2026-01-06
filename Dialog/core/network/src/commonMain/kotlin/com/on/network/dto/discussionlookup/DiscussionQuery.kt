@@ -19,13 +19,15 @@ data class DiscussionQuery(
         return map
     }
 
-    fun DiscussionCriteria.toQuery(
-        cursor: String,
-        size: Int,
-    ): DiscussionQuery =
-        DiscussionQuery(
-            discussionCriteria = this,
-            cursor = cursor,
-            size = size,
-        )
+    companion object {
+        fun DiscussionCriteria.toQuery(
+            cursor: String,
+            size: Int,
+        ): DiscussionQuery =
+            DiscussionQuery(
+                discussionCriteria = this,
+                cursor = cursor,
+                size = size,
+            )
+    }
 }

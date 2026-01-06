@@ -22,14 +22,16 @@ data class OfflineDiscussionEditRequest(
     @SerialName("category")
     val category: String,
 ) {
-    fun OfflineDiscussionDraft.toDto(): OfflineDiscussionEditRequest =
-        OfflineDiscussionEditRequest(
-            title = title,
-            content = content,
-            startAt = startAt.formatToString(),
-            endAt = endAt.formatToString(),
-            place = place,
-            maxParticipantCount = maxParticipantCount,
-            category = category,
-        )
+    companion object {
+        fun OfflineDiscussionDraft.toResponse(): OfflineDiscussionEditRequest =
+            OfflineDiscussionEditRequest(
+                title = title,
+                content = content,
+                startAt = startAt.formatToString(),
+                endAt = endAt.formatToString(),
+                place = place,
+                maxParticipantCount = maxParticipantCount,
+                category = category,
+            )
+    }
 }

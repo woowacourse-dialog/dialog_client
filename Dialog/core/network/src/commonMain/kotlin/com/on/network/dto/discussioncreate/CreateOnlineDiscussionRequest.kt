@@ -16,10 +16,12 @@ data class CreateOnlineDiscussionRequest(
     @SerialName("category")
     val category: String,
 ) {
-    fun OnlineDiscussionDraft.toDto(): CreateOnlineDiscussionRequest = CreateOnlineDiscussionRequest(
-        title = title,
-        content = content,
-        endDate = endDate.formatToString(),
-        category = category,
-    )
+    companion object {
+        fun OnlineDiscussionDraft.toResponse(): CreateOnlineDiscussionRequest = CreateOnlineDiscussionRequest(
+            title = title,
+            content = content,
+            endDate = endDate.formatToString(),
+            category = category,
+        )
+    }
 }

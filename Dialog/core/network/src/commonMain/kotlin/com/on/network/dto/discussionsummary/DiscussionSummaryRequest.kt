@@ -8,8 +8,10 @@ data class DiscussionSummaryRequest(
     @SerialName("discussionId")
     val discussionId: Long,
 ) {
-    fun Long.toDto(): DiscussionSummaryRequest =
-        DiscussionSummaryRequest(
-            discussionId = this,
-        )
+    companion object {
+        fun Long.toResponse(): DiscussionSummaryRequest =
+            DiscussionSummaryRequest(
+                discussionId = this,
+            )
+    }
 }
