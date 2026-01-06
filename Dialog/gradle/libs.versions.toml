@@ -48,7 +48,7 @@ coil = "3.3.0"
 
 # Util
 napier = "2.7.1"
-ksp = "2.2.21-2.0.4"
+ksp = "2.3.4"
 
 # Test
 junit5 = "6.0.1"
