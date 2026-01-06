@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.android.test) apply false
     alias(libs.plugins.kotlin.ktlint) apply false
+    alias(libs.plugins.ksp.gradle.plugin) apply false
+    alias(libs.plugins.ktrofit) apply false
 }
 
 subprojects {

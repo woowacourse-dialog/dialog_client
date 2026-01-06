@@ -1,11 +1,12 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
 plugins {
     id("dialog.convention.kmp.library")
     alias(libs.plugins.ksp.gradle.plugin)
     alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.ktrofit)
 }
 
 android {
@@ -64,8 +65,4 @@ kotlin {
             implementation(libs.ktor.client.logging)
         }
     }
-}
-
-dependencies {
-    add("kspCommonMainMetadata", libs.ktorfit.ksp)
 }
