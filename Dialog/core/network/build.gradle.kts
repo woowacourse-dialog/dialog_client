@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ksp.gradle.plugin)
     alias(libs.plugins.buildkonfig)
     alias(libs.plugins.ktrofit)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
