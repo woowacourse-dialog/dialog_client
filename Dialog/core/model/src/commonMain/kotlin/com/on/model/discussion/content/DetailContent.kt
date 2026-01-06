@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDateTime
 
 data class DetailContent(
     val id: Int,
-    val discussionType: String,
+    val discussionType: DiscussionType,
     val title: String,
     val author: Author,
     val category: DiscussionCategory,
@@ -12,5 +12,10 @@ data class DetailContent(
     val createdAt: LocalDateTime,
     val likeCount: Int,
     val modifiedAt: LocalDateTime,
-    val summary: String,
-)
+) {
+    val status: DiscussionStatus get() =
+        when(createdAt > modifiedAt) {
+            true -> DiscussionStatus.DISCUSSIONCOMPLETE
+            false -> DiscussionStatus.INDISCUSSION
+        }
+}

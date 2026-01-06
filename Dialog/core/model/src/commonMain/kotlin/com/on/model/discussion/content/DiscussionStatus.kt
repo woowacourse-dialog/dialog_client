@@ -8,11 +8,13 @@ enum class DiscussionStatus {
     DISCUSSIONCOMPLETE,
     ;
 
-    fun of(discussionType: String): DiscussionStatus = when (discussionType) {
-        "RECRUITING" -> RECRUITING
-        "RECRUITCOMPLETE" -> RECRUITCOMPLETE
-        "INDISCUSSION" -> INDISCUSSION
-        "DISCUSSIONCOMPLETE" -> DISCUSSIONCOMPLETE
-        else -> UNDEFINED
+    companion object{
+        fun of(discussionType: String): DiscussionStatus = when (discussionType) {
+            "RECRUITING" -> RECRUITING
+            "RECRUITCOMPLETE" -> RECRUITCOMPLETE
+            "INDISCUSSION" -> INDISCUSSION
+            "DISCUSSIONCOMPLETE" -> DISCUSSIONCOMPLETE
+            else -> UNDEFINED
+        }
     }
 }

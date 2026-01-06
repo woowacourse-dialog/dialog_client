@@ -19,9 +19,13 @@ kotlin {
             // ktorfit
             implementation(libs.ktorfit)
 
+            // datetime
+            implementation(libs.kotlinx.datetime)
+
             // project
             implementation(projects.core.domain)
             implementation(projects.core.model)
+            implementation(projects.core.common)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)

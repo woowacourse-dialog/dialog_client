@@ -1,7 +1,7 @@
 package com.on.model.discussion.content
 
 data class Author(
-    val id: Int,
+    val id: Long,
     val nickname: String,
-    val track: String,
+    val profileImage: ProfileImage?
 )

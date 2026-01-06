@@ -7,10 +7,12 @@ enum class DiscussionCategory {
     FRONTEND,
     ;
 
-    fun of(category: String): DiscussionCategory = when (category) {
-        "ANDROID" -> ANDROID
-        "BACKEND" -> BACKEND
-        "FRONTEND" -> FRONTEND
-        else -> UNDEFINED
+    companion object{
+        fun of(category: String): DiscussionCategory = when (category) {
+            "ANDROID" -> ANDROID
+            "BACKEND" -> BACKEND
+            "FRONTEND" -> FRONTEND
+            else -> UNDEFINED
+        }
     }
 }

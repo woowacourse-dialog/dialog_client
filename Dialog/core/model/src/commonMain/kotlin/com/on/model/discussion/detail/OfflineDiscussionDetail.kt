@@ -3,7 +3,6 @@ package com.on.model.discussion.detail
 import com.on.model.discussion.content.DetailContent
 import com.on.model.discussion.offline.Participant
 import kotlinx.datetime.LocalDateTime
-import kotlinx.serialization.SerialName
 
 data class OfflineDiscussionDetail(
     override val detailContent: DetailContent,

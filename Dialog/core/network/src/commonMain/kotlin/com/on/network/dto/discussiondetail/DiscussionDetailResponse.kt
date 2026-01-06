@@ -1,5 +1,16 @@
 package com.on.network.dto.discussiondetail
 
+import com.on.dialog.core.common.extension.toIsoLocalDate
+import com.on.dialog.core.common.extension.toIsoLocalDateTime
+import com.on.model.discussion.content.Author
+import com.on.model.discussion.content.DetailContent
+import com.on.model.discussion.content.DiscussionCategory
+import com.on.model.discussion.content.DiscussionType
+import com.on.model.discussion.content.ProfileImage
+import com.on.model.discussion.detail.DiscussionDetail
+import com.on.model.discussion.detail.OfflineDiscussionDetail
+import com.on.model.discussion.detail.OnlineDiscussionDetail
+import com.on.model.discussion.offline.Participant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,16 +21,63 @@ data class DiscussionDetailResponse(
     @SerialName("discussionType")
     val discussionType: String,
     @SerialName("commonDiscussionInfo")
-    val commonDiscussionInfo: CommonDiscussionInfo,
+    val commonDiscussionInfoDto: CommonDiscussionInfoDto,
     @SerialName("offlineDiscussionInfo")
-    val offlineDiscussionInfo: OfflineDiscussionInfo?,
+    val offlineDiscussionInfoDto: OfflineDiscussionInfoDto?,
     @SerialName("onlineDiscussionInfo")
-    val onlineDiscussionInfo: OnlineDiscussionInfo?,
+    val onlineDiscussionInfoDto: OnlineDiscussionInfoDto?,
 ) {
+    fun toDomain(): DiscussionDetail {
+        return when(discussionType) {
+            "ONLINE" -> {
+                OnlineDiscussionDetail(
+                    detailContent = DetailContent(
+                        id = id,
+                        discussionType = DiscussionType.of(discussionType),
+                        title = commonDiscussionInfoDto.title,
+                        author = commonDiscussionInfoDto.authorDto.toDomain(),
+                        category = DiscussionCategory.of(commonDiscussionInfoDto.category),
+                        content = commonDiscussionInfoDto.content,
+                        createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
+                        likeCount = commonDiscussionInfoDto.likeCount,
+                        modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
+                    ),
+                    summary = commonDiscussionInfoDto.summary,
+                    endDate = onlineDiscussionInfoDto!!.endDate.toIsoLocalDate()
+                )
+            }
+            "OFFLINE" -> {
+                OfflineDiscussionDetail(
+                    detailContent = DetailContent(
+                        id = id,
+                        discussionType = DiscussionType.of(discussionType),
+                        title = commonDiscussionInfoDto.title,
+                        author = commonDiscussionInfoDto.authorDto.toDomain(),
+                        category = DiscussionCategory.of(commonDiscussionInfoDto.category),
+                        content = commonDiscussionInfoDto.content,
+                        createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
+                        likeCount = commonDiscussionInfoDto.likeCount,
+                        modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
+                    ),
+                    summary = commonDiscussionInfoDto.summary,
+                    startAt = offlineDiscussionInfoDto!!.startAt.toIsoLocalDateTime(),
+                    endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
+                    currentParticipantCount = offlineDiscussionInfoDto.participantCount,
+                    maxParticipantCount = offlineDiscussionInfoDto.maxParticipantCount,
+                    place = offlineDiscussionInfoDto.place,
+                    participants = offlineDiscussionInfoDto.participantsDto.map { it.toDomain() }
+                )
+            }
+            else -> {
+                throw IllegalArgumentException("없는 타입입니다.")
+            }
+        }
+    }
+
     @Serializable
-    data class CommonDiscussionInfo(
+    data class CommonDiscussionInfoDto(
         @SerialName("author")
-        val author: Author,
+        val authorDto: AuthorDto,
         @SerialName("category")
         val category: String,
         @SerialName("content")
@@ -31,31 +89,43 @@ data class DiscussionDetailResponse(
         @SerialName("modifiedAt")
         val modifiedAt: String,
         @SerialName("summary")
-        val summary: String,
+        val summary: String?,
         @SerialName("title")
         val title: String,
     ) {
         @Serializable
-        data class Author(
+        data class AuthorDto(
             @SerialName("id")
             val id: Long,
             @SerialName("name")
             val name: String,
             @SerialName("profileImage")
-            val profileImage: ProfileImage?,
+            val profileImageDto: ProfileImageDto?,
         ) {
+            fun toDomain(): Author =
+                Author(
+                    id = id,
+                    nickname = name,
+                    profileImage = profileImageDto?.toDomain()
+                )
             @Serializable
-            data class ProfileImage(
+            data class ProfileImageDto(
                 @SerialName("basicImageUri")
                 val basicImageUri: String?,
                 @SerialName("customImageUri")
                 val customImageUri: String?,
-            )
+            ) {
+                fun toDomain(): ProfileImage =
+                    ProfileImage(
+                        basicImageUri = basicImageUri,
+                        customImageUri = customImageUri
+                    )
+            }
         }
     }
 
     @Serializable
-    data class OfflineDiscussionInfo(
+    data class OfflineDiscussionInfoDto(
         @SerialName("endAt")
         val endAt: String,
         @SerialName("maxParticipantCount")
@@ -63,23 +133,29 @@ data class DiscussionDetailResponse(
         @SerialName("participantCount")
         val participantCount: Int,
         @SerialName("participants")
-        val participants: List<Participant?>,
+        val participantsDto: List<ParticipantDto>,
         @SerialName("place")
         val place: String,
         @SerialName("startAt")
         val startAt: String,
     ) {
         @Serializable
-        data class Participant(
+        data class ParticipantDto(
             @SerialName("id")
-            val id: Int,
+            val id: Long,
             @SerialName("name")
             val name: String,
-        )
+        ) {
+            fun toDomain(): Participant =
+                Participant(
+                    id = id,
+                    name = name
+                )
+        }
     }
 
     @Serializable
-    data class OnlineDiscussionInfo(
+    data class OnlineDiscussionInfoDto(
         @SerialName("endDate")
         val endDate: String,
     )
