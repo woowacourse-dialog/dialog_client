@@ -15,7 +15,7 @@ import com.on.network.dto.discussionedit.OnlineDiscussionEditRequest.Companion.t
 import com.on.network.dto.discussionlookup.DiscussionQuery.Companion.toQuery
 import com.on.network.dto.discussionsummary.DiscussionSummaryRequest.Companion.toRequest
 
-class DiscussionDefaultRepository(
+internal class DiscussionDefaultRepository(
     private val discussionDatasource: DiscussionDatasource,
 ) : DiscussionRepository {
     override suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetail> =
