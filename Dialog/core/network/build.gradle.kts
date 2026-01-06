@@ -1,5 +1,6 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 
 plugins {
     id("dialog.convention.kmp.library")
@@ -21,6 +22,7 @@ buildkonfig {
             "\"${gradleLocalProperties(rootDir, providers)
             .getProperty("debug_base_url")}\""
         )
+        buildConfigField(BOOLEAN, "IS_DEBUG", "true")
     }
 
     defaultConfigs("release") {
@@ -30,6 +32,7 @@ buildkonfig {
             "\"${gradleLocalProperties(rootDir, providers)
             .getProperty("release_base_url")}\""
         )
+        buildConfigField(BOOLEAN, "IS_DEBUG", "false")
     }
 }
 
@@ -41,6 +44,7 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
 
             // ktorfit
             implementation(libs.ktorfit)
@@ -55,9 +59,11 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.ktor.client.logging)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.ktor.client.logging)
         }
     }
 }
