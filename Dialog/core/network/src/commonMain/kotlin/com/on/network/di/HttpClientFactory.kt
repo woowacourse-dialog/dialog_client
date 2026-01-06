@@ -23,14 +23,6 @@ internal fun HttpClientConfig<*>.installLogging() {
     }
 }
 
-private fun Json.prettyJson(json: String): String = try {
-    val parsed = parseToJsonElement(json)
-    encodeToString(JsonElement.serializer(), parsed)
-} catch (e: Exception) {
-    Napier.e(tag = "KtorLogger", throwable = e, message = e.message.orEmpty())
-    json
-}
-
 @OptIn(ExperimentalSerializationApi::class)
 private object PrettyLogger : Logger {
     private val jsonConfiguration = Json {
@@ -39,8 +31,16 @@ private object PrettyLogger : Logger {
     }
 
     override fun log(message: String) {
-        val replacedMessage = replaceBodyWithPrettyJson(message)
+        val replacedMessage: String = replaceBodyWithPrettyJson(message)
         Napier.v(tag = "KtorLogger", message = replacedMessage)
+    }
+
+    private fun Json.prettyJson(json: String): String = try {
+        val parsed = parseToJsonElement(json)
+        encodeToString(JsonElement.serializer(), parsed)
+    } catch (e: Exception) {
+        Napier.e(tag = "KtorLogger", throwable = e, message = e.message.orEmpty())
+        json
     }
 
     private fun replaceBodyWithPrettyJson(message: String): String {
