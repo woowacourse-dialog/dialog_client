@@ -116,7 +116,7 @@ data class DiscussionDetailResponse(
                 @SerialName("customImageUri")
                 val customImageUri: String?,
             ) {
-                fun toDomain(): ProfileImage? =
+                fun toDomain(): ProfileImage =
                     ProfileImage(
                         basicImageUri = basicImageUri,
                         customImageUri = customImageUri,
