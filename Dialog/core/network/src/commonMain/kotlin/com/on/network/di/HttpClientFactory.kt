@@ -101,11 +101,13 @@ private object PrettyLogger : Logger {
         val bodyStart: Int = startIndex + startToken.length
         val rawBody: String = message.substring(bodyStart, endIndex).trim()
 
-        val prettyBody: String = runCatching {
-            jsonConfiguration.prettyJson(rawBody)
-        }.getOrElse {
-            rawBody
-        }
+        val prettyBody: String =
+            if (rawBody.isBlank()) {
+                rawBody
+            } else {
+                jsonConfiguration.prettyJson(rawBody)
+            }
+
 
         val before: String = message.take(bodyStart)
         val after: String = message.substring(endIndex)
