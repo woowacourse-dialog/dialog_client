@@ -26,7 +26,7 @@ internal class DiscussionRemoteDatasource(
         cursor: String?,
         size: Int,
     ): Result<DiscussionCursorPageResponse> =
-        safeApiCall { discussionService.getDiscussions(query.toQueryMap()) }
+        safeApiCall { discussionService.getDiscussions(query.toQueryMap(),cursor,size) }
 
     override suspend fun getMyDiscussions(): Result<DiscussionCursorPageResponse> =
         safeApiCall { discussionService.getMyDiscussions() }

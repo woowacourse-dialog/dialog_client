@@ -39,6 +39,8 @@ internal interface DiscussionService {
     @GET("api/discussions")
     suspend fun getDiscussions(
         @QueryMap query: Map<String, List<String>>,
+        @Query cursor: String?,
+        @Query size: Int,
     ): DataResponse<DiscussionCursorPageResponse>
 
     @GET("api/discussions/me")
