@@ -1,12 +1,12 @@
 package com.on.network.di
 
 import com.on.network.service.DiscussionService
+import com.on.network.service.createDiscussionService
 import de.jensklingenberg.ktorfit.Ktorfit
 import org.koin.dsl.module
 
-@Suppress("DEPRECATION")
 val serviceModule = module {
     single<DiscussionService> {
-        get<Ktorfit>().create()
+        get<Ktorfit>().createDiscussionService()
     }
 }
