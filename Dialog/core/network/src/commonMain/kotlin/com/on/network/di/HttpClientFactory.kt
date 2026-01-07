@@ -5,9 +5,12 @@ import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -16,6 +19,35 @@ import kotlinx.serialization.json.JsonElement
 expect fun createHttpClient(): HttpClient
 
 internal fun HttpClientConfig<*>.installContentNegotiation() {
+
+    /**
+     * HTTP 응답이 성공(2xx)이 아닐 경우
+     * 자동으로 예외를 발생시키기 위한 설정
+     *
+     * - ClientRequestException : 4xx (클라이언트 요청 오류)
+     * - ServerResponseException : 5xx (서버 오류)
+     * - IOException : 네트워크 오류
+     *
+     * 이 설정이 없으면 400 / 500 에러 응답도
+     * 정상 응답처럼 JSON 파싱을 시도하게 되어
+     * 의도하지 않은 파싱 오류가 발생할 수 있다.
+     */
+    expectSuccess = true
+
+    /**
+     * 모든 요청의 기본 Content-Type을 JSON으로 설정
+     *
+     * Retrofit의
+     * addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+     * 와 동일한 역할을 하며,
+     *
+     * 서버에 전송되는 요청 본문이
+     * application/json 타입임을 명시한다.
+     */
+    defaultRequest{
+        contentType(ContentType.Application.Json)
+    }
+
     install(ContentNegotiation) {
         json(
             Json {
