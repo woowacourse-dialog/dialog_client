@@ -19,7 +19,6 @@ import kotlinx.serialization.json.JsonElement
 expect fun createHttpClient(): HttpClient
 
 internal fun HttpClientConfig<*>.installContentNegotiation() {
-
     /**
      * HTTP 응답이 성공(2xx)이 아닐 경우
      * 자동으로 예외를 발생시키기 위한 설정
@@ -44,7 +43,7 @@ internal fun HttpClientConfig<*>.installContentNegotiation() {
      * 서버에 전송되는 요청 본문이
      * application/json 타입임을 명시한다.
      */
-    defaultRequest{
+    defaultRequest {
         contentType(ContentType.Application.Json)
     }
 
@@ -107,7 +106,6 @@ private object PrettyLogger : Logger {
             } else {
                 jsonConfiguration.prettyJson(rawBody)
             }
-
 
         val before: String = message.take(bodyStart)
         val after: String = message.substring(endIndex)

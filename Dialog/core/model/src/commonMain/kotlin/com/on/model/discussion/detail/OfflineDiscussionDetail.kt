@@ -17,11 +17,24 @@ data class OfflineDiscussionDetail(
 ) : DiscussionDetail {
     override fun status(now: LocalDateTime): DiscussionStatus =
         when {
-            now < startAt -> DiscussionStatus.RECRUITING
-            now < startAt && currentParticipantCount >= maxParticipantCount ->
+            now < startAt -> {
+                DiscussionStatus.RECRUITING
+            }
+
+            now < startAt && currentParticipantCount >= maxParticipantCount -> {
                 DiscussionStatus.RECRUITCOMPLETE
-            now in startAt..endAt -> DiscussionStatus.INDISCUSSION
-            now > endAt -> DiscussionStatus.DISCUSSIONCOMPLETE
-            else -> DiscussionStatus.UNDEFINED
+            }
+
+            now in startAt..endAt -> {
+                DiscussionStatus.INDISCUSSION
+            }
+
+            now > endAt -> {
+                DiscussionStatus.DISCUSSIONCOMPLETE
+            }
+
+            else -> {
+                DiscussionStatus.UNDEFINED
+            }
         }
 }

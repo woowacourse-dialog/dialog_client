@@ -14,11 +14,24 @@ data class OfflineDiscussionCatalog(
 ) : DiscussionCatalog {
     override fun status(now: LocalDateTime): DiscussionStatus =
         when {
-            now < startAt -> DiscussionStatus.RECRUITING
-            now < startAt && participantCount >= maxParticipantCount ->
+            now < startAt -> {
+                DiscussionStatus.RECRUITING
+            }
+
+            now < startAt && participantCount >= maxParticipantCount -> {
                 DiscussionStatus.RECRUITCOMPLETE
-            now in startAt..endAt -> DiscussionStatus.INDISCUSSION
-            now > endAt -> DiscussionStatus.DISCUSSIONCOMPLETE
-            else -> DiscussionStatus.UNDEFINED
+            }
+
+            now in startAt..endAt -> {
+                DiscussionStatus.INDISCUSSION
+            }
+
+            now > endAt -> {
+                DiscussionStatus.DISCUSSIONCOMPLETE
+            }
+
+            else -> {
+                DiscussionStatus.UNDEFINED
+            }
         }
 }
