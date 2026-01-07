@@ -1,5 +1,6 @@
 package com.on.network.dto.discussionlookup
 
+import com.on.dialog.core.common.extension.toIsoLocalDate
 import com.on.dialog.core.common.extension.toIsoLocalDateTime
 import com.on.model.discussion.catalog.DiscussionCatalog
 import com.on.model.discussion.catalog.OfflineDiscussionCatalog
@@ -55,7 +56,7 @@ data class DiscussionCursorPageResponse(
                             commentCount = commonDiscussionInfoDto.commentCount,
                             profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
                         ),
-                        endDate = onlineDiscussionInfoDto!!.endDate,
+                        endDate = onlineDiscussionInfoDto!!.endDate.toIsoLocalDate(),
                     )
                 }
 
