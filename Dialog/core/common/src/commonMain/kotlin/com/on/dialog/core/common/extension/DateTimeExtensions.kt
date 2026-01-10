@@ -5,6 +5,7 @@ package com.on.dialog.core.common.extension
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atTime
 import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
@@ -51,3 +52,10 @@ fun LocalDate.formatToString(pattern: String = "yyyy-MM-dd"): String =
  */
 fun LocalDateTime.formatToString(pattern: String = "yyyy-MM-dd HH:mm"): String =
     format(LocalDateTime.Format { byUnicodePattern(pattern) })
+
+/**
+ * [LocalDate]를 00:00:00 기준의 [LocalDateTime]으로 변환합니다.
+ */
+fun LocalDate.atStartOfDay(): LocalDateTime = atTime(0, 0)
+
+fun LocalDate.atEndOfDay(): LocalDateTime = atTime(23, 59, 59)
