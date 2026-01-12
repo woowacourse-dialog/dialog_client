@@ -19,7 +19,7 @@ data class DiscussionCursorPageResponse(
     @SerialName("hasNext")
     val hasNext: Boolean,
     @SerialName("nextCursor")
-    val nextCursor: String,
+    val nextCursor: String?,
 ) {
     fun toDomain(): DiscussionCatalogCursorPage =
         DiscussionCatalogCursorPage(
