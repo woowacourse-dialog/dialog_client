@@ -22,7 +22,8 @@ internal class DiscussionDefaultRepository(
     private val discussionDatasource: DiscussionDatasource,
 ) : DiscussionRepository {
     override suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetail> =
-        discussionDatasource.getDiscussionDetail(id = id)
+        discussionDatasource
+            .getDiscussionDetail(id = id)
             .mapCatching { discussionDetailResponse: DiscussionDetailResponse ->
                 when (discussionDetailResponse) {
                     is DiscussionDetailOnlineResponse -> discussionDetailResponse.toDomain()

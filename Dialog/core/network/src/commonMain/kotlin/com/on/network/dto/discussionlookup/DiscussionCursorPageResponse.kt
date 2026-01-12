@@ -26,7 +26,7 @@ data class DiscussionCursorPageResponse(
     fun toDomain(): DiscussionCatalogCursorPage =
         DiscussionCatalogCursorPage(
             discussionCatalog = contentDto.map { contentDto: ContentDto ->
-                when(contentDto) {
+                when (contentDto) {
                     is OnlineContentDto -> contentDto.toDomain()
                     is OfflineContentDto -> contentDto.toDomain()
                 }
@@ -36,7 +36,7 @@ data class DiscussionCursorPageResponse(
         )
 
     @Serializable
-    sealed interface ContentDto{
+    sealed interface ContentDto {
         @Serializable
         @SerialName("ONLINE")
         data class OnlineContentDto(
@@ -48,7 +48,7 @@ data class DiscussionCursorPageResponse(
             val commonDiscussionInfoDto: CommonDiscussionInfoDto,
             @SerialName("onlineDiscussionInfo")
             val onlineDiscussionInfoDto: OnlineDiscussionInfoDto,
-        ): ContentDto {
+        ) : ContentDto {
             fun toDomain(): DiscussionCatalog =
                 OnlineDiscussionCatalog(
                     catalogContent = CatalogContent(
@@ -76,7 +76,7 @@ data class DiscussionCursorPageResponse(
             val commonDiscussionInfoDto: CommonDiscussionInfoDto,
             @SerialName("offlineDiscussionInfo")
             val offlineDiscussionInfoDto: OfflineDiscussionInfoDto,
-        ): ContentDto {
+        ) : ContentDto {
             fun toDomain(): DiscussionCatalog =
                 OfflineDiscussionCatalog(
                     catalogContent = CatalogContent(
