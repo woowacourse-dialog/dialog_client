@@ -71,6 +71,7 @@ private object PrettyLogger : Logger {
     private val jsonConfiguration = Json {
         prettyPrintIndent = "\t"
         prettyPrint = true
+        classDiscriminator = "discussionType"
     }
 
     override fun log(message: String) {

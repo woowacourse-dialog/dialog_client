@@ -15,24 +15,22 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DiscussionDetailResponse(
-    @SerialName("id")
-    val id: Int,
-    @SerialName("discussionType")
-    val discussionType: String,
-    @SerialName("commonDiscussionInfo")
-    val commonDiscussionInfoDto: CommonDiscussionInfoDto,
-    @SerialName("offlineDiscussionInfo")
-    val offlineDiscussionInfoDto: OfflineDiscussionInfoDto?,
-    @SerialName("onlineDiscussionInfo")
-    val onlineDiscussionInfoDto: OnlineDiscussionInfoDto?,
-) {
-    fun toDomain(): DiscussionDetail = when (discussionType) {
-        "ONLINE" -> {
+sealed interface DiscussionDetailResponse {
+    @Serializable
+    @SerialName("ONLINE")
+    data class DiscussionDetailOnlineResponse(
+        @SerialName("id")
+        val id: Long,
+        @SerialName("commonDiscussionInfo")
+        val commonDiscussionInfoDto: CommonDiscussionInfoDto,
+        @SerialName("onlineDiscussionInfo")
+        val onlineDiscussionInfoDto: OnlineDiscussionInfoDto,
+    ) : DiscussionDetailResponse {
+        fun toDomain(): DiscussionDetail =
             OnlineDiscussionDetail(
                 detailContent = DetailContent(
                     id = id,
-                    discussionType = DiscussionType.of(discussionType),
+                    discussionType = DiscussionType.ONLINE,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
                     category = DiscussionCategory.of(commonDiscussionInfoDto.category),
@@ -42,15 +40,31 @@ data class DiscussionDetailResponse(
                     modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
                 ),
                 summary = commonDiscussionInfoDto.summary,
-                endDate = onlineDiscussionInfoDto!!.endDate.toIsoLocalDate(),
+                endDate = onlineDiscussionInfoDto.endDate.toIsoLocalDate(),
             )
-        }
 
-        "OFFLINE" -> {
+        @Serializable
+        data class OnlineDiscussionInfoDto(
+            @SerialName("endDate")
+            val endDate: String,
+        )
+    }
+
+    @Serializable
+    @SerialName("OFFLINE")
+    data class DiscussionDetailOfflineResponse(
+        @SerialName("id")
+        val id: Long,
+        @SerialName("commonDiscussionInfo")
+        val commonDiscussionInfoDto: CommonDiscussionInfoDto,
+        @SerialName("offlineDiscussionInfo")
+        val offlineDiscussionInfoDto: OfflineDiscussionInfoDto,
+    ) : DiscussionDetailResponse {
+        fun toDomain(): DiscussionDetail =
             OfflineDiscussionDetail(
                 detailContent = DetailContent(
                     id = id,
-                    discussionType = DiscussionType.of(discussionType),
+                    discussionType = DiscussionType.OFFLINE,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
                     category = DiscussionCategory.of(commonDiscussionInfoDto.category),
@@ -60,17 +74,42 @@ data class DiscussionDetailResponse(
                     modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
                 ),
                 summary = commonDiscussionInfoDto.summary,
-                startAt = offlineDiscussionInfoDto!!.startAt.toIsoLocalDateTime(),
+                startAt = offlineDiscussionInfoDto.startAt.toIsoLocalDateTime(),
                 endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
                 currentParticipantCount = offlineDiscussionInfoDto.participantCount,
                 maxParticipantCount = offlineDiscussionInfoDto.maxParticipantCount,
                 place = offlineDiscussionInfoDto.place,
                 participants = offlineDiscussionInfoDto.participantsDto.map { it.toDomain() },
             )
-        }
 
-        else -> {
-            throw IllegalArgumentException("없는 타입입니다.")
+        @Serializable
+        data class OfflineDiscussionInfoDto(
+            @SerialName("endAt")
+            val endAt: String,
+            @SerialName("maxParticipantCount")
+            val maxParticipantCount: Int,
+            @SerialName("participantCount")
+            val participantCount: Int,
+            @SerialName("participants")
+            val participantsDto: List<ParticipantDto>,
+            @SerialName("place")
+            val place: String,
+            @SerialName("startAt")
+            val startAt: String,
+        ) {
+            @Serializable
+            data class ParticipantDto(
+                @SerialName("id")
+                val id: Long,
+                @SerialName("name")
+                val name: String,
+            ) {
+                fun toDomain(): Participant =
+                    Participant(
+                        id = id,
+                        name = name,
+                    )
+            }
         }
     }
 
@@ -124,40 +163,4 @@ data class DiscussionDetailResponse(
             }
         }
     }
-
-    @Serializable
-    data class OfflineDiscussionInfoDto(
-        @SerialName("endAt")
-        val endAt: String,
-        @SerialName("maxParticipantCount")
-        val maxParticipantCount: Int,
-        @SerialName("participantCount")
-        val participantCount: Int,
-        @SerialName("participants")
-        val participantsDto: List<ParticipantDto>,
-        @SerialName("place")
-        val place: String,
-        @SerialName("startAt")
-        val startAt: String,
-    ) {
-        @Serializable
-        data class ParticipantDto(
-            @SerialName("id")
-            val id: Long,
-            @SerialName("name")
-            val name: String,
-        ) {
-            fun toDomain(): Participant =
-                Participant(
-                    id = id,
-                    name = name,
-                )
-        }
-    }
-
-    @Serializable
-    data class OnlineDiscussionInfoDto(
-        @SerialName("endDate")
-        val endDate: String,
-    )
 }

@@ -3,7 +3,7 @@ package com.on.model.discussion.content
 import kotlinx.datetime.LocalDateTime
 
 data class DetailContent(
-    val id: Int,
+    val id: Long,
     val discussionType: DiscussionType,
     val title: String,
     val author: Author,
