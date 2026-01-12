@@ -8,6 +8,7 @@ import com.on.model.discussion.content.DiscussionCategory
 import com.on.model.discussion.content.DiscussionType
 import com.on.model.discussion.content.ProfileImage
 import com.on.model.discussion.datetimeperiod.DateTimePeriod
+import com.on.model.discussion.datetimeperiod.EndDate
 import com.on.model.discussion.detail.DiscussionDetail
 import com.on.model.discussion.detail.OfflineDiscussionDetail
 import com.on.model.discussion.detail.OnlineDiscussionDetail
@@ -42,7 +43,7 @@ sealed interface DiscussionDetailResponse {
                     modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
                 ),
                 summary = commonDiscussionInfoDto.summary,
-                endDate = onlineDiscussionInfoDto.endDate.toIsoLocalDate(),
+                endDate = EndDate(onlineDiscussionInfoDto.endDate.toIsoLocalDate()),
             )
 
         @Serializable
