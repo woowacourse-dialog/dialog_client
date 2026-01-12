@@ -7,7 +7,7 @@ import kotlin.jvm.JvmInline
 
 @JvmInline
 value class EndDate(
-    val endDate: LocalDate
+    val endDate: LocalDate,
 ) {
     fun isInPeriod(startAt: LocalDateTime, dateTime: LocalDateTime): Boolean =
         dateTime in startAt..endDate.atEndOfDay()

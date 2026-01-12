@@ -12,7 +12,7 @@ data class OnlineDiscussionDetail(
 ) : DiscussionDetail {
     override fun status(now: LocalDateTime): DiscussionStatus =
         when {
-            endDate.isInPeriod(detailContent.createdAt,now) -> DiscussionStatus.INDISCUSSION
+            endDate.isInPeriod(detailContent.createdAt, now) -> DiscussionStatus.INDISCUSSION
             endDate.isAfterEnd(now) -> DiscussionStatus.DISCUSSIONCOMPLETE
             else -> DiscussionStatus.UNDEFINED
         }
