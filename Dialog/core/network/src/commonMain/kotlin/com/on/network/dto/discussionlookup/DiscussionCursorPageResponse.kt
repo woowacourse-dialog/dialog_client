@@ -10,6 +10,7 @@ import com.on.model.discussion.content.DiscussionCategory
 import com.on.model.discussion.content.ProfileImage
 import com.on.model.discussion.cursorpage.DiscussionCatalogCursorPage
 import com.on.model.discussion.datetimeperiod.DateTimePeriod
+import com.on.model.discussion.datetimeperiod.EndDate
 import com.on.model.discussion.participant.ParticipantCapacity
 import com.on.network.dto.discussionlookup.DiscussionCursorPageResponse.ContentDto.OfflineContentDto
 import com.on.network.dto.discussionlookup.DiscussionCursorPageResponse.ContentDto.OnlineContentDto
@@ -64,7 +65,7 @@ data class DiscussionCursorPageResponse(
                         commentCount = commonDiscussionInfoDto.commentCount,
                         profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
                     ),
-                    endDate = onlineDiscussionInfoDto.endDate.toIsoLocalDate(),
+                    endDate = EndDate(onlineDiscussionInfoDto.endDate.toIsoLocalDate()),
                 )
         }
 
