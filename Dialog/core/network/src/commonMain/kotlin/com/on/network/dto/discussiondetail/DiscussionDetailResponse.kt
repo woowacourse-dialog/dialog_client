@@ -7,10 +7,12 @@ import com.on.model.discussion.content.DetailContent
 import com.on.model.discussion.content.DiscussionCategory
 import com.on.model.discussion.content.DiscussionType
 import com.on.model.discussion.content.ProfileImage
+import com.on.model.discussion.datetimeperiod.DateTimePeriod
 import com.on.model.discussion.detail.DiscussionDetail
 import com.on.model.discussion.detail.OfflineDiscussionDetail
 import com.on.model.discussion.detail.OnlineDiscussionDetail
 import com.on.model.discussion.offline.Participant
+import com.on.model.discussion.participant.ParticipantCapacity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -74,10 +76,14 @@ sealed interface DiscussionDetailResponse {
                     modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
                 ),
                 summary = commonDiscussionInfoDto.summary,
-                startAt = offlineDiscussionInfoDto.startAt.toIsoLocalDateTime(),
-                endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
-                currentParticipantCount = offlineDiscussionInfoDto.participantCount,
-                maxParticipantCount = offlineDiscussionInfoDto.maxParticipantCount,
+                dateTimePeriod = DateTimePeriod(
+                    startAt = offlineDiscussionInfoDto.startAt.toIsoLocalDateTime(),
+                    endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
+                ),
+                participantCapacity = ParticipantCapacity(
+                    current = offlineDiscussionInfoDto.participantCount,
+                    max = offlineDiscussionInfoDto.maxParticipantCount,
+                ),
                 place = offlineDiscussionInfoDto.place,
                 participants = offlineDiscussionInfoDto.participantsDto.map { it.toDomain() },
             )

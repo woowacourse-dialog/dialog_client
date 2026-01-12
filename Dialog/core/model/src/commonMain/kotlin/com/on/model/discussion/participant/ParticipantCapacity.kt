@@ -7,4 +7,3 @@ data class ParticipantCapacity(
     fun isParticipantFull(): Boolean =
         current >= max
 }
-
