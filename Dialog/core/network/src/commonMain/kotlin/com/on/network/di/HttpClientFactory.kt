@@ -5,6 +5,8 @@ import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.CookiesStorage
+import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -16,7 +18,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
-expect fun createHttpClient(): HttpClient
+expect fun createHttpClient(cookiesStorage: CookiesStorage): HttpClient
 
 internal fun HttpClientConfig<*>.installContentNegotiation() {
     /**
@@ -63,6 +65,13 @@ internal fun HttpClientConfig<*>.installLogging() {
     install(Logging) {
         logger = PrettyLogger
         level = LogLevel.ALL
+    }
+}
+
+internal fun HttpClientConfig<*>.installCookies(cookiesStorage: CookiesStorage) {
+    install(HttpCookies) {
+        // 커스텀 쿠키 스토리지 사용 (DataStore 기반)
+        storage = cookiesStorage
     }
 }
 
