@@ -9,6 +9,8 @@ import com.on.model.discussion.content.CatalogContent
 import com.on.model.discussion.content.DiscussionCategory
 import com.on.model.discussion.content.ProfileImage
 import com.on.model.discussion.cursorpage.DiscussionCatalogCursorPage
+import com.on.network.dto.discussionlookup.DiscussionCursorPageResponse.ContentDto.OfflineContentDto
+import com.on.network.dto.discussionlookup.DiscussionCursorPageResponse.ContentDto.OnlineContentDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -23,68 +25,78 @@ data class DiscussionCursorPageResponse(
 ) {
     fun toDomain(): DiscussionCatalogCursorPage =
         DiscussionCatalogCursorPage(
-            discussionCatalog = contentDto.map { it.toDomain() },
+            discussionCatalog = contentDto.map { contentDto: ContentDto ->
+                when(contentDto) {
+                    is OnlineContentDto -> contentDto.toDomain()
+                    is OfflineContentDto -> contentDto.toDomain()
+                }
+            },
             hasNext = hasNext,
             nextCursor = nextCursor,
         )
 
     @Serializable
-    data class ContentDto(
-        @SerialName("id")
-        val id: Long,
-        @SerialName("discussionType")
-        val discussionType: String,
-        @SerialName("commonDiscussionInfo")
-        val commonDiscussionInfoDto: CommonDiscussionInfoDto,
-        @SerialName("offlineDiscussionInfo")
-        val offlineDiscussionInfoDto: OfflineDiscussionInfoDto?,
-        @SerialName("onlineDiscussionInfo")
-        val onlineDiscussionInfoDto: OnlineDiscussionInfoDto?,
-    ) {
-        fun toDomain(): DiscussionCatalog =
-            when (discussionType) {
-                "ONLINE" -> {
-                    OnlineDiscussionCatalog(
-                        catalogContent = CatalogContent(
-                            id = id,
-                            title = commonDiscussionInfoDto.title,
-                            discussionType = discussionType,
-                            author = commonDiscussionInfoDto.author,
-                            category = DiscussionCategory.of(commonDiscussionInfoDto.category),
-                            createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
-                            modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
-                            commentCount = commonDiscussionInfoDto.commentCount,
-                            profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
-                        ),
-                        endDate = onlineDiscussionInfoDto!!.endDate.toIsoLocalDate(),
-                    )
-                }
+    sealed interface ContentDto{
+        @Serializable
+        @SerialName("ONLINE")
+        data class OnlineContentDto(
+            @SerialName("id")
+            val id: Long,
+            @SerialName("discussionType")
+            val discussionType: String,
+            @SerialName("commonDiscussionInfo")
+            val commonDiscussionInfoDto: CommonDiscussionInfoDto,
+            @SerialName("onlineDiscussionInfo")
+            val onlineDiscussionInfoDto: OnlineDiscussionInfoDto,
+        ): ContentDto {
+            fun toDomain(): DiscussionCatalog =
+                OnlineDiscussionCatalog(
+                    catalogContent = CatalogContent(
+                        id = id,
+                        title = commonDiscussionInfoDto.title,
+                        discussionType = discussionType,
+                        author = commonDiscussionInfoDto.author,
+                        category = DiscussionCategory.of(commonDiscussionInfoDto.category),
+                        createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
+                        modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
+                        commentCount = commonDiscussionInfoDto.commentCount,
+                        profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
+                    ),
+                    endDate = onlineDiscussionInfoDto.endDate.toIsoLocalDate(),
+                )
+        }
 
-                "OFFLINE" -> {
-                    OfflineDiscussionCatalog(
-                        catalogContent = CatalogContent(
-                            id = id,
-                            title = commonDiscussionInfoDto.title,
-                            discussionType = discussionType,
-                            author = commonDiscussionInfoDto.author,
-                            category = DiscussionCategory.of(commonDiscussionInfoDto.category),
-                            createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
-                            modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
-                            commentCount = commonDiscussionInfoDto.commentCount,
-                            profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
-                        ),
-                        startAt = offlineDiscussionInfoDto!!.startAt.toIsoLocalDateTime(),
-                        endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
-                        place = offlineDiscussionInfoDto.place,
-                        maxParticipantCount = offlineDiscussionInfoDto.maxParticipantCount,
-                        participantCount = offlineDiscussionInfoDto.participantCount,
-                    )
-                }
-
-                else -> {
-                    throw IllegalArgumentException("없는 타입입니다.")
-                }
-            }
+        @Serializable
+        @SerialName("OFFLINE")
+        data class OfflineContentDto(
+            val id: Long,
+            @SerialName("discussionType")
+            val discussionType: String,
+            @SerialName("commonDiscussionInfo")
+            val commonDiscussionInfoDto: CommonDiscussionInfoDto,
+            @SerialName("offlineDiscussionInfo")
+            val offlineDiscussionInfoDto: OfflineDiscussionInfoDto,
+        ): ContentDto {
+            fun toDomain(): DiscussionCatalog =
+                OfflineDiscussionCatalog(
+                    catalogContent = CatalogContent(
+                        id = id,
+                        title = commonDiscussionInfoDto.title,
+                        discussionType = discussionType,
+                        author = commonDiscussionInfoDto.author,
+                        category = DiscussionCategory.of(commonDiscussionInfoDto.category),
+                        createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
+                        modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
+                        commentCount = commonDiscussionInfoDto.commentCount,
+                        profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
+                    ),
+                    startAt = offlineDiscussionInfoDto.startAt.toIsoLocalDateTime(),
+                    endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
+                    place = offlineDiscussionInfoDto.place,
+                    maxParticipantCount = offlineDiscussionInfoDto.maxParticipantCount,
+                    participantCount = offlineDiscussionInfoDto.participantCount,
+                )
+        }
 
         @Serializable
         data class CommonDiscussionInfoDto(
