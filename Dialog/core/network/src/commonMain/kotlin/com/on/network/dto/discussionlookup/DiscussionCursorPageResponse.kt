@@ -42,8 +42,6 @@ data class DiscussionCursorPageResponse(
         data class OnlineContentDto(
             @SerialName("id")
             val id: Long,
-            @SerialName("discussionType")
-            val discussionType: String,
             @SerialName("commonDiscussionInfo")
             val commonDiscussionInfoDto: CommonDiscussionInfoDto,
             @SerialName("onlineDiscussionInfo")
@@ -54,7 +52,6 @@ data class DiscussionCursorPageResponse(
                     catalogContent = CatalogContent(
                         id = id,
                         title = commonDiscussionInfoDto.title,
-                        discussionType = discussionType,
                         author = commonDiscussionInfoDto.author,
                         category = DiscussionCategory.of(commonDiscussionInfoDto.category),
                         createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
@@ -82,7 +79,6 @@ data class DiscussionCursorPageResponse(
                     catalogContent = CatalogContent(
                         id = id,
                         title = commonDiscussionInfoDto.title,
-                        discussionType = discussionType,
                         author = commonDiscussionInfoDto.author,
                         category = DiscussionCategory.of(commonDiscussionInfoDto.category),
                         createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),

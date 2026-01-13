@@ -30,7 +30,6 @@ sealed interface DiscussionDetailResponse {
             OnlineDiscussionDetail(
                 detailContent = DetailContent(
                     id = id,
-                    discussionType = DiscussionType.ONLINE,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
                     category = DiscussionCategory.of(commonDiscussionInfoDto.category),
@@ -64,7 +63,6 @@ sealed interface DiscussionDetailResponse {
             OfflineDiscussionDetail(
                 detailContent = DetailContent(
                     id = id,
-                    discussionType = DiscussionType.OFFLINE,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
                     category = DiscussionCategory.of(commonDiscussionInfoDto.category),
