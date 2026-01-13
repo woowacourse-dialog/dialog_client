@@ -1,10 +1,8 @@
 package com.on.model.discussion.catalog
 
-import com.on.dialog.core.common.extension.atEndOfDay
 import com.on.model.discussion.content.CatalogContent
 import com.on.model.discussion.content.DiscussionStatus
 import com.on.model.discussion.datetimeperiod.EndDate
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 data class OnlineDiscussionCatalog(
