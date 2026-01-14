@@ -27,17 +27,18 @@ fun MyPageScreen(modifier: Modifier = Modifier) {
                 loginType = LoginType.GITHUB,
                 onLoginSuccess = { showLoginWebView = false },
                 onLoginFailure = { showLoginWebView = false },
+                onLoginCancel = { showLoginWebView = false },
             )
         }
 
         false -> {
-            MyPageScreenDefault(onLoginClick = { showLoginWebView = true })
+            MyPageScreen(onLoginClick = { showLoginWebView = true })
         }
     }
 }
 
 @Composable
-fun MyPageScreenDefault(
+fun MyPageScreen(
     onLoginClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
     modifier: Modifier = Modifier,
@@ -68,7 +69,7 @@ fun MyPageScreenDefault(
 private fun MyPageScreenPreview() {
     DialogTheme {
         Surface {
-            MyPageScreenDefault()
+            MyPageScreen()
         }
     }
 }
