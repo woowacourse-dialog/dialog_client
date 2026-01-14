@@ -5,7 +5,6 @@ import com.on.dialog.core.common.extension.toIsoLocalDateTime
 import com.on.model.discussion.content.Author
 import com.on.model.discussion.content.DetailContent
 import com.on.model.discussion.content.DiscussionCategory
-import com.on.model.discussion.content.DiscussionType
 import com.on.model.discussion.content.ProfileImage
 import com.on.model.discussion.detail.DiscussionDetail
 import com.on.model.discussion.detail.OfflineDiscussionDetail
