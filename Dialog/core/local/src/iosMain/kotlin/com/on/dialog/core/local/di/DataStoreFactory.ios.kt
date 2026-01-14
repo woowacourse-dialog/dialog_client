@@ -18,6 +18,6 @@ internal fun createDataStore(): DataStore<Preferences> = createDataStore(
             create = false,
             error = null,
         )
-        requireNotNull(documentDirectory).path + "/$dataStoreFileName"
+        requireNotNull(documentDirectory).path + "/$DATA_STORE_PATH"
     },
 )
