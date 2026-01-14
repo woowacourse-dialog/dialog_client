@@ -52,9 +52,6 @@ kotlin {
             // datetime
             implementation(libs.kotlinx.datetime)
 
-            // dataStore
-            implementation(libs.androidx.datastore.preferences)
-
             // project
             implementation(projects.core.domain)
             implementation(projects.core.model)

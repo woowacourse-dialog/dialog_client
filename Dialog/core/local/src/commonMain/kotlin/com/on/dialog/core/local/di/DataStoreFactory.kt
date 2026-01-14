@@ -1,4 +1,4 @@
-package com.on.dialog.core.local.datastore
+package com.on.dialog.core.local.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory

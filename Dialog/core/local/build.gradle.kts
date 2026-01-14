@@ -1,5 +1,6 @@
 plugins {
     id("dialog.convention.kmp.library")
+    id("dialog.convention.kotlin.serialization")
 }
 
 android {
@@ -11,6 +12,8 @@ kotlin {
         commonMain.dependencies {
             // dataStore
             implementation(libs.androidx.datastore.preferences)
+
+            implementation(libs.ktor.client.core)
         }
     }
 }

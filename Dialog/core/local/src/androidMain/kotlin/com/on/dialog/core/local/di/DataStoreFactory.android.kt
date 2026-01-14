@@ -1,4 +1,4 @@
-package com.on.dialog.core.local.datastore
+package com.on.dialog.core.local.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
