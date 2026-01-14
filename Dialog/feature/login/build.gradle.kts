@@ -1,11 +1,51 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 plugins {
     id("dialog.convention.kmp.library")
     id("dialog.convention.kmp.compose")
+    alias(libs.plugins.buildkonfig)
 }
 
 android {
     namespace = "com.on.dialog.feature.login"
 }
+
+buildkonfig {
+    packageName = "com.on.dialog.feature.login"
+
+    defaultConfigs {
+        buildConfigField(
+            STRING,
+            "BASE_URL",
+            "${gradleLocalProperties(rootDir, providers).getProperty("debug_base_url")}"
+        )
+        buildConfigField(
+            STRING,
+            "GITHUB_OAUTH_URL",
+            "${gradleLocalProperties(rootDir, providers).getProperty("debug_github_oauth_url")}"
+        )
+        buildConfigField(BOOLEAN, "IS_DEBUG", "true")
+    }
+
+    targetConfigs {
+        create("release") {
+            buildConfigField(
+                STRING,
+                "BASE_URL",
+                "${gradleLocalProperties(rootDir, providers).getProperty("release_base_url")}"
+            )
+            buildConfigField(
+                STRING,
+                "GITHUB_OAUTH_URL",
+                "${gradleLocalProperties(rootDir, providers).getProperty("release_github_oauth_url")}"
+            )
+            buildConfigField(BOOLEAN, "IS_DEBUG", "false")
+        }
+    }
+}
+
 
 kotlin {
     sourceSets {

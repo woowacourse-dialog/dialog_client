@@ -1,14 +1,15 @@
-package com.on.dialog.login
+package com.on.dialog.feature.login
 
 import androidx.compose.runtime.Composable
+import org.koin.compose.viewmodel.koinViewModel
 
-internal const val DIALOG_URL = "https://woowa-dialog.com"
+internal val DIALOG_URL = BuildKonfig.BASE_URL
 
 enum class LoginType(
     val keyword: String,
     val loginUrl: String,
 ) {
-    GITHUB("github", "https://woowa-dialog.com/api/oauth2/authorization/github"),
+    GITHUB("github", BuildKonfig.GITHUB_OAUTH_URL),
     GOOGLE("google", ""),
 }
 
@@ -22,6 +23,7 @@ enum class LoginType(
 @Composable
 expect fun LoginWebViewScreen(
     loginType: LoginType,
-    onLoginSuccess: (String) -> Unit,
+    onLoginSuccess: () -> Unit,
     onLoginFailure: () -> Unit,
+    viewModel: LoginViewModel = koinViewModel(),
 )

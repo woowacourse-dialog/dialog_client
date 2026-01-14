@@ -1,4 +1,4 @@
-package com.on.dialog.login
+package com.on.dialog.feature.login
 
 import android.webkit.CookieManager
 import android.webkit.WebView
@@ -16,8 +16,9 @@ import io.github.aakira.napier.Napier
 @Composable
 actual fun LoginWebViewScreen(
     loginType: LoginType,
-    onLoginSuccess: (String) -> Unit,
+    onLoginSuccess: () -> Unit,
     onLoginFailure: () -> Unit,
+    viewModel: LoginViewModel,
 ) {
     var isLoginComplete: Boolean by remember { mutableStateOf(false) }
 
@@ -62,9 +63,11 @@ actual fun LoginWebViewScreen(
                         if (jsessionId != null) {
                             Napier.d("✅ JSESSIONID: $jsessionId")
                             isLoginComplete = true
-                            onLoginSuccess(jsessionId)
+                            viewModel.onIntent(LoginIntent.OnWebViewLoginSuccess(jsessionId))
+                            onLoginSuccess()
                         } else {
                             Napier.w("⚠️ JSESSIONID not found in cookies")
+                            viewModel.onIntent(LoginIntent.OnWebViewLoginFailure)
                             onLoginFailure()
                         }
                     }

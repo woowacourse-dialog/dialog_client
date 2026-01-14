@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,25 +13,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.login.LoginType
-import com.on.dialog.login.LoginWebViewScreen
+import com.on.dialog.feature.login.LoginType
+import com.on.dialog.feature.login.LoginWebViewScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MyPageScreen(modifier: Modifier = Modifier) {
     var showLoginWebView: Boolean by rememberSaveable { mutableStateOf(false) }
-    var text: String by rememberSaveable { mutableStateOf("JSESSIONID 없음") }
-
-    Text(text = text)
 
     when (showLoginWebView) {
         true -> {
             LoginWebViewScreen(
                 loginType = LoginType.GITHUB,
-                onLoginSuccess = { jsessionId: String ->
-                    showLoginWebView = false
-                    text = jsessionId
-                },
+                onLoginSuccess = { showLoginWebView = false },
                 onLoginFailure = { showLoginWebView = false },
             )
         }
