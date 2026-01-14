@@ -5,6 +5,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,9 +19,19 @@ actual fun LoginWebViewScreen(
     loginType: LoginType,
     onLoginSuccess: () -> Unit,
     onLoginFailure: () -> Unit,
+    onLoginCancel: () -> Unit,
     viewModel: LoginViewModel,
 ) {
     var isLoginComplete: Boolean by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            if (effect is LoginEffect.CloseLoginWebView) {
+                onLoginCancel()
+                return@collect
+            }
+        }
+    }
 
     AndroidView(
         modifier = Modifier.fillMaxSize(),
@@ -48,8 +59,8 @@ actual fun LoginWebViewScreen(
 
                     // 로그인 성공 페이지 감지
                     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때
-                    if (!isLoginComplete && !url.contains(loginType.keyword) && url.contains("woowa-dialog.com")) {
-                        val cookies = cookieManager.getCookie(DIALOG_URL)
+                    if (!isLoginComplete && url.contentEquals(BuildKonfig.BASE_URL)) {
+                        val cookies = cookieManager.getCookie(BuildKonfig.BASE_URL)
                         Napier.d("All Cookies: $cookies")
 
                         // JSESSIONID 추출
@@ -63,11 +74,11 @@ actual fun LoginWebViewScreen(
                         if (jsessionId != null) {
                             Napier.d("✅ JSESSIONID: $jsessionId")
                             isLoginComplete = true
-                            viewModel.onIntent(LoginIntent.OnWebViewLoginSuccess(jsessionId))
+                            viewModel.onIntent(LoginIntent.LoginSuccess(jsessionId))
                             onLoginSuccess()
                         } else {
                             Napier.w("⚠️ JSESSIONID not found in cookies")
-                            viewModel.onIntent(LoginIntent.OnWebViewLoginFailure)
+                            viewModel.onIntent(LoginIntent.LoginFailure)
                             onLoginFailure()
                         }
                     }

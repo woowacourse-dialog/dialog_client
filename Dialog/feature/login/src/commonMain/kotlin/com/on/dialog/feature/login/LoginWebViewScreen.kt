@@ -3,14 +3,11 @@ package com.on.dialog.feature.login
 import androidx.compose.runtime.Composable
 import org.koin.compose.viewmodel.koinViewModel
 
-internal val DIALOG_URL = BuildKonfig.BASE_URL
-
 enum class LoginType(
-    val keyword: String,
     val loginUrl: String,
 ) {
-    GITHUB("github", BuildKonfig.GITHUB_OAUTH_URL),
-    GOOGLE("google", ""),
+    GITHUB(BuildKonfig.GITHUB_OAUTH_URL),
+    GOOGLE(""),
 }
 
 /**
@@ -25,5 +22,6 @@ expect fun LoginWebViewScreen(
     loginType: LoginType,
     onLoginSuccess: () -> Unit,
     onLoginFailure: () -> Unit,
+    onLoginCancel: () -> Unit,
     viewModel: LoginViewModel = koinViewModel(),
 )
