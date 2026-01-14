@@ -41,15 +41,13 @@ actual fun LoginWebViewScreen(
             webView.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
+                    val url: String = url ?: return
 
                     Napier.d("WebView URL: $url")
 
                     // 로그인 성공 페이지 감지
                     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때
-                    if (!isLoginComplete &&
-                        url?.contains(loginType.keyword) == false &&
-                        url.contains("woowa-dialog.com")
-                    ) {
+                    if (!isLoginComplete && !url.contains(loginType.keyword) && url.contains("woowa-dialog.com")) {
                         val cookies = cookieManager.getCookie(DIALOG_URL)
                         Napier.d("All Cookies: $cookies")
 

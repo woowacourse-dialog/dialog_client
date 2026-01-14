@@ -11,6 +11,7 @@ import androidx.compose.ui.viewinterop.UIKitView
 import io.github.aakira.napier.Napier
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreGraphics.CGRectMake
+import platform.Foundation.NSHTTPCookie
 import platform.Foundation.NSHTTPCookieStorage
 import platform.Foundation.NSURL
 import platform.Foundation.NSURLRequest
@@ -44,16 +45,13 @@ actual fun LoginWebViewScreen(
                     webView: WKWebView,
                     didFinishNavigation: WKNavigation?,
                 ) {
-                    val url = webView.URL?.absoluteString ?: return
+                    val url: String = webView.URL?.absoluteString ?: return
 
                     Napier.d("WebView URL: $url")
 
                     // 로그인 성공 페이지 감지
                     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때
-                    if (!isLoginComplete &&
-                        !url.contains(loginType.keyword) &&
-                        url.contains("woowa-dialog.com")
-                    ) {
+                    if (!isLoginComplete && !url.contains(loginType.keyword) && url.contains("woowa-dialog.com")) {
                         // 쿠키 추출
                         val cookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage
                         val cookies = cookieStorage.cookies ?: emptyList<Any?>()
@@ -62,7 +60,7 @@ actual fun LoginWebViewScreen(
 
                         // JSESSIONID 추출
                         val jsessionId: String? = cookies
-                            .filterIsInstance<platform.Foundation.NSHTTPCookie>()
+                            .filterIsInstance<NSHTTPCookie>()
                             .find { it.name == "JSESSIONID" }
                             ?.value
 
