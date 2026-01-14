@@ -28,8 +28,11 @@ internal class DiscussionDefaultRepository(
     ): Result<DiscussionCatalogCursorPage> =
         discussionDatasource.getDiscussions(discussionCriteria.toQuery(), cursor, size).mapCatching { it.toDomain() }
 
-    override suspend fun getMyDiscussions(): Result<DiscussionCatalogCursorPage> =
-        discussionDatasource.getMyDiscussions().mapCatching { it.toDomain() }
+    override suspend fun getMyDiscussions(
+        cursor: String?,
+        size: Int,
+    ): Result<DiscussionCatalogCursorPage> =
+        discussionDatasource.getMyDiscussions(cursor, size).mapCatching { it.toDomain() }
 
     override suspend fun searchDiscussions(
         searchBy: Int,

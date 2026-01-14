@@ -16,7 +16,10 @@ interface DiscussionRepository {
         size: Int,
     ): Result<DiscussionCatalogCursorPage>
 
-    suspend fun getMyDiscussions(): Result<DiscussionCatalogCursorPage>
+    suspend fun getMyDiscussions(
+        cursor: String?,
+        size: Int,
+    ): Result<DiscussionCatalogCursorPage>
 
     suspend fun searchDiscussions(
         searchBy: Int,

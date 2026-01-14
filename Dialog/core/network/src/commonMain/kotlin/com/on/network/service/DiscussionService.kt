@@ -44,7 +44,10 @@ internal interface DiscussionService {
     ): DataResponse<DiscussionCursorPageResponse>
 
     @GET("api/discussions/me")
-    suspend fun getMyDiscussions(): DataResponse<DiscussionCursorPageResponse>
+    suspend fun getMyDiscussions(
+        @Query cursor: String?,
+        @Query size: Int,
+    ): DataResponse<DiscussionCursorPageResponse>
 
     @GET("api/discussions/search")
     suspend fun searchDiscussions(
