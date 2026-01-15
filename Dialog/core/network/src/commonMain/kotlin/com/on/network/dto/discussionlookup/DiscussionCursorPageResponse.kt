@@ -37,6 +37,7 @@ data class DiscussionCursorPageResponse(
             hasNext = hasNext,
             nextCursor = nextCursor,
         )
+
     @Serializable
     sealed interface ContentDto {
         @Serializable
@@ -66,6 +67,7 @@ data class DiscussionCursorPageResponse(
                     endDate = EndDate(onlineDiscussionInfoDto.endDate.toIsoLocalDate()),
                 )
         }
+
         @Serializable
         @SerialName("OFFLINE")
         data class OfflineContentDto(
