@@ -37,6 +37,7 @@ data class DiscussionCursorPageResponse(
             hasNext = hasNext,
             nextCursor = nextCursor,
         )
+    @Serializable
     sealed interface ContentDto {
         @Serializable
         @SerialName("ONLINE")
