@@ -1,5 +1,6 @@
 package com.on.model.discussion.content
 
+import com.on.model.common.ProfileImage
 import kotlinx.datetime.LocalDateTime
 
 data class CatalogContent(

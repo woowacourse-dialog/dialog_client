@@ -2,12 +2,12 @@ package com.on.network.dto.discussionlookup
 
 import com.on.dialog.core.common.extension.toIsoLocalDate
 import com.on.dialog.core.common.extension.toIsoLocalDateTime
+import com.on.model.common.ProfileImage
 import com.on.model.discussion.catalog.DiscussionCatalog
 import com.on.model.discussion.catalog.OfflineDiscussionCatalog
 import com.on.model.discussion.catalog.OnlineDiscussionCatalog
 import com.on.model.discussion.content.CatalogContent
 import com.on.model.discussion.content.DiscussionCategory
-import com.on.model.discussion.content.ProfileImage
 import com.on.model.discussion.cursorpage.DiscussionCatalogCursorPage
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

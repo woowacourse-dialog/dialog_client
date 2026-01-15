@@ -1,4 +1,4 @@
-package com.on.model.discussion.content
+package com.on.model.common
 
 data class ProfileImage(
     val basicImageUri: String?,

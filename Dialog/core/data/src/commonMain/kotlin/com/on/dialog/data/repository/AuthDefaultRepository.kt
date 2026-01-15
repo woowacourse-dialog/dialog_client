@@ -1,7 +1,7 @@
 package com.on.dialog.data.repository
 
 import com.on.dialog.domain.repository.AuthRepository
-import com.on.model.auth.Track
+import com.on.model.common.Track
 import com.on.network.datasource.AuthDatasource
 import com.on.network.dto.auth.SignupRequest
 
