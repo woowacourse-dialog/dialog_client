@@ -16,6 +16,7 @@ kotlin {
             implementation(projects.core.domain)
             implementation(projects.core.network)
             implementation(projects.core.local)
+            implementation(projects.core.model)
             implementation(projects.feature.login)
         }
     }

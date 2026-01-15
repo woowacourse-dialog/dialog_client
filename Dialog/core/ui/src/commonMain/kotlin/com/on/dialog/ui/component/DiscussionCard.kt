@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.ui.mapper.Category
 import com.on.dialog.ui.mapper.toChipCategory
+import com.on.model.common.Track
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.discussion_card_author
 import dialog.core.ui.generated.resources.discussion_card_endAt
@@ -94,9 +94,9 @@ private fun DiscussionCardPreviewDark() {
 @Composable
 private fun DiscussionCardPreviewContent() {
     val chips: ImmutableList<ChipCategory> = persistentListOf(
-        Category.ONLINE.toChipCategory(),
-        Category.ANDROID.toChipCategory(),
-        Category.FRONTEND.toChipCategory(),
+        "ONLINE".toChipCategory(),
+        Track.ANDROID.toChipCategory(),
+        Track.FRONTEND.toChipCategory(),
     )
 
     Surface(color = DialogTheme.colorScheme.surfaceContainer) {
