@@ -5,7 +5,6 @@ import com.on.dialog.core.common.extension.toIsoLocalDateTime
 import com.on.model.discussion.content.Author
 import com.on.model.discussion.content.DetailContent
 import com.on.model.discussion.content.DiscussionCategory
-import com.on.model.discussion.content.DiscussionType
 import com.on.model.discussion.content.ProfileImage
 import com.on.model.discussion.datetimeperiod.DateTimePeriod
 import com.on.model.discussion.datetimeperiod.EndDate
@@ -33,7 +32,6 @@ sealed interface DiscussionDetailResponse {
             OnlineDiscussionDetail(
                 detailContent = DetailContent(
                     id = id,
-                    discussionType = DiscussionType.ONLINE,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
                     category = DiscussionCategory.of(commonDiscussionInfoDto.category),
@@ -67,7 +65,6 @@ sealed interface DiscussionDetailResponse {
             OfflineDiscussionDetail(
                 detailContent = DetailContent(
                     id = id,
-                    discussionType = DiscussionType.OFFLINE,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
                     category = DiscussionCategory.of(commonDiscussionInfoDto.category),

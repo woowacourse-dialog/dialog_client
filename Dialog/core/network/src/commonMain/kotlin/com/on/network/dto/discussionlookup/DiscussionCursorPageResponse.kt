@@ -37,8 +37,6 @@ data class DiscussionCursorPageResponse(
             hasNext = hasNext,
             nextCursor = nextCursor,
         )
-
-    @Serializable
     sealed interface ContentDto {
         @Serializable
         @SerialName("ONLINE")
@@ -57,7 +55,6 @@ data class DiscussionCursorPageResponse(
                     catalogContent = CatalogContent(
                         id = id,
                         title = commonDiscussionInfoDto.title,
-                        discussionType = discussionType,
                         author = commonDiscussionInfoDto.author,
                         category = DiscussionCategory.of(commonDiscussionInfoDto.category),
                         createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
@@ -68,7 +65,6 @@ data class DiscussionCursorPageResponse(
                     endDate = EndDate(onlineDiscussionInfoDto.endDate.toIsoLocalDate()),
                 )
         }
-
         @Serializable
         @SerialName("OFFLINE")
         data class OfflineContentDto(
@@ -85,7 +81,6 @@ data class DiscussionCursorPageResponse(
                     catalogContent = CatalogContent(
                         id = id,
                         title = commonDiscussionInfoDto.title,
-                        discussionType = discussionType,
                         author = commonDiscussionInfoDto.author,
                         category = DiscussionCategory.of(commonDiscussionInfoDto.category),
                         createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
