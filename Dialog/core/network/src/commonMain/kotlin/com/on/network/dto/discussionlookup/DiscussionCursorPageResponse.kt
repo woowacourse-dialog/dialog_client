@@ -9,6 +9,9 @@ import com.on.model.discussion.content.CatalogContent
 import com.on.model.discussion.content.DiscussionCategory
 import com.on.model.discussion.content.ProfileImage
 import com.on.model.discussion.cursorpage.DiscussionCatalogCursorPage
+import com.on.model.discussion.datetimeperiod.DateTimePeriod
+import com.on.model.discussion.datetimeperiod.EndDate
+import com.on.model.discussion.participant.ParticipantCapacity
 import com.on.network.dto.discussionlookup.DiscussionCursorPageResponse.ContentDto.OfflineContentDto
 import com.on.network.dto.discussionlookup.DiscussionCursorPageResponse.ContentDto.OnlineContentDto
 import kotlinx.serialization.SerialName
@@ -42,6 +45,8 @@ data class DiscussionCursorPageResponse(
         data class OnlineContentDto(
             @SerialName("id")
             val id: Long,
+            @SerialName("discussionType")
+            val discussionType: String,
             @SerialName("commonDiscussionInfo")
             val commonDiscussionInfoDto: CommonDiscussionInfoDto,
             @SerialName("onlineDiscussionInfo")
@@ -59,7 +64,7 @@ data class DiscussionCursorPageResponse(
                         commentCount = commonDiscussionInfoDto.commentCount,
                         profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
                     ),
-                    endDate = onlineDiscussionInfoDto.endDate.toIsoLocalDate(),
+                    endDate = EndDate(onlineDiscussionInfoDto.endDate.toIsoLocalDate()),
                 )
         }
 
@@ -86,11 +91,15 @@ data class DiscussionCursorPageResponse(
                         commentCount = commonDiscussionInfoDto.commentCount,
                         profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
                     ),
-                    startAt = offlineDiscussionInfoDto.startAt.toIsoLocalDateTime(),
-                    endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
+                    dateTimePeriod = DateTimePeriod(
+                        startAt = offlineDiscussionInfoDto.startAt.toIsoLocalDateTime(),
+                        endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
+                    ),
+                    participantCapacity = ParticipantCapacity(
+                        current = offlineDiscussionInfoDto.participantCount,
+                        max = offlineDiscussionInfoDto.maxParticipantCount,
+                    ),
                     place = offlineDiscussionInfoDto.place,
-                    maxParticipantCount = offlineDiscussionInfoDto.maxParticipantCount,
-                    participantCount = offlineDiscussionInfoDto.participantCount,
                 )
         }
 
