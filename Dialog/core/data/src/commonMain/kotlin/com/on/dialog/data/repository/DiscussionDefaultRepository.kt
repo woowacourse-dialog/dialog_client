@@ -10,6 +10,9 @@ import com.on.model.discussion.summary.DiscussionSummary
 import com.on.network.datasource.DiscussionDatasource
 import com.on.network.dto.discussioncreate.CreateOfflineDiscussionRequest.Companion.toCreationRequest
 import com.on.network.dto.discussioncreate.CreateOnlineDiscussionRequest.Companion.toCreateRequest
+import com.on.network.dto.discussiondetail.DiscussionDetailResponse
+import com.on.network.dto.discussiondetail.DiscussionDetailResponse.DiscussionDetailOfflineResponse
+import com.on.network.dto.discussiondetail.DiscussionDetailResponse.DiscussionDetailOnlineResponse
 import com.on.network.dto.discussionedit.OfflineDiscussionEditRequest.Companion.toEditRequest
 import com.on.network.dto.discussionedit.OnlineDiscussionEditRequest.Companion.toEditRequest
 import com.on.network.dto.discussionlookup.DiscussionQuery.Companion.toQuery
@@ -19,7 +22,14 @@ internal class DiscussionDefaultRepository(
     private val discussionDatasource: DiscussionDatasource,
 ) : DiscussionRepository {
     override suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetail> =
-        discussionDatasource.getDiscussionDetail(id).mapCatching { it.toDomain() }
+        discussionDatasource
+            .getDiscussionDetail(id = id)
+            .mapCatching { discussionDetailResponse: DiscussionDetailResponse ->
+                when (discussionDetailResponse) {
+                    is DiscussionDetailOnlineResponse -> discussionDetailResponse.toDomain()
+                    is DiscussionDetailOfflineResponse -> discussionDetailResponse.toDomain()
+                }
+            }
 
     override suspend fun getDiscussions(
         discussionCriteria: DiscussionCriteria,
