@@ -53,6 +53,7 @@ internal fun HttpClientConfig<*>.installContentNegotiation() {
                 ignoreUnknownKeys = true
                 isLenient = true
                 encodeDefaults = true
+                classDiscriminator = "discussionType"
             },
         )
     }
@@ -71,7 +72,6 @@ private object PrettyLogger : Logger {
     private val jsonConfiguration = Json {
         prettyPrintIndent = "\t"
         prettyPrint = true
-        classDiscriminator = "discussionType"
     }
 
     override fun log(message: String) {
