@@ -1,5 +1,6 @@
 package com.on.dialog.feature.mypage
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.domain.repository.AuthRepository
@@ -8,7 +9,6 @@ import com.on.dialog.ui.viewmodel.BaseViewModel
 import com.on.dialog.ui.viewmodel.UiEffect
 import com.on.dialog.ui.viewmodel.UiIntent
 import com.on.dialog.ui.viewmodel.UiState
-import com.on.model.common.Track
 import kotlinx.coroutines.launch
 
 sealed interface MyPageUiIntent : UiIntent {
@@ -23,12 +23,13 @@ sealed interface MyPageUiEffect : UiEffect {
     ) : MyPageUiEffect
 }
 
+@Immutable
 data class MyPageUiState(
     val isLoggedIn: Boolean = false,
     val isLoading: Boolean = true,
     val imageUrl: String = "",
     val nickname: String = "",
-    val track: Track = Track.ANDROID,
+    val track: String = "",
     val githubId: String = "",
     val isNotificationEnable: Boolean = false,
 ) : UiState
@@ -55,7 +56,7 @@ class MyPageViewModel(
                         copy(
                             isLoggedIn = true,
                             isLoading = false,
-                            track = userInfo.track,
+                            track = userInfo.track.initial,
                             nickname = userInfo.nickname,
                             githubId = userInfo.githubId,
                             isNotificationEnable = userInfo.isNotificationEnabled,

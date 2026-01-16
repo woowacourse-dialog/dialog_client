@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +42,10 @@ fun MyPageScreen(
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = koinViewModel(),
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.onIntent(MyPageUiIntent.LoadMyPage)
+    }
+
     val uiState: MyPageUiState by viewModel.uiState.collectAsState()
     var showLoginWebView: Boolean by rememberSaveable { mutableStateOf(false) }
 
@@ -62,6 +67,7 @@ fun MyPageScreen(
                 uiState = uiState,
                 onLoginClick = { showLoginWebView = true },
                 onLogoutClick = {},
+                modifier = modifier,
             )
         }
     }
@@ -168,7 +174,7 @@ fun ProfileSection(
                                 style = DialogTheme.typography.titleMedium,
                             )
                             Text(
-                                text = uiState.track.initial,
+                                text = uiState.track,
                                 style = DialogTheme.typography.labelLarge,
                             )
                         }
@@ -195,7 +201,7 @@ private fun MyPageScreenLoggedInPreview() {
                 uiState = MyPageUiState(
                     imageUrl = "",
                     nickname = "크림",
-                    track = Track.ANDROID,
+                    track = Track.ANDROID.initial,
                     githubId = "ijh1298",
                     isNotificationEnable = false,
                     isLoggedIn = true,
