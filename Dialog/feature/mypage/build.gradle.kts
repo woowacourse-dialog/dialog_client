@@ -17,7 +17,11 @@ kotlin {
             implementation(projects.core.network)
             implementation(projects.core.local)
             implementation(projects.core.model)
+            implementation(projects.core.common)
             implementation(projects.feature.login)
+
+            // koin
+            implementation(libs.koin.compose.viewmodel)
         }
     }
 }
