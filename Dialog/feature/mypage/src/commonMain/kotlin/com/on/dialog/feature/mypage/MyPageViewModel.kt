@@ -1,6 +1,5 @@
 package com.on.dialog.feature.mypage
 
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.domain.repository.AuthRepository
@@ -9,10 +8,13 @@ import com.on.dialog.ui.viewmodel.BaseViewModel
 import com.on.dialog.ui.viewmodel.UiEffect
 import com.on.dialog.ui.viewmodel.UiIntent
 import com.on.dialog.ui.viewmodel.UiState
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 sealed interface MyPageUiIntent : UiIntent {
     data object LoadMyPage : MyPageUiIntent
+
+    data object Logout : MyPageUiIntent
 }
 
 sealed interface MyPageUiEffect : UiEffect {
@@ -23,7 +25,6 @@ sealed interface MyPageUiEffect : UiEffect {
     ) : MyPageUiEffect
 }
 
-@Immutable
 data class MyPageUiState(
     val isLoggedIn: Boolean = false,
     val isLoading: Boolean = true,
@@ -43,6 +44,10 @@ class MyPageViewModel(
             MyPageUiIntent.LoadMyPage -> {
                 loadMyPage()
                 loadMyProfileImage()
+            }
+
+            MyPageUiIntent.Logout -> {
+                logout()
             }
         }
     }
@@ -88,7 +93,7 @@ class MyPageViewModel(
                                 ?: "",
                         )
                     }
-                }.onFailure { result ->
+                }.onFailure { result: Throwable ->
                     if (result is NetworkError.Unauthorized) {
                         updateState {
                             copy(isLoading = false, isLoggedIn = false)
@@ -97,6 +102,19 @@ class MyPageViewModel(
                     } else {
                         emitEffect(MyPageUiEffect.ShowError("내 프로필 이미지를 불러오는데 실패했습니다."))
                     }
+                }
+        }
+    }
+
+    private fun logout() {
+        viewModelScope.launch {
+            authRepository
+                .logout()
+                .onSuccess {
+                    updateState { MyPageUiState() }
+                    Napier.d("로그아웃 성공")
+                }.onFailure { result: Throwable ->
+                    emitEffect(MyPageUiEffect.ShowError(result.message ?: "로그아웃에 실패했습니다."))
                 }
         }
     }

@@ -66,7 +66,7 @@ fun MyPageScreen(
             MyPageScreen(
                 uiState = uiState,
                 onLoginClick = { showLoginWebView = true },
-                onLogoutClick = {},
+                onLogoutClick = { viewModel.onIntent(MyPageUiIntent.Logout) },
                 modifier = modifier,
             )
         }
@@ -90,7 +90,7 @@ fun MyPageScreen(
     ) {
         when (isLoggedIn) {
             true -> MyPageScreenLoggedIn(uiState, onLogoutClick)
-            false -> MyPageScreenLoggedOut(uiState, onLoginClick)
+            false -> MyPageScreenLoggedOut(onLoginClick)
         }
     }
 }
@@ -127,7 +127,6 @@ private fun MyPageScreenLoggedIn(
 
 @Composable
 private fun MyPageScreenLoggedOut(
-    uiState: MyPageUiState,
     onLoginClick: () -> Unit,
 ) {
     DialogCard(
@@ -188,6 +187,25 @@ fun ProfileSection(
             ) {
                 Icon(imageVector = DialogIcons.Edit, contentDescription = "")
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ProfileSectionPreview() {
+    DialogTheme {
+        Surface {
+            ProfileSection(
+                MyPageUiState(
+                    imageUrl = "",
+                    nickname = "크림",
+                    track = Track.ANDROID.initial,
+                    githubId = "ijh1298",
+                    isNotificationEnable = false,
+                    isLoggedIn = true,
+                ),
+            )
         }
     }
 }

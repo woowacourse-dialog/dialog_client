@@ -12,6 +12,9 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.domain)
             implementation(projects.core.model)
+            implementation(projects.core.local)
+            implementation(projects.feature.login)
+            implementation(projects.feature.mypage)
         }
     }
 }
