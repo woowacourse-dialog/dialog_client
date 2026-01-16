@@ -1,9 +1,11 @@
 package com.on.model.common
 
-enum class Track {
-    ANDROID,
-    BACKEND,
-    FRONTEND,
+enum class Track(
+    val initial: String,
+) {
+    ANDROID("AN"),
+    BACKEND("BE"),
+    FRONTEND("FE"),
     ;
 
     companion object {
