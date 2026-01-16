@@ -15,9 +15,9 @@ interface AuthService {
         @Body request: SignupRequest,
     ): DataResponse<SignupResponse>
 
-    @GET("/api/login/check")
+    @GET("api/login/check")
     suspend fun getLoginStatus(): DataResponse<LoginCheckResponse>
 
-    @DELETE("/api/logout")
+    @DELETE("api/logout")
     suspend fun logout(): DataResponse<Unit?>
 }

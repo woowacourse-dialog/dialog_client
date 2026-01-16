@@ -13,30 +13,30 @@ import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.PATCH
 
 interface UserService {
-    @GET("/api/user/mine")
+    @GET("api/user/mine")
     suspend fun getMyUserInfo(): DataResponse<UserInfoResponse>
 
-    @PATCH("/api/user/mine")
+    @PATCH("api/user/mine")
     suspend fun updateMyProfile(
         @Body
         request: UserMypageUpdateRequest,
     ): DataResponse<Unit?>
 
-    @PATCH("/api/user/mine/notifications")
+    @PATCH("api/user/mine/notifications")
     suspend fun updateNotificationSetting(
         @Body
         request: NotificationSettingRequest,
     ): DataResponse<NotificationSettingResponse>
 
-    @GET("/api/user/mine/profile-image")
+    @GET("api/user/mine/profile-image")
     suspend fun getMyProfileImage(): DataResponse<ProfileImageGetResponse>
 
-    @PATCH("/api/user/mine/profile-image")
+    @PATCH("api/user/mine/profile-image")
     suspend fun updateMyProfileImage(
         @Body
         request: String, // 업로드할 이미지 파일 Binary (JPEG, PNG 등)
     ): DataResponse<ProfileImageUpdateResponse>
 
-    @GET("/api/user/mine/track")
+    @GET("api/user/mine/track")
     suspend fun getMyTrack(): DataResponse<MyTrackGetTrackResponse>
 }
