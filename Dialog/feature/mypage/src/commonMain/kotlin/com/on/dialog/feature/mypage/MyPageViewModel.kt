@@ -114,6 +114,7 @@ class MyPageViewModel(
                     updateState { MyPageUiState() }
                     Napier.d("로그아웃 성공")
                 }.onFailure { result: Throwable ->
+                    Napier.w("로그아웃 실패")
                     emitEffect(MyPageUiEffect.ShowError(result.message ?: "로그아웃에 실패했습니다."))
                 }
         }
