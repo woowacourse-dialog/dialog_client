@@ -21,13 +21,18 @@ kotlinx-serialization = "1.9.0"
 kotlinx-collections-immutable = "0.4.0"
 
 # Compose & UI
-compose-multiplatform = "1.9.3"
+compose-multiplatform = "1.10.0"
 androidx-core = "1.17.0"
 androidx-datastore = "1.2.0"
 androidx-lifecycle-runtime = "2.10.0"
 androidx-startup = "1.2.0"
 androidx-activity-compose = "1.12.1"
 jetbrains-androidx-navigation = "2.9.1"
+
+# Navigation
+nav3Core = "1.0.0"
+lifecycleViewmodelNav3 = "2.10.0"
+kotlinxSerializationCore = "1.9.0"
 
 # Room Database
 androidx-room = "2.8.4"
@@ -92,6 +97,12 @@ androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle-runtime" }
 androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "jetbrains-androidx-navigation" }
 androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test"}
+
+# Navigation
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerializationCore" }
 
 # Ktor
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
