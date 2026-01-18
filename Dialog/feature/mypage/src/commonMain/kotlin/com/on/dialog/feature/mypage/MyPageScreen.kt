@@ -83,7 +83,7 @@ fun MyPageScreen(
 }
 
 @Composable
-fun MyPageScreen(
+private fun MyPageScreen(
     uiState: MyPageUiState,
     isLoggedIn: Boolean = uiState.isLoggedIn,
     modifier: Modifier = Modifier,
@@ -141,13 +141,11 @@ private fun MyPageScreenLoggedOut(
     DialogCard(
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Column {
-            DialogButton(
-                text = stringResource(Res.string.login),
-                style = DialogButtonStyle.None,
-                onClick = onLoginClick,
-            ) { Icon(imageVector = DialogIcons.Login, contentDescription = "") }
-        }
+        DialogButton(
+            text = stringResource(Res.string.login),
+            style = DialogButtonStyle.None,
+            onClick = onLoginClick,
+        ) { Icon(imageVector = DialogIcons.Login, contentDescription = "") }
     }
 }
 
@@ -171,24 +169,11 @@ fun ProfileSection(
                     contentDescription = "",
                     modifier = Modifier.size(60.dp),
                 )
-                Row {
-                    Column(verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraSmall)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraSmall),
-                        ) {
-                            Text(
-                                text = uiState.nickname,
-                                style = DialogTheme.typography.titleMedium,
-                            )
-                            Text(
-                                text = uiState.track,
-                                style = DialogTheme.typography.labelLarge,
-                            )
-                        }
-                        Text(text = uiState.githubId, style = DialogTheme.typography.bodyMedium)
-                    }
-                }
+                ProfileInfo(
+                    nickname = uiState.nickname,
+                    track = uiState.track,
+                    githubId = uiState.githubId,
+                )
             }
             DialogIconButton(
                 tone = DialogIconButtonTone.Primary,
@@ -197,6 +182,34 @@ fun ProfileSection(
                 Icon(imageVector = DialogIcons.Edit, contentDescription = "")
             }
         }
+    }
+}
+
+@Composable
+private fun ProfileInfo(
+    nickname: String,
+    track: String,
+    githubId: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraSmall),
+        modifier = modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraSmall),
+        ) {
+            Text(
+                text = nickname,
+                style = DialogTheme.typography.titleMedium,
+            )
+            Text(
+                text = track,
+                style = DialogTheme.typography.labelLarge,
+            )
+        }
+        Text(text = githubId, style = DialogTheme.typography.bodyMedium)
     }
 }
 
