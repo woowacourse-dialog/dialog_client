@@ -21,10 +21,6 @@ internal class PersistentCookieStorage(
     private val cookiesKey = stringPreferencesKey("http_cookies")
     private val cookiesCache = mutableMapOf<String, Cookie>()
 
-    init {
-        // 앱 시작시 저장된 쿠키 로드
-    }
-
     override suspend fun addCookie(requestUrl: Url, cookie: Cookie) {
         mutex.withLock {
             cookiesCache[cookie.name] = cookie
