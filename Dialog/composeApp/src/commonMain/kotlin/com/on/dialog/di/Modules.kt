@@ -3,7 +3,7 @@ package com.on.dialog.di
 import com.on.dialog.core.local.di.localModule
 import com.on.dialog.data.di.repositoryModule
 import com.on.dialog.feature.login.di.loginModule
-import com.on.dialog.feature.mypage.myPageModule
+import com.on.dialog.feature.mypage.di.myPageModule
 import com.on.network.di.datasourceModule
 import com.on.network.di.networkModule
 import com.on.network.di.serviceModule
