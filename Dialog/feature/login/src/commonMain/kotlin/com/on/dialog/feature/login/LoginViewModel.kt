@@ -30,6 +30,7 @@ sealed interface LoginIntent : UiIntent {
 
     data class LoginSuccess(
         val jsessionId: String,
+        val isNewUser: Boolean = false,
     ) : LoginIntent
 
     data object LoginFailure : LoginIntent

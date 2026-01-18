@@ -59,6 +59,9 @@ fun MyPageScreen(
                 },
                 onLoginFailure = { showLoginWebView = false },
                 onLoginCancel = { showLoginWebView = false },
+                onSignUp = {
+                    // TODO 트랙 선택 화면 이동
+                },
             )
         }
 

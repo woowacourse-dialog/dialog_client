@@ -23,5 +23,6 @@ expect fun LoginWebViewScreen(
     onLoginSuccess: () -> Unit,
     onLoginFailure: () -> Unit,
     onLoginCancel: () -> Unit,
+    onSignUp: () -> Unit,
     viewModel: LoginViewModel = koinViewModel(),
 )
