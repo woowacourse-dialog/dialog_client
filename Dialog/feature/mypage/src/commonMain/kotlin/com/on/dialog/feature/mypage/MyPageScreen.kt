@@ -1,7 +1,9 @@
 package com.on.dialog.feature.mypage
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,8 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.on.dialog.designsystem.component.DialogButton
-import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogIconButtonTone
@@ -115,19 +118,16 @@ private fun MyPageScreenLoggedIn(
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column {
-            DialogButton(
+            MyPageMenuButton(
                 text = stringResource(Res.string.my_discussions),
-                style = DialogButtonStyle.None,
                 onClick = {},
             ) { Icon(imageVector = DialogIcons.Forum, contentDescription = "") }
-            DialogButton(
+            MyPageMenuButton(
                 text = stringResource(Res.string.my_scraps),
-                style = DialogButtonStyle.None,
                 onClick = {},
             ) { Icon(imageVector = DialogIcons.Bookmark, contentDescription = "") }
-            DialogButton(
+            MyPageMenuButton(
                 text = stringResource(Res.string.logout),
-                style = DialogButtonStyle.None,
                 onClick = onLogoutClick,
             ) { Icon(imageVector = DialogIcons.Logout, contentDescription = "") }
         }
@@ -141,11 +141,36 @@ private fun MyPageScreenLoggedOut(
     DialogCard(
         modifier = Modifier.fillMaxWidth(),
     ) {
-        DialogButton(
+        MyPageMenuButton(
             text = stringResource(Res.string.login),
-            style = DialogButtonStyle.None,
             onClick = onLoginClick,
         ) { Icon(imageVector = DialogIcons.Login, contentDescription = "") }
+    }
+}
+
+@Composable
+private fun MyPageMenuButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    leadingIcon: @Composable (() -> Unit)? = null,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(
+                vertical = DialogTheme.spacing.medium,
+                horizontal = DialogTheme.spacing.small,
+            ),
+    ) {
+        leadingIcon?.let {
+            Box(modifier = Modifier.sizeIn(maxHeight = ButtonDefaults.IconSize)) {
+                leadingIcon()
+            }
+            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+        }
+        Text(text = text, style = DialogTheme.typography.labelLarge)
     }
 }
 
