@@ -34,6 +34,12 @@ import com.on.dialog.feature.login.LoginType
 import com.on.dialog.feature.login.LoginWebViewScreen
 import com.on.dialog.ui.component.ProfileImage
 import com.on.model.common.Track
+import dialog.feature.mypage.generated.resources.Res
+import dialog.feature.mypage.generated.resources.login
+import dialog.feature.mypage.generated.resources.logout
+import dialog.feature.mypage.generated.resources.my_discussions
+import dialog.feature.mypage.generated.resources.my_scraps
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -110,17 +116,17 @@ private fun MyPageScreenLoggedIn(
     ) {
         Column {
             DialogButton(
-                text = "내가 개설한 토론 보기",
+                text = stringResource(Res.string.my_discussions),
                 style = DialogButtonStyle.None,
                 onClick = {},
             ) { Icon(imageVector = DialogIcons.Forum, contentDescription = "") }
             DialogButton(
-                text = "내가 스크랩한 토론 보기",
+                text = stringResource(Res.string.my_scraps),
                 style = DialogButtonStyle.None,
                 onClick = {},
             ) { Icon(imageVector = DialogIcons.Bookmark, contentDescription = "") }
             DialogButton(
-                text = "로그아웃",
+                text = stringResource(Res.string.logout),
                 style = DialogButtonStyle.None,
                 onClick = onLogoutClick,
             ) { Icon(imageVector = DialogIcons.Logout, contentDescription = "") }
@@ -137,7 +143,7 @@ private fun MyPageScreenLoggedOut(
     ) {
         Column {
             DialogButton(
-                text = "로그인",
+                text = stringResource(Res.string.login),
                 style = DialogButtonStyle.None,
                 onClick = onLoginClick,
             ) { Icon(imageVector = DialogIcons.Login, contentDescription = "") }
