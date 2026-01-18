@@ -7,7 +7,7 @@ import com.on.network.dto.auth.SignupRequest
 import com.on.network.dto.auth.SignupResponse
 import com.on.network.service.AuthService
 
-class AuthRemoteDatasource(
+internal class AuthRemoteDatasource(
     private val authService: AuthService,
 ) : AuthDatasource {
     override suspend fun signup(request: SignupRequest): Result<SignupResponse> =

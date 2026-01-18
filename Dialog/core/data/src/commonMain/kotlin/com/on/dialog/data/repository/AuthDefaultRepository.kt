@@ -5,7 +5,7 @@ import com.on.model.common.Track
 import com.on.network.datasource.AuthDatasource
 import com.on.network.dto.auth.SignupRequest
 
-class AuthDefaultRepository(
+internal class AuthDefaultRepository(
     private val authDatasource: AuthDatasource,
 ) : AuthRepository {
     override suspend fun signup(

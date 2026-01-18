@@ -6,7 +6,7 @@ import com.on.model.common.Track
 import com.on.model.user.UserInfo
 import com.on.network.datasource.UserDatasource
 
-class UserDefaultRepository(
+internal class UserDefaultRepository(
     private val userDatasource: UserDatasource,
 ) : UserRepository {
     override suspend fun getMyUserInfo(): Result<UserInfo> =

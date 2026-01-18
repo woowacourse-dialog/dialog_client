@@ -11,7 +11,7 @@ import com.on.network.dto.user.UserInfoResponse
 import com.on.network.dto.user.UserMypageUpdateRequest
 import com.on.network.service.UserService
 
-class UserRemoteDatasource(
+internal class UserRemoteDatasource(
     private val userService: UserService,
 ) : UserDatasource {
     override suspend fun getMyUserInfo(): Result<UserInfoResponse> =

@@ -12,10 +12,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class PersistentCookieStorage(
+internal class PersistentCookieStorage(
     private val dataStore: DataStore<Preferences>,
 ) : CookiesStorage {
     private val mutex = Mutex()
