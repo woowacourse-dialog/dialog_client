@@ -34,7 +34,6 @@ actual fun LoginWebViewScreen(
     viewModel: LoginViewModel,
 ) {
     var isLoginComplete: Boolean by remember { mutableStateOf(false) }
-    var isUrlLoaded: Boolean by remember { mutableStateOf(false) }
     var isNewUser: Boolean by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -91,15 +90,7 @@ actual fun LoginWebViewScreen(
 
                     // 로그인 성공 페이지 감지
                     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때
-                    // URL 비교 시 trailing slash 제거하여 비교
-                    val normalizedUrl = url.trimEnd('/')
-                    val normalizedBaseUrl = baseUrl.trimEnd('/')
-
-                    Napier.d("🌐 normalizedUrl: $normalizedUrl")
-                    Napier.d("🌐 normalizedBaseUrl: $normalizedBaseUrl")
-                    Napier.d("🌐 URL matches: ${normalizedUrl == normalizedBaseUrl}")
-
-                    if (!isLoginComplete && normalizedUrl == normalizedBaseUrl) {
+                    if (!isLoginComplete && url.contentEquals(baseUrl)) {
                         // WKWebView 전용 쿠키 저장소에서 쿠키 추출
                         val cookieStore = config.websiteDataStore.httpCookieStore
                         cookieStore.getAllCookies { cookies ->
@@ -132,21 +123,17 @@ actual fun LoginWebViewScreen(
                 }
             }
 
-            webView
-        },
-        update = { webView ->
-            if (!isUrlLoaded) {
-                isUrlLoaded = true
-                Napier.d("Loading login URL: ${loginType.loginUrl}")
-                val url = NSURL.URLWithString(loginType.loginUrl)
-                if (url != null) {
-                    val request = NSURLRequest.requestWithURL(url)
-                    webView.loadRequest(request)
-                } else {
-                    Napier.e("Invalid login URL: ${loginType.loginUrl}")
-                    onLoginFailure()
-                }
+            // 로그인 URL 로드
+            val url = NSURL.URLWithString(loginType.loginUrl)
+            if (url != null) {
+                val request = NSURLRequest.requestWithURL(url)
+                webView.loadRequest(request)
+            } else {
+                Napier.e("Invalid login URL: ${loginType.loginUrl}")
+                onLoginFailure()
             }
+
+            webView
         },
     )
 }
