@@ -11,6 +11,16 @@ import com.on.dialog.ui.viewmodel.UiState
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
+data class MyPageUiState(
+    val isLoggedIn: Boolean = false,
+    val isLoading: Boolean = true,
+    val imageUrl: String = "",
+    val nickname: String = "",
+    val track: String = "",
+    val githubId: String = "",
+    val isNotificationEnable: Boolean = false,
+) : UiState
+
 sealed interface MyPageUiIntent : UiIntent {
     data object LoadMyPage : MyPageUiIntent
 
@@ -22,16 +32,6 @@ sealed interface MyPageUiEffect : UiEffect {
         val message: String,
     ) : MyPageUiEffect
 }
-
-data class MyPageUiState(
-    val isLoggedIn: Boolean = false,
-    val isLoading: Boolean = true,
-    val imageUrl: String = "",
-    val nickname: String = "",
-    val track: String = "",
-    val githubId: String = "",
-    val isNotificationEnable: Boolean = false,
-) : UiState
 
 class MyPageViewModel(
     private val authRepository: AuthRepository,
