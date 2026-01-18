@@ -175,7 +175,7 @@ private fun MyPageMenuButton(
 }
 
 @Composable
-fun ProfileSection(
+private fun ProfileSection(
     uiState: MyPageUiState,
     modifier: Modifier = Modifier,
 ) {
