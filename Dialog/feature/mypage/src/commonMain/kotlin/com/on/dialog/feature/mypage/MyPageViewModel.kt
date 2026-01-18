@@ -18,8 +18,6 @@ sealed interface MyPageUiIntent : UiIntent {
 }
 
 sealed interface MyPageUiEffect : UiEffect {
-    data object NavigateLogin : MyPageUiEffect
-
     data class ShowError(
         val message: String,
     ) : MyPageUiEffect
