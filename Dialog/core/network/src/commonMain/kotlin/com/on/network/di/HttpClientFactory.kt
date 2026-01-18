@@ -55,6 +55,7 @@ internal fun HttpClientConfig<*>.installContentNegotiation() {
                 ignoreUnknownKeys = true
                 isLenient = true
                 encodeDefaults = true
+                classDiscriminator = "discussionType"
             },
         )
     }
