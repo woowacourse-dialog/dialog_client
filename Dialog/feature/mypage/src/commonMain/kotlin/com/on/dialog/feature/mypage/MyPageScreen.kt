@@ -25,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogCard
@@ -159,6 +160,7 @@ private fun MyPageMenuButton(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clip(shape = DialogTheme.shapes.small)
             .clickable { onClick() }
             .padding(
                 vertical = DialogTheme.spacing.medium,
