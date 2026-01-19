@@ -1,6 +1,5 @@
 package com.on.dialog.feature.login
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,12 +24,13 @@ import platform.darwin.NSObject
 
 @OptIn(ExperimentalForeignApi::class)
 @Composable
-actual fun LoginWebViewScreen(
+actual fun LoginWebView(
     loginType: LoginType,
     onLoginSuccess: () -> Unit,
     onLoginFailure: () -> Unit,
     onLoginCancel: () -> Unit,
     onSignUp: () -> Unit,
+    modifier: Modifier,
     viewModel: LoginViewModel,
 ) {
     var isLoginComplete: Boolean by remember { mutableStateOf(false) }
@@ -46,7 +46,7 @@ actual fun LoginWebViewScreen(
     }
 
     UIKitView(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         factory = {
             val config = WKWebViewConfiguration().apply {
                 // JavaScript 활성화 (Android의 javaScriptEnabled = true와 동일)

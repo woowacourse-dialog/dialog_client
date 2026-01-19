@@ -34,7 +34,7 @@ import com.on.dialog.designsystem.component.DialogIconButtonTone
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.login.LoginType
-import com.on.dialog.feature.login.LoginWebViewScreen
+import com.on.dialog.feature.login.LoginWebView
 import com.on.dialog.ui.component.ProfileImage
 import com.on.model.common.Track
 import dialog.feature.mypage.generated.resources.Res
@@ -56,7 +56,7 @@ fun MyPageScreen(
 
     when (showLoginWebView) {
         true -> {
-            LoginWebViewScreen(
+            LoginWebView(
                 loginType = LoginType.GITHUB,
                 onLoginSuccess = {
                     showLoginWebView = false
@@ -67,6 +67,7 @@ fun MyPageScreen(
                 onSignUp = {
                     // TODO 트랙 선택 화면 이동
                 },
+                modifier = modifier,
             )
         }
 

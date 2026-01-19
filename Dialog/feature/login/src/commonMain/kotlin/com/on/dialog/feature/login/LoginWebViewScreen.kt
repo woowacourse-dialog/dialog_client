@@ -1,14 +1,8 @@
 package com.on.dialog.feature.login
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import org.koin.compose.viewmodel.koinViewModel
-
-enum class LoginType(
-    val loginUrl: String,
-) {
-    GITHUB(BuildKonfig.GITHUB_OAUTH_URL),
-    GOOGLE(""),
-}
 
 /**
  * 지정된 [LoginType]으로 소셜 로그인을 수행하는 웹뷰 화면입니다.
@@ -21,11 +15,12 @@ enum class LoginType(
  * @param viewModel 로그인 로직을 관리하는 뷰모델
  */
 @Composable
-expect fun LoginWebViewScreen(
+expect fun LoginWebView(
     loginType: LoginType,
     onLoginSuccess: () -> Unit,
     onLoginFailure: () -> Unit,
     onLoginCancel: () -> Unit,
     onSignUp: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: LoginViewModel = koinViewModel(),
 )
