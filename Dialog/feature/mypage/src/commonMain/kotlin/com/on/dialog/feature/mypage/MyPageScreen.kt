@@ -19,10 +19,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,8 +31,6 @@ import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogIconButtonTone
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.feature.login.LoginType
-import com.on.dialog.feature.login.LoginWebView
 import com.on.dialog.ui.component.ProfileImage
 import com.on.model.common.Track
 import dialog.feature.mypage.generated.resources.Res
@@ -48,34 +44,22 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MyPageScreen(
+    navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = koinViewModel(),
 ) {
     val uiState: MyPageState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showLoginWebView: Boolean by rememberSaveable { mutableStateOf(value = false) }
 
-    if (showLoginWebView) {
-        LoginWebView(
-            loginType = LoginType.GITHUB,
-            onLoginSuccess = {
-                showLoginWebView = false
-                viewModel.onIntent(intent = MyPageIntent.LoadMyPage)
-            },
-            onLoginFailure = { showLoginWebView = false },
-            onLoginCancel = { showLoginWebView = false },
-            onSignUp = {
-                // TODO 트랙 선택 화면 이동
-            },
-            modifier = modifier,
-        )
-    } else {
-        MyPageScreen(
-            uiState = uiState,
-            onLoginClick = { showLoginWebView = true },
-            onLogoutClick = { viewModel.onIntent(intent = MyPageIntent.Logout) },
-            modifier = modifier,
-        )
+    LaunchedEffect(Unit) {
+        viewModel.onIntent(intent = MyPageIntent.CheckLoginStatus)
     }
+
+    MyPageScreen(
+        uiState = uiState,
+        onLoginClick = { navigateToLogin() },
+        onLogoutClick = { viewModel.onIntent(intent = MyPageIntent.Logout) },
+        modifier = modifier,
+    )
 }
 
 @Composable

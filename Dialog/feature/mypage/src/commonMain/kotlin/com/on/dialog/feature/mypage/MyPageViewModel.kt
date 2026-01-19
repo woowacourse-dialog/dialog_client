@@ -12,20 +12,28 @@ class MyPageViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
 ) : BaseViewModel<MyPageIntent, MyPageState, MyPageEffect>(initialState = MyPageState()) {
-    init {
-        onIntent(intent = MyPageIntent.LoadMyPage)
-    }
-
     override fun onIntent(intent: MyPageIntent) {
         when (intent) {
-            MyPageIntent.LoadMyPage -> {
-                loadMyPage()
-                loadMyProfileImage()
-            }
+            MyPageIntent.CheckLoginStatus -> getLoginStatus()
+            MyPageIntent.Logout -> logout()
+        }
+    }
 
-            MyPageIntent.Logout -> {
-                logout()
+    private fun getLoginStatus() {
+        if (currentState.isLoggedIn) return
+
+        viewModelScope.launch {
+            authRepository.getLoginStatus().onSuccess { isLoggedIn: Boolean ->
+                if (isLoggedIn) {
+                    loadMyPage()
+                    loadMyProfileImage()
+                    updateState { copy(isLoggedIn = true) }
+                } else {
+                    updateState { copy(isLoggedIn = false) }
+                }
             }
+        }.invokeOnCompletion {
+            updateState { copy(isLoading = false) }
         }
     }
 
@@ -46,9 +54,7 @@ class MyPageViewModel(
                     }
                 }.onFailure { result ->
                     if (result is NetworkError.Unauthorized) {
-                        updateState {
-                            copy(isLoading = false, isLoggedIn = false)
-                        }
+                        updateState { copy(isLoggedIn = false) }
                         emitEffect(
                             MyPageEffect.ShowError(
                                 message = result.message ?: "로그인 후 이용할 수 있습니다.",
@@ -58,6 +64,8 @@ class MyPageViewModel(
                         emitEffect(MyPageEffect.ShowError(message = "내 정보를 불러오는데 실패했습니다."))
                     }
                 }
+        }.invokeOnCompletion {
+            updateState { copy(isLoading = false) }
         }
     }
 
@@ -71,14 +79,12 @@ class MyPageViewModel(
                             isLoggedIn = true,
                             isLoading = false,
                             imageUrl = profileImage.customImageUri ?: profileImage.basicImageUri
-                                ?: "",
+                            ?: "",
                         )
                     }
                 }.onFailure { result: Throwable ->
                     if (result is NetworkError.Unauthorized) {
-                        updateState {
-                            copy(isLoading = false, isLoggedIn = false)
-                        }
+                        updateState { copy(isLoggedIn = false) }
                         emitEffect(
                             MyPageEffect.ShowError(
                                 message = result.message ?: "로그인 후 이용할 수 있습니다.",
@@ -88,6 +94,8 @@ class MyPageViewModel(
                         emitEffect(MyPageEffect.ShowError(message = "내 프로필 이미지를 불러오는데 실패했습니다."))
                     }
                 }
+        }.invokeOnCompletion {
+            updateState { copy(isLoading = false) }
         }
     }
 
