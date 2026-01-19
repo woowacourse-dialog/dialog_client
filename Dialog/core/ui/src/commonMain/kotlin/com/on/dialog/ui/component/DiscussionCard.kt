@@ -58,7 +58,7 @@ private fun DiscussionCardFooter(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraSmall)) {
+        Column(verticalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.extraSmall)) {
             Text(
                 text = stringResource(Res.string.discussion_card_author, author),
                 style = DialogTheme.typography.bodyMedium,

@@ -17,7 +17,7 @@ class CookieNetworkEntity(
         value = value,
         domain = domain,
         path = path,
-        expires = expires?.let { GMTDate(it) },
+        expires = expires?.let { GMTDate(timestamp = it) },
         secure = secure,
         httpOnly = httpOnly,
     )

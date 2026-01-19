@@ -70,14 +70,14 @@ class LocalCookieStorage(
         }
 
         // Domain 검사
-        val cookieDomain = domain.lowercase()
-        val requestDomain = requestHost.lowercase()
+        val cookieDomain: String = domain.lowercase()
+        val requestDomain: String = requestHost.lowercase()
         if (cookieDomain.isNotEmpty() && !requestDomain.endsWith(suffix = cookieDomain)) {
             return false
         }
 
         // Path 체크
-        val cookiePath = path
+        val cookiePath: String = path
         if (!requestPath.startsWith(prefix = cookiePath)) {
             return false
         }

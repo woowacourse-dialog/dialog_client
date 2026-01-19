@@ -7,9 +7,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val sessionRepository: SessionRepository,
-) : BaseViewModel<LoginIntent, LoginState, LoginEffect>(
-        initialState = LoginState(),
-    ) {
+) : BaseViewModel<LoginIntent, LoginState, LoginEffect>(initialState = LoginState()) {
     override fun onIntent(intent: LoginIntent) {
         when (intent) {
             is LoginIntent.LoginVia -> navigateToLogin(loginType = intent.loginType)
@@ -46,7 +44,7 @@ class LoginViewModel(
 
     private fun notifyLoginError() {
         updateState { copy(isLoading = false) }
-        emitEffect(effect = LoginEffect.ShowError(ERROR_MESSAGE_LOGIN_FAILED))
+        emitEffect(effect = LoginEffect.ShowError(message = ERROR_MESSAGE_LOGIN_FAILED))
         emitEffect(effect = LoginEffect.CloseLoginWebView)
     }
 

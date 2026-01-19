@@ -11,7 +11,7 @@ internal class AuthRemoteDatasource(
     private val authService: AuthService,
 ) : AuthDatasource {
     override suspend fun signup(request: SignupRequest): Result<SignupResponse> =
-        safeApiCall { authService.signup(request) }
+        safeApiCall { authService.signup(request = request) }
 
     override suspend fun getLoginStatus(): Result<LoginCheckResponse> =
         safeApiCall { authService.getLoginStatus() }
