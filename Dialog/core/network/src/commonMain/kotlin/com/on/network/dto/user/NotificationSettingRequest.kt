@@ -7,4 +7,9 @@ import kotlinx.serialization.Serializable
 class NotificationSettingRequest(
     @SerialName("isNotificationEnable")
     val isNotificationEnable: Boolean,
-)
+) {
+    companion object {
+        fun Boolean.toRequest(): NotificationSettingRequest =
+            NotificationSettingRequest(isNotificationEnable = this)
+    }
+}

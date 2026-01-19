@@ -5,6 +5,8 @@ import com.on.model.common.ProfileImage
 import com.on.model.common.Track
 import com.on.model.user.UserInfo
 import com.on.network.datasource.UserDatasource
+import com.on.network.dto.user.NotificationSettingRequest.Companion.toRequest
+import com.on.network.dto.user.UserMypageUpdateRequest
 
 internal class UserDefaultRepository(
     private val userDatasource: UserDatasource,
@@ -15,11 +17,12 @@ internal class UserDefaultRepository(
     override suspend fun updateMyProfile(
         nickname: String,
         track: Track,
-    ): Result<Unit?> = userDatasource.updateMyProfile(nickname, track.name)
+    ): Result<Unit?> =
+        userDatasource.updateMyProfile(UserMypageUpdateRequest(nickname, track.name))
 
     override suspend fun updateNotificationSetting(isNotificationEnable: Boolean): Result<Boolean> =
         userDatasource
-            .updateNotificationSetting(isNotificationEnable)
+            .updateNotificationSetting(isNotificationEnable.toRequest())
             .map { it.isNotificationEnable }
 
     override suspend fun getMyProfileImage(): Result<ProfileImage> =
