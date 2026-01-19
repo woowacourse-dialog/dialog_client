@@ -12,6 +12,10 @@ class MyPageViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
 ) : BaseViewModel<MyPageUiIntent, MyPageUiState, MyPageUiEffect>(MyPageUiState()) {
+    init {
+        onIntent(MyPageUiIntent.LoadMyPage)
+    }
+
     override fun onIntent(intent: MyPageUiIntent) {
         when (intent) {
             MyPageUiIntent.LoadMyPage -> {

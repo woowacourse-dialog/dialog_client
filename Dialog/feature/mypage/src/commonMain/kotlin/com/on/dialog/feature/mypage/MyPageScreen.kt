@@ -51,10 +51,6 @@ fun MyPageScreen(
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = koinViewModel(),
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.onIntent(MyPageUiIntent.LoadMyPage)
-    }
-
     val uiState: MyPageUiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showLoginWebView: Boolean by rememberSaveable { mutableStateOf(false) }
 
