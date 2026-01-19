@@ -18,7 +18,7 @@ internal class SessionDefaultRepository(
             cookie = Cookie(
                 name = JSESSIONID,
                 value = jsessionId,
-                domain = DOMAIN,
+                domain = BuildKonfig.BASE_URL.toDomainUrl(),
                 path = "/",
                 secure = true,
                 httpOnly = true,
@@ -39,7 +39,8 @@ internal class SessionDefaultRepository(
     }
 
     companion object {
-        private const val DOMAIN = "woowa-dialog.com"
         private const val JSESSIONID = "JSESSIONID"
+
+        private fun String.toDomainUrl(): String = this.substringAfter("https://").removeSuffix("/")
     }
 }
