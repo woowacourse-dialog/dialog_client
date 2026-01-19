@@ -7,5 +7,5 @@ interface AuthRepository {
 
     suspend fun getLoginStatus(): Result<Boolean>
 
-    suspend fun logout(): Result<Unit?>
+    suspend fun logout(): Result<Unit>
 }

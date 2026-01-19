@@ -16,5 +16,5 @@ internal class AuthRemoteDatasource(
     override suspend fun getLoginStatus(): Result<LoginCheckResponse> =
         safeApiCall { authService.getLoginStatus() }
 
-    override suspend fun logout(): Result<Unit?> = safeApiCall { authService.logout() }
+    override suspend fun logout(): Result<Unit> = safeApiCall { authService.logout() }
 }

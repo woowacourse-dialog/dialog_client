@@ -19,5 +19,5 @@ interface AuthService {
     suspend fun getLoginStatus(): DataResponse<LoginCheckResponse>
 
     @DELETE("api/logout")
-    suspend fun logout(): DataResponse<Unit?>
+    suspend fun logout(): DataResponse<Unit>
 }

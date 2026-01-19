@@ -9,5 +9,5 @@ interface AuthDatasource {
 
     suspend fun getLoginStatus(): Result<LoginCheckResponse>
 
-    suspend fun logout(): Result<Unit?>
+    suspend fun logout(): Result<Unit>
 }

@@ -19,5 +19,5 @@ internal class AuthDefaultRepository(
     override suspend fun getLoginStatus(): Result<Boolean> =
         authDatasource.getLoginStatus().map { it.isLoggedIn }
 
-    override suspend fun logout(): Result<Unit?> = authDatasource.logout()
+    override suspend fun logout(): Result<Unit> = authDatasource.logout()
 }

@@ -17,7 +17,7 @@ internal class UserRemoteDatasource(
     override suspend fun getMyUserInfo(): Result<UserInfoResponse> =
         safeApiCall { userService.getMyUserInfo() }
 
-    override suspend fun updateMyProfile(request: UserMypageUpdateRequest): Result<Unit?> =
+    override suspend fun updateMyProfile(request: UserMypageUpdateRequest): Result<Unit> =
         safeApiCall { userService.updateMyProfile(request) }
 
     override suspend fun updateNotificationSetting(request: NotificationSettingRequest): Result<NotificationSettingResponse> =

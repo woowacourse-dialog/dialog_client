@@ -20,7 +20,7 @@ interface UserService {
     suspend fun updateMyProfile(
         @Body
         request: UserMypageUpdateRequest,
-    ): DataResponse<Unit?>
+    ): DataResponse<Unit>
 
     @PATCH("api/user/mine/notifications")
     suspend fun updateNotificationSetting(

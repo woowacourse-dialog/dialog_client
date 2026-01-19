@@ -17,7 +17,7 @@ internal class UserDefaultRepository(
     override suspend fun updateMyProfile(
         nickname: String,
         track: Track,
-    ): Result<Unit?> =
+    ): Result<Unit> =
         userDatasource.updateMyProfile(UserMypageUpdateRequest(nickname, track.name))
 
     override suspend fun updateNotificationSetting(isNotificationEnable: Boolean): Result<Boolean> =

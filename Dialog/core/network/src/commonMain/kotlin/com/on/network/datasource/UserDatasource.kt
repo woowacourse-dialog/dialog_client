@@ -11,7 +11,7 @@ import com.on.network.dto.user.UserMypageUpdateRequest
 interface UserDatasource {
     suspend fun getMyUserInfo(): Result<UserInfoResponse>
 
-    suspend fun updateMyProfile(request: UserMypageUpdateRequest): Result<Unit?>
+    suspend fun updateMyProfile(request: UserMypageUpdateRequest): Result<Unit>
 
     suspend fun updateNotificationSetting(request: NotificationSettingRequest): Result<NotificationSettingResponse>
 
