@@ -43,6 +43,23 @@ internal class PersistentCookieStorage(
         // clean up
     }
 
+    @Serializable
+    private data class SerializableCookie(
+        val name: String,
+        val value: String,
+        val domain: String,
+        val path: String,
+        val expires: Long? = null,
+    ) {
+        fun toCookie(): Cookie = Cookie(
+            name = name,
+            value = value,
+            domain = domain,
+            path = path,
+            expires = expires?.let { GMTDate(it) },
+        )
+    }
+
     private suspend fun loadCookiesIfNeeded() {
         if (cookiesCache.isEmpty()) {
             val stored: String? = dataStore.data.first()[cookiesKey]
@@ -60,50 +77,33 @@ internal class PersistentCookieStorage(
         val json: String = Json.encodeToString(cookies)
         dataStore.edit { it[cookiesKey] = json }
     }
-}
 
-@Serializable
-private data class SerializableCookie(
-    val name: String,
-    val value: String,
-    val domain: String,
-    val path: String,
-    val expires: Long? = null,
-) {
-    fun toCookie(): Cookie = Cookie(
+    private fun Cookie.toSerializable(): SerializableCookie = SerializableCookie(
         name = name,
         value = value,
-        domain = domain,
-        path = path,
-        expires = expires?.let { GMTDate(it) },
+        domain = domain ?: "",
+        path = path ?: "/",
+        expires = expires?.timestamp,
     )
-}
 
-private fun Cookie.toSerializable(): SerializableCookie = SerializableCookie(
-    name = name,
-    value = value,
-    domain = domain ?: "",
-    path = path ?: "/",
-    expires = expires?.timestamp,
-)
+    private fun Cookie.matches(requestUrl: Url): Boolean {
+        // 만료 검사
+        if (expires != null && expires!!.timestamp < GMTDate().timestamp) {
+            return false
+        }
 
-private fun Cookie.matches(requestUrl: Url): Boolean {
-    // 만료 검사
-    if (expires != null && expires!!.timestamp < GMTDate().timestamp) {
-        return false
+        // Domain 검사
+        val cookieDomain = domain?.lowercase() ?: ""
+        val requestDomain = requestUrl.host.lowercase()
+        if (cookieDomain.isNotEmpty() && !requestDomain.endsWith(cookieDomain)) {
+            return false
+        }
+
+        // Path 체크
+        val cookiePath = path ?: "/"
+        if (!requestUrl.encodedPath.startsWith(cookiePath)) {
+            return false
+        }
+        return true
     }
-
-    // Domain 검사
-    val cookieDomain = domain?.lowercase() ?: ""
-    val requestDomain = requestUrl.host.lowercase()
-    if (cookieDomain.isNotEmpty() && !requestDomain.endsWith(cookieDomain)) {
-        return false
-    }
-
-    // Path 체크
-    val cookiePath = path ?: "/"
-    if (!requestUrl.encodedPath.startsWith(cookiePath)) {
-        return false
-    }
-    return true
 }
