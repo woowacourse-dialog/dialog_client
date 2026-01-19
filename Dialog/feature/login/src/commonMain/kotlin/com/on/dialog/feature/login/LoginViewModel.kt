@@ -10,27 +10,24 @@ class LoginViewModel(
 ) : BaseViewModel<LoginIntent, LoginState, LoginEffect>(initialState = LoginState()) {
     override fun onIntent(intent: LoginIntent) {
         when (intent) {
-            is LoginIntent.LoginVia -> navigateToLogin(loginType = intent.loginType)
-            is LoginIntent.LoginSuccess -> saveUserSession(jsessionId = intent.jsessionId)
-            LoginIntent.LoginFailure -> notifyLoginError()
-            LoginIntent.CancelLogin -> cancelLogin()
+            is LoginIntent.LoginSuccess -> saveUserSession(
+                jsessionId = intent.jsessionId,
+                isNewUser = intent.isNewUser,
+            )
         }
     }
 
-    private fun navigateToLogin(loginType: LoginType) {
-        emitEffect(LoginEffect.OpenLoginWebView(loginType = loginType))
-    }
-
-    private fun saveUserSession(jsessionId: String) {
+    private fun saveUserSession(jsessionId: String, isNewUser: Boolean) {
         updateState { copy(isLoading = true) }
 
         viewModelScope
             .launch {
                 sessionRepository
-                    .saveSession(
-                        requestUrl = BuildKonfig.BASE_URL,
-                        jsessionId = jsessionId,
-                    ).onFailure { error ->
+                    .saveSession(jsessionId = jsessionId)
+                    .onSuccess {
+                        updateState { copy(isLoginComplete = true, isNewUser = isNewUser) }
+                        emitEffect(if (isNewUser) LoginEffect.GoBack else LoginEffect.NavigateToSignUp)
+                    }.onFailure { error ->
                         emitEffect(
                             effect = LoginEffect.ShowError(
                                 message = error.message ?: ERROR_MESSAGE_SESSION_SAVE_FAILED,
@@ -42,19 +39,7 @@ class LoginViewModel(
             }
     }
 
-    private fun notifyLoginError() {
-        updateState { copy(isLoading = false) }
-        emitEffect(effect = LoginEffect.ShowError(message = ERROR_MESSAGE_LOGIN_FAILED))
-        emitEffect(effect = LoginEffect.CloseLoginWebView)
-    }
-
-    private fun cancelLogin() {
-        updateState { copy(isLoading = false) }
-        emitEffect(effect = LoginEffect.CloseLoginWebView)
-    }
-
     companion object {
-        private const val ERROR_MESSAGE_LOGIN_FAILED = "로그인에 실패했습니다."
         private const val ERROR_MESSAGE_SESSION_SAVE_FAILED = "JSESSIONID 저장에 실패했습니다."
     }
 }
