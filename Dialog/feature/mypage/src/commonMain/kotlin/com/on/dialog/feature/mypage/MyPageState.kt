@@ -2,7 +2,7 @@ package com.on.dialog.feature.mypage
 
 import com.on.dialog.ui.viewmodel.UiState
 
-data class MyPageUiState(
+data class MyPageState(
     val isLoggedIn: Boolean = false,
     val isLoading: Boolean = true,
     val imageUrl: String = "",

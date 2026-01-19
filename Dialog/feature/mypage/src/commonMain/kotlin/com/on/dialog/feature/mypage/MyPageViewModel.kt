@@ -11,19 +11,19 @@ import kotlinx.coroutines.launch
 class MyPageViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-) : BaseViewModel<MyPageUiIntent, MyPageUiState, MyPageUiEffect>(initialState = MyPageUiState()) {
+) : BaseViewModel<MyPageIntent, MyPageState, MyPageEffect>(initialState = MyPageState()) {
     init {
-        onIntent(intent = MyPageUiIntent.LoadMyPage)
+        onIntent(intent = MyPageIntent.LoadMyPage)
     }
 
-    override fun onIntent(intent: MyPageUiIntent) {
+    override fun onIntent(intent: MyPageIntent) {
         when (intent) {
-            MyPageUiIntent.LoadMyPage -> {
+            MyPageIntent.LoadMyPage -> {
                 loadMyPage()
                 loadMyProfileImage()
             }
 
-            MyPageUiIntent.Logout -> {
+            MyPageIntent.Logout -> {
                 logout()
             }
         }
@@ -50,12 +50,12 @@ class MyPageViewModel(
                             copy(isLoading = false, isLoggedIn = false)
                         }
                         emitEffect(
-                            MyPageUiEffect.ShowError(
+                            MyPageEffect.ShowError(
                                 message = result.message ?: "로그인 후 이용할 수 있습니다.",
                             ),
                         )
                     } else {
-                        emitEffect(MyPageUiEffect.ShowError(message = "내 정보를 불러오는데 실패했습니다."))
+                        emitEffect(MyPageEffect.ShowError(message = "내 정보를 불러오는데 실패했습니다."))
                     }
                 }
         }
@@ -80,12 +80,12 @@ class MyPageViewModel(
                             copy(isLoading = false, isLoggedIn = false)
                         }
                         emitEffect(
-                            MyPageUiEffect.ShowError(
+                            MyPageEffect.ShowError(
                                 message = result.message ?: "로그인 후 이용할 수 있습니다.",
                             ),
                         )
                     } else {
-                        emitEffect(MyPageUiEffect.ShowError(message = "내 프로필 이미지를 불러오는데 실패했습니다."))
+                        emitEffect(MyPageEffect.ShowError(message = "내 프로필 이미지를 불러오는데 실패했습니다."))
                     }
                 }
         }
@@ -96,12 +96,12 @@ class MyPageViewModel(
             authRepository
                 .logout()
                 .onSuccess {
-                    updateState { MyPageUiState() }
+                    updateState { MyPageState() }
                     Napier.d("로그아웃 성공")
                 }.onFailure { result: Throwable ->
                     Napier.w("로그아웃 실패")
                     emitEffect(
-                        MyPageUiEffect.ShowError(
+                        MyPageEffect.ShowError(
                             message = result.message ?: "로그아웃에 실패했습니다.",
                         ),
                     )

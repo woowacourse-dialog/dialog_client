@@ -51,7 +51,7 @@ fun MyPageScreen(
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = koinViewModel(),
 ) {
-    val uiState: MyPageUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState: MyPageState by viewModel.uiState.collectAsStateWithLifecycle()
     var showLoginWebView: Boolean by rememberSaveable { mutableStateOf(value = false) }
 
     if (showLoginWebView) {
@@ -59,7 +59,7 @@ fun MyPageScreen(
             loginType = LoginType.GITHUB,
             onLoginSuccess = {
                 showLoginWebView = false
-                viewModel.onIntent(intent = MyPageUiIntent.LoadMyPage)
+                viewModel.onIntent(intent = MyPageIntent.LoadMyPage)
             },
             onLoginFailure = { showLoginWebView = false },
             onLoginCancel = { showLoginWebView = false },
@@ -72,7 +72,7 @@ fun MyPageScreen(
         MyPageScreen(
             uiState = uiState,
             onLoginClick = { showLoginWebView = true },
-            onLogoutClick = { viewModel.onIntent(intent = MyPageUiIntent.Logout) },
+            onLogoutClick = { viewModel.onIntent(intent = MyPageIntent.Logout) },
             modifier = modifier,
         )
     }
@@ -80,7 +80,7 @@ fun MyPageScreen(
 
 @Composable
 private fun MyPageScreen(
-    uiState: MyPageUiState,
+    uiState: MyPageState,
     isLoggedIn: Boolean = uiState.isLoggedIn,
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit = {},
@@ -102,7 +102,7 @@ private fun MyPageScreen(
 
 @Composable
 private fun MyPageScreenLoggedIn(
-    uiState: MyPageUiState,
+    uiState: MyPageState,
     onLogoutClick: () -> Unit,
 ) {
     ProfileSection(uiState)
@@ -179,7 +179,7 @@ private fun MyPageMenuButton(
 
 @Composable
 private fun ProfileSection(
-    uiState: MyPageUiState,
+    uiState: MyPageState,
     modifier: Modifier = Modifier,
 ) {
     DialogCard {
@@ -247,7 +247,7 @@ private fun ProfileSectionPreview() {
     DialogTheme {
         Surface {
             ProfileSection(
-                uiState = MyPageUiState(
+                uiState = MyPageState(
                     imageUrl = "",
                     nickname = "크림",
                     track = Track.ANDROID.initial,
@@ -266,7 +266,7 @@ private fun MyPageScreenLoggedInPreview() {
     DialogTheme {
         Surface {
             MyPageScreen(
-                uiState = MyPageUiState(
+                uiState = MyPageState(
                     imageUrl = "",
                     nickname = "크림",
                     track = Track.ANDROID.initial,
@@ -285,7 +285,7 @@ private fun MyPageScreenLoggedOutPreview() {
     DialogTheme {
         Surface {
             MyPageScreen(
-                uiState = MyPageUiState(
+                uiState = MyPageState(
                     isLoggedIn = false,
                 ),
             )
