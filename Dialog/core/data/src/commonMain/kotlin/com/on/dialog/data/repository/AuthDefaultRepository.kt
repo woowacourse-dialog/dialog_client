@@ -14,10 +14,10 @@ internal class AuthDefaultRepository(
     ): Result<Long> =
         authDatasource
             .signup(SignupRequest(track.name, webPushNotification))
-            .mapCatching { it.userId }
+            .map { it.userId }
 
     override suspend fun getLoginStatus(): Result<Boolean> =
-        authDatasource.getLoginStatus().mapCatching { it.isLoggedIn }
+        authDatasource.getLoginStatus().map { it.isLoggedIn }
 
     override suspend fun logout(): Result<Unit?> = authDatasource.logout()
 }
