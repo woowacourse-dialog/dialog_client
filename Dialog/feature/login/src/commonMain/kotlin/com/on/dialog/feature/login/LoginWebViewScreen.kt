@@ -1,7 +1,12 @@
 package com.on.dialog.feature.login
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.aakira.napier.Napier
 import org.koin.compose.viewmodel.koinViewModel
 
 /**
@@ -11,16 +16,55 @@ import org.koin.compose.viewmodel.koinViewModel
  * @param onLoginSuccess 로그인 성공 시 호출되는 콜백
  * @param onLoginFailure 로그인 실패 시 호출되는 콜백
  * @param onLoginCancel 로그인 취소 시 호출되는 콜백
- * @param onSignUp 회원가입이 필요한 경우 호출되는 콜백
  * @param viewModel 로그인 로직을 관리하는 뷰모델
  */
+
 @Composable
 expect fun LoginWebView(
+    uiState: LoginState,
     loginType: LoginType,
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (jsessionId: String, isNewUser: Boolean) -> Unit,
     onLoginFailure: () -> Unit,
     onLoginCancel: () -> Unit,
-    onSignUp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = koinViewModel(),
 )
+
+@Composable
+fun LoginWebViewScreen(
+    loginType: LoginType,
+    goBack: () -> Unit,
+    navigateToSignUp: () -> Unit,
+    viewModel: LoginViewModel = koinViewModel(),
+) {
+    val uiState: LoginState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                LoginEffect.GoBack -> goBack()
+                LoginEffect.NavigateToSignUp -> navigateToSignUp()
+                is LoginEffect.ShowError -> Unit
+            }
+        }
+    }
+
+    LoginWebView(
+        uiState = uiState,
+        loginType = loginType,
+        onLoginSuccess = { jsessionId, isNewUser ->
+            viewModel.onIntent(
+                intent = LoginIntent.LoginSuccess(jsessionId = jsessionId, isNewUser = isNewUser)
+            )
+        },
+        onLoginFailure = {
+            // showSnackbar
+            goBack()
+        },
+        onLoginCancel = {
+            // showSnackbar
+            Napier.d("onLoginCancel");
+            goBack()
+        },
+    )
+}
+
