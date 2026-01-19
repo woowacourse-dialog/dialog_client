@@ -2,10 +2,10 @@ package com.on.network.dto.discussiondetail
 
 import com.on.dialog.core.common.extension.toIsoLocalDate
 import com.on.dialog.core.common.extension.toIsoLocalDateTime
+import com.on.model.common.ProfileImage
 import com.on.model.discussion.content.Author
 import com.on.model.discussion.content.DetailContent
 import com.on.model.discussion.content.DiscussionCategory
-import com.on.model.discussion.content.ProfileImage
 import com.on.model.discussion.datetimeperiod.DateTimePeriod
 import com.on.model.discussion.datetimeperiod.EndDate
 import com.on.model.discussion.detail.DiscussionDetail

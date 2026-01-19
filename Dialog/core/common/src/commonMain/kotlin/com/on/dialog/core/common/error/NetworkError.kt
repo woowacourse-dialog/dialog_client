@@ -7,6 +7,12 @@ sealed class NetworkError(
         cause: Exception,
     ) : NetworkError(cause)
 
+    class Unauthorized(
+        cause: Exception,
+        val errorCode: String,
+        val errorMessage: String,
+    ) : NetworkError(cause)
+
     class ServerError(
         cause: Exception,
     ) : NetworkError(cause)

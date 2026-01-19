@@ -15,8 +15,9 @@ import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.ui.mapper.Category
 import com.on.dialog.ui.mapper.toChipCategory
+import com.on.model.common.Track
+import com.on.model.discussion.content.DiscussionType
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.discussion_card_author
 import dialog.core.ui.generated.resources.discussion_card_endAt
@@ -40,7 +41,7 @@ fun DiscussionCard(
             verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
         ) {
             Text(text = title, style = DialogTheme.typography.titleMedium)
-            DiscussionCardFooter(author, endAt, discussionCount)
+            DiscussionCardFooter(author = author, endAt = endAt, discussionCount = discussionCount)
         }
     }
 }
@@ -57,7 +58,7 @@ private fun DiscussionCardFooter(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraSmall)) {
+        Column(verticalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.extraSmall)) {
             Text(
                 text = stringResource(Res.string.discussion_card_author, author),
                 style = DialogTheme.typography.bodyMedium,
@@ -94,9 +95,9 @@ private fun DiscussionCardPreviewDark() {
 @Composable
 private fun DiscussionCardPreviewContent() {
     val chips: ImmutableList<ChipCategory> = persistentListOf(
-        Category.ONLINE.toChipCategory(),
-        Category.ANDROID.toChipCategory(),
-        Category.FRONTEND.toChipCategory(),
+        DiscussionType.ONLINE.toChipCategory(),
+        Track.ANDROID.toChipCategory(),
+        Track.FRONTEND.toChipCategory(),
     )
 
     Surface(color = DialogTheme.colorScheme.surfaceContainer) {
@@ -107,7 +108,7 @@ private fun DiscussionCardPreviewContent() {
             author = "크림",
             endAt = "2026.01.31",
             discussionCount = 25,
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(all = 12.dp),
         )
     }
 }
