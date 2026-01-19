@@ -54,31 +54,27 @@ fun MyPageScreen(
     val uiState: MyPageUiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showLoginWebView: Boolean by rememberSaveable { mutableStateOf(false) }
 
-    when (showLoginWebView) {
-        true -> {
-            LoginWebView(
-                loginType = LoginType.GITHUB,
-                onLoginSuccess = {
-                    showLoginWebView = false
-                    viewModel.onIntent(MyPageUiIntent.LoadMyPage)
-                },
-                onLoginFailure = { showLoginWebView = false },
-                onLoginCancel = { showLoginWebView = false },
-                onSignUp = {
-                    // TODO 트랙 선택 화면 이동
-                },
-                modifier = modifier,
-            )
-        }
-
-        false -> {
-            MyPageScreen(
-                uiState = uiState,
-                onLoginClick = { showLoginWebView = true },
-                onLogoutClick = { viewModel.onIntent(MyPageUiIntent.Logout) },
-                modifier = modifier,
-            )
-        }
+    if (showLoginWebView) {
+        LoginWebView(
+            loginType = LoginType.GITHUB,
+            onLoginSuccess = {
+                showLoginWebView = false
+                viewModel.onIntent(MyPageUiIntent.LoadMyPage)
+            },
+            onLoginFailure = { showLoginWebView = false },
+            onLoginCancel = { showLoginWebView = false },
+            onSignUp = {
+                // TODO 트랙 선택 화면 이동
+            },
+            modifier = modifier,
+        )
+    } else {
+        MyPageScreen(
+            uiState = uiState,
+            onLoginClick = { showLoginWebView = true },
+            onLogoutClick = { viewModel.onIntent(MyPageUiIntent.Logout) },
+            modifier = modifier,
+        )
     }
 }
 
