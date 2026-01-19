@@ -20,7 +20,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogIconButtonTone
@@ -55,7 +55,7 @@ fun MyPageScreen(
         viewModel.onIntent(MyPageUiIntent.LoadMyPage)
     }
 
-    val uiState: MyPageUiState by viewModel.uiState.collectAsState()
+    val uiState: MyPageUiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showLoginWebView: Boolean by rememberSaveable { mutableStateOf(false) }
 
     when (showLoginWebView) {
