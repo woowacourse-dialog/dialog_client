@@ -43,11 +43,11 @@ internal class DiscussionRemoteDatasource(
     ): Result<DiscussionCursorPageResponse> =
         safeApiCall {
             discussionService.searchDiscussions(
-                searchBy,
-                keyword,
-                query.toQueryMap(),
-                cursor,
-                size,
+                searchBy = searchBy,
+                keyword = keyword,
+                query = query.toQueryMap(),
+                cursor = cursor,
+                size = size,
             )
         }
 
