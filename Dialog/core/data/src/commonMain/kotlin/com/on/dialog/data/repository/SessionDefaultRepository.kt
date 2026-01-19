@@ -2,20 +2,19 @@ package com.on.dialog.data.repository
 
 import com.on.dialog.core.data.BuildKonfig
 import com.on.dialog.domain.repository.SessionRepository
-import io.ktor.client.plugins.cookies.CookiesStorage
-import io.ktor.http.Cookie
+import com.on.network.datasource.CookieStore
+import com.on.network.dto.session.CookieNetworkEntity
 import io.ktor.http.Url
 
 internal class SessionDefaultRepository(
-    private val cookiesStorage: CookiesStorage,
+    private val cookieStore: CookieStore,
 ) : SessionRepository {
     override suspend fun saveSession(
         requestUrl: String,
         jsessionId: String,
     ): Result<Unit> = runCatching {
-        cookiesStorage.addCookie(
-            requestUrl = Url(requestUrl),
-            cookie = Cookie(
+        cookieStore.save(
+            cookie = CookieNetworkEntity(
                 name = JSESSIONID,
                 value = jsessionId,
                 domain = BuildKonfig.BASE_URL.toDomainUrl(),
@@ -27,14 +26,13 @@ internal class SessionDefaultRepository(
     }
 
     override suspend fun clearSession(): Result<Unit> = runCatching {
-        // PersistentCookieStorage에 clear 메서드 추가 필요
-        // 현재는 close() 호출
-        cookiesStorage.close()
+        cookieStore.clear()
     }
 
     override suspend fun hasValidSession(): Result<Boolean> = runCatching {
         // JSESSIONID 쿠키가 있는지 확인
-        val cookies = cookiesStorage.get(Url(BuildKonfig.BASE_URL))
+        val url = Url(BuildKonfig.BASE_URL)
+        val cookies: List<CookieNetworkEntity> = cookieStore.loadAll(url.host, url.encodedPath)
         cookies.any { it.name == JSESSIONID }
     }
 

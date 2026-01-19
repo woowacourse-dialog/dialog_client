@@ -18,7 +18,7 @@ val repositoryModule = module {
     }
     single<SessionRepository> {
         SessionDefaultRepository(
-            cookiesStorage = get(),
+            cookieStore = get(),
         )
     }
     single<UserRepository> {

@@ -12,8 +12,6 @@ kotlin {
         commonMain.dependencies {
             // dataStore
             implementation(libs.androidx.datastore.preferences)
-
-            implementation(libs.ktor.client.core)
         }
     }
 }

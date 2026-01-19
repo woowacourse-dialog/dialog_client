@@ -2,12 +2,17 @@ package com.on.network.di
 
 import com.on.dialog.core.network.BuildKonfig
 import com.on.network.common.DataResponseConverterFactory
+import com.on.network.datasourceimpl.KtorCookiesStorage
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.cookies.CookiesStorage
 import org.koin.dsl.module
 
 val networkModule = module {
-    // HttpClient 생성 시 CookiesStorage 주입
+    single<CookiesStorage> {
+        KtorCookiesStorage(cookieStore = get())
+    }
+
     single<HttpClient> {
         createHttpClient(cookiesStorage = get())
     }
