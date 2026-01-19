@@ -7,7 +7,6 @@ sealed interface LoginEffect : UiEffect {
 
     data object NavigateToSignUp : LoginEffect
 
-
     data class ShowError(
         val message: String,
     ) : LoginEffect

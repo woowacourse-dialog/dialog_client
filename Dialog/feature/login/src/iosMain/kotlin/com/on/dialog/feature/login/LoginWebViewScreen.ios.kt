@@ -51,11 +51,11 @@ actual fun LoginWebView(
                 override fun webView(
                     webView: WKWebView,
                     decidePolicyForNavigationAction: WKNavigationAction,
-                    decisionHandler: (WKNavigationActionPolicy) -> Unit
+                    decisionHandler: (WKNavigationActionPolicy) -> Unit,
                 ) {
                     val url: String? = decidePolicyForNavigationAction.request.URL?.absoluteString
 
-                    Napier.d("$url");
+                    Napier.d("$url")
 
                     // scope 파라미터에서 신규/기존 유저 구분
                     // scope=read:user → 기존 유저
@@ -81,7 +81,7 @@ actual fun LoginWebView(
                         url = url,
                         config = config,
                         onLoginSuccess = onLoginSuccess,
-                        onLoginFailure = onLoginFailure
+                        onLoginFailure = onLoginFailure,
                     )
                 }
             }
@@ -107,7 +107,7 @@ private fun handleLoginResult(
     url: String,
     config: WKWebViewConfiguration,
     onLoginSuccess: (String, Boolean) -> Unit,
-    onLoginFailure: () -> Unit
+    onLoginFailure: () -> Unit,
 ) {
     // 로그인 성공 페이지 감지
     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때

@@ -31,7 +31,7 @@ fun App() {
             } else {
                 MyPageScreen(
                     navigateToLogin = { showLoginWebView = true },
-                    modifier = Modifier.padding(paddingValues = innerPadding)
+                    modifier = Modifier.padding(paddingValues = innerPadding),
                 )
             }
         }

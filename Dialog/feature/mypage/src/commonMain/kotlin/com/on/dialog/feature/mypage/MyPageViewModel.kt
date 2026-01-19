@@ -22,81 +22,86 @@ class MyPageViewModel(
     private fun getLoginStatus() {
         if (currentState.isLoggedIn) return
 
-        viewModelScope.launch {
-            authRepository.getLoginStatus().onSuccess { isLoggedIn: Boolean ->
-                if (isLoggedIn) {
-                    loadMyPage()
-                    loadMyProfileImage()
-                    updateState { copy(isLoggedIn = true) }
-                } else {
-                    updateState { copy(isLoggedIn = false) }
-                }
+        viewModelScope
+            .launch {
+                authRepository
+                    .getLoginStatus()
+                    .onSuccess { isLoggedIn: Boolean ->
+                        if (isLoggedIn) {
+                            loadMyPage()
+                            loadMyProfileImage()
+                            updateState { copy(isLoggedIn = true) }
+                        } else {
+                            updateState { copy(isLoggedIn = false) }
+                        }
+                    }
+            }.invokeOnCompletion {
+                updateState { copy(isLoading = false) }
             }
-        }.invokeOnCompletion {
-            updateState { copy(isLoading = false) }
-        }
     }
 
     private fun loadMyPage() {
-        viewModelScope.launch {
-            userRepository
-                .getMyUserInfo()
-                .onSuccess { userInfo ->
-                    updateState {
-                        copy(
-                            isLoggedIn = true,
-                            isLoading = false,
-                            track = userInfo.track.initial,
-                            nickname = userInfo.nickname,
-                            githubId = userInfo.githubId,
-                            isNotificationEnable = userInfo.isNotificationEnabled,
-                        )
+        viewModelScope
+            .launch {
+                userRepository
+                    .getMyUserInfo()
+                    .onSuccess { userInfo ->
+                        updateState {
+                            copy(
+                                isLoggedIn = true,
+                                isLoading = false,
+                                track = userInfo.track.initial,
+                                nickname = userInfo.nickname,
+                                githubId = userInfo.githubId,
+                                isNotificationEnable = userInfo.isNotificationEnabled,
+                            )
+                        }
+                    }.onFailure { result ->
+                        if (result is NetworkError.Unauthorized) {
+                            updateState { copy(isLoggedIn = false) }
+                            emitEffect(
+                                MyPageEffect.ShowError(
+                                    message = result.message ?: "로그인 후 이용할 수 있습니다.",
+                                ),
+                            )
+                        } else {
+                            emitEffect(MyPageEffect.ShowError(message = "내 정보를 불러오는데 실패했습니다."))
+                        }
                     }
-                }.onFailure { result ->
-                    if (result is NetworkError.Unauthorized) {
-                        updateState { copy(isLoggedIn = false) }
-                        emitEffect(
-                            MyPageEffect.ShowError(
-                                message = result.message ?: "로그인 후 이용할 수 있습니다.",
-                            ),
-                        )
-                    } else {
-                        emitEffect(MyPageEffect.ShowError(message = "내 정보를 불러오는데 실패했습니다."))
-                    }
-                }
-        }.invokeOnCompletion {
-            updateState { copy(isLoading = false) }
-        }
+            }.invokeOnCompletion {
+                updateState { copy(isLoading = false) }
+            }
     }
 
     private fun loadMyProfileImage() {
-        viewModelScope.launch {
-            userRepository
-                .getMyProfileImage()
-                .onSuccess { profileImage ->
-                    updateState {
-                        copy(
-                            isLoggedIn = true,
-                            isLoading = false,
-                            imageUrl = profileImage.customImageUri ?: profileImage.basicImageUri
-                            ?: "",
-                        )
+        viewModelScope
+            .launch {
+                userRepository
+                    .getMyProfileImage()
+                    .onSuccess { profileImage ->
+                        updateState {
+                            copy(
+                                isLoggedIn = true,
+                                isLoading = false,
+                                imageUrl = profileImage.customImageUri ?: profileImage.basicImageUri
+                                    ?: "",
+                            )
+                        }
+                    }.onFailure { result: Throwable ->
+                        if (result is NetworkError.Unauthorized) {
+                            updateState { copy(isLoggedIn = false) }
+                            emitEffect(
+                                MyPageEffect.ShowError(
+                                    message = result.message ?: "로그인 후 이용할 수 있습니다.",
+                                ),
+                            )
+                        } else {
+                            emitEffect(MyPageEffect.ShowError(message = "내 프로필 이미지를 불러오는데 실패했습니다."))
+                        }
                     }
-                }.onFailure { result: Throwable ->
-                    if (result is NetworkError.Unauthorized) {
-                        updateState { copy(isLoggedIn = false) }
-                        emitEffect(
-                            MyPageEffect.ShowError(
-                                message = result.message ?: "로그인 후 이용할 수 있습니다.",
-                            ),
-                        )
-                    } else {
-                        emitEffect(MyPageEffect.ShowError(message = "내 프로필 이미지를 불러오는데 실패했습니다."))
-                    }
-                }
-        }.invokeOnCompletion {
-            updateState { copy(isLoading = false) }
-        }
+            }.invokeOnCompletion {
+                updateState { copy(isLoading = false) }
+            }
     }
 
     private fun logout() {

@@ -53,7 +53,7 @@ fun LoginWebViewScreen(
         loginType = loginType,
         onLoginSuccess = { jsessionId, isNewUser ->
             viewModel.onIntent(
-                intent = LoginIntent.LoginSuccess(jsessionId = jsessionId, isNewUser = isNewUser)
+                intent = LoginIntent.LoginSuccess(jsessionId = jsessionId, isNewUser = isNewUser),
             )
         },
         onLoginFailure = {
@@ -62,9 +62,8 @@ fun LoginWebViewScreen(
         },
         onLoginCancel = {
             // showSnackbar
-            Napier.d("onLoginCancel");
+            Napier.d("onLoginCancel")
             goBack()
         },
     )
 }
-

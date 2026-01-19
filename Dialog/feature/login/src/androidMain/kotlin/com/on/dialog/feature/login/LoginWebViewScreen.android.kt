@@ -41,7 +41,7 @@ actual fun LoginWebView(
 
                 override fun shouldOverrideUrlLoading(
                     view: WebView?,
-                    request: WebResourceRequest?
+                    request: WebResourceRequest?,
                 ): Boolean {
                     // scope 파라미터에서 신규/기존 유저 구분
                     // scope=read:user → 기존 유저

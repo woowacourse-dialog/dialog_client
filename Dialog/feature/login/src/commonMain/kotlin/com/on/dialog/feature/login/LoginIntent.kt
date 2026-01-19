@@ -13,5 +13,4 @@ sealed interface LoginIntent : UiIntent {
         val jsessionId: String,
         val isNewUser: Boolean = false,
     ) : LoginIntent
-
 }
