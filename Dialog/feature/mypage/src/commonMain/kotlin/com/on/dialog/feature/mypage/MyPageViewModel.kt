@@ -5,33 +5,8 @@ import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.UserRepository
 import com.on.dialog.ui.viewmodel.BaseViewModel
-import com.on.dialog.ui.viewmodel.UiEffect
-import com.on.dialog.ui.viewmodel.UiIntent
-import com.on.dialog.ui.viewmodel.UiState
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
-
-data class MyPageUiState(
-    val isLoggedIn: Boolean = false,
-    val isLoading: Boolean = true,
-    val imageUrl: String = "",
-    val nickname: String = "",
-    val track: String = "",
-    val githubId: String = "",
-    val isNotificationEnable: Boolean = false,
-) : UiState
-
-sealed interface MyPageUiIntent : UiIntent {
-    data object LoadMyPage : MyPageUiIntent
-
-    data object Logout : MyPageUiIntent
-}
-
-sealed interface MyPageUiEffect : UiEffect {
-    data class ShowError(
-        val message: String,
-    ) : MyPageUiEffect
-}
 
 class MyPageViewModel(
     private val authRepository: AuthRepository,
