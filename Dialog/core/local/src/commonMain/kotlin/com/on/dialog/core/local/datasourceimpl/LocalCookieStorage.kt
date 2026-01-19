@@ -16,7 +16,7 @@ class LocalCookieStorage(
     private val dataStore: DataStore<Preferences>,
 ) {
     private val mutex = Mutex()
-    private val cookiesKey = stringPreferencesKey("http_cookies")
+    private val cookiesKey = stringPreferencesKey(name = "http_cookies")
     private val cookiesCache = mutableMapOf<String, CookieLocalEntity>()
 
     suspend fun save(cookie: CookieLocalEntity) {
@@ -32,7 +32,7 @@ class LocalCookieStorage(
 
             return cookiesCache.values.filter { cookie ->
                 // 유효성 검사
-                cookie.matches(requestHost, requestPath)
+                cookie.matches(requestHost = requestHost, requestPath = requestPath)
             }
         }
     }
@@ -48,7 +48,7 @@ class LocalCookieStorage(
         if (cookiesCache.isEmpty()) {
             val stored: String? = dataStore.data.first()[cookiesKey]
             stored?.let {
-                val cookies: List<CookieLocalEntity> = Json.decodeFromString(stored)
+                val cookies: List<CookieLocalEntity> = Json.decodeFromString(string = stored)
                 cookies.forEach {
                     cookiesCache[it.name] = it
                 }
@@ -58,7 +58,7 @@ class LocalCookieStorage(
 
     private suspend fun saveCookies() {
         val cookies: List<CookieLocalEntity> = cookiesCache.values.map { it }
-        val json: String = Json.encodeToString(cookies)
+        val json: String = Json.encodeToString(value = cookies)
         dataStore.edit { it[cookiesKey] = json }
     }
 
@@ -72,13 +72,13 @@ class LocalCookieStorage(
         // Domain 검사
         val cookieDomain = domain.lowercase()
         val requestDomain = requestHost.lowercase()
-        if (cookieDomain.isNotEmpty() && !requestDomain.endsWith(cookieDomain)) {
+        if (cookieDomain.isNotEmpty() && !requestDomain.endsWith(suffix = cookieDomain)) {
             return false
         }
 
         // Path 체크
         val cookiePath = path
-        if (!requestPath.startsWith(cookiePath)) {
+        if (!requestPath.startsWith(prefix = cookiePath)) {
             return false
         }
         return true

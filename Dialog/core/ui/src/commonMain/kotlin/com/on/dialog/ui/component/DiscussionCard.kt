@@ -41,7 +41,7 @@ fun DiscussionCard(
             verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
         ) {
             Text(text = title, style = DialogTheme.typography.titleMedium)
-            DiscussionCardFooter(author, endAt, discussionCount)
+            DiscussionCardFooter(author = author, endAt = endAt, discussionCount = discussionCount)
         }
     }
 }
@@ -108,7 +108,7 @@ private fun DiscussionCardPreviewContent() {
             author = "크림",
             endAt = "2026.01.31",
             discussionCount = 25,
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(all = 12.dp),
         )
     }
 }

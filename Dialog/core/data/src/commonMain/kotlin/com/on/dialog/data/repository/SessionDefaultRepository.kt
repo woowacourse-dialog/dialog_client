@@ -31,14 +31,18 @@ internal class SessionDefaultRepository(
 
     override suspend fun hasValidSession(): Result<Boolean> = runCatching {
         // JSESSIONID 쿠키가 있는지 확인
-        val url = Url(BuildKonfig.BASE_URL)
-        val cookies: List<CookieNetworkEntity> = cookieStore.loadAll(url.host, url.encodedPath)
+        val url = Url(urlString = BuildKonfig.BASE_URL)
+        val cookies: List<CookieNetworkEntity> = cookieStore.loadAll(
+            requestHost = url.host,
+            requestPath = url.encodedPath,
+        )
         cookies.any { it.name == JSESSIONID }
     }
 
     companion object {
         private const val JSESSIONID = "JSESSIONID"
 
-        private fun String.toDomainUrl(): String = this.substringAfter("https://").removeSuffix("/")
+        private fun String.toDomainUrl(): String =
+            this.substringAfter(delimiter = "https://").removeSuffix(suffix = "/")
     }
 }

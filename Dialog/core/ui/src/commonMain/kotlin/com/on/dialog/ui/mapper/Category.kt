@@ -16,41 +16,41 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun Track.toChipCategory(): ChipCategory = when (this) {
     Track.ANDROID -> ChipCategory(
-        text = stringResource(Res.string.category_android),
-        textColor = Color(0xFF003D2E),
-        backgroundColor = Color(0xFF3DDC84),
+        text = stringResource(resource = Res.string.category_android),
+        textColor = Color(color = 0xFF003D2E),
+        backgroundColor = Color(color = 0xFF3DDC84),
     )
 
     Track.BACKEND -> ChipCategory(
-        text = stringResource(Res.string.category_backend),
+        text = stringResource(resource = Res.string.category_backend),
         textColor = Color.White,
-        backgroundColor = Color(0xFFFF6F00),
+        backgroundColor = Color(color = 0xFFFF6F00),
     )
 
     Track.FRONTEND -> ChipCategory(
-        text = stringResource(Res.string.category_frontend),
+        text = stringResource(resource = Res.string.category_frontend),
         textColor = Color.White,
-        backgroundColor = Color(0xFF2196F3),
+        backgroundColor = Color(color = 0xFF2196F3),
     )
 }
 
 @Composable
 fun DiscussionType.toChipCategory(): ChipCategory = when (this) {
     DiscussionType.ONLINE -> ChipCategory(
-        text = stringResource(Res.string.discussion_type_online),
+        text = stringResource(resource = Res.string.discussion_type_online),
         textColor = Color.White,
-        backgroundColor = Color(0xFF000000),
+        backgroundColor = Color(color = 0xFF000000),
     )
 
     DiscussionType.OFFLINE -> ChipCategory(
-        text = stringResource(Res.string.discussion_type_offline),
+        text = stringResource(resource = Res.string.discussion_type_offline),
         textColor = Color.White,
-        backgroundColor = Color(0xFF000000),
+        backgroundColor = Color(color = 0xFF000000),
     )
 
     DiscussionType.UNDEFINED -> ChipCategory(
-        text = stringResource(Res.string.discussion_type_online),
+        text = stringResource(resource = Res.string.discussion_type_online),
         textColor = Color.White,
-        backgroundColor = Color(0xFF000000),
+        backgroundColor = Color(color = 0xFF000000),
     )
 }

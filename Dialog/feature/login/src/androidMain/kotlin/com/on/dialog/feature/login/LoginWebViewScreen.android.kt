@@ -23,10 +23,10 @@ actual fun LoginWebView(
     modifier: Modifier,
     viewModel: LoginViewModel,
 ) {
-    var isLoginComplete: Boolean by remember { mutableStateOf(false) }
-    var isNewUser: Boolean by remember { mutableStateOf(false) }
+    var isLoginComplete: Boolean by remember { mutableStateOf(value = false) }
+    var isNewUser: Boolean by remember { mutableStateOf(value = false) }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.effect.collect { effect ->
             if (effect is LoginEffect.CloseLoginWebView) {
                 onLoginCancel()
@@ -64,13 +64,13 @@ actual fun LoginWebView(
                     // scope=read:temp_user → 신규 회원가입
                     // %3a == 인코딩된 경우의 콜론
                     when {
-                        url.contains("scope=read%3Atemp_user") ||
-                            url.contains("scope=read:temp_user") -> {
+                        url.contains(other = "scope=read%3Atemp_user") ||
+                            url.contains(other = "scope=read:temp_user") -> {
                             isNewUser = true
                         }
 
-                        url.contains("scope=read%3Auser") ||
-                            url.contains("scope=read:user") -> {
+                        url.contains(other = "scope=read%3Auser") ||
+                            url.contains(other = "scope=read:user") -> {
                             isNewUser = false
                         }
                     }
@@ -78,7 +78,7 @@ actual fun LoginWebView(
 
                     // 로그인 성공 페이지 감지
                     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때
-                    if (!isLoginComplete && url.contentEquals(BuildKonfig.BASE_URL)) {
+                    if (!isLoginComplete && url.contentEquals(charSequence = BuildKonfig.BASE_URL)) {
                         val cookies = cookieManager.getCookie(BuildKonfig.BASE_URL)
                         Napier.d("All Cookies: $cookies")
 
@@ -86,14 +86,19 @@ actual fun LoginWebView(
                         val jsessionId: String? = cookies
                             ?.split(";")
                             ?.map { it.trim() }
-                            ?.find { it.startsWith("JSESSIONID=") }
-                            ?.substringAfter("JSESSIONID=")
+                            ?.find { it.startsWith(prefix = "JSESSIONID=") }
+                            ?.substringAfter(delimiter = "JSESSIONID=")
 
                         // JSESSIONID 추출 성공 시 콜백 함수로 반환
                         if (jsessionId != null) {
                             Napier.d("✅ JSESSIONID: $jsessionId, isNewUser: $isNewUser")
                             isLoginComplete = true
-                            viewModel.onIntent(LoginIntent.LoginSuccess(jsessionId, isNewUser))
+                            viewModel.onIntent(
+                                intent = LoginIntent.LoginSuccess(
+                                    jsessionId,
+                                    isNewUser,
+                                ),
+                            )
 
                             // 신규 유저면 회원가입, 기존 유저면 로그인
                             when (isNewUser) {
@@ -102,7 +107,7 @@ actual fun LoginWebView(
                             }
                         } else {
                             Napier.w("⚠️ JSESSIONID not found in cookies")
-                            viewModel.onIntent(LoginIntent.LoginFailure)
+                            viewModel.onIntent(intent = LoginIntent.LoginFailure)
                             onLoginFailure()
                         }
                     }

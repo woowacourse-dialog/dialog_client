@@ -52,14 +52,14 @@ fun MyPageScreen(
     viewModel: MyPageViewModel = koinViewModel(),
 ) {
     val uiState: MyPageUiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showLoginWebView: Boolean by rememberSaveable { mutableStateOf(false) }
+    var showLoginWebView: Boolean by rememberSaveable { mutableStateOf(value = false) }
 
     if (showLoginWebView) {
         LoginWebView(
             loginType = LoginType.GITHUB,
             onLoginSuccess = {
                 showLoginWebView = false
-                viewModel.onIntent(MyPageUiIntent.LoadMyPage)
+                viewModel.onIntent(intent = MyPageUiIntent.LoadMyPage)
             },
             onLoginFailure = { showLoginWebView = false },
             onLoginCancel = { showLoginWebView = false },
@@ -72,7 +72,7 @@ fun MyPageScreen(
         MyPageScreen(
             uiState = uiState,
             onLoginClick = { showLoginWebView = true },
-            onLogoutClick = { viewModel.onIntent(MyPageUiIntent.Logout) },
+            onLogoutClick = { viewModel.onIntent(intent = MyPageUiIntent.Logout) },
             modifier = modifier,
         )
     }
@@ -89,8 +89,8 @@ private fun MyPageScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(DialogTheme.colorScheme.surfaceContainer)
-            .padding(20.dp),
+            .background(color = DialogTheme.colorScheme.surfaceContainer)
+            .padding(all = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         when (isLoggedIn) {
@@ -106,21 +106,21 @@ private fun MyPageScreenLoggedIn(
     onLogoutClick: () -> Unit,
 ) {
     ProfileSection(uiState)
-    Spacer(Modifier.height(DialogTheme.spacing.extraLarge))
+    Spacer(Modifier.height(height = DialogTheme.spacing.extraLarge))
     DialogCard(
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column {
             MyPageMenuButton(
-                text = stringResource(Res.string.my_discussions),
+                text = stringResource(resource = Res.string.my_discussions),
                 onClick = {},
             ) { Icon(imageVector = DialogIcons.Forum, contentDescription = "") }
             MyPageMenuButton(
-                text = stringResource(Res.string.my_scraps),
+                text = stringResource(resource = Res.string.my_scraps),
                 onClick = {},
             ) { Icon(imageVector = DialogIcons.Bookmark, contentDescription = "") }
             MyPageMenuButton(
-                text = stringResource(Res.string.logout),
+                text = stringResource(resource = Res.string.logout),
                 onClick = onLogoutClick,
             ) { Icon(imageVector = DialogIcons.Logout, contentDescription = "") }
         }
@@ -141,8 +141,11 @@ private fun MyPageScreenLoggedOut(
                 contentDescription = "",
                 modifier = Modifier.sizeIn(maxHeight = ButtonDefaults.IconSize),
             )
-            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
-            Text(text = stringResource(Res.string.login), style = DialogTheme.typography.labelLarge)
+            Spacer(modifier = Modifier.width(width = ButtonDefaults.IconSpacing))
+            Text(
+                text = stringResource(resource = Res.string.login),
+                style = DialogTheme.typography.labelLarge,
+            )
         }
     }
 }
@@ -168,7 +171,7 @@ private fun MyPageMenuButton(
             Box(modifier = Modifier.sizeIn(maxHeight = ButtonDefaults.IconSize)) {
                 leadingIcon()
             }
-            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+            Spacer(modifier = Modifier.width(width = ButtonDefaults.IconSpacing))
         }
         Text(text = text, style = DialogTheme.typography.labelLarge)
     }
@@ -187,12 +190,12 @@ private fun ProfileSection(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
+                horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.medium),
             ) {
                 ProfileImage(
                     imageUrl = uiState.imageUrl,
                     contentDescription = "",
-                    modifier = Modifier.size(60.dp),
+                    modifier = Modifier.size(size = 60.dp),
                 )
                 ProfileInfo(
                     nickname = uiState.nickname,
@@ -218,12 +221,12 @@ private fun ProfileInfo(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraSmall),
+        verticalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.extraSmall),
         modifier = modifier,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraSmall),
+            horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.extraSmall),
         ) {
             Text(
                 text = nickname,
@@ -244,7 +247,7 @@ private fun ProfileSectionPreview() {
     DialogTheme {
         Surface {
             ProfileSection(
-                MyPageUiState(
+                uiState = MyPageUiState(
                     imageUrl = "",
                     nickname = "크림",
                     track = Track.ANDROID.initial,

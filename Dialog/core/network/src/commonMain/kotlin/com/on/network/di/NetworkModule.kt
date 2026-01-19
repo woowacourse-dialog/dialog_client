@@ -21,7 +21,7 @@ val networkModule = module {
         Ktorfit
             .Builder()
             .converterFactories(DataResponseConverterFactory())
-            .httpClient(get<HttpClient>())
+            .httpClient(client = get<HttpClient>())
             .baseUrl(BuildKonfig.BASE_URL)
             .build()
     }

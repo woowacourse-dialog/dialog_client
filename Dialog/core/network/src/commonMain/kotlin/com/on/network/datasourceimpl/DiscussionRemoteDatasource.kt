@@ -19,20 +19,26 @@ internal class DiscussionRemoteDatasource(
     private val discussionService: DiscussionService,
 ) : DiscussionDatasource {
     override suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetailResponse> =
-        safeApiCall { discussionService.getDiscussionDetail(id) }
+        safeApiCall { discussionService.getDiscussionDetail(id = id) }
 
     override suspend fun getDiscussions(
         query: DiscussionQuery,
         cursor: String?,
         size: Int,
     ): Result<DiscussionCursorPageResponse> =
-        safeApiCall { discussionService.getDiscussions(query.toQueryMap(), cursor, size) }
+        safeApiCall {
+            discussionService.getDiscussions(
+                query = query.toQueryMap(),
+                cursor = cursor,
+                size = size,
+            )
+        }
 
     override suspend fun getMyDiscussions(
         cursor: String?,
         size: Int,
     ): Result<DiscussionCursorPageResponse> =
-        safeApiCall { discussionService.getMyDiscussions(cursor, size) }
+        safeApiCall { discussionService.getMyDiscussions(cursor = cursor, size = size) }
 
     override suspend fun searchDiscussions(
         searchBy: Int,
@@ -52,26 +58,26 @@ internal class DiscussionRemoteDatasource(
         }
 
     override suspend fun createOfflineDiscussion(request: CreateOfflineDiscussionRequest): Result<OfflineDiscussionCreateResponse> =
-        safeApiCall { discussionService.postOfflineDiscussion(request) }
+        safeApiCall { discussionService.postOfflineDiscussion(request = request) }
 
     override suspend fun createOnlineDiscussion(request: CreateOnlineDiscussionRequest): Result<OnlineDiscussionCreateResponse> =
-        safeApiCall { discussionService.postOnlineDiscussion(request) }
+        safeApiCall { discussionService.postOnlineDiscussion(request = request) }
 
     override suspend fun createDiscussionSummary(request: DiscussionSummaryRequest): Result<DiscussionSummaryResponse> =
-        safeApiCall { discussionService.postDiscussionSummary(request) }
+        safeApiCall { discussionService.postDiscussionSummary(request = request) }
 
     override suspend fun deleteDiscussion(id: Long): Result<Unit> =
-        safeApiCall { discussionService.deleteDiscussion(id) }
+        safeApiCall { discussionService.deleteDiscussion(id = id) }
 
     override suspend fun updateOfflineDiscussion(
         id: Long,
         request: OfflineDiscussionEditRequest,
     ): Result<Unit> =
-        safeApiCall { discussionService.updateOfflineDiscussion(id, request) }
+        safeApiCall { discussionService.updateOfflineDiscussion(id = id, request = request) }
 
     override suspend fun updateOnlineDiscussion(
         id: Long,
         request: OnlineDiscussionEditRequest,
     ): Result<Unit> =
-        safeApiCall { discussionService.updateOnlineDiscussion(id, request) }
+        safeApiCall { discussionService.updateOnlineDiscussion(id = id, request = request) }
 }

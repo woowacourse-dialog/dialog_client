@@ -9,14 +9,16 @@ class CookieStoreAdapter(
     private val localCookieStorage: LocalCookieStorage,
 ) : CookieStore {
     override suspend fun save(cookie: CookieNetworkEntity) {
-        localCookieStorage.save(cookie.toLocalEntity())
+        localCookieStorage.save(cookie = cookie.toLocalEntity())
     }
 
     override suspend fun loadAll(
         requestHost: String,
         requestPath: String,
     ): List<CookieNetworkEntity> =
-        localCookieStorage.loadAll(requestHost, requestPath).map { it.toNetworkEntity() }
+        localCookieStorage
+            .loadAll(requestHost = requestHost, requestPath = requestPath)
+            .map { it.toNetworkEntity() }
 
     override suspend fun clear() {
         localCookieStorage.clear()

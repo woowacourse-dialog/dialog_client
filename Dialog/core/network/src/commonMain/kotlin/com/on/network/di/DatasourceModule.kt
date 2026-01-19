@@ -10,12 +10,12 @@ import org.koin.dsl.module
 
 val datasourceModule = module {
     single<DiscussionDatasource> {
-        DiscussionRemoteDatasource(get())
+        DiscussionRemoteDatasource(discussionService = get())
     }
     single<AuthDatasource> {
-        AuthRemoteDatasource(get())
+        AuthRemoteDatasource(authService = get())
     }
     single<UserDatasource> {
-        UserRemoteDatasource(get())
+        UserRemoteDatasource(userService = get())
     }
 }

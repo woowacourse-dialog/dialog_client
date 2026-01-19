@@ -36,13 +36,17 @@ internal class DiscussionDefaultRepository(
         cursor: String?,
         size: Int,
     ): Result<DiscussionCatalogCursorPage> =
-        discussionDatasource.getDiscussions(discussionCriteria.toQuery(), cursor, size).mapCatching { it.toDomain() }
+        discussionDatasource
+            .getDiscussions(query = discussionCriteria.toQuery(), cursor = cursor, size = size)
+            .mapCatching { it.toDomain() }
 
     override suspend fun getMyDiscussions(
         cursor: String?,
         size: Int,
     ): Result<DiscussionCatalogCursorPage> =
-        discussionDatasource.getMyDiscussions(cursor, size).mapCatching { it.toDomain() }
+        discussionDatasource
+            .getMyDiscussions(cursor = cursor, size = size)
+            .mapCatching { it.toDomain() }
 
     override suspend fun searchDiscussions(
         searchBy: Int,
@@ -51,28 +55,48 @@ internal class DiscussionDefaultRepository(
         cursor: String?,
         size: Int,
     ): Result<DiscussionCatalogCursorPage> =
-        discussionDatasource.searchDiscussions(searchBy, keyword, discussionCriteria.toQuery(), cursor, size).mapCatching { it.toDomain() }
+        discussionDatasource
+            .searchDiscussions(
+                searchBy = searchBy,
+                keyword = keyword,
+                query = discussionCriteria.toQuery(),
+                cursor = cursor,
+                size = size,
+            ).mapCatching { it.toDomain() }
 
     override suspend fun createOfflineDiscussion(request: OfflineDiscussionDraft): Result<Long> =
-        discussionDatasource.createOfflineDiscussion(request.toCreationRequest()).mapCatching { it.discussionId }
+        discussionDatasource
+            .createOfflineDiscussion(request = request.toCreationRequest())
+            .mapCatching { it.discussionId }
 
     override suspend fun createOnlineDiscussion(request: OnlineDiscussionDraft): Result<Long> =
-        discussionDatasource.createOnlineDiscussion(request.toCreateRequest()).mapCatching { it.discussionId }
+        discussionDatasource
+            .createOnlineDiscussion(request = request.toCreateRequest())
+            .mapCatching { it.discussionId }
 
     override suspend fun createDiscussionSummary(discussionId: Long): Result<DiscussionSummary> =
-        discussionDatasource.createDiscussionSummary(discussionId.toRequest()).mapCatching { it.toDomain() }
+        discussionDatasource
+            .createDiscussionSummary(request = discussionId.toRequest())
+            .mapCatching { it.toDomain() }
 
     override suspend fun updateOfflineDiscussion(
         id: Long,
         offlineDiscussionDraft: OfflineDiscussionDraft,
     ): Result<Unit> =
-        discussionDatasource.updateOfflineDiscussion(id, offlineDiscussionDraft.toEditRequest())
+        discussionDatasource.updateOfflineDiscussion(
+            id = id,
+            request = offlineDiscussionDraft.toEditRequest(),
+        )
 
     override suspend fun updateOnlineDiscussion(
         id: Long,
         onlineDiscussionDraft: OnlineDiscussionDraft,
     ): Result<Unit> =
-        discussionDatasource.updateOnlineDiscussion(id, onlineDiscussionDraft.toEditRequest())
+        discussionDatasource.updateOnlineDiscussion(
+            id = id,
+            request = onlineDiscussionDraft.toEditRequest(),
+        )
 
-    override suspend fun deleteDiscussion(id: Long): Result<Unit> = discussionDatasource.deleteDiscussion(id)
+    override suspend fun deleteDiscussion(id: Long): Result<Unit> =
+        discussionDatasource.deleteDiscussion(id = id)
 }

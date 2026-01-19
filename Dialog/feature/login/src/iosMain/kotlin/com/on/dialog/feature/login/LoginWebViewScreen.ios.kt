@@ -36,7 +36,7 @@ actual fun LoginWebView(
     var isLoginComplete: Boolean by remember { mutableStateOf(false) }
     var isNewUser: Boolean by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.effect.collect { effect ->
             if (effect is LoginEffect.CloseLoginWebView) {
                 onLoginCancel()
@@ -55,7 +55,7 @@ actual fun LoginWebView(
                 websiteDataStore = WKWebsiteDataStore.defaultDataStore()
             }
             val webView = WKWebView(
-                frame = CGRectMake(0.0, 0.0, 0.0, 0.0),
+                frame = CGRectMake(x = 0.0, y = 0.0, width = 0.0, height = 0.0),
                 configuration = config,
             )
 
@@ -76,13 +76,13 @@ actual fun LoginWebView(
                     // scope=read:temp_user → 신규 회원가입
                     // %3a == 인코딩된 경우의 콜론
                     when {
-                        url.contains("scope=read%3Atemp_user") ||
-                            url.contains("scope=read:temp_user") -> {
+                        url.contains(other = "scope=read%3Atemp_user") ||
+                            url.contains(other = "scope=read:temp_user") -> {
                             isNewUser = true
                         }
 
-                        url.contains("scope=read%3Auser") ||
-                            url.contains("scope=read:user") -> {
+                        url.contains(other = "scope=read%3Auser") ||
+                            url.contains(other = "scope=read:user") -> {
                             isNewUser = false
                         }
                     }
@@ -106,7 +106,12 @@ actual fun LoginWebView(
                             if (jsessionId != null) {
                                 Napier.d("✅ JSESSIONID: $jsessionId, isNewUser: $isNewUser")
                                 isLoginComplete = true
-                                viewModel.onIntent(LoginIntent.LoginSuccess(jsessionId, isNewUser))
+                                viewModel.onIntent(
+                                    intent = LoginIntent.LoginSuccess(
+                                        jsessionId,
+                                        isNewUser,
+                                    ),
+                                )
 
                                 // 신규 유저면 회원가입, 기존 유저면 로그인
                                 when (isNewUser) {
@@ -115,7 +120,7 @@ actual fun LoginWebView(
                                 }
                             } else {
                                 Napier.w("⚠️ JSESSIONID not found in cookies")
-                                viewModel.onIntent(LoginIntent.LoginFailure)
+                                viewModel.onIntent(intent = LoginIntent.LoginFailure)
                                 onLoginFailure()
                             }
                         }

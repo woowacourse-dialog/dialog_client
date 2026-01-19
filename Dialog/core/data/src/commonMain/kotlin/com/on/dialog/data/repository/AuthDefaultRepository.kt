@@ -13,7 +13,7 @@ internal class AuthDefaultRepository(
         webPushNotification: Boolean,
     ): Result<Long> =
         authDatasource
-            .signup(SignupRequest(track.name, webPushNotification))
+            .signup(SignupRequest(track = track.name, webPushNotification = webPushNotification))
             .map { it.userId }
 
     override suspend fun getLoginStatus(): Result<Boolean> =

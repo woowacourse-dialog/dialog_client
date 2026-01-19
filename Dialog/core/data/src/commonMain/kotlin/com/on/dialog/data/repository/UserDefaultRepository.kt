@@ -18,11 +18,16 @@ internal class UserDefaultRepository(
         nickname: String,
         track: Track,
     ): Result<Unit> =
-        userDatasource.updateMyProfile(UserMypageUpdateRequest(nickname, track.name))
+        userDatasource.updateMyProfile(
+            request = UserMypageUpdateRequest(
+                nickname = nickname,
+                track = track.name,
+            ),
+        )
 
     override suspend fun updateNotificationSetting(isNotificationEnable: Boolean): Result<Boolean> =
         userDatasource
-            .updateNotificationSetting(isNotificationEnable.toRequest())
+            .updateNotificationSetting(request = isNotificationEnable.toRequest())
             .map { it.isNotificationEnable }
 
     override suspend fun getMyProfileImage(): Result<ProfileImage> =
@@ -30,9 +35,9 @@ internal class UserDefaultRepository(
 
     override suspend fun updateMyProfileImage(request: String): Result<ProfileImage> =
         userDatasource
-            .updateMyProfileImage(request)
+            .updateMyProfileImage(file = request)
             .mapCatching { it.toDomain() }
 
     override suspend fun getMyTrack(): Result<Track> =
-        userDatasource.getMyTrack().mapCatching { Track.of(it.track) }
+        userDatasource.getMyTrack().mapCatching { Track.of(name = it.track) }
 }

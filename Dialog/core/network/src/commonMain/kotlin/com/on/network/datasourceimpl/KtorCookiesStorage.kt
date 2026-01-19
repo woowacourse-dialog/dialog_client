@@ -24,7 +24,9 @@ class KtorCookiesStorage(
     }
 
     override suspend fun get(requestUrl: Url): List<Cookie> =
-        cookieStore.loadAll(requestUrl.host, requestUrl.encodedPath).map { it.toCookie() }
+        cookieStore
+            .loadAll(requestHost = requestUrl.host, requestPath = requestUrl.encodedPath)
+            .map { it.toCookie() }
 
     override fun close() = Unit
 }

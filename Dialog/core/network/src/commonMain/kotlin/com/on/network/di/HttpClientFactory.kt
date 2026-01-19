@@ -46,10 +46,10 @@ internal fun HttpClientConfig<*>.installContentNegotiation() {
      * application/json 타입임을 명시한다.
      */
     defaultRequest {
-        contentType(ContentType.Application.Json)
+        contentType(type = ContentType.Application.Json)
     }
 
-    install(ContentNegotiation) {
+    install(plugin = ContentNegotiation) {
         json(
             Json {
                 ignoreUnknownKeys = true
@@ -63,14 +63,14 @@ internal fun HttpClientConfig<*>.installContentNegotiation() {
 
 internal fun HttpClientConfig<*>.installLogging() {
     if (!BuildKonfig.IS_DEBUG) return
-    install(Logging) {
+    install(plugin = Logging) {
         logger = PrettyLogger
         level = LogLevel.ALL
     }
 }
 
 internal fun HttpClientConfig<*>.installCookies(cookiesStorage: CookiesStorage) {
-    install(HttpCookies) {
+    install(plugin = HttpCookies) {
         // 커스텀 쿠키 스토리지 사용 (DataStore 기반)
         storage = cookiesStorage
     }

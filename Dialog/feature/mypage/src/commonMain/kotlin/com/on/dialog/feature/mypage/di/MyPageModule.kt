@@ -5,5 +5,5 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val myPageModule = module {
-    viewModel { MyPageViewModel(get(), get()) }
+    viewModel { MyPageViewModel(authRepository = get(), userRepository = get()) }
 }

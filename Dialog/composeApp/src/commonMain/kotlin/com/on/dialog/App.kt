@@ -13,7 +13,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App() {
     DialogTheme {
         Scaffold { innerPadding ->
-            MyPageScreen(modifier = Modifier.padding(innerPadding))
+            MyPageScreen(modifier = Modifier.padding(paddingValues = innerPadding))
         }
     }
 }

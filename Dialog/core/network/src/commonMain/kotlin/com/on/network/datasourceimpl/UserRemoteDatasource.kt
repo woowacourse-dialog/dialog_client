@@ -18,16 +18,16 @@ internal class UserRemoteDatasource(
         safeApiCall { userService.getMyUserInfo() }
 
     override suspend fun updateMyProfile(request: UserMypageUpdateRequest): Result<Unit> =
-        safeApiCall { userService.updateMyProfile(request) }
+        safeApiCall { userService.updateMyProfile(request = request) }
 
     override suspend fun updateNotificationSetting(request: NotificationSettingRequest): Result<NotificationSettingResponse> =
-        safeApiCall { userService.updateNotificationSetting(request) }
+        safeApiCall { userService.updateNotificationSetting(request = request) }
 
     override suspend fun getMyProfileImage(): Result<ProfileImageGetResponse> =
         safeApiCall { userService.getMyProfileImage() }
 
     override suspend fun updateMyProfileImage(file: String): Result<ProfileImageUpdateResponse> =
-        safeApiCall { userService.updateMyProfileImage(file) }
+        safeApiCall { userService.updateMyProfileImage(request = file) }
 
     override suspend fun getMyTrack(): Result<MyTrackGetTrackResponse> =
         safeApiCall { userService.getMyTrack() }

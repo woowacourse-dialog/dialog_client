@@ -12,15 +12,15 @@ class LoginViewModel(
     ) {
     override fun onIntent(intent: LoginIntent) {
         when (intent) {
-            is LoginIntent.LoginVia -> navigateToLogin(intent.loginType)
-            is LoginIntent.LoginSuccess -> saveUserSession(intent.jsessionId)
+            is LoginIntent.LoginVia -> navigateToLogin(loginType = intent.loginType)
+            is LoginIntent.LoginSuccess -> saveUserSession(jsessionId = intent.jsessionId)
             LoginIntent.LoginFailure -> notifyLoginError()
             LoginIntent.CancelLogin -> cancelLogin()
         }
     }
 
     private fun navigateToLogin(loginType: LoginType) {
-        emitEffect(LoginEffect.OpenLoginWebView(loginType))
+        emitEffect(LoginEffect.OpenLoginWebView(loginType = loginType))
     }
 
     private fun saveUserSession(jsessionId: String) {
@@ -34,8 +34,8 @@ class LoginViewModel(
                         jsessionId = jsessionId,
                     ).onFailure { error ->
                         emitEffect(
-                            LoginEffect.ShowError(
-                                error.message ?: ERROR_MESSAGE_SESSION_SAVE_FAILED,
+                            effect = LoginEffect.ShowError(
+                                message = error.message ?: ERROR_MESSAGE_SESSION_SAVE_FAILED,
                             ),
                         )
                     }
@@ -46,13 +46,13 @@ class LoginViewModel(
 
     private fun notifyLoginError() {
         updateState { copy(isLoading = false) }
-        emitEffect(LoginEffect.ShowError(ERROR_MESSAGE_LOGIN_FAILED))
-        emitEffect(LoginEffect.CloseLoginWebView)
+        emitEffect(effect = LoginEffect.ShowError(ERROR_MESSAGE_LOGIN_FAILED))
+        emitEffect(effect = LoginEffect.CloseLoginWebView)
     }
 
     private fun cancelLogin() {
         updateState { copy(isLoading = false) }
-        emitEffect(LoginEffect.CloseLoginWebView)
+        emitEffect(effect = LoginEffect.CloseLoginWebView)
     }
 
     companion object {
