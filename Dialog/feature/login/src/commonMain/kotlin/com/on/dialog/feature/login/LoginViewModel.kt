@@ -26,22 +26,22 @@ class LoginViewModel(
     private fun saveUserSession(jsessionId: String) {
         updateState { copy(isLoading = true) }
 
-        viewModelScope.launch {
-            sessionRepository
-                .saveSession(
-                    requestUrl = BuildKonfig.BASE_URL,
-                    jsessionId = jsessionId,
-                ).onSuccess {
-                    updateState { copy(isLoading = false) }
-                }.onFailure { error ->
-                    updateState { copy(isLoading = false) }
-                    emitEffect(
-                        LoginEffect.ShowError(
-                            error.message ?: ERROR_MESSAGE_SESSION_SAVE_FAILED,
-                        ),
-                    )
-                }
-        }
+        viewModelScope
+            .launch {
+                sessionRepository
+                    .saveSession(
+                        requestUrl = BuildKonfig.BASE_URL,
+                        jsessionId = jsessionId,
+                    ).onFailure { error ->
+                        emitEffect(
+                            LoginEffect.ShowError(
+                                error.message ?: ERROR_MESSAGE_SESSION_SAVE_FAILED,
+                            ),
+                        )
+                    }
+            }.invokeOnCompletion {
+                updateState { copy(isLoading = false) }
+            }
     }
 
     private fun notifyLoginError() {
