@@ -136,11 +136,17 @@ private fun MyPageScreenLoggedOut(
 ) {
     DialogCard(
         modifier = Modifier.fillMaxWidth(),
+        onClick = onLoginClick,
     ) {
-        MyPageMenuButton(
-            text = stringResource(Res.string.login),
-            onClick = onLoginClick,
-        ) { Icon(imageVector = DialogIcons.Login, contentDescription = "") }
+        Row {
+            Icon(
+                imageVector = DialogIcons.Login,
+                contentDescription = "",
+                modifier = Modifier.sizeIn(maxHeight = ButtonDefaults.IconSize),
+            )
+            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+            Text(text = stringResource(Res.string.login), style = DialogTheme.typography.labelLarge)
+        }
     }
 }
 
