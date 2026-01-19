@@ -1,6 +1,5 @@
 package com.on.dialog.feature.mypage
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogIconButton
-import com.on.dialog.designsystem.component.DialogIconButtonTone
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.component.ProfileImage
@@ -65,21 +63,18 @@ fun MyPageScreen(
 @Composable
 private fun MyPageScreen(
     uiState: MyPageState,
-    isLoggedIn: Boolean = uiState.isLoggedIn,
+    onLoginClick: () -> Unit,
+    onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onLoginClick: () -> Unit = {},
-    onLogoutClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = DialogTheme.colorScheme.surfaceContainer)
-            .padding(all = 20.dp),
+        modifier = modifier.fillMaxSize().padding(all = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        when (isLoggedIn) {
-            true -> MyPageScreenLoggedIn(uiState, onLogoutClick)
-            false -> MyPageScreenLoggedOut(onLoginClick)
+        if (uiState.isLoggedIn) {
+            MyPageScreenLoggedIn(uiState = uiState, onLogoutClick = onLogoutClick)
+        } else {
+            MyPageScreenLoggedOut(onLoginClick = onLoginClick)
         }
     }
 }
@@ -166,11 +161,11 @@ private fun ProfileSection(
     uiState: MyPageState,
     modifier: Modifier = Modifier,
 ) {
-    DialogCard {
+    DialogCard(modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -187,10 +182,7 @@ private fun ProfileSection(
                     githubId = uiState.githubId,
                 )
             }
-            DialogIconButton(
-                tone = DialogIconButtonTone.Primary,
-                onClick = {},
-            ) {
+            DialogIconButton(onClick = {}) {
                 Icon(imageVector = DialogIcons.Edit, contentDescription = "")
             }
         }
@@ -258,6 +250,8 @@ private fun MyPageScreenLoggedInPreview() {
                     isNotificationEnable = false,
                     isLoggedIn = true,
                 ),
+                onLoginClick = {},
+                onLogoutClick = {},
             )
         }
     }
@@ -272,6 +266,8 @@ private fun MyPageScreenLoggedOutPreview() {
                 uiState = MyPageState(
                     isLoggedIn = false,
                 ),
+                onLoginClick = {},
+                onLogoutClick = {},
             )
         }
     }
