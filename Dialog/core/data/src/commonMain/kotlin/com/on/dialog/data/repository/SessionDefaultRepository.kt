@@ -1,5 +1,6 @@
 package com.on.dialog.data.repository
 
+import com.on.dialog.core.data.BuildKonfig
 import com.on.dialog.domain.repository.SessionRepository
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.http.Cookie
@@ -17,7 +18,7 @@ internal class SessionDefaultRepository(
             cookie = Cookie(
                 name = JSESSIONID,
                 value = jsessionId,
-                domain = "woowa-dialog.com",
+                domain = DOMAIN,
                 path = "/",
                 secure = true,
                 httpOnly = true,
@@ -33,11 +34,12 @@ internal class SessionDefaultRepository(
 
     override suspend fun hasValidSession(): Result<Boolean> = runCatching {
         // JSESSIONID 쿠키가 있는지 확인
-        val cookies = cookiesStorage.get(Url("https://woowa-dialog.com"))
+        val cookies = cookiesStorage.get(Url(BuildKonfig.BASE_URL))
         cookies.any { it.name == JSESSIONID }
     }
 
     companion object {
+        private const val DOMAIN = "woowa-dialog.com"
         private const val JSESSIONID = "JSESSIONID"
     }
 }
