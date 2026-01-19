@@ -10,7 +10,6 @@ internal class SessionDefaultRepository(
     private val cookieStore: CookieStore,
 ) : SessionRepository {
     override suspend fun saveSession(
-        requestUrl: String,
         jsessionId: String,
     ): Result<Unit> = runCatching {
         cookieStore.save(
