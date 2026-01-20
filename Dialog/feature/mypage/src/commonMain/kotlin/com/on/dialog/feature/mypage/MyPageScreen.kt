@@ -37,8 +37,8 @@ import dialog.feature.mypage.generated.resources.logout
 import dialog.feature.mypage.generated.resources.my_discussions
 import dialog.feature.mypage.generated.resources.my_scraps
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MyPageScreen(

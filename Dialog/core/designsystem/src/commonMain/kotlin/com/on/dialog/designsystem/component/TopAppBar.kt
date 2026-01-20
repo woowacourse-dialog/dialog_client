@@ -17,9 +17,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * 상단에서 제목과 내비게이션, 액션을 제공하는 TopAppBar 컴포넌트입니다.

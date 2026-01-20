@@ -10,8 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.no_profile
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
+import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun ProfileImage(
     imageUrl: String,

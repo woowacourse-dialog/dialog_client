@@ -17,8 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.util.dpToSp
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
+import androidx.compose.ui.tooling.preview.Preview
 internal val DialogTypography
     @Composable
     get() =

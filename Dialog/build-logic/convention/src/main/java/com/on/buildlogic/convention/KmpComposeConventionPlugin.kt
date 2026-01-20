@@ -53,19 +53,19 @@ internal class KmpComposeConventionPlugin : Plugin<Project> {
         extensions.configure<KotlinMultiplatformExtension> {
             sourceSets.named("commonMain") {
                 dependencies {
-                    implementation(compose.dependencies.runtime)
-                    implementation(compose.dependencies.foundation)
-                    implementation(compose.dependencies.material3)
-                    implementation(compose.dependencies.ui)
-                    implementation(compose.dependencies.components.resources)
-                    implementation(compose.dependencies.components.uiToolingPreview)
+                    implementation("org.jetbrains.compose.runtime:runtime:1.10.0")
+                    implementation("org.jetbrains.compose.foundation:foundation:1.10.0")
+                    implementation("org.jetbrains.compose.material3:material3:1.9.0")
+                    implementation("org.jetbrains.compose.ui:ui:1.10.0")
+                    implementation("org.jetbrains.compose.components:components-resources:1.10.0")
+                    implementation("org.jetbrains.compose.ui:ui-tooling-preview:1.10.0")
                     implementation(libs.library("koin-compose"))
                 }
             }
         }
 
         dependencies {
-            add("debugImplementation", compose.dependencies.uiTooling)
+            add("debugImplementation", "org.jetbrains.compose.ui:ui-tooling:1.10.0")
         }
     }
 }
