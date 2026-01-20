@@ -1,4 +1,4 @@
-package com.on.api
+package com.on.dialog.feature.main.api
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable

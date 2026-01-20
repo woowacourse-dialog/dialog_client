@@ -1,4 +1,4 @@
-package com.on.impl
+package com.on.dialog.feature.main.impl
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
