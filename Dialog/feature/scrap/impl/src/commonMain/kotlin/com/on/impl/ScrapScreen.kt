@@ -15,9 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.dialog.designsystem.theme.DialogTheme
-
 @Composable
-fun DiscussionListScreen() {
+fun ScrapScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -25,7 +24,7 @@ fun DiscussionListScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "토론 목록",
+            text = "내가 스크랩한 토론 목록",
             style = MaterialTheme.typography.headlineSmall
         )
 
@@ -54,8 +53,8 @@ fun DiscussionListScreen() {
 
 @Composable
 @Preview(showBackground = true)
-private fun DiscussionListScreenPreview() {
+private fun ScrapScreenPreview() {
     DialogTheme {
-        DiscussionListScreen()
+        ScrapScreen()
     }
 }
