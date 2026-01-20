@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "com.on.dialog.feature.login"
+    namespace = "com.on.dialog.feature.login.impl"
 }
 
 buildkonfig {
-    packageName = "com.on.dialog.feature.login"
+    packageName = "com.on.dialog.feature.login.impl"
 
     defaultConfigs {
         buildConfigField(
@@ -46,7 +46,6 @@ buildkonfig {
     }
 }
 
-
 kotlin {
     sourceSets {
         commonMain.dependencies {
@@ -56,9 +55,16 @@ kotlin {
             implementation(projects.core.data)
             implementation(projects.core.local)
             implementation(projects.core.model)
+            implementation(projects.core.navigation)
 
             // koin
             implementation(libs.koin.compose.viewmodel)
+
+            implementation(projects.feature.login.api)
+
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.androidx.material3.adaptive.nav3)
+            implementation(libs.androidx.material3.adaptive)
         }
     }
 }

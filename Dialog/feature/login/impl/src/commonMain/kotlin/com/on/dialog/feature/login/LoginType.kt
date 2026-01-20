@@ -1,5 +1,7 @@
 package com.on.dialog.feature.login
 
+import com.on.dialog.feature.login.impl.BuildKonfig
+
 enum class LoginType(
     val loginUrl: String,
 ) {
