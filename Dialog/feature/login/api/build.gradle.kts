@@ -1,7 +1,6 @@
 plugins {
     id("dialog.convention.kmp.library")
-    alias(libs.plugins.ksp.gradle.plugin)
-    alias(libs.plugins.kotlin.serialization)
+    id("dialog.convention.kotlin.serialization")
 }
 
 android {

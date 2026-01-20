@@ -5,6 +5,7 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 plugins {
     id("dialog.convention.kmp.library")
     id("dialog.convention.kmp.compose")
+    id("dialog.convention.kotlin.serialization")
     alias(libs.plugins.buildkonfig)
 }
 

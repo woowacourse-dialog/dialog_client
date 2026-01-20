@@ -1,11 +1,10 @@
 plugins {
     id("dialog.convention.kmp.library")
     id("dialog.convention.kotlin.serialization")
-    id("dialog.convention.kmp.compose")
 }
 
 android {
-    namespace = "com.on.dialog.core.navigation"
+    namespace = "com.on.dialog.feature.main.api"
 }
 
 kotlin {
