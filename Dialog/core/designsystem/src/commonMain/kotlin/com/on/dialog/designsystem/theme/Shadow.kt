@@ -33,7 +33,7 @@ enum class ShadowLevel(
     internal val offsetY: Dp,
     internal val color: Color,
 ) {
-    SMALL(4.dp, 2.dp, 0.dp, 4.dp, Color.Black.copy(alpha = 0.1f)),
+    SMALL(4.dp, 1.dp, 0.dp, 2.dp, Color.Black.copy(alpha = 0.1f)),
     MEDIUM(8.dp, 4.dp, 0.dp, 4.dp, Color.Black.copy(alpha = 0.15f)),
     LARGE(12.dp, 6.dp, 0.dp, 4.dp, Color.Black.copy(alpha = 0.2f)),
 }

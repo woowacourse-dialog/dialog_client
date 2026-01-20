@@ -11,6 +11,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.designsystem)
+            implementation(projects.core.model)
 
             // Kotlinx
             implementation(libs.kotlinx.collections.immutable)
