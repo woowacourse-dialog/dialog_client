@@ -5,6 +5,7 @@ import com.on.dialog.data.di.dataModule
 import com.on.dialog.data.di.repositoryModule
 import com.on.dialog.feature.login.di.loginModule
 import com.on.dialog.feature.mypage.di.myPageModule
+import com.on.impl.di.mainModule
 import com.on.network.di.datasourceModule
 import com.on.network.di.networkModule
 import com.on.network.di.serviceModule
@@ -24,7 +25,7 @@ val coreModule =
 
 val featureModule =
     module {
-        includes(loginModule, myPageModule)
+        includes(loginModule, myPageModule, mainModule)
     }
 
 val appModule =

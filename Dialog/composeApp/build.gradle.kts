@@ -18,6 +18,7 @@ kotlin {
             // feature
             implementation(projects.feature.login.impl)
             implementation(projects.feature.mypage.impl)
+            implementation(projects.feature.main.impl)
         }
     }
 }

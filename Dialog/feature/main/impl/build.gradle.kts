@@ -19,11 +19,12 @@ kotlin {
             implementation(projects.core.local)
             implementation(projects.core.model)
             implementation(projects.core.navigation)
+            implementation(projects.core.designsystem)
 
             // koin
             implementation(libs.koin.compose.viewmodel)
 
-            implementation(projects.feature.login.api)
+            implementation(projects.feature.main.api)
 
             implementation(libs.androidx.material3.adaptive.nav3)
             implementation(libs.androidx.material3.adaptive)
