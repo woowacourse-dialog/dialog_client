@@ -19,6 +19,7 @@ kotlin {
             implementation(projects.feature.login.impl)
             implementation(projects.feature.mypage.impl)
             implementation(projects.feature.main.impl)
+            implementation(projects.feature.scrap.impl)
         }
     }
 }
