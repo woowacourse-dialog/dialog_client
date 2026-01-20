@@ -18,7 +18,7 @@ kotlin {
             implementation(projects.core.local)
             implementation(projects.core.model)
             implementation(projects.core.common)
-            implementation(projects.feature.login)
+            implementation(projects.feature.login.impl)
 
             // koin
             implementation(libs.koin.compose.viewmodel)

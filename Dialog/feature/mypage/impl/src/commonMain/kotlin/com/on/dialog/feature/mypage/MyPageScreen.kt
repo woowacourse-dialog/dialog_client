@@ -31,14 +31,14 @@ import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.component.ProfileImage
 import com.on.model.common.Track
-import dialog.feature.mypage.generated.resources.Res
-import dialog.feature.mypage.generated.resources.login
-import dialog.feature.mypage.generated.resources.logout
-import dialog.feature.mypage.generated.resources.my_discussions
-import dialog.feature.mypage.generated.resources.my_scraps
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.ui.tooling.preview.Preview
+import dialog.feature.mypage.impl.generated.resources.Res
+import dialog.feature.mypage.impl.generated.resources.login
+import dialog.feature.mypage.impl.generated.resources.logout
+import dialog.feature.mypage.impl.generated.resources.my_discussions
+import dialog.feature.mypage.impl.generated.resources.my_scraps
 
 @Composable
 fun MyPageScreen(
