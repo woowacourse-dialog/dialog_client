@@ -18,10 +18,17 @@ kotlin {
             implementation(projects.core.local)
             implementation(projects.core.model)
             implementation(projects.core.common)
-            implementation(projects.feature.login.impl)
+            implementation(projects.core.navigation)
+            implementation(projects.feature.mypage.api)
+            implementation(projects.feature.login.api)
 
             // koin
             implementation(libs.koin.compose.viewmodel)
+
+            // navigation
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.androidx.material3.adaptive.nav3)
+            implementation(libs.androidx.material3.adaptive)
         }
     }
 }
