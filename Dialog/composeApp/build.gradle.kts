@@ -15,6 +15,7 @@ kotlin {
             implementation(projects.core.local)
             implementation(projects.feature.login)
             implementation(projects.feature.mypage)
+            implementation(projects.core.navigation)
         }
     }
 }
