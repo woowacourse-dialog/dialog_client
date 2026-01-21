@@ -6,7 +6,7 @@ import com.on.dialog.data.di.repositoryModule
 import com.on.dialog.feature.login.di.loginModule
 import com.on.dialog.feature.main.impl.di.mainModule
 import com.on.dialog.feature.mypage.di.myPageModule
-import com.on.dialog.navigation.AppNavConfig
+import com.on.dialog.navigation.SavedStateConfigurationProvider
 import com.on.impl.di.scrapModule
 import com.on.navigation.NavKeyProvider
 import com.on.network.di.datasourceModule
@@ -36,7 +36,7 @@ val appModule =
         includes(coreModule, featureModule)
 
         single {
-            AppNavConfig(
+            SavedStateConfigurationProvider(
                 providers = getAll<NavKeyProvider>(),
             )
         }

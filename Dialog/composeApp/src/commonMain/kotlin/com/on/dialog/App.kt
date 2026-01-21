@@ -17,7 +17,7 @@ import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.main.api.MainRoute
 import com.on.dialog.feature.mypage.api.MyPageRoute
 import com.on.dialog.feature.scrap.api.ScrapRoute
-import com.on.dialog.navigation.AppNavConfig
+import com.on.dialog.navigation.SavedStateConfigurationProvider
 import com.on.navigation.NavigationState
 import com.on.navigation.Navigator
 import com.on.navigation.rememberNavigationState
@@ -28,15 +28,15 @@ import org.koin.compose.koinInject
 @Composable
 @Preview
 fun App() {
-    val appNavConfig: AppNavConfig = koinInject()
+    val savedStateConfigurationProvider: SavedStateConfigurationProvider = koinInject()
     val navigationState: NavigationState = rememberNavigationState(
         startKey = MainRoute,
         topLevelKeys = TOP_LEVEL_ROUTES.keys,
-        configuration = appNavConfig.savedStateConfiguration,
+        configuration = savedStateConfigurationProvider.savedStateConfiguration,
     )
     val navigator = remember { Navigator(navigationState) }
     val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
-        appNavConfig.providers.forEach { provider ->
+        savedStateConfigurationProvider.providers.forEach { provider ->
             with(provider) {
                 registerScreens(navigator)
             }

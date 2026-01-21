@@ -3,11 +3,10 @@ package com.on.dialog.navigation
 import androidx.navigation3.runtime.NavKey
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.on.navigation.NavKeyProvider
-import io.github.aakira.napier.Napier
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
-class AppNavConfig(
+class SavedStateConfigurationProvider(
     val providers: List<NavKeyProvider>,
 ) {
     val savedStateConfiguration: SavedStateConfiguration by lazy {
