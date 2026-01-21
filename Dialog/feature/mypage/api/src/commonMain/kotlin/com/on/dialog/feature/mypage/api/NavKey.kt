@@ -1,7 +1,7 @@
-package com.on.dialog.feature.main.api
+package com.on.dialog.feature.mypage.api
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object MainRoute : NavKey
+data object MyPageNavKey : NavKey

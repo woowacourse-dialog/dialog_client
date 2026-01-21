@@ -4,13 +4,13 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.on.dialog.feature.login.LoginType
 import com.on.dialog.feature.login.LoginWebViewScreen
-import com.on.dialog.feature.login.api.LoginRoute
+import com.on.dialog.feature.login.api.LoginNavKey
 import com.on.navigation.Navigator
 
 fun EntryProviderScope<NavKey>.loginScreen(
     navigator: Navigator,
 ) {
-    entry<LoginRoute> {
+    entry<LoginNavKey> {
         LoginWebViewScreen(
             loginType = LoginType.GITHUB,
             goBack = navigator::goBack,

@@ -1,7 +1,7 @@
-package com.on.dialog.feature.scrap.api
+package com.on.dialog.feature.main.api
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object ScrapRoute : NavKey
+data object MainNavKey : NavKey
