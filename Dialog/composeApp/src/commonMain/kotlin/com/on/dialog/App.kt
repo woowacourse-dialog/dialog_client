@@ -14,6 +14,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import com.on.dialog.designsystem.component.DialogNavigationBar
 import com.on.dialog.feature.login.api.LoginRoute
 import com.on.dialog.feature.main.api.MainRoute
 import com.on.dialog.feature.mypage.api.MyPageRoute
@@ -28,6 +29,7 @@ import com.on.impl.navigation.scrapScreen
 import com.on.navigation.Navigator
 import com.on.navigation.rememberNavigationState
 import com.on.navigation.toEntries
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
@@ -52,22 +54,13 @@ fun App() {
     DialogTheme {
         Scaffold(bottomBar = {
             if (navigationState.currentKey in TOP_LEVEL_ROUTES.keys) {
-                NavigationBar {
-                    TOP_LEVEL_ROUTES.forEach { (key, value) ->
-                        val isSelected = key == navigationState.currentKey
-                        NavigationBarItem(
-                            selected = isSelected,
-                            onClick = { navigator.navigate(key) },
-                            icon = {
-                                Icon(
-                                    imageVector = value.icon,
-                                    contentDescription = value.label
-                                )
-                            },
-                            label = { Text(value.label) }
-                        )
-                    }
-                }
+                DialogNavigationBar(
+                    items = TOP_LEVEL_ROUTES.values.toPersistentList(),
+                    selectedIndex = TOP_LEVEL_ROUTES.keys.indexOf(navigationState.currentKey),
+                    onSelectedIndexChange = { selectedIndex ->
+                        navigator.navigate(TOP_LEVEL_ROUTES.keys.elementAt(selectedIndex))
+                    },
+                )
             }
         }) { paddingValues ->
             NavDisplay(
