@@ -25,8 +25,7 @@ kotlin {
 
             implementation(projects.feature.scrap.api)
 
-            implementation(libs.androidx.material3.adaptive.nav3)
-            implementation(libs.androidx.material3.adaptive)
+            implementation(libs.androidx.nav3.runtime)
         }
     }
 }

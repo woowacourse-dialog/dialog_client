@@ -11,8 +11,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.androidx.material3.adaptive.nav3)
-            implementation(libs.androidx.material3.adaptive)
+            implementation(libs.androidx.nav3.runtime)
         }
     }
 }

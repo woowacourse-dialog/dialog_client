@@ -31,7 +31,6 @@ jetbrains-androidx-navigation = "2.9.1"
 
 # Navigation
 androidx-nav3 = "1.0.0-alpha06"
-androidx-adaptive = "1.3.0-alpha03"
 android-lifecycle-viewmodel-nav3= "2.10.0"
 
 # Room Database
@@ -100,9 +99,8 @@ androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test"}
 
 # Navigation
 androidx-nav3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "androidx-nav3" }
-androidx-material3-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "androidx-adaptive" }
-androidx-material3-adaptive-nav3 = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation3", version.ref = "androidx-adaptive" }
 androidx-nav3-lifecycle-viewmodel = {module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "android-lifecycle-viewmodel-nav3" }
+androidx-nav3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "androidx-nav3" }
 
 # Ktor
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
