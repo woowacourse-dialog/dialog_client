@@ -11,12 +11,8 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.on.dialog.designsystem.component.DialogNavigationBar
-import com.on.dialog.designsystem.component.NavigationItem
-import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.main.api.MainNavKey
-import com.on.dialog.feature.mypage.api.MyPageNavKey
-import com.on.dialog.feature.scrap.api.ScrapNavKey
 import com.on.dialog.navigation.SavedStateConfigurationProvider
 import com.on.navigation.NavigationState
 import com.on.navigation.Navigator
@@ -31,7 +27,7 @@ fun App() {
     val savedStateConfigurationProvider: SavedStateConfigurationProvider = koinInject()
     val navigationState: NavigationState = rememberNavigationState(
         startKey = MainNavKey,
-        topLevelKeys = TOP_LEVEL_ROUTES.keys,
+        topLevelKeys = TopLevel.routesKey,
         configuration = savedStateConfigurationProvider.savedStateConfiguration,
     )
     val navigator = remember { Navigator(navigationState) }
@@ -45,12 +41,12 @@ fun App() {
 
     DialogTheme {
         Scaffold(bottomBar = {
-            if (navigationState.currentKey in TOP_LEVEL_ROUTES.keys) {
+            if (navigationState.currentKey in TopLevel.routesKey) {
                 DialogNavigationBar(
-                    items = TOP_LEVEL_ROUTES.values.toPersistentList(),
-                    selectedIndex = TOP_LEVEL_ROUTES.keys.indexOf(navigationState.currentKey),
+                    items = TopLevel.routesNavigationItem.toPersistentList(),
+                    selectedIndex = TopLevel.routesKey.indexOf(navigationState.currentKey),
                     onSelectedIndexChange = { selectedIndex ->
-                        navigator.navigate(TOP_LEVEL_ROUTES.keys.elementAt(selectedIndex))
+                        navigator.navigate(TopLevel.routesKey.elementAt(selectedIndex))
                     },
                 )
             }
@@ -65,9 +61,3 @@ fun App() {
         }
     }
 }
-
-private val TOP_LEVEL_ROUTES = mapOf<NavKey, NavigationItem>(
-    MainNavKey to NavigationItem(icon = DialogIcons.Home, label = "홈"),
-    ScrapNavKey to NavigationItem(icon = DialogIcons.Bookmark, label = "북마크"),
-    MyPageNavKey to NavigationItem(icon = DialogIcons.Person, label = "마이페이지"),
-)
