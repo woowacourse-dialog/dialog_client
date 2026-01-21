@@ -2,13 +2,13 @@ package com.on.dialog.feature.login.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.on.api.LoginRoute
+import com.on.dialog.feature.login.api.LoginRoute
 import com.on.dialog.feature.login.LoginType
 import com.on.dialog.feature.login.LoginWebViewScreen
 import com.on.navigation.Navigator
 
 fun EntryProviderScope<NavKey>.loginScreen(
-    navigator: Navigator
+    navigator: Navigator,
 ) {
     entry<LoginRoute> {
         LoginWebViewScreen(

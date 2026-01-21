@@ -1,26 +1,76 @@
 package com.on.navigation
 
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import io.github.aakira.napier.Napier
 
-class Navigator(val state: NavigationState) {
-    fun navigate(route: NavKey) {
-        if (route in state.backStacks.keys) {
-            state.topLevelRoute = route
-        } else {
-            state.backStacks[state.topLevelRoute]?.add(route)
+class Navigator(
+    val state: NavigationState,
+) {
+    fun navigate(key: NavKey) {
+        when (key) {
+            state.currentTopLevelKey -> clearSubStack()
+            in state.topLevelKeys -> goToTopLevel(key)
+            else -> goToKey(key)
         }
+        Napier.e(
+            tag = "Navigator",
+            message =
+                """
+            
+            ------------------------ Navigator --------------------------------
+            [navigate to $key]
+            currentTopLevelKey: ${state.currentTopLevelKey}
+            currentKey: ${state.currentKey}
+
+            topLevelStack: ${state.topLevelStack}
+            subStacks: ${state.subStacks}
+            currentSubStack: ${state.currentSubStack.size}
+            ------------------------------------------------------------------------
+            """.trimIndent(),
+        )
     }
 
     fun goBack() {
-        val currentStack: NavBackStack<NavKey> = state.backStacks[state.topLevelRoute]
-            ?: error("${state.topLevelRoute}를 찾을 수 없습니다.")
-        val currentRoute: NavKey = currentStack.last()
+        when (state.currentKey) {
+            state.startKey -> Unit
+            state.currentTopLevelKey -> state.topLevelStack.removeLastOrNull()
+            else -> state.currentSubStack.removeLastOrNull()
+        }
+        Napier.e(
+            tag = "Navigator",
+            message =
+                """
+            
+            ------------------------ Navigator --------------------------------
+            [goback]
+            currentTopLevelKey: ${state.currentTopLevelKey}
+            currentKey: ${state.currentKey}
 
-        if (currentRoute == state.topLevelRoute) {
-            state.topLevelRoute = state.startRoute
-        } else {
-            currentStack.removeLastOrNull()
+            topLevelStack: ${state.topLevelStack}
+            subStacks: ${state.subStacks}
+            currentSubStack: ${state.currentSubStack.size}
+            ------------------------------------------------------------------------
+            """.trimIndent(),
+        )
+    }
+
+    private fun goToKey(key: NavKey) {
+        state.currentSubStack.apply {
+            remove(key)
+            add(key)
+        }
+    }
+
+    private fun goToTopLevel(key: NavKey) {
+        state.topLevelStack.apply {
+            if (key == state.startKey) clear() else remove(key)
+            add(key)
+        }
+    }
+
+    private fun clearSubStack() {
+        state.currentSubStack.run {
+            if (size > 1) subList(1, size).clear()
         }
     }
 }

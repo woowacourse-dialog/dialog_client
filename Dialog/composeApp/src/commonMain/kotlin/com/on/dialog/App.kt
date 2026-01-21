@@ -1,38 +1,98 @@
 package com.on.dialog
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.feature.login.LoginType
-import com.on.dialog.feature.login.LoginWebViewScreen
-import com.on.dialog.feature.mypage.MyPageScreen
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
+import androidx.savedstate.serialization.SavedStateConfiguration
+import com.on.dialog.feature.login.api.LoginRoute
+import com.on.dialog.feature.main.api.MainRoute
+import com.on.dialog.feature.mypage.api.MyPageRoute
+import com.on.dialog.feature.scrap.api.ScrapRoute
+import com.on.dialog.designsystem.component.NavigationItem
+import com.on.dialog.designsystem.icon.DialogIcons
+import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.login.navigation.loginScreen
+import com.on.dialog.feature.mypage.navigation.myPageScreen
+import com.on.dialog.feature.main.impl.navigation.mainScreen
+import com.on.impl.navigation.scrapScreen
+import com.on.navigation.Navigator
+import com.on.navigation.rememberNavigationState
+import com.on.navigation.toEntries
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+
 @Composable
 @Preview
 fun App() {
-    // TODO Navigation으로 마이그레이션
-    var showLoginWebView: Boolean by rememberSaveable { mutableStateOf(value = false) }
+    val navigationState = rememberNavigationState(
+        startKey = MainRoute,
+        topLevelKeys = TOP_LEVEL_ROUTES.keys,
+        configuration = config
+    )
+
+    val navigator = remember { Navigator(navigationState) }
+
+    val entryProvider = entryProvider {
+        mainScreen(navigator = navigator)
+        loginScreen(navigator = navigator)
+        myPageScreen(navigator = navigator)
+        scrapScreen(navigator = navigator)
+    }
 
     DialogTheme {
-        Scaffold { innerPadding ->
-            if (showLoginWebView) {
-                LoginWebViewScreen(
-                    loginType = LoginType.GITHUB,
-                    goBack = { showLoginWebView = false },
-                    navigateToSignUp = { showLoginWebView = false },
-                )
-            } else {
-                MyPageScreen(
-                    navigateToLogin = { showLoginWebView = true },
-                    modifier = Modifier.padding(paddingValues = innerPadding),
-                )
+        Scaffold(bottomBar = {
+            if (navigationState.currentKey in TOP_LEVEL_ROUTES.keys) {
+                NavigationBar {
+                    TOP_LEVEL_ROUTES.forEach { (key, value) ->
+                        val isSelected = key == navigationState.currentKey
+                        NavigationBarItem(
+                            selected = isSelected,
+                            onClick = { navigator.navigate(key) },
+                            icon = {
+                                Icon(
+                                    imageVector = value.icon,
+                                    contentDescription = value.label
+                                )
+                            },
+                            label = { Text(value.label) }
+                        )
+                    }
+                }
             }
+        }) { paddingValues ->
+            NavDisplay(
+                entries = navigationState.toEntries{ key ->
+                    entryProvider(key)
+                },
+                onBack = { navigator.goBack() },
+                modifier = Modifier.padding(paddingValues)
+            )
         }
     }
 }
+
+val config = SavedStateConfiguration {
+    serializersModule = SerializersModule {
+        polymorphic(NavKey::class) {
+            subclass(MainRoute::class, MainRoute.serializer())
+            subclass(ScrapRoute::class, ScrapRoute.serializer())
+            subclass(MyPageRoute::class, MyPageRoute.serializer())
+            subclass(LoginRoute::class, LoginRoute.serializer())
+        }
+    }
+}
+private val TOP_LEVEL_ROUTES = mapOf<NavKey, NavigationItem>(
+    MainRoute to NavigationItem(icon = DialogIcons.Home, label = "홈"),
+    ScrapRoute to NavigationItem(icon = DialogIcons.Bookmark, label = "북마크"),
+    MyPageRoute to NavigationItem(icon = DialogIcons.Person, label = "마이페이지"),
+)
