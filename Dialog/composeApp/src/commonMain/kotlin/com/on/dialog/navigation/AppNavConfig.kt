@@ -8,10 +8,10 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
 class AppNavConfig(
-    val providers: List<NavKeyProvider>
+    val providers: List<NavKeyProvider>,
 ) {
     val savedStateConfiguration: SavedStateConfiguration by lazy {
-        println("실제 사용 시점 - providers: ${providers}")
+        println("실제 사용 시점 - providers: $providers")
         SavedStateConfiguration {
             serializersModule = SerializersModule {
                 polymorphic(NavKey::class) {

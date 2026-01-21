@@ -15,17 +15,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.dialog.designsystem.theme.DialogTheme
+
 @Composable
 fun ScrapScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(DialogTheme.spacing.huge),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = "내가 스크랩한 토론 목록",
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.headlineSmall,
         )
 
         Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
@@ -35,7 +36,7 @@ fun ScrapScreen() {
         ) {
             Column(
                 modifier = Modifier.padding(DialogTheme.spacing.large),
-                verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large)
+                verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
             ) {
                 Text(
                     text = "토론 주제 1",

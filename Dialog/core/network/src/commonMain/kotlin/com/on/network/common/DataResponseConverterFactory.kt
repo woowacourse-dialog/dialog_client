@@ -40,6 +40,7 @@ class DataResponseConverterFactory : Converter.Factory {
                             }
                         }
                     }
+
                     is KtorfitResult.Failure -> {
                         throw result.throwable
                     }

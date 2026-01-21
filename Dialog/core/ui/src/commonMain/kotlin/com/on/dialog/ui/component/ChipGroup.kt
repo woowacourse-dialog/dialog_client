@@ -12,12 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.component.DialogChip
 import com.on.dialog.designsystem.theme.DialogTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import androidx.compose.ui.tooling.preview.Preview
+
 /**
  * [DialogChip] 컴포넌트에 필요한 데이터를 나타내는 클래스
  *

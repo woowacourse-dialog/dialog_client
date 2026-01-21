@@ -7,7 +7,7 @@ import com.on.impl.ScrapScreen
 import com.on.navigation.Navigator
 
 fun EntryProviderScope<NavKey>.scrapScreen(
-    navigator: Navigator
+    navigator: Navigator,
 ) {
     entry<ScrapRoute> {
         ScrapScreen()

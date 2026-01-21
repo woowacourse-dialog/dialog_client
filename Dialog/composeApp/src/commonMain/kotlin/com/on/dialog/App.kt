@@ -11,12 +11,12 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.on.dialog.designsystem.component.DialogNavigationBar
-import com.on.dialog.feature.main.api.MainRoute
-import com.on.dialog.feature.mypage.api.MyPageRoute
-import com.on.dialog.feature.scrap.api.ScrapRoute
 import com.on.dialog.designsystem.component.NavigationItem
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.main.api.MainRoute
+import com.on.dialog.feature.mypage.api.MyPageRoute
+import com.on.dialog.feature.scrap.api.ScrapRoute
 import com.on.dialog.navigation.AppNavConfig
 import com.on.navigation.NavigationState
 import com.on.navigation.Navigator
@@ -29,15 +29,12 @@ import org.koin.compose.koinInject
 @Preview
 fun App() {
     val appNavConfig: AppNavConfig = koinInject()
-
     val navigationState: NavigationState = rememberNavigationState(
         startKey = MainRoute,
         topLevelKeys = TOP_LEVEL_ROUTES.keys,
-        configuration = appNavConfig.savedStateConfiguration
+        configuration = appNavConfig.savedStateConfiguration,
     )
-
     val navigator = remember { Navigator(navigationState) }
-
     val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
         appNavConfig.providers.forEach { provider ->
             with(provider) {
@@ -59,15 +56,16 @@ fun App() {
             }
         }) { paddingValues ->
             NavDisplay(
-                entries = navigationState.toEntries{ key ->
+                entries = navigationState.toEntries { key ->
                     entryProvider(key)
                 },
                 onBack = { navigator.goBack() },
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues),
             )
         }
     }
 }
+
 private val TOP_LEVEL_ROUTES = mapOf<NavKey, NavigationItem>(
     MainRoute to NavigationItem(icon = DialogIcons.Home, label = "홈"),
     ScrapRoute to NavigationItem(icon = DialogIcons.Bookmark, label = "북마크"),

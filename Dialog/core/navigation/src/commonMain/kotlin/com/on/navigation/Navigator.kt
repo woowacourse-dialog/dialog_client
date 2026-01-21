@@ -16,17 +16,17 @@ class Navigator(
             tag = "Navigator",
             message =
                 """
-            
-            ------------------------ Navigator --------------------------------
-            [navigate to $key]
-            currentTopLevelKey: ${state.currentTopLevelKey}
-            currentKey: ${state.currentKey}
+                
+                ------------------------ Navigator --------------------------------
+                [navigate to $key]
+                currentTopLevelKey: ${state.currentTopLevelKey}
+                currentKey: ${state.currentKey}
 
-            topLevelStack: ${state.topLevelStack}
-            subStacks: ${state.subStacks}
-            currentSubStack: ${state.currentSubStack.size}
-            ------------------------------------------------------------------------
-            """.trimIndent(),
+                topLevelStack: ${state.topLevelStack}
+                subStacks: ${state.subStacks}
+                currentSubStack: ${state.currentSubStack.size}
+                ------------------------------------------------------------------------
+                """.trimIndent(),
         )
     }
 
@@ -40,17 +40,17 @@ class Navigator(
             tag = "Navigator",
             message =
                 """
-            
-            ------------------------ Navigator --------------------------------
-            [goback]
-            currentTopLevelKey: ${state.currentTopLevelKey}
-            currentKey: ${state.currentKey}
+                
+                ------------------------ Navigator --------------------------------
+                [goback]
+                currentTopLevelKey: ${state.currentTopLevelKey}
+                currentKey: ${state.currentKey}
 
-            topLevelStack: ${state.topLevelStack}
-            subStacks: ${state.subStacks}
-            currentSubStack: ${state.currentSubStack.size}
-            ------------------------------------------------------------------------
-            """.trimIndent(),
+                topLevelStack: ${state.topLevelStack}
+                subStacks: ${state.subStacks}
+                currentSubStack: ${state.currentSubStack.size}
+                ------------------------------------------------------------------------
+                """.trimIndent(),
         )
     }
 

@@ -6,11 +6,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.no_profile
-import androidx.compose.ui.tooling.preview.Preview
+
 @Composable
 fun ProfileImage(
     imageUrl: String,

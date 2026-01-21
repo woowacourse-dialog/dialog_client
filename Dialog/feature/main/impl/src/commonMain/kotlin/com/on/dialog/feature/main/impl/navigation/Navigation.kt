@@ -7,7 +7,7 @@ import com.on.dialog.feature.main.impl.DiscussionListScreen
 import com.on.navigation.Navigator
 
 fun EntryProviderScope<NavKey>.mainScreen(
-    navigator: Navigator
+    navigator: Navigator,
 ) {
     entry<MainRoute> {
         DiscussionListScreen()

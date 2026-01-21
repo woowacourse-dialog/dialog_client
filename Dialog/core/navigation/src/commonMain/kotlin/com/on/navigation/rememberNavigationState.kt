@@ -27,7 +27,7 @@ fun rememberNavigationState(
     topLevelKeys: Set<NavKey>,
     configuration: SavedStateConfiguration,
 ): NavigationState {
-    val topLevelStack = rememberNavBackStack(configuration = configuration,startKey)
+    val topLevelStack = rememberNavBackStack(configuration = configuration, startKey)
     val subStacks = topLevelKeys.associateWith { key -> rememberNavBackStack(configuration = configuration, key) }
 
     return remember(startKey, topLevelKeys) {
@@ -38,6 +38,7 @@ fun rememberNavigationState(
         )
     }
 }
+
 /**
  * @param startKey - 앱의 시작 라우트. 사용자는 이 라우트를 통해 앱을 종료하게 된다.
  * @param topLevelStack - 현재 선택된 최상위(Top-level) 라우트

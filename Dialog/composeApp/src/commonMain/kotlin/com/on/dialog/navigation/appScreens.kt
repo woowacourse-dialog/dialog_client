@@ -7,7 +7,7 @@ import com.on.navigation.Navigator
 
 fun EntryProviderScope<NavKey>.appScreens(
     navigator: Navigator,
-    providers: List<NavKeyProvider>
+    providers: List<NavKeyProvider>,
 ) {
     providers.forEach { provider ->
         with(provider) {
