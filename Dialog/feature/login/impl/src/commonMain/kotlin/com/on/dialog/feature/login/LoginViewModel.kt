@@ -18,6 +18,7 @@ class LoginViewModel(
     }
 
     private fun saveUserSession(jsessionId: String, isNewUser: Boolean) {
+        if (currentState.isLoginComplete) return
         updateState { copy(isLoading = true) }
 
         viewModelScope
@@ -26,7 +27,7 @@ class LoginViewModel(
                     .saveSession(jsessionId = jsessionId)
                     .onSuccess {
                         updateState { copy(isLoginComplete = true, isNewUser = isNewUser) }
-                        emitEffect(if (isNewUser) LoginEffect.GoBack else LoginEffect.NavigateToSignUp)
+                        emitEffect(if (isNewUser) LoginEffect.NavigateToSignUp else LoginEffect.GoBack)
                     }.onFailure { error ->
                         emitEffect(
                             effect = LoginEffect.ShowError(
