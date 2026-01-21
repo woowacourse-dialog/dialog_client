@@ -6,6 +6,9 @@ import com.on.dialog.data.di.repositoryModule
 import com.on.dialog.feature.login.di.loginModule
 import com.on.dialog.feature.mypage.di.myPageModule
 import com.on.dialog.feature.main.impl.di.mainModule
+import com.on.dialog.navigation.AppNavConfig
+import com.on.impl.di.scrapModule
+import com.on.navigation.NavKeyProvider
 import com.on.network.di.datasourceModule
 import com.on.network.di.networkModule
 import com.on.network.di.serviceModule
@@ -25,10 +28,16 @@ val coreModule =
 
 val featureModule =
     module {
-        includes(loginModule, myPageModule, mainModule)
+        includes(mainModule, scrapModule, myPageModule, loginModule,)
     }
 
 val appModule =
     module {
         includes(coreModule, featureModule)
+
+        single {
+            AppNavConfig(
+                providers = getAll<NavKeyProvider>()
+            )
+        }
     }
