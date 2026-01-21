@@ -10,7 +10,6 @@ class SavedStateConfigurationProvider(
     val providers: List<NavKeyProvider>,
 ) {
     val savedStateConfiguration: SavedStateConfiguration by lazy {
-        println("실제 사용 시점 - providers: $providers")
         SavedStateConfiguration {
             serializersModule = SerializersModule {
                 polymorphic(NavKey::class) {
