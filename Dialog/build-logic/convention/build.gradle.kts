@@ -50,5 +50,15 @@ gradlePlugin {
             id = "dialog.convention.kotlin.serialization"
             implementationClass = "com.on.buildlogic.convention.KotlinSerializationConventionPlugin"
         }
+
+        register("dialog.convention.kotlin.feature.api") {
+            id = "dialog.convention.kotlin.feature.api"
+            implementationClass = "com.on.buildlogic.convention.KmpFeatureApiConventionPlugin"
+        }
+
+        register("dialog.convention.kotlin.feature.impl") {
+            id = "dialog.convention.kotlin.feature.impl"
+            implementationClass = "com.on.buildlogic.convention.KmpFeatureImplConventionPlugin"
+        }
     }
 }
