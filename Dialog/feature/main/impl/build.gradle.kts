@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
 
             implementation(projects.feature.main.api)
+            implementation(projects.feature.discussiondetail.api)
 
             implementation(libs.androidx.nav3.runtime)
         }

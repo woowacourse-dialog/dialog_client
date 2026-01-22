@@ -1,5 +1,6 @@
 package com.on.dialog.feature.main.impl
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.on.dialog.designsystem.theme.DialogTheme
 
 @Composable
-fun DiscussionListScreen() {
+fun DiscussionListScreen(
+    navigateToDiscussionDetail: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,12 +44,21 @@ fun DiscussionListScreen() {
             ) {
                 Text(
                     text = "토론 주제 1",
+                    modifier = Modifier.clickable{
+                        navigateToDiscussionDetail()
+                    }
                 )
                 Text(
                     text = "토론 주제 2",
+                    modifier = Modifier.clickable{
+                        navigateToDiscussionDetail()
+                    }
                 )
                 Text(
                     text = "토론 주제 3",
+                    modifier = Modifier.clickable{
+                        navigateToDiscussionDetail()
+                    }
                 )
             }
         }
@@ -56,6 +69,6 @@ fun DiscussionListScreen() {
 @Preview(showBackground = true)
 private fun DiscussionListScreenPreview() {
     DialogTheme {
-        DiscussionListScreen()
+        DiscussionListScreen({})
     }
 }
