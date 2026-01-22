@@ -3,9 +3,7 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
 plugins {
-    id("dialog.convention.kmp.library")
-    id("dialog.convention.kmp.compose")
-    id("dialog.convention.kotlin.serialization")
+    id("dialog.convention.kotlin.feature.impl")
     alias(libs.plugins.buildkonfig)
 }
 
@@ -40,7 +38,12 @@ buildkonfig {
             buildConfigField(
                 STRING,
                 "GITHUB_OAUTH_URL",
-                "${gradleLocalProperties(rootDir, providers).getProperty("release_github_oauth_url")}"
+                "${
+                    gradleLocalProperties(
+                        rootDir,
+                        providers
+                    ).getProperty("release_github_oauth_url")
+                }"
             )
             buildConfigField(BOOLEAN, "IS_DEBUG", "false")
         }
@@ -49,22 +52,15 @@ buildkonfig {
 
 kotlin {
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.napier)
+        }
         commonMain.dependencies {
-            implementation(projects.core.ui)
-            implementation(projects.core.network)
-            implementation(projects.core.domain)
-            implementation(projects.core.data)
             implementation(projects.core.local)
-            implementation(projects.core.model)
-            implementation(projects.core.navigation)
-
-            // koin
-            implementation(libs.koin.compose.viewmodel)
-
             implementation(projects.feature.login.api)
-
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.androidx.nav3.runtime)
+        }
+        iosMain.dependencies {
+            implementation(libs.napier)
         }
     }
 }
