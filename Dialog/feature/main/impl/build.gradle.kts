@@ -24,6 +24,9 @@ kotlin {
             // koin
             implementation(libs.koin.compose.viewmodel)
 
+            // math
+            implementation(libs.kotlinx.collections.immutable)
+
             implementation(projects.feature.main.api)
             implementation(projects.feature.discussiondetail.api)
 

@@ -35,8 +35,12 @@ fun DiscussionCard(
     endAt: String,
     discussionCount: Int,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
 ) {
-    DialogCard(modifier = modifier) {
+    DialogCard(
+        modifier = modifier,
+        onClick = onClick,
+    ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
         ) {
@@ -110,6 +114,7 @@ private fun DiscussionCardPreviewContent() {
             endAt = "2026.01.31",
             discussionCount = 25,
             modifier = Modifier.padding(all = 12.dp),
+            onClick = {},
         )
     }
 }
