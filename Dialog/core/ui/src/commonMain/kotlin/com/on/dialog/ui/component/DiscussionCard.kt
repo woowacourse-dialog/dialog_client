@@ -29,7 +29,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun DiscussionCard(
     chips: ImmutableList<ChipCategory>,
-    onChipsChange: (ImmutableList<ChipCategory>) -> Unit,
+    onChipsChange: (List<ChipCategory>) -> Unit,
     title: String,
     author: String,
     endAt: String,
@@ -40,6 +40,7 @@ fun DiscussionCard(
         Column(
             verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
         ) {
+            DialogChipGroup(chips = chips, onChipsChange = onChipsChange)
             Text(text = title, style = DialogTheme.typography.titleMedium)
             DiscussionCardFooter(author = author, endAt = endAt, discussionCount = discussionCount)
         }
