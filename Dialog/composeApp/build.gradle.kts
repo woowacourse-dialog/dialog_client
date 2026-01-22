@@ -20,11 +20,14 @@ kotlin {
             implementation(projects.feature.mypage.impl)
             implementation(projects.feature.main.impl)
             implementation(projects.feature.scrap.impl)
+            implementation(projects.feature.discussiondetail.impl)
 
             implementation(projects.feature.login.api)
             implementation(projects.feature.mypage.api)
             implementation(projects.feature.main.api)
             implementation(projects.feature.scrap.api)
+            implementation(projects.feature.discussiondetail.api)
+
 
             implementation(libs.androidx.nav3.ui)
 
