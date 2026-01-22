@@ -14,6 +14,7 @@ import com.on.dialog.designsystem.component.DialogNavigationBar
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.main.api.MainNavKey
 import com.on.dialog.navigation.SavedStateConfigurationProvider
+import com.on.dialog.navigation.appScreens
 import com.on.navigation.NavigationState
 import com.on.navigation.Navigator
 import com.on.navigation.rememberNavigationState
@@ -31,13 +32,8 @@ fun App() {
         configuration = savedStateConfigurationProvider.savedStateConfiguration,
     )
     val navigator = remember { Navigator(navigationState) }
-    val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
-        savedStateConfigurationProvider.providers.forEach { provider ->
-            with(provider) {
-                registerScreens(navigator)
-            }
-        }
-    }
+    val entryProvider: (NavKey) -> NavEntry<NavKey> =
+        entryProvider { appScreens(navigator, savedStateConfigurationProvider.providers) }
 
     DialogTheme {
         Scaffold(bottomBar = {
