@@ -1,12 +1,9 @@
 package com.on.dialog
 
 import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -26,7 +23,6 @@ import com.on.navigation.NavigationState
 import com.on.navigation.Navigator
 import com.on.navigation.rememberNavigationState
 import com.on.navigation.toEntries
-import kotlinx.collections.immutable.toPersistentList
 import org.koin.compose.koinInject
 
 @Composable
@@ -46,7 +42,7 @@ fun App() {
         Scaffold(bottomBar = {
             if (navigationState.currentKey in TopLevel.routesKey) {
                 DialogNavigationBar(
-                    items = TopLevel.routesNavigationItem.toPersistentList(),
+                    items = TopLevel.routesNavigationItem,
                     selectedIndex = TopLevel.routesKey.indexOf(navigationState.currentKey),
                     onSelectedIndexChange = { selectedIndex ->
                         navigator.navigate(TopLevel.routesKey.elementAt(selectedIndex))
