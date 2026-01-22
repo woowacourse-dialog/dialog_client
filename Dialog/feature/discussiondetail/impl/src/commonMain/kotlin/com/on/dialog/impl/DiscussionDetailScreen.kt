@@ -1,35 +1,31 @@
 package com.on.dialog.impl
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.on.dialog.designsystem.component.DialogIconButton
+import com.on.dialog.designsystem.component.DialogTopAppBar
+import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 
 @Composable
-fun DiscussionDetailScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(DialogTheme.spacing.huge),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = "토론 상세 화면",
-            style = MaterialTheme.typography.headlineSmall,
+fun DiscussionDetailScreen(
+    goBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxSize()) {
+        DialogTopAppBar(
+            title = "토론 상세 화면",
+            centerAligned = false,
+            navigationIcon = {
+                DialogIconButton(onClick = goBack) {
+                    Icon(imageVector = DialogIcons.ArrowBack, contentDescription = null)
+                }
+            },
         )
-
-        Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
     }
 }
 
@@ -37,6 +33,6 @@ fun DiscussionDetailScreen() {
 @Preview(showBackground = true)
 private fun DiscussionDetailScreenPreview() {
     DialogTheme {
-        DiscussionDetailScreen()
+        DiscussionDetailScreen({})
     }
 }

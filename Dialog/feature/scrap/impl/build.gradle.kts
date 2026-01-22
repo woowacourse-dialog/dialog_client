@@ -20,10 +20,15 @@ kotlin {
             implementation(projects.core.navigation)
             implementation(projects.core.designsystem)
 
+
             // koin
             implementation(libs.koin.compose.viewmodel)
 
+            // math
+            implementation(libs.kotlinx.collections.immutable)
+
             implementation(projects.feature.scrap.api)
+            implementation(projects.feature.discussiondetail.api)
 
             implementation(libs.androidx.nav3.runtime)
         }

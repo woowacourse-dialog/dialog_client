@@ -1,52 +1,50 @@
 package com.on.impl
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.ui.component.ChipCategory
+import com.on.dialog.ui.component.DiscussionCard
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun ScrapScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(DialogTheme.spacing.huge),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = "내가 스크랩한 토론 목록",
-            style = MaterialTheme.typography.headlineSmall,
+fun ScrapScreen(
+    navigateToDiscussionDetail: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxSize()) {
+        DialogTopAppBar(
+            title = "스크랩 화면",
+            centerAligned = true,
         )
 
-        Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
+        Column(
+            modifier = Modifier
+                .padding(DialogTheme.spacing.huge),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                modifier = Modifier.padding(DialogTheme.spacing.large),
-                verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
+            DiscussionCard(
+                chips = persistentListOf(
+                    ChipCategory(
+                        text = "Android",
+                        textColor = Color(0xFF003D2E),
+                        backgroundColor = Color(0xFF3DDC84),
+                    )
+                ),
+                onChipsChange = {},
+                title = "KMP 전망",
+                author = "크림",
+                endAt = "2026.01.31",
+                discussionCount = 3,
             ) {
-                Text(
-                    text = "토론 주제 1",
-                )
-                Text(
-                    text = "토론 주제 2",
-                )
-                Text(
-                    text = "토론 주제 3",
-                )
+                navigateToDiscussionDetail()
             }
         }
     }
@@ -56,6 +54,6 @@ fun ScrapScreen() {
 @Preview(showBackground = true)
 private fun ScrapScreenPreview() {
     DialogTheme {
-        ScrapScreen()
+        ScrapScreen({})
     }
 }

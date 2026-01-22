@@ -10,6 +10,6 @@ fun EntryProviderScope<NavKey>.discussionDetailScreen(
     navigator: Navigator,
 ) {
     entry<DiscussionDetailNavKey> {
-        DiscussionDetailScreen()
+        DiscussionDetailScreen(goBack = { navigator.goBack() })
     }
 }
