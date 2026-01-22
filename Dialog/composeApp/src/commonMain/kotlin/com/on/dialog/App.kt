@@ -1,5 +1,12 @@
 package com.on.dialog
 
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -53,6 +60,18 @@ fun App() {
                 },
                 onBack = { navigator.goBack() },
                 modifier = Modifier.padding(paddingValues),
+                transitionSpec = {
+                    ContentTransform(
+                        fadeIn(animationSpec = tween(300)),
+                        fadeOut(animationSpec = tween(300)),
+                    )
+                },
+                popTransitionSpec = {
+                    ContentTransform(
+                        fadeIn(animationSpec = tween(300)),
+                        fadeOut(animationSpec = tween(300)),
+                    )
+                },
             )
         }
     }
