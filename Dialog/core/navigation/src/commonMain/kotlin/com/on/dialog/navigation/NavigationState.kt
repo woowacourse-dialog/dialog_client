@@ -72,7 +72,7 @@ fun NavigationState.toEntries(entryProvider: (NavKey) -> NavEntry<NavKey>): Snap
             val decorators =
                 listOf(
                     rememberSaveableStateHolderNavEntryDecorator<NavKey>(),
-                    rememberViewModelStoreNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
                 )
 
             rememberDecoratedNavEntries(

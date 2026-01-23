@@ -119,7 +119,7 @@ internal class KmpFeatureImplConventionPlugin : Plugin<Project> {
                     // Feature 공통
                     implementation(libs.library("koin-compose-viewmodel"))
                     implementation(libs.library("kotlinx-collections-immutable"))
-                    implementation(libs.library("androidx-nav3-runtime"))
+                    implementation(libs.library("jetbrains-navigation3-ui"))
                     implementation(libs.library("napier"))
                 }
             }

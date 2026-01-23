@@ -27,9 +27,6 @@ kotlin {
             // discussiondetail
             implementation(projects.feature.discussiondetail.api)
             implementation(projects.feature.discussiondetail.impl)
-
-            // nav3
-            implementation(libs.androidx.nav3.ui)
         }
     }
 }

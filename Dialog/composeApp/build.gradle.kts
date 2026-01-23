@@ -16,7 +16,7 @@ kotlin {
             implementation(projects.core.local)
             implementation(projects.core.navigation)
             // feature
-            
+
             // discussionlist
             implementation(projects.feature.discussionlist.api)
             implementation(projects.feature.discussionlist.impl)
@@ -32,7 +32,7 @@ kotlin {
             implementation(projects.feature.discussiondetail.impl)
 
             //nav3
-            implementation(libs.androidx.nav3.ui)
+            implementation(libs.jetbrains.navigation3.ui)
         }
     }
 }

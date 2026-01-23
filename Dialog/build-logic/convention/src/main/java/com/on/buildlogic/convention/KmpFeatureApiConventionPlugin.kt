@@ -67,7 +67,7 @@ internal class KmpFeatureApiConventionPlugin : Plugin<Project> {
             sourceSets.named("commonMain") {
                 dependencies {
                     implementation(libs.library("kotlinx-serialization-json"))
-                    implementation(libs.library("androidx-nav3-runtime"))
+                    implementation(libs.library("jetbrains-navigation3-ui"))
                 }
             }
         }
