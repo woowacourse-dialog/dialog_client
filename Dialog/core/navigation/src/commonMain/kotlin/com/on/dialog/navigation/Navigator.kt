@@ -46,7 +46,7 @@ class Navigator(
     }
 
     private fun log(action: String) {
-        Napier.e(
+        Napier.i(
             tag = "Navigator",
             message =
                 """
