@@ -5,7 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import com.on.dialog.feature.login.api.LoginNavKey
 import com.on.dialog.feature.mypage.MyPageScreen
 import com.on.dialog.feature.mypage.api.MyPageNavKey
-import com.on.navigation.Navigator
+import com.on.dialog.navigation.Navigator
 
 fun EntryProviderScope<NavKey>.myPageScreen(
     navigator: Navigator,

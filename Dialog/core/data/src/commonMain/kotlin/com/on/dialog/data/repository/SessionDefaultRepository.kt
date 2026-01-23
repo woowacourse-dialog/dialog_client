@@ -2,18 +2,18 @@ package com.on.dialog.data.repository
 
 import com.on.dialog.core.data.BuildKonfig
 import com.on.dialog.domain.repository.SessionRepository
-import com.on.network.datasource.CookieStore
-import com.on.network.dto.session.CookieNetworkEntity
+import com.on.dialog.network.datasource.CookieStore
+import com.on.dialog.network.dto.session.CookieNetworkEntity
 import io.ktor.http.Url
 
 internal class SessionDefaultRepository(
-    private val cookieStore: CookieStore,
+    private val cookieStore: com.on.dialog.network.datasource.CookieStore,
 ) : SessionRepository {
     override suspend fun saveSession(
         jsessionId: String,
     ): Result<Unit> = runCatching {
         cookieStore.save(
-            cookie = CookieNetworkEntity(
+            cookie = _root_ide_package_.com.on.dialog.network.dto.session.CookieNetworkEntity(
                 name = JSESSIONID,
                 value = jsessionId,
                 domain = BuildKonfig.BASE_URL.toDomainUrl(),
@@ -31,7 +31,7 @@ internal class SessionDefaultRepository(
     override suspend fun hasValidSession(): Result<Boolean> = runCatching {
         // JSESSIONID 쿠키가 있는지 확인
         val url = Url(urlString = BuildKonfig.BASE_URL)
-        val cookies: List<CookieNetworkEntity> = cookieStore.loadAll(
+        val cookies: List<com.on.dialog.network.dto.session.CookieNetworkEntity> = cookieStore.loadAll(
             requestHost = url.host,
             requestPath = url.encodedPath,
         )

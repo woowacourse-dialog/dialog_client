@@ -5,7 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import com.on.dialog.api.DiscussionDetailNavKey
 import com.on.dialog.feature.discussionlist.api.DiscussionListNavKey
 import com.on.dialog.feature.discussionlist.impl.DiscussionListScreen
-import com.on.navigation.Navigator
+import com.on.dialog.navigation.Navigator
 
 fun EntryProviderScope<NavKey>.discussionListScreen(
     navigator: Navigator,

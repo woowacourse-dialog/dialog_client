@@ -1,6 +1,6 @@
 package com.on.impl.di
 
-import com.on.navigation.NavKeyProvider
+import com.on.dialog.navigation.NavKeyProvider
 import org.koin.dsl.bind
 import org.koin.dsl.module
 

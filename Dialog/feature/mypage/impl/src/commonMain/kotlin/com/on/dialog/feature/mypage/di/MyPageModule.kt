@@ -1,7 +1,7 @@
 package com.on.dialog.feature.mypage.di
 
 import com.on.dialog.feature.mypage.MyPageViewModel
-import com.on.navigation.NavKeyProvider
+import com.on.dialog.navigation.NavKeyProvider
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module

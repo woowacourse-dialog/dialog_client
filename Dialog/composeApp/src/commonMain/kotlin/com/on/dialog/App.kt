@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.discussionlist.api.DiscussionListNavKey
+import com.on.dialog.main.MainApp
 import com.on.dialog.navigation.SavedStateConfigurationProvider
 import com.on.dialog.navigation.appScreens
-import com.on.main.MainApp
 import org.koin.compose.koinInject
 
 @Composable

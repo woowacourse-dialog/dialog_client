@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.model.common.Track
+import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.ui.mapper.toChipCategory
-import com.on.model.common.Track
-import com.on.model.discussion.content.DiscussionType
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.discussion_card_author
 import dialog.core.ui.generated.resources.discussion_card_endAt

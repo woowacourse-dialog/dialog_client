@@ -1,9 +1,12 @@
 package com.on.dialog.domain.repository
 
-import com.on.model.common.Track
+import com.on.dialog.model.common.Track
 
 interface AuthRepository {
-    suspend fun signup(track: Track, webPushNotification: Boolean): Result<Long>
+    suspend fun signup(
+        track: com.on.dialog.model.common.Track,
+        webPushNotification: Boolean,
+    ): Result<Long>
 
     suspend fun getLoginStatus(): Result<Boolean>
 

@@ -31,7 +31,7 @@ import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.component.ProfileImage
-import com.on.model.common.Track
+import com.on.dialog.model.common.Track
 import dialog.feature.mypage.impl.generated.resources.Res
 import dialog.feature.mypage.impl.generated.resources.login
 import dialog.feature.mypage.impl.generated.resources.logout

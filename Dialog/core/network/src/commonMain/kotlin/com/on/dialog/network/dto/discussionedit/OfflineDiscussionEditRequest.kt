@@ -1,0 +1,37 @@
+package com.on.dialog.network.dto.discussionedit
+
+import com.on.dialog.core.common.extension.formatToString
+import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class OfflineDiscussionEditRequest(
+    @SerialName("title")
+    val title: String,
+    @SerialName("content")
+    val content: String,
+    @SerialName("startAt")
+    val startAt: String,
+    @SerialName("endAt")
+    val endAt: String,
+    @SerialName("place")
+    val place: String,
+    @SerialName("maxParticipantCount")
+    val maxParticipantCount: Int,
+    @SerialName("category")
+    val category: String,
+) {
+    companion object {
+        fun com.on.dialog.model.discussion.draft.OfflineDiscussionDraft.toEditRequest(): OfflineDiscussionEditRequest =
+            OfflineDiscussionEditRequest(
+                title = title,
+                content = content,
+                startAt = startAt.formatToString(),
+                endAt = endAt.formatToString(),
+                place = place,
+                maxParticipantCount = maxParticipantCount,
+                category = category,
+            )
+    }
+}
