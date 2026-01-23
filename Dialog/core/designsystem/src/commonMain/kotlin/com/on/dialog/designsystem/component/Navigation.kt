@@ -19,12 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.NavKey
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.source.NoRippleInteractionSource
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.Gray400
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.serialization.Serializable
 
 data class NavigationItem(
     val label: String,
@@ -43,9 +43,9 @@ data class NavigationItem(
  */
 @Composable
 fun DialogNavigationBar(
-    items: ImmutableList<NavigationItem>,
-    selectedIndex: Int,
-    onSelectedIndexChange: (Int) -> Unit,
+    items: Map<NavKey, NavigationItem>,
+    selectedKey: NavKey,
+    onSelectedKeyChange: (NavKey) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavigationBar(
@@ -53,15 +53,15 @@ fun DialogNavigationBar(
         contentColor = DialogTheme.colorScheme.onSurface,
         modifier = modifier,
     ) {
-        items.forEachIndexed { index, item ->
-            val isSelected = selectedIndex == index
+        items.forEach { (navKey, item) ->
+            val isSelected = selectedKey == navKey
             val primaryColor = DialogTheme.colorScheme.primary
             val iconColor = if (isSelected) primaryColor else primaryColor.copy(alpha = 0.3f)
             val textColor = if (isSelected) primaryColor else primaryColor.copy(alpha = 0.3f)
 
             NavigationBarItem(
                 selected = isSelected,
-                onClick = { onSelectedIndexChange(index) },
+                onClick = { onSelectedKeyChange(navKey) },
                 icon = {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -107,29 +107,23 @@ private fun DialogNavigationBarPreviewDark() {
     }
 }
 
+@Serializable
+data object FakeNavKey : NavKey
+@Serializable
+data object FakeNavKey2 : NavKey
+@Serializable
+data object FakeNavKey3 : NavKey
+
 @Composable
 private fun DialogNavigationBarPreviewContent() {
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember { mutableStateOf(FakeNavKey) }
     DialogNavigationBar(
-        items = persistentListOf(
-            NavigationItem(
-                label = "홈",
-                icon = DialogIcons.Home,
-            ),
-            NavigationItem(
-                label = "검색",
-                icon = DialogIcons.Search,
-            ),
-            NavigationItem(
-                label = "스크랩",
-                icon = DialogIcons.Bookmark,
-            ),
-            NavigationItem(
-                label = "프로필",
-                icon = DialogIcons.Person,
-            ),
+        items = mapOf(
+            FakeNavKey to NavigationItem(icon = DialogIcons.Home, label = "홈"),
+            FakeNavKey2 to NavigationItem(icon = DialogIcons.Bookmark, label = "북마크"),
+            FakeNavKey3 to NavigationItem(icon = DialogIcons.Person, label = "마이페이지"),
         ),
-        selectedIndex = selectedIndex,
-        onSelectedIndexChange = { selectedIndex = it },
+        selectedKey = selectedIndex,
+        onSelectedKeyChange = { },
     )
 }

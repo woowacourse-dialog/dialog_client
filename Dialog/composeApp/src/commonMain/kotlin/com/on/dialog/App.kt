@@ -31,7 +31,7 @@ fun App() {
     val savedStateConfigurationProvider: SavedStateConfigurationProvider = koinInject()
     val navigationState: NavigationState = rememberNavigationState(
         startKey = MainNavKey,
-        topLevelKeys = TopLevel.routesKey,
+        topLevelKeys = TopLevel.routes.keys,
         configuration = savedStateConfigurationProvider.savedStateConfiguration,
     )
     val navigator = remember { Navigator(navigationState) }
@@ -40,12 +40,12 @@ fun App() {
 
     DialogTheme {
         Scaffold(bottomBar = {
-            if (navigationState.currentKey in TopLevel.routesKey) {
+            if (navigationState.currentKey in TopLevel.routes.keys) {
                 DialogNavigationBar(
-                    items = TopLevel.routesNavigationItem,
-                    selectedIndex = TopLevel.routesKey.indexOf(navigationState.currentKey),
-                    onSelectedIndexChange = { selectedIndex ->
-                        navigator.navigate(TopLevel.routesKey.elementAt(selectedIndex))
+                    items = TopLevel.routes,
+                    selectedKey = navigationState.currentKey,
+                    onSelectedKeyChange = { navKey: NavKey ->
+                        navigator.navigate(navKey)
                     },
                 )
             }
