@@ -103,7 +103,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
  * ```
  */
 
-
 internal class KmpFeatureImplConventionPlugin : Plugin<Project> {
     override fun apply(target: Project): Unit = with(target) {
         plugins.apply(PluginIds.KOTLIN_MULTIPLATFORM)

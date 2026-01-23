@@ -50,17 +50,17 @@ class Navigator(
             tag = "Navigator",
             message =
                 """
-            ------------------------ Navigator --------------------------------
-            [$action]
-            currentTopLevelKey: ${state.currentTopLevelKey}
-            currentKey: ${state.currentKey}
+                ------------------------ Navigator --------------------------------
+                [$action]
+                currentTopLevelKey: ${state.currentTopLevelKey}
+                currentKey: ${state.currentKey}
 
-            topLevelStack: ${state.topLevelStack.toLogString()}
-            subStacks:
-            ${state.subStacks.toLogString()}
-            currentSubStackSize: ${state.currentSubStack.size}
-            ------------------------------------------------------------------------
-            """.trimIndent(),
+                topLevelStack: ${state.topLevelStack.toLogString()}
+                subStacks:
+                ${state.subStacks.toLogString()}
+                currentSubStackSize: ${state.currentSubStack.size}
+                ------------------------------------------------------------------------
+                """.trimIndent(),
         )
     }
 
@@ -71,5 +71,4 @@ class Navigator(
         entries.joinToString(separator = "\n") { (key, stack) ->
             "$key -> ${stack.toLogString()}"
         }
-
 }

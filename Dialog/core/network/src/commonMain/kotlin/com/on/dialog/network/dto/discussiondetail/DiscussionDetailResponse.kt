@@ -35,7 +35,7 @@ sealed interface DiscussionDetailResponse {
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
                     category = _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionCategory.of(
-                        commonDiscussionInfoDto.category
+                        commonDiscussionInfoDto.category,
                     ),
                     content = commonDiscussionInfoDto.content,
                     createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
@@ -44,7 +44,7 @@ sealed interface DiscussionDetailResponse {
                 ),
                 summary = commonDiscussionInfoDto.summary,
                 endDate = _root_ide_package_.com.on.dialog.model.discussion.datetimeperiod.EndDate(
-                    onlineDiscussionInfoDto.endDate.toIsoLocalDate()
+                    onlineDiscussionInfoDto.endDate.toIsoLocalDate(),
                 ),
             )
 
@@ -72,7 +72,7 @@ sealed interface DiscussionDetailResponse {
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
                     category = _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionCategory.of(
-                        commonDiscussionInfoDto.category
+                        commonDiscussionInfoDto.category,
                     ),
                     content = commonDiscussionInfoDto.content,
                     createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),

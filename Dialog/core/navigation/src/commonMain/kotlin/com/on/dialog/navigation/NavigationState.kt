@@ -25,7 +25,7 @@ fun rememberNavigationState(
     val subStacks = topLevelKeys.associateWith { key ->
         rememberNavBackStack(
             configuration = configuration,
-            key
+            key,
         )
     }
 

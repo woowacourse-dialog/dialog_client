@@ -15,15 +15,15 @@ object TopLevel {
     val routes: Map<NavKey, NavigationItem> = mapOf(
         DiscussionListNavKey to NavigationItem(
             icon = DialogIcons.Home,
-            label = Res.string.top_level_nav_item_home
+            label = Res.string.top_level_nav_item_home,
         ),
         ScrapNavKey to NavigationItem(
             icon = DialogIcons.Bookmark,
-            label = Res.string.top_level_nav_item_scrap
+            label = Res.string.top_level_nav_item_scrap,
         ),
         MyPageNavKey to NavigationItem(
             icon = DialogIcons.Person,
-            label = Res.string.top_level_nav_item_my_page
+            label = Res.string.top_level_nav_item_my_page,
         ),
     )
 }

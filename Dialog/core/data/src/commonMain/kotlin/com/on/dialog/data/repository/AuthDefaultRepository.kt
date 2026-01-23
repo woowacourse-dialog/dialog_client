@@ -16,10 +16,9 @@ internal class AuthDefaultRepository(
             .signup(
                 _root_ide_package_.com.on.dialog.network.dto.auth.SignupRequest(
                     track = track.name,
-                    webPushNotification = webPushNotification
-                )
-            )
-            .map { it.userId }
+                    webPushNotification = webPushNotification,
+                ),
+            ).map { it.userId }
 
     override suspend fun getLoginStatus(): Result<Boolean> =
         authDatasource.getLoginStatus().map { it.isLoggedIn }

@@ -36,7 +36,7 @@ fun DiscussionListScreen(
                         text = "Android",
                         textColor = Color(0xFF003D2E),
                         backgroundColor = Color(0xFF3DDC84),
-                    )
+                    ),
                 ),
                 onChipsChange = {},
                 title = "KMP 전망",

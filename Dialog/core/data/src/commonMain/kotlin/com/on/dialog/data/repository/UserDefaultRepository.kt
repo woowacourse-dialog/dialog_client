@@ -39,6 +39,10 @@ internal class UserDefaultRepository(
             .mapCatching { it.toDomain() }
 
     override suspend fun getMyTrack(): Result<com.on.dialog.model.common.Track> =
-        userDatasource.getMyTrack()
-            .mapCatching { _root_ide_package_.com.on.dialog.model.common.Track.of(name = it.track) }
+        userDatasource
+            .getMyTrack()
+            .mapCatching {
+                _root_ide_package_.com.on.dialog.model.common.Track
+                    .of(name = it.track)
+            }
 }

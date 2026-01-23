@@ -13,7 +13,7 @@ fun EntryProviderScope<NavKey>.discussionListScreen(
     entry<DiscussionListNavKey> {
         DiscussionListScreen(navigateToDiscussionDetail = {
             navigator.navigate(
-                DiscussionDetailNavKey
+                DiscussionDetailNavKey,
             )
         })
     }

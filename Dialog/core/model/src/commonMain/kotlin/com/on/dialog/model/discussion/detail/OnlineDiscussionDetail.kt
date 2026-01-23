@@ -14,10 +14,11 @@ data class OnlineDiscussionDetail(
         when {
             endDate.isInPeriod(
                 detailContent.createdAt,
-                now
+                now,
             ) -> _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionStatus.INDISCUSSION
 
             endDate.isAfterEnd(now) -> _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionStatus.DISCUSSIONCOMPLETE
+
             else -> _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionStatus.UNDEFINED
         }
 }
