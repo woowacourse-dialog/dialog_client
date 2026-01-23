@@ -94,7 +94,7 @@ internal val surfaceContainerHighDark = Color(0xFF2A2A2B)
 internal val surfaceContainerHighestDark = Color(0xFF343536)
 
 internal val Gray200 = Color(0xFFEEEEEE)
-internal val Gray400 = Color(0xFFBDBDBD)
+val Gray400 = Color(0xFFBDBDBD)
 
 @Preview(name = "Light Colors", heightDp = 2000)
 @Composable

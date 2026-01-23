@@ -1,4 +1,4 @@
-package com.on.dialog.designsystem.component
+package com.on.main.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,10 +24,18 @@ import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.source.NoRippleInteractionSource
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.Gray400
-import kotlinx.serialization.Serializable
+import com.on.dialog.feature.discussionlist.api.DiscussionListNavKey
+import com.on.dialog.feature.mypage.api.MyPageNavKey
+import com.on.dialog.feature.scrap.api.ScrapNavKey
+import dialog.feature.main.generated.resources.Res
+import dialog.feature.main.generated.resources.top_level_nav_item_home
+import dialog.feature.main.generated.resources.top_level_nav_item_my_page
+import dialog.feature.main.generated.resources.top_level_nav_item_scrap
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 data class NavigationItem(
-    val label: String,
+    val label: StringResource,
     val icon: ImageVector,
     val selectedIcon: ImageVector = icon,
 )
@@ -69,12 +77,12 @@ fun DialogNavigationBar(
                     ) {
                         Icon(
                             imageVector = if (isSelected) item.selectedIcon else item.icon,
-                            contentDescription = item.label,
+                            contentDescription = stringResource(resource = item.label),
                             tint = iconColor,
                             modifier = Modifier.size(32.dp),
                         )
                         Text(
-                            text = item.label,
+                            text = stringResource(resource = item.label),
                             style = DialogTheme.typography.labelLarge,
                             color = textColor,
                         )
@@ -107,21 +115,23 @@ private fun DialogNavigationBarPreviewDark() {
     }
 }
 
-@Serializable
-data object FakeNavKey : NavKey
-@Serializable
-data object FakeNavKey2 : NavKey
-@Serializable
-data object FakeNavKey3 : NavKey
-
 @Composable
 private fun DialogNavigationBarPreviewContent() {
-    var selectedIndex by remember { mutableStateOf(FakeNavKey) }
+    var selectedIndex by remember { mutableStateOf(DiscussionListNavKey) }
     DialogNavigationBar(
         items = mapOf(
-            FakeNavKey to NavigationItem(icon = DialogIcons.Home, label = "홈"),
-            FakeNavKey2 to NavigationItem(icon = DialogIcons.Bookmark, label = "북마크"),
-            FakeNavKey3 to NavigationItem(icon = DialogIcons.Person, label = "마이페이지"),
+            DiscussionListNavKey to NavigationItem(
+                icon = DialogIcons.Home,
+                label = Res.string.top_level_nav_item_home
+            ),
+            ScrapNavKey to NavigationItem(
+                icon = DialogIcons.Bookmark,
+                label = Res.string.top_level_nav_item_scrap
+            ),
+            MyPageNavKey to NavigationItem(
+                icon = DialogIcons.Person,
+                label = Res.string.top_level_nav_item_my_page
+            ),
         ),
         selectedKey = selectedIndex,
         onSelectedKeyChange = { },

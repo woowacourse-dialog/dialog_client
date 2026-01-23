@@ -15,7 +15,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
-import com.on.dialog.designsystem.component.DialogNavigationBar
+import com.on.main.component.DialogNavigationBar
 import com.on.navigation.NavigationState
 import com.on.navigation.Navigator
 import com.on.navigation.rememberNavigationState
