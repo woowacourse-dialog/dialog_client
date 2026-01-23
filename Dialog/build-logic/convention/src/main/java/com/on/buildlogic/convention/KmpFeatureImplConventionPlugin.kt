@@ -111,7 +111,6 @@ internal class KmpFeatureImplConventionPlugin : Plugin<Project> {
                     implementation(project(":core:network"))
                     implementation(project(":core:domain"))
                     implementation(project(":core:data"))
-                    implementation(project(":core:local"))
                     implementation(project(":core:model"))
                     implementation(project(":core:navigation"))
                     implementation(project(":core:designsystem"))
