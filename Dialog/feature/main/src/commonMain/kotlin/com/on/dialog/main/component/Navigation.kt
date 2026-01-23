@@ -90,7 +90,7 @@ fun DialogNavigationBar(
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = Color.Transparent,
                     selectedIconColor = DialogTheme.colorScheme.primary,
-                    unselectedIconColor = DialogTheme.colors.gray400
+                    unselectedIconColor = DialogTheme.colors.gray400,
                 ),
                 interactionSource = NoRippleInteractionSource,
             )

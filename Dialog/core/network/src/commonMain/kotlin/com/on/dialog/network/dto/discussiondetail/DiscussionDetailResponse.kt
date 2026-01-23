@@ -11,6 +11,7 @@ import com.on.dialog.model.discussion.datetimeperiod.EndDate
 import com.on.dialog.model.discussion.detail.DiscussionDetail
 import com.on.dialog.model.discussion.detail.OfflineDiscussionDetail
 import com.on.dialog.model.discussion.detail.OnlineDiscussionDetail
+import com.on.dialog.model.discussion.offline.Participant
 import com.on.dialog.model.discussion.participant.ParticipantCapacity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -113,8 +114,8 @@ sealed interface DiscussionDetailResponse {
                 @SerialName("name")
                 val name: String,
             ) {
-                fun toDomain(): com.on.dialog.model.discussion.offline.Participant =
-                    _root_ide_package_.com.on.dialog.model.discussion.offline.Participant(
+                fun toDomain(): Participant =
+                    Participant(
                         id = id,
                         name = name,
                     )
