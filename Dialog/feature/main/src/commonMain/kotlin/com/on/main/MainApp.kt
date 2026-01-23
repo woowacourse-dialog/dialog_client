@@ -35,37 +35,46 @@ fun MainApp(
     )
     val navigator = remember { Navigator(navigationState) }
 
-    Scaffold(bottomBar = {
-        if (navigationState.currentKey in TopLevel.routes.keys) {
-            DialogNavigationBar(
-                items = TopLevel.routes,
-                selectedKey = navigationState.currentKey,
-                onSelectedKeyChange = { navKey: NavKey ->
-                    navigator.navigate(navKey)
-                },
+    Scaffold(
+        bottomBar = {
+            MainBottomBar(
+                currentKey = navigationState.currentKey,
+                onNavigate = navigator::navigate,
             )
-        }
-    }) { paddingValues ->
+        },
+    ) { paddingValues ->
         NavDisplay(
             entries = navigationState.toEntries { key ->
-                entryProvider {
-                    registerScreens(navigator)
-                }.invoke(key)
+                entryProvider { registerScreens(navigator) }.invoke(key)
             },
-            onBack = { navigator.goBack() },
+            onBack = navigator::goBack,
             modifier = Modifier.padding(paddingValues),
             transitionSpec = {
                 ContentTransform(
-                    fadeIn(animationSpec = tween(300)),
-                    fadeOut(animationSpec = tween(300)),
+                    fadeIn(tween(300)),
+                    fadeOut(tween(300)),
                 )
             },
             popTransitionSpec = {
                 ContentTransform(
-                    fadeIn(animationSpec = tween(300)),
-                    fadeOut(animationSpec = tween(300)),
+                    fadeIn(tween(300)),
+                    fadeOut(tween(300)),
                 )
             },
         )
     }
+}
+
+@Composable
+private fun MainBottomBar(
+    currentKey: NavKey,
+    onNavigate: (NavKey) -> Unit,
+) {
+    if (currentKey !in TopLevel.routes.keys) return
+
+    DialogNavigationBar(
+        items = TopLevel.routes,
+        selectedKey = currentKey,
+        onSelectedKeyChange = onNavigate,
+    )
 }
