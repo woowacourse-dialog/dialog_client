@@ -1,5 +1,6 @@
 package com.on.navigation
 
+import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import io.github.aakira.napier.Napier
 
@@ -12,22 +13,7 @@ class Navigator(
             in state.topLevelKeys -> goToTopLevel(key)
             else -> goToKey(key)
         }
-        Napier.e(
-            tag = "Navigator",
-            message =
-                """
-                
-                ------------------------ Navigator --------------------------------
-                [navigate to $key]
-                currentTopLevelKey: ${state.currentTopLevelKey}
-                currentKey: ${state.currentKey}
-
-                topLevelStack: ${state.topLevelStack}
-                subStacks: ${state.subStacks}
-                currentSubStack: ${state.currentSubStack.size}
-                ------------------------------------------------------------------------
-                """.trimIndent(),
-        )
+        log(action = "navigate to $key")
     }
 
     fun goBack() {
@@ -36,22 +22,7 @@ class Navigator(
             state.currentTopLevelKey -> state.topLevelStack.removeLastOrNull()
             else -> state.currentSubStack.removeLastOrNull()
         }
-        Napier.e(
-            tag = "Navigator",
-            message =
-                """
-                
-                ------------------------ Navigator --------------------------------
-                [goback]
-                currentTopLevelKey: ${state.currentTopLevelKey}
-                currentKey: ${state.currentKey}
-
-                topLevelStack: ${state.topLevelStack}
-                subStacks: ${state.subStacks}
-                currentSubStack: ${state.currentSubStack.size}
-                ------------------------------------------------------------------------
-                """.trimIndent(),
-        )
+        log(action = "goBack")
     }
 
     private fun goToKey(key: NavKey) {
@@ -73,4 +44,32 @@ class Navigator(
             if (size > 1) subList(1, size).clear()
         }
     }
+
+    private fun log(action: String) {
+        Napier.e(
+            tag = "Navigator",
+            message =
+                """
+            ------------------------ Navigator --------------------------------
+            [$action]
+            currentTopLevelKey: ${state.currentTopLevelKey}
+            currentKey: ${state.currentKey}
+
+            topLevelStack: ${state.topLevelStack.toLogString()}
+            subStacks:
+            ${state.subStacks.toLogString()}
+            currentSubStackSize: ${state.currentSubStack.size}
+            ------------------------------------------------------------------------
+            """.trimIndent(),
+        )
+    }
+
+    private fun NavBackStack<NavKey>.toLogString(): String =
+        this.joinToString(prefix = "[", postfix = "]", separator = ", ")
+
+    private fun Map<NavKey, NavBackStack<NavKey>>.toLogString(): String =
+        entries.joinToString(separator = "\n") { (key, stack) ->
+            "$key -> ${stack.toLogString()}"
+        }
+
 }
