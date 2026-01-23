@@ -1,4 +1,4 @@
-package com.on.dialog
+package com.on.main
 
 import androidx.navigation3.runtime.NavKey
 import com.on.dialog.designsystem.component.NavigationItem

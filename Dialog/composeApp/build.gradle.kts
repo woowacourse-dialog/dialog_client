@@ -22,16 +22,11 @@ kotlin {
             implementation(projects.feature.scrap.impl)
             implementation(projects.feature.discussiondetail.impl)
 
-            implementation(projects.feature.login.api)
-            implementation(projects.feature.mypage.api)
             implementation(projects.feature.discussionlist.api)
-            implementation(projects.feature.scrap.api)
-            implementation(projects.feature.discussiondetail.api)
+            implementation(projects.feature.main)
 
-
+            //nav3
             implementation(libs.androidx.nav3.ui)
-
-            implementation(libs.kotlinx.collections.immutable)
         }
     }
 }
