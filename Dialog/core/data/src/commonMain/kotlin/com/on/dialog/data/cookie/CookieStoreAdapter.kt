@@ -18,7 +18,7 @@ class CookieStoreAdapter(
     ): List<CookieNetworkEntity> =
         localCookieStorage
             .loadAll(requestHost = requestHost, requestPath = requestPath)
-            .map { it.toNetworkEntity() }
+            .map { cookieLocalEntity: CookieLocalEntity -> cookieLocalEntity.toNetworkEntity() }
 
     override suspend fun clear() {
         localCookieStorage.clear()
