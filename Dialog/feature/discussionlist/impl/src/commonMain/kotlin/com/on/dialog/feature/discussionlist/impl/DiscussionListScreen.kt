@@ -54,6 +54,6 @@ fun DiscussionListScreen(
 @Preview(showBackground = true)
 private fun DiscussionListScreenPreview() {
     DialogTheme {
-        DiscussionListScreen({})
+        DiscussionListScreen(navigateToDiscussionDetail = {})
     }
 }

@@ -5,7 +5,7 @@ import com.on.dialog.model.discussion.content.DiscussionStatus
 import com.on.dialog.model.discussion.content.DiscussionType
 
 data class DiscussionCriteria(
-    val categories: List<com.on.dialog.model.discussion.content.DiscussionCategory>?,
-    val statuses: List<com.on.dialog.model.discussion.content.DiscussionStatus>?,
-    val discussionTypes: List<com.on.dialog.model.discussion.content.DiscussionType>?,
+    val categories: List<DiscussionCategory>?,
+    val statuses: List<DiscussionStatus>?,
+    val discussionTypes: List<DiscussionType>?,
 )

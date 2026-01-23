@@ -17,7 +17,7 @@ data class CreateOnlineDiscussionRequest(
     val category: String,
 ) {
     companion object {
-        fun com.on.dialog.model.discussion.draft.OnlineDiscussionDraft.toCreateRequest(): CreateOnlineDiscussionRequest =
+        fun OnlineDiscussionDraft.toCreateRequest(): CreateOnlineDiscussionRequest =
             CreateOnlineDiscussionRequest(
                 title = title,
                 content = content,

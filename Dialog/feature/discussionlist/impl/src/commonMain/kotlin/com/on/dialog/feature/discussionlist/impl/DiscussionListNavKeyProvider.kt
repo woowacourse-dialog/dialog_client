@@ -10,7 +10,7 @@ import kotlinx.serialization.modules.PolymorphicModuleBuilder
 
 class DiscussionListNavKeyProvider : NavKeyProvider {
     override fun PolymorphicModuleBuilder<NavKey>.registerNavKeys() {
-        subclass(DiscussionListNavKey::class, DiscussionListNavKey.serializer())
+        subclass(subclass = DiscussionListNavKey::class, serializer = DiscussionListNavKey.serializer())
     }
 
     override fun EntryProviderScope<NavKey>.registerScreens(navigator: Navigator) {

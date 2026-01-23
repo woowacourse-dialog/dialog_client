@@ -5,7 +5,7 @@ import com.on.dialog.model.discussion.content.DiscussionStatus
 import kotlinx.datetime.LocalDateTime
 
 sealed interface DiscussionCatalog {
-    val catalogContent: com.on.dialog.model.discussion.content.CatalogContent
+    val catalogContent: CatalogContent
 
-    fun status(now: LocalDateTime): com.on.dialog.model.discussion.content.DiscussionStatus
+    fun status(now: LocalDateTime): DiscussionStatus
 }

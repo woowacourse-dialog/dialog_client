@@ -19,12 +19,12 @@ import com.on.dialog.network.dto.discussionlookup.DiscussionQuery.Companion.toQu
 import com.on.dialog.network.dto.discussionsummary.DiscussionSummaryRequest.Companion.toRequest
 
 internal class DiscussionDefaultRepository(
-    private val discussionDatasource: com.on.dialog.network.datasource.DiscussionDatasource,
+    private val discussionDatasource: DiscussionDatasource,
 ) : DiscussionRepository {
-    override suspend fun getDiscussionDetail(id: Long): Result<com.on.dialog.model.discussion.detail.DiscussionDetail> =
+    override suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetail> =
         discussionDatasource
             .getDiscussionDetail(id = id)
-            .mapCatching { discussionDetailResponse: com.on.dialog.network.dto.discussiondetail.DiscussionDetailResponse ->
+            .mapCatching { discussionDetailResponse: DiscussionDetailResponse ->
                 when (discussionDetailResponse) {
                     is DiscussionDetailOnlineResponse -> discussionDetailResponse.toDomain()
                     is DiscussionDetailOfflineResponse -> discussionDetailResponse.toDomain()
@@ -32,10 +32,10 @@ internal class DiscussionDefaultRepository(
             }
 
     override suspend fun getDiscussions(
-        discussionCriteria: com.on.dialog.model.discussion.criteria.DiscussionCriteria,
+        discussionCriteria: DiscussionCriteria,
         cursor: String?,
         size: Int,
-    ): Result<com.on.dialog.model.discussion.cursorpage.DiscussionCatalogCursorPage> =
+    ): Result<DiscussionCatalogCursorPage> =
         discussionDatasource
             .getDiscussions(query = discussionCriteria.toQuery(), cursor = cursor, size = size)
             .mapCatching { it.toDomain() }
@@ -43,7 +43,7 @@ internal class DiscussionDefaultRepository(
     override suspend fun getMyDiscussions(
         cursor: String?,
         size: Int,
-    ): Result<com.on.dialog.model.discussion.cursorpage.DiscussionCatalogCursorPage> =
+    ): Result<DiscussionCatalogCursorPage> =
         discussionDatasource
             .getMyDiscussions(cursor = cursor, size = size)
             .mapCatching { it.toDomain() }
@@ -51,10 +51,10 @@ internal class DiscussionDefaultRepository(
     override suspend fun searchDiscussions(
         searchBy: Int,
         keyword: String,
-        discussionCriteria: com.on.dialog.model.discussion.criteria.DiscussionCriteria,
+        discussionCriteria: DiscussionCriteria,
         cursor: String?,
         size: Int,
-    ): Result<com.on.dialog.model.discussion.cursorpage.DiscussionCatalogCursorPage> =
+    ): Result<DiscussionCatalogCursorPage> =
         discussionDatasource
             .searchDiscussions(
                 searchBy = searchBy,
@@ -64,24 +64,24 @@ internal class DiscussionDefaultRepository(
                 size = size,
             ).mapCatching { it.toDomain() }
 
-    override suspend fun createOfflineDiscussion(request: com.on.dialog.model.discussion.draft.OfflineDiscussionDraft): Result<Long> =
+    override suspend fun createOfflineDiscussion(request: OfflineDiscussionDraft): Result<Long> =
         discussionDatasource
             .createOfflineDiscussion(request = request.toCreationRequest())
             .mapCatching { it.discussionId }
 
-    override suspend fun createOnlineDiscussion(request: com.on.dialog.model.discussion.draft.OnlineDiscussionDraft): Result<Long> =
+    override suspend fun createOnlineDiscussion(request: OnlineDiscussionDraft): Result<Long> =
         discussionDatasource
             .createOnlineDiscussion(request = request.toCreateRequest())
             .mapCatching { it.discussionId }
 
-    override suspend fun createDiscussionSummary(discussionId: Long): Result<com.on.dialog.model.discussion.summary.DiscussionSummary> =
+    override suspend fun createDiscussionSummary(discussionId: Long): Result<DiscussionSummary> =
         discussionDatasource
             .createDiscussionSummary(request = discussionId.toRequest())
             .mapCatching { it.toDomain() }
 
     override suspend fun updateOfflineDiscussion(
         id: Long,
-        offlineDiscussionDraft: com.on.dialog.model.discussion.draft.OfflineDiscussionDraft,
+        offlineDiscussionDraft: OfflineDiscussionDraft,
     ): Result<Unit> =
         discussionDatasource.updateOfflineDiscussion(
             id = id,
@@ -90,7 +90,7 @@ internal class DiscussionDefaultRepository(
 
     override suspend fun updateOnlineDiscussion(
         id: Long,
-        onlineDiscussionDraft: com.on.dialog.model.discussion.draft.OnlineDiscussionDraft,
+        onlineDiscussionDraft: OnlineDiscussionDraft,
     ): Result<Unit> =
         discussionDatasource.updateOnlineDiscussion(
             id = id,

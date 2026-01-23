@@ -8,43 +8,43 @@ import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.model.discussion.summary.DiscussionSummary
 
 interface DiscussionRepository {
-    suspend fun getDiscussionDetail(id: Long): Result<com.on.dialog.model.discussion.detail.DiscussionDetail>
+    suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetail>
 
     suspend fun getDiscussions(
-        discussionCriteria: com.on.dialog.model.discussion.criteria.DiscussionCriteria,
+        discussionCriteria: DiscussionCriteria,
         cursor: String?,
         size: Int,
-    ): Result<com.on.dialog.model.discussion.cursorpage.DiscussionCatalogCursorPage>
+    ): Result<DiscussionCatalogCursorPage>
 
     suspend fun getMyDiscussions(
         cursor: String?,
         size: Int,
-    ): Result<com.on.dialog.model.discussion.cursorpage.DiscussionCatalogCursorPage>
+    ): Result<DiscussionCatalogCursorPage>
 
     suspend fun searchDiscussions(
         searchBy: Int,
         keyword: String,
-        discussionCriteria: com.on.dialog.model.discussion.criteria.DiscussionCriteria,
+        discussionCriteria: DiscussionCriteria,
         cursor: String?,
         size: Int,
-    ): Result<com.on.dialog.model.discussion.cursorpage.DiscussionCatalogCursorPage>
+    ): Result<DiscussionCatalogCursorPage>
 
-    suspend fun createOfflineDiscussion(request: com.on.dialog.model.discussion.draft.OfflineDiscussionDraft): Result<Long>
+    suspend fun createOfflineDiscussion(request: OfflineDiscussionDraft): Result<Long>
 
-    suspend fun createOnlineDiscussion(request: com.on.dialog.model.discussion.draft.OnlineDiscussionDraft): Result<Long>
+    suspend fun createOnlineDiscussion(request: OnlineDiscussionDraft): Result<Long>
 
     suspend fun createDiscussionSummary(
         discussionId: Long,
-    ): Result<com.on.dialog.model.discussion.summary.DiscussionSummary>
+    ): Result<DiscussionSummary>
 
     suspend fun updateOfflineDiscussion(
         id: Long,
-        offlineDiscussionDraft: com.on.dialog.model.discussion.draft.OfflineDiscussionDraft,
+        offlineDiscussionDraft: OfflineDiscussionDraft,
     ): Result<Unit>
 
     suspend fun updateOnlineDiscussion(
         id: Long,
-        onlineDiscussionDraft: com.on.dialog.model.discussion.draft.OnlineDiscussionDraft,
+        onlineDiscussionDraft: OnlineDiscussionDraft,
     ): Result<Unit>
 
     suspend fun deleteDiscussion(id: Long): Result<Unit>

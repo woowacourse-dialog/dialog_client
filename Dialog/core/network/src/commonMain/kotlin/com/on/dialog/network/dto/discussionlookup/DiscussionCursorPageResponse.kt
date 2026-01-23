@@ -26,7 +26,7 @@ data class DiscussionCursorPageResponse(
     @SerialName("nextCursor")
     val nextCursor: String?,
 ) {
-    fun toDomain(): com.on.dialog.model.discussion.cursorpage.DiscussionCatalogCursorPage =
+    fun toDomain(): DiscussionCatalogCursorPage =
         DiscussionCatalogCursorPage(
             discussionCatalog = contentDto.map { contentDto: ContentDto ->
                 when (contentDto) {

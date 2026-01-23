@@ -51,14 +51,14 @@ fun MainApp(
             modifier = Modifier.padding(paddingValues),
             transitionSpec = {
                 ContentTransform(
-                    fadeIn(tween(300)),
-                    fadeOut(tween(300)),
+                    targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                    initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
                 )
             },
             popTransitionSpec = {
                 ContentTransform(
-                    fadeIn(tween(300)),
-                    fadeOut(tween(300)),
+                    targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                    initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
                 )
             },
         )

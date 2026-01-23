@@ -5,8 +5,8 @@ import kotlinx.datetime.LocalDateTime
 data class DetailContent(
     val id: Long,
     val title: String,
-    val author: com.on.dialog.model.discussion.content.Author,
-    val category: com.on.dialog.model.discussion.content.DiscussionCategory,
+    val author: Author,
+    val category: DiscussionCategory,
     val content: String,
     val createdAt: LocalDateTime,
     val likeCount: Int,

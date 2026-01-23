@@ -11,7 +11,6 @@ import com.on.dialog.model.discussion.datetimeperiod.EndDate
 import com.on.dialog.model.discussion.detail.DiscussionDetail
 import com.on.dialog.model.discussion.detail.OfflineDiscussionDetail
 import com.on.dialog.model.discussion.detail.OnlineDiscussionDetail
-import com.on.dialog.model.discussion.offline.Participant
 import com.on.dialog.model.discussion.participant.ParticipantCapacity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -28,13 +27,13 @@ sealed interface DiscussionDetailResponse {
         @SerialName("onlineDiscussionInfo")
         val onlineDiscussionInfoDto: OnlineDiscussionInfoDto,
     ) : DiscussionDetailResponse {
-        fun toDomain(): com.on.dialog.model.discussion.detail.DiscussionDetail =
-            _root_ide_package_.com.on.dialog.model.discussion.detail.OnlineDiscussionDetail(
-                detailContent = _root_ide_package_.com.on.dialog.model.discussion.content.DetailContent(
+        fun toDomain(): DiscussionDetail =
+            OnlineDiscussionDetail(
+                detailContent = DetailContent(
                     id = id,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
-                    category = _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionCategory.of(
+                    category = DiscussionCategory.of(
                         commonDiscussionInfoDto.category,
                     ),
                     content = commonDiscussionInfoDto.content,
@@ -43,7 +42,7 @@ sealed interface DiscussionDetailResponse {
                     modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
                 ),
                 summary = commonDiscussionInfoDto.summary,
-                endDate = _root_ide_package_.com.on.dialog.model.discussion.datetimeperiod.EndDate(
+                endDate = EndDate(
                     onlineDiscussionInfoDto.endDate.toIsoLocalDate(),
                 ),
             )
@@ -65,13 +64,13 @@ sealed interface DiscussionDetailResponse {
         @SerialName("offlineDiscussionInfo")
         val offlineDiscussionInfoDto: OfflineDiscussionInfoDto,
     ) : DiscussionDetailResponse {
-        fun toDomain(): com.on.dialog.model.discussion.detail.DiscussionDetail =
-            _root_ide_package_.com.on.dialog.model.discussion.detail.OfflineDiscussionDetail(
-                detailContent = _root_ide_package_.com.on.dialog.model.discussion.content.DetailContent(
+        fun toDomain(): DiscussionDetail =
+            OfflineDiscussionDetail(
+                detailContent = DetailContent(
                     id = id,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
-                    category = _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionCategory.of(
+                    category = DiscussionCategory.of(
                         commonDiscussionInfoDto.category,
                     ),
                     content = commonDiscussionInfoDto.content,
@@ -80,11 +79,11 @@ sealed interface DiscussionDetailResponse {
                     modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
                 ),
                 summary = commonDiscussionInfoDto.summary,
-                dateTimePeriod = _root_ide_package_.com.on.dialog.model.discussion.datetimeperiod.DateTimePeriod(
+                dateTimePeriod = DateTimePeriod(
                     startAt = offlineDiscussionInfoDto.startAt.toIsoLocalDateTime(),
                     endAt = offlineDiscussionInfoDto.endAt.toIsoLocalDateTime(),
                 ),
-                participantCapacity = _root_ide_package_.com.on.dialog.model.discussion.participant.ParticipantCapacity(
+                participantCapacity = ParticipantCapacity(
                     current = offlineDiscussionInfoDto.participantCount,
                     max = offlineDiscussionInfoDto.maxParticipantCount,
                 ),
@@ -151,8 +150,8 @@ sealed interface DiscussionDetailResponse {
             @SerialName("profileImage")
             val profileImageDto: ProfileImageDto?,
         ) {
-            fun toDomain(): com.on.dialog.model.discussion.content.Author =
-                _root_ide_package_.com.on.dialog.model.discussion.content.Author(
+            fun toDomain(): Author =
+                Author(
                     id = id,
                     nickname = name,
                     profileImage = profileImageDto?.toDomain(),
@@ -165,8 +164,8 @@ sealed interface DiscussionDetailResponse {
                 @SerialName("customImageUri")
                 val customImageUri: String?,
             ) {
-                fun toDomain(): com.on.dialog.model.common.ProfileImage =
-                    _root_ide_package_.com.on.dialog.model.common.ProfileImage(
+                fun toDomain(): ProfileImage =
+                    ProfileImage(
                         basicImageUri = basicImageUri,
                         customImageUri = customImageUri,
                     )

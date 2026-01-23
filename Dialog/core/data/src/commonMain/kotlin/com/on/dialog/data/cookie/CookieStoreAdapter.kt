@@ -7,15 +7,15 @@ import com.on.dialog.network.dto.session.CookieNetworkEntity
 
 class CookieStoreAdapter(
     private val localCookieStorage: LocalCookieStorage,
-) : com.on.dialog.network.datasource.CookieStore {
-    override suspend fun save(cookie: com.on.dialog.network.dto.session.CookieNetworkEntity) {
+) : CookieStore {
+    override suspend fun save(cookie: CookieNetworkEntity) {
         localCookieStorage.save(cookie = cookie.toLocalEntity())
     }
 
     override suspend fun loadAll(
         requestHost: String,
         requestPath: String,
-    ): List<com.on.dialog.network.dto.session.CookieNetworkEntity> =
+    ): List<CookieNetworkEntity> =
         localCookieStorage
             .loadAll(requestHost = requestHost, requestPath = requestPath)
             .map { it.toNetworkEntity() }
@@ -24,7 +24,7 @@ class CookieStoreAdapter(
         localCookieStorage.clear()
     }
 
-    private fun com.on.dialog.network.dto.session.CookieNetworkEntity.toLocalEntity(): CookieLocalEntity = CookieLocalEntity(
+    private fun CookieNetworkEntity.toLocalEntity(): CookieLocalEntity = CookieLocalEntity(
         name = name,
         value = value,
         domain = domain,
@@ -34,8 +34,8 @@ class CookieStoreAdapter(
         httpOnly = httpOnly,
     )
 
-    private fun CookieLocalEntity.toNetworkEntity(): com.on.dialog.network.dto.session.CookieNetworkEntity =
-        _root_ide_package_.com.on.dialog.network.dto.session.CookieNetworkEntity(
+    private fun CookieLocalEntity.toNetworkEntity(): CookieNetworkEntity =
+        CookieNetworkEntity(
             name = name,
             value = value,
             domain = domain,

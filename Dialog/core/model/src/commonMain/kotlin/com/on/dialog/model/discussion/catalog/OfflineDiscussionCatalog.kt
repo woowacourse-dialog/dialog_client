@@ -7,31 +7,31 @@ import com.on.dialog.model.discussion.participant.ParticipantCapacity
 import kotlinx.datetime.LocalDateTime
 
 data class OfflineDiscussionCatalog(
-    override val catalogContent: com.on.dialog.model.discussion.content.CatalogContent,
-    val dateTimePeriod: com.on.dialog.model.discussion.datetimeperiod.DateTimePeriod,
-    val participantCapacity: com.on.dialog.model.discussion.participant.ParticipantCapacity,
+    override val catalogContent: CatalogContent,
+    val dateTimePeriod: DateTimePeriod,
+    val participantCapacity: ParticipantCapacity,
     val place: String,
-) : com.on.dialog.model.discussion.catalog.DiscussionCatalog {
-    override fun status(now: LocalDateTime): com.on.dialog.model.discussion.content.DiscussionStatus =
+) : DiscussionCatalog {
+    override fun status(now: LocalDateTime): DiscussionStatus =
         when {
             dateTimePeriod.isBeforeStart(now) -> {
-                _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionStatus.RECRUITING
+                DiscussionStatus.RECRUITING
             }
 
             dateTimePeriod.isBeforeStart(now) && participantCapacity.isParticipantFull() -> {
-                _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionStatus.RECRUITCOMPLETE
+                DiscussionStatus.RECRUITCOMPLETE
             }
 
             dateTimePeriod.isInPeriod(now) -> {
-                _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionStatus.INDISCUSSION
+                DiscussionStatus.INDISCUSSION
             }
 
             dateTimePeriod.isAfterEnd(now) -> {
-                _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionStatus.DISCUSSIONCOMPLETE
+                DiscussionStatus.DISCUSSIONCOMPLETE
             }
 
             else -> {
-                _root_ide_package_.com.on.dialog.model.discussion.content.DiscussionStatus.UNDEFINED
+                DiscussionStatus.UNDEFINED
             }
         }
 }

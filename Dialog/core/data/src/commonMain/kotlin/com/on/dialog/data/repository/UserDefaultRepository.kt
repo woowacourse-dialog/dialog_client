@@ -9,17 +9,17 @@ import com.on.dialog.network.dto.user.NotificationSettingRequest.Companion.toReq
 import com.on.dialog.network.dto.user.UserMypageUpdateRequest
 
 internal class UserDefaultRepository(
-    private val userDatasource: com.on.dialog.network.datasource.UserDatasource,
+    private val userDatasource: UserDatasource,
 ) : UserRepository {
-    override suspend fun getMyUserInfo(): Result<com.on.dialog.model.user.UserInfo> =
+    override suspend fun getMyUserInfo(): Result<UserInfo> =
         userDatasource.getMyUserInfo().mapCatching { it.toDomain() }
 
     override suspend fun updateMyProfile(
         nickname: String,
-        track: com.on.dialog.model.common.Track,
+        track: Track,
     ): Result<Unit> =
         userDatasource.updateMyProfile(
-            request = _root_ide_package_.com.on.dialog.network.dto.user.UserMypageUpdateRequest(
+            request = UserMypageUpdateRequest(
                 nickname = nickname,
                 track = track.name,
             ),
@@ -30,19 +30,19 @@ internal class UserDefaultRepository(
             .updateNotificationSetting(request = isNotificationEnable.toRequest())
             .map { it.isNotificationEnable }
 
-    override suspend fun getMyProfileImage(): Result<com.on.dialog.model.common.ProfileImage> =
+    override suspend fun getMyProfileImage(): Result<ProfileImage> =
         userDatasource.getMyProfileImage().mapCatching { it.toDomain() }
 
-    override suspend fun updateMyProfileImage(request: String): Result<com.on.dialog.model.common.ProfileImage> =
+    override suspend fun updateMyProfileImage(request: String): Result<ProfileImage> =
         userDatasource
             .updateMyProfileImage(file = request)
             .mapCatching { it.toDomain() }
 
-    override suspend fun getMyTrack(): Result<com.on.dialog.model.common.Track> =
+    override suspend fun getMyTrack(): Result<Track> =
         userDatasource
             .getMyTrack()
             .mapCatching {
-                _root_ide_package_.com.on.dialog.model.common.Track
+                Track
                     .of(name = it.track)
             }
 }
