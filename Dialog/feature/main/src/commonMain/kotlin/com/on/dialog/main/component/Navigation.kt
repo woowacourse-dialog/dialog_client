@@ -23,7 +23,6 @@ import androidx.navigation3.runtime.NavKey
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.source.NoRippleInteractionSource
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.designsystem.theme.Gray400
 import com.on.dialog.feature.discussionlist.api.DiscussionListNavKey
 import com.on.dialog.feature.mypage.api.MyPageNavKey
 import com.on.dialog.feature.scrap.api.ScrapNavKey
@@ -91,7 +90,7 @@ fun DialogNavigationBar(
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = Color.Transparent,
                     selectedIconColor = DialogTheme.colorScheme.primary,
-                    unselectedIconColor = Gray400,
+                    unselectedIconColor = DialogTheme.colors.gray400
                 ),
                 interactionSource = NoRippleInteractionSource,
             )

@@ -15,6 +15,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -94,7 +96,21 @@ internal val surfaceContainerHighDark = Color(0xFF2A2A2B)
 internal val surfaceContainerHighestDark = Color(0xFF343536)
 
 internal val Gray200 = Color(0xFFEEEEEE)
-val Gray400 = Color(0xFFBDBDBD)
+internal val Gray400 = Color(0xFFBDBDBD)
+
+@Immutable
+data class DialogColors(
+    val gray200: Color,
+    val gray400: Color,
+)
+
+val LocalColors =
+    staticCompositionLocalOf {
+        DialogColors(
+            gray200 = Gray200,
+            gray400 = Gray400,
+        )
+    }
 
 @Preview(name = "Light Colors", heightDp = 2000)
 @Composable
