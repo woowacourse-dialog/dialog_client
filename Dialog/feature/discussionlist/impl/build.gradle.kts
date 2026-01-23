@@ -3,14 +3,14 @@ plugins {
 }
 
 android {
-    namespace = "com.on.dialog.feature.main.impl"
+    namespace = "com.on.dialog.feature.discussionlist.impl"
 }
 
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.feature.main.api)
+            implementation(projects.feature.discussionlist.api)
             implementation(projects.feature.discussiondetail.api)
         }
     }

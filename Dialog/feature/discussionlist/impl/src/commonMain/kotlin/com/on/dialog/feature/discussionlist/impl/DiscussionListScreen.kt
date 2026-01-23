@@ -1,4 +1,4 @@
-package com.on.dialog.feature.main.impl
+package com.on.dialog.feature.discussionlist.impl
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

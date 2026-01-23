@@ -16,7 +16,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.on.dialog.designsystem.component.DialogNavigationBar
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.feature.main.api.MainNavKey
+import com.on.dialog.feature.discussionlist.api.DiscussionListNavKey
 import com.on.dialog.navigation.SavedStateConfigurationProvider
 import com.on.dialog.navigation.appScreens
 import com.on.navigation.NavigationState
@@ -30,7 +30,7 @@ import org.koin.compose.koinInject
 fun App() {
     val savedStateConfigurationProvider: SavedStateConfigurationProvider = koinInject()
     val navigationState: NavigationState = rememberNavigationState(
-        startKey = MainNavKey,
+        startKey = DiscussionListNavKey,
         topLevelKeys = TopLevel.routes.keys,
         configuration = savedStateConfigurationProvider.savedStateConfiguration,
     )

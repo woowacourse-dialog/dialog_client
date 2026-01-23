@@ -3,8 +3,8 @@ package com.on.dialog.di
 import com.on.dialog.core.local.di.localModule
 import com.on.dialog.data.di.dataModule
 import com.on.dialog.data.di.repositoryModule
+import com.on.dialog.feature.discussionlist.impl.di.discussionListModule
 import com.on.dialog.feature.login.di.loginModule
-import com.on.dialog.feature.main.impl.di.mainModule
 import com.on.dialog.feature.mypage.di.myPageModule
 import com.on.dialog.impl.di.discussionDetailModule
 import com.on.dialog.navigation.SavedStateConfigurationProvider
@@ -30,7 +30,7 @@ val coreModule =
 
 val featureModule =
     module {
-        includes(mainModule, scrapModule, myPageModule, loginModule)
+        includes(discussionListModule, scrapModule, myPageModule, loginModule)
     }
 
 val appModule =

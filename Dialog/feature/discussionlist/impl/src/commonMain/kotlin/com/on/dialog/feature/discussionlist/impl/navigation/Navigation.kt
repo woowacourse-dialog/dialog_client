@@ -1,16 +1,16 @@
-package com.on.dialog.feature.main.impl.navigation
+package com.on.dialog.feature.discussionlist.impl.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.on.dialog.api.DiscussionDetailNavKey
-import com.on.dialog.feature.main.api.MainNavKey
-import com.on.dialog.feature.main.impl.DiscussionListScreen
+import com.on.dialog.feature.discussionlist.api.DiscussionListNavKey
+import com.on.dialog.feature.discussionlist.impl.DiscussionListScreen
 import com.on.navigation.Navigator
 
-fun EntryProviderScope<NavKey>.mainScreen(
+fun EntryProviderScope<NavKey>.discussionListScreen(
     navigator: Navigator,
 ) {
-    entry<MainNavKey> {
+    entry<DiscussionListNavKey> {
         DiscussionListScreen(navigateToDiscussionDetail = {
             navigator.navigate(
                 DiscussionDetailNavKey

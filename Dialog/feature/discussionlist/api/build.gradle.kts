@@ -3,5 +3,5 @@ plugins {
 }
 
 android {
-    namespace = "com.on.dialog.feature.main.api"
+    namespace = "com.on.dialog.feature.discussionlist.api"
 }
