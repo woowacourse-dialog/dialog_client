@@ -16,14 +16,20 @@ kotlin {
             implementation(projects.core.local)
             implementation(projects.core.navigation)
             // feature
-            implementation(projects.feature.login.impl)
-            implementation(projects.feature.mypage.impl)
-            implementation(projects.feature.discussionlist.impl)
-            implementation(projects.feature.scrap.impl)
-            implementation(projects.feature.discussiondetail.impl)
-
+            
+            // discussionlist
             implementation(projects.feature.discussionlist.api)
+            implementation(projects.feature.discussionlist.impl)
+            // main
             implementation(projects.feature.main)
+            // login
+            implementation(projects.feature.login.impl)
+            // mypage
+            implementation(projects.feature.mypage.impl)
+            // scrap
+            implementation(projects.feature.scrap.impl)
+            // discussiondetail
+            implementation(projects.feature.discussiondetail.impl)
 
             //nav3
             implementation(libs.androidx.nav3.ui)
