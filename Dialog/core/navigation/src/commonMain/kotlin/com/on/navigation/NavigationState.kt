@@ -1,13 +1,9 @@
 package com.on.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSerializable
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -17,9 +13,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberDecoratedNavEntries
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.savedstate.compose.serialization.serializers.MutableStateSerializer
 import androidx.savedstate.serialization.SavedStateConfiguration
-import kotlinx.serialization.PolymorphicSerializer
 
 @Composable
 fun rememberNavigationState(
@@ -28,7 +22,12 @@ fun rememberNavigationState(
     configuration: SavedStateConfiguration,
 ): NavigationState {
     val topLevelStack = rememberNavBackStack(configuration = configuration, startKey)
-    val subStacks = topLevelKeys.associateWith { key -> rememberNavBackStack(configuration = configuration, key) }
+    val subStacks = topLevelKeys.associateWith { key ->
+        rememberNavBackStack(
+            configuration = configuration,
+            key
+        )
+    }
 
     return remember(startKey, topLevelKeys) {
         NavigationState(
