@@ -5,7 +5,7 @@ import com.on.dialog.network.datasource.CookieStore
 import org.koin.dsl.module
 
 val dataModule = module {
-    single<com.on.dialog.network.datasource.CookieStore> {
+    single<CookieStore> {
         CookieStoreAdapter(localCookieStorage = get())
     }
 }

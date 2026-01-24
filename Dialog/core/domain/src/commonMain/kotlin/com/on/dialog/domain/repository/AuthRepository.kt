@@ -4,7 +4,7 @@ import com.on.dialog.model.common.Track
 
 interface AuthRepository {
     suspend fun signup(
-        track: com.on.dialog.model.common.Track,
+        track: Track,
         webPushNotification: Boolean,
     ): Result<Long>
 
