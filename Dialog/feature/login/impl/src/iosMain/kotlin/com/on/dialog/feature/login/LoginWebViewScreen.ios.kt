@@ -2,6 +2,7 @@ package com.on.dialog.feature.login
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.UIKitView
 import com.on.dialog.feature.login.impl.BuildKonfig
@@ -13,8 +14,6 @@ import platform.Foundation.NSURL
 import platform.Foundation.NSURLRequest
 import platform.WebKit.WKHTTPCookieStore
 import platform.WebKit.WKNavigation
-import platform.WebKit.WKNavigationAction
-import platform.WebKit.WKNavigationActionPolicy
 import platform.WebKit.WKNavigationDelegateProtocol
 import platform.WebKit.WKWebView
 import platform.WebKit.WKWebViewConfiguration
@@ -32,61 +31,39 @@ actual fun LoginWebView(
     onLoginCancel: () -> Unit,
     modifier: Modifier,
 ) {
+    val config = remember {
+        WKWebViewConfiguration().apply {
+            preferences.javaScriptEnabled = true
+            websiteDataStore = WKWebsiteDataStore.defaultDataStore()
+        }
+    }
+
+    // delegate를 강한 참조로 유지 (WKWebView의 navigationDelegate는 weak 참조)
+    val navigationDelegate = remember {
+        object : NSObject(), WKNavigationDelegateProtocol {
+            override fun webView(webView: WKWebView, didFinishNavigation: WKNavigation?) {
+                val url: String = webView.URL?.absoluteString ?: return
+
+                handleLoginResult(
+                    uiState = uiState,
+                    url = url,
+                    config = config,
+                    onLoginSuccess = onLoginSuccess,
+                    onLoginFailure = onLoginFailure,
+                )
+            }
+        }
+    }
+
     UIKitView(
         modifier = modifier.fillMaxSize(),
         factory = {
-            val config = WKWebViewConfiguration().apply {
-                preferences.javaScriptEnabled = false
-                // WKWebView 전용 쿠키 저장소 사용
-                websiteDataStore = WKWebsiteDataStore.defaultDataStore()
-            }
             val webView = WKWebView(
                 frame = CGRectMake(x = 0.0, y = 0.0, width = 0.0, height = 0.0),
                 configuration = config,
             )
 
-            // NavigationDelegate 설정
-            webView.navigationDelegate = object : NSObject(), WKNavigationDelegateProtocol {
-                var isNewUser: Boolean = true
-
-                // Android의 shouldOverrideUrlLoading과 동일한 역할
-                override fun webView(
-                    webView: WKWebView,
-                    decidePolicyForNavigationAction: WKNavigationAction,
-                    decisionHandler: (WKNavigationActionPolicy) -> Unit,
-                ) {
-                    val url: String? = decidePolicyForNavigationAction.request.URL?.absoluteString
-
-                    Napier.d("$url")
-
-                    // scope 파라미터에서 신규/기존 유저 구분
-                    // scope=read:user → 기존 유저
-                    // scope=read:temp_user → 신규 회원가입
-                    url?.contains(other = "read:user")?.let { isNewUser = false }
-
-                    decisionHandler(WKNavigationActionPolicy.WKNavigationActionPolicyAllow)
-                }
-
-                // Android의 onPageFinished와 동일한 역할
-                override fun webView(
-                    webView: WKWebView,
-                    didFinishNavigation: WKNavigation?,
-                ) {
-                    val url: String = webView.URL?.absoluteString ?: return
-
-                    Napier.d("WebView URL: $url")
-                    Napier.d("isNewUser: $isNewUser")
-
-                    handleLoginResult(
-                        isNewUser = isNewUser,
-                        uiState = uiState,
-                        url = url,
-                        config = config,
-                        onLoginSuccess = onLoginSuccess,
-                        onLoginFailure = onLoginFailure,
-                    )
-                }
-            }
+            webView.navigationDelegate = navigationDelegate
 
             // 로그인 URL 로드
             val url = NSURL.URLWithString(loginType.loginUrl)
@@ -94,7 +71,6 @@ actual fun LoginWebView(
                 val request = NSURLRequest.requestWithURL(url)
                 webView.loadRequest(request)
             } else {
-                Napier.e("Invalid login URL: ${loginType.loginUrl}")
                 onLoginFailure()
             }
 
@@ -104,7 +80,6 @@ actual fun LoginWebView(
 }
 
 private fun handleLoginResult(
-    isNewUser: Boolean,
     uiState: LoginState,
     url: String,
     config: WKWebViewConfiguration,
@@ -113,7 +88,7 @@ private fun handleLoginResult(
 ) {
     // 로그인 성공 페이지 감지
     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때
-    if (!uiState.isLoginComplete && url.contentEquals(other = BuildKonfig.BASE_URL)) {
+    if (!uiState.isLoginComplete && url.contains(other = BuildKonfig.BASE_URL)) {
         // WKWebView 전용 쿠키 저장소에서 쿠키 추출
         val cookieStore: WKHTTPCookieStore = config.websiteDataStore.httpCookieStore
         cookieStore.getAllCookies { cookies ->
@@ -127,10 +102,10 @@ private fun handleLoginResult(
 
             // JSESSIONID 추출 성공 시 콜백 함수로 반환
             if (jsessionId != null) {
-                Napier.d("✅ JSESSIONID: $jsessionId, isNewUser: $isNewUser")
+                val isNewUser = isNewUser(url)
                 onLoginSuccess(jsessionId, isNewUser)
             } else {
-                Napier.w("⚠️ JSESSIONID not found in cookies")
+                Napier.d(tag = "LoginWebView", message = "⚠️ JSESSIONID not found in cookies")
                 onLoginFailure()
             }
         }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.on.dialog.feature.login.impl.BuildKonfig
 import io.github.aakira.napier.Napier
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -66,4 +67,11 @@ fun LoginWebViewScreen(
             goBack()
         },
     )
+}
+
+internal fun isNewUser(url: String): Boolean {
+    return when (url.substringAfter(BuildKonfig.BASE_URL)) {
+        "signup" -> true
+        else -> false
+    }
 }
