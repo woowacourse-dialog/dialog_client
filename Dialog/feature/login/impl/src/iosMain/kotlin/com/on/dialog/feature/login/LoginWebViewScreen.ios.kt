@@ -1,5 +1,6 @@
 package com.on.dialog.feature.login
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.UIKitView
@@ -32,7 +33,7 @@ actual fun LoginWebView(
     modifier: Modifier,
 ) {
     UIKitView(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         factory = {
             val config = WKWebViewConfiguration().apply {
                 preferences.javaScriptEnabled = false
