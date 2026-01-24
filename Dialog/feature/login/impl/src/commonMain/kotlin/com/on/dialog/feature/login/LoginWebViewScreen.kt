@@ -69,9 +69,7 @@ fun LoginWebViewScreen(
     )
 }
 
-internal fun isNewUser(url: String): Boolean {
-    return when (url.substringAfter(BuildKonfig.BASE_URL)) {
-        "signup" -> true
-        else -> false
-    }
+internal fun isNewUser(url: String): Boolean = when (url.substringAfter(BuildKonfig.BASE_URL)) {
+    "signup" -> true
+    else -> false
 }
