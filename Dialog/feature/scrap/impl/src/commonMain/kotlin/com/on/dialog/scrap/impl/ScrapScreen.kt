@@ -1,4 +1,4 @@
-package com.on.impl
+package com.on.dialog.scrap.impl
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

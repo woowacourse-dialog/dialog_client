@@ -1,4 +1,4 @@
-package com.on.impl.di
+package com.on.dialog.scrap.impl.di
 
 import com.on.dialog.navigation.NavKeyProvider
 import org.koin.dsl.bind
