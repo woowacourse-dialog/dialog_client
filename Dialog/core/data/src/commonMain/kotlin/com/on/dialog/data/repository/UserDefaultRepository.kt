@@ -1,12 +1,12 @@
 package com.on.dialog.data.repository
 
 import com.on.dialog.domain.repository.UserRepository
-import com.on.model.common.ProfileImage
-import com.on.model.common.Track
-import com.on.model.user.UserInfo
-import com.on.network.datasource.UserDatasource
-import com.on.network.dto.user.NotificationSettingRequest.Companion.toRequest
-import com.on.network.dto.user.UserMypageUpdateRequest
+import com.on.dialog.model.common.ProfileImage
+import com.on.dialog.model.common.Track
+import com.on.dialog.model.user.UserInfo
+import com.on.dialog.network.datasource.UserDatasource
+import com.on.dialog.network.dto.user.NotificationSettingRequest.Companion.toRequest
+import com.on.dialog.network.dto.user.UserMypageUpdateRequest
 
 internal class UserDefaultRepository(
     private val userDatasource: UserDatasource,
@@ -34,9 +34,7 @@ internal class UserDefaultRepository(
         userDatasource.getMyProfileImage().mapCatching { it.toDomain() }
 
     override suspend fun updateMyProfileImage(request: String): Result<ProfileImage> =
-        userDatasource
-            .updateMyProfileImage(file = request)
-            .mapCatching { it.toDomain() }
+        userDatasource.updateMyProfileImage(file = request).mapCatching { it.toDomain() }
 
     override suspend fun getMyTrack(): Result<Track> =
         userDatasource.getMyTrack().mapCatching { Track.of(name = it.track) }

@@ -1,22 +1,22 @@
 package com.on.dialog.data.repository
 
 import com.on.dialog.domain.repository.DiscussionRepository
-import com.on.model.discussion.criteria.DiscussionCriteria
-import com.on.model.discussion.cursorpage.DiscussionCatalogCursorPage
-import com.on.model.discussion.detail.DiscussionDetail
-import com.on.model.discussion.draft.OfflineDiscussionDraft
-import com.on.model.discussion.draft.OnlineDiscussionDraft
-import com.on.model.discussion.summary.DiscussionSummary
-import com.on.network.datasource.DiscussionDatasource
-import com.on.network.dto.discussioncreate.CreateOfflineDiscussionRequest.Companion.toCreationRequest
-import com.on.network.dto.discussioncreate.CreateOnlineDiscussionRequest.Companion.toCreateRequest
-import com.on.network.dto.discussiondetail.DiscussionDetailResponse
-import com.on.network.dto.discussiondetail.DiscussionDetailResponse.DiscussionDetailOfflineResponse
-import com.on.network.dto.discussiondetail.DiscussionDetailResponse.DiscussionDetailOnlineResponse
-import com.on.network.dto.discussionedit.OfflineDiscussionEditRequest.Companion.toEditRequest
-import com.on.network.dto.discussionedit.OnlineDiscussionEditRequest.Companion.toEditRequest
-import com.on.network.dto.discussionlookup.DiscussionQuery.Companion.toQuery
-import com.on.network.dto.discussionsummary.DiscussionSummaryRequest.Companion.toRequest
+import com.on.dialog.model.discussion.criteria.DiscussionCriteria
+import com.on.dialog.model.discussion.cursorpage.DiscussionCatalogCursorPage
+import com.on.dialog.model.discussion.detail.DiscussionDetail
+import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
+import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
+import com.on.dialog.model.discussion.summary.DiscussionSummary
+import com.on.dialog.network.datasource.DiscussionDatasource
+import com.on.dialog.network.dto.discussioncreate.CreateOfflineDiscussionRequest.Companion.toCreationRequest
+import com.on.dialog.network.dto.discussioncreate.CreateOnlineDiscussionRequest.Companion.toCreateRequest
+import com.on.dialog.network.dto.discussiondetail.DiscussionDetailResponse
+import com.on.dialog.network.dto.discussiondetail.DiscussionDetailResponse.DiscussionDetailOfflineResponse
+import com.on.dialog.network.dto.discussiondetail.DiscussionDetailResponse.DiscussionDetailOnlineResponse
+import com.on.dialog.network.dto.discussionedit.OfflineDiscussionEditRequest.Companion.toEditRequest
+import com.on.dialog.network.dto.discussionedit.OnlineDiscussionEditRequest.Companion.toEditRequest
+import com.on.dialog.network.dto.discussionlookup.DiscussionQuery.Companion.toQuery
+import com.on.dialog.network.dto.discussionsummary.DiscussionSummaryRequest.Companion.toRequest
 
 internal class DiscussionDefaultRepository(
     private val discussionDatasource: DiscussionDatasource,

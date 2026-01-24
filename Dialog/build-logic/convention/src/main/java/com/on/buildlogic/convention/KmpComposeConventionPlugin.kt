@@ -1,7 +1,6 @@
 package com.on.buildlogic.convention
 
 import com.on.buildlogic.convention.extension.PluginIds
-import com.on.buildlogic.convention.extension.compose
 import com.on.buildlogic.convention.extension.library
 import com.on.buildlogic.convention.extension.libs
 import org.gradle.api.Plugin
@@ -53,19 +52,19 @@ internal class KmpComposeConventionPlugin : Plugin<Project> {
         extensions.configure<KotlinMultiplatformExtension> {
             sourceSets.named("commonMain") {
                 dependencies {
-                    implementation(compose.dependencies.runtime)
-                    implementation(compose.dependencies.foundation)
-                    implementation(compose.dependencies.material3)
-                    implementation(compose.dependencies.ui)
-                    implementation(compose.dependencies.components.resources)
-                    implementation(compose.dependencies.components.uiToolingPreview)
+                    implementation(libs.library("compose-runtime"))
+                    implementation(libs.library("compose-foundation"))
+                    implementation(libs.library("compose-ui"))
+                    implementation(libs.library("compose-ui-tooling-preview"))
+                    implementation(libs.library("compose-components-resources"))
+                    implementation(libs.library("compose-material3"))
                     implementation(libs.library("koin-compose"))
                 }
             }
         }
 
         dependencies {
-            add("debugImplementation", compose.dependencies.uiTooling)
+            add("debugImplementation", "org.jetbrains.compose.ui:ui-tooling:1.10.0")
         }
     }
 }

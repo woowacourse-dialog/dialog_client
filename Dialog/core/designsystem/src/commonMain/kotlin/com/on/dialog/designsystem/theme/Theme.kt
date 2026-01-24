@@ -112,6 +112,11 @@ object DialogTheme {
         @ReadOnlyComposable
         get() = MaterialTheme.colorScheme
 
+    val colors: DialogColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalColors.current
+
     val typography: Typography
         @Composable
         @ReadOnlyComposable
