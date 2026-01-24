@@ -26,23 +26,15 @@ internal class UserDefaultRepository(
         )
 
     override suspend fun updateNotificationSetting(isNotificationEnable: Boolean): Result<Boolean> =
-        userDatasource
-            .updateNotificationSetting(request = isNotificationEnable.toRequest())
+        userDatasource.updateNotificationSetting(request = isNotificationEnable.toRequest())
             .map { it.isNotificationEnable }
 
     override suspend fun getMyProfileImage(): Result<ProfileImage> =
         userDatasource.getMyProfileImage().mapCatching { it.toDomain() }
 
     override suspend fun updateMyProfileImage(request: String): Result<ProfileImage> =
-        userDatasource
-            .updateMyProfileImage(file = request)
-            .mapCatching { it.toDomain() }
+        userDatasource.updateMyProfileImage(file = request).mapCatching { it.toDomain() }
 
     override suspend fun getMyTrack(): Result<Track> =
-        userDatasource
-            .getMyTrack()
-            .mapCatching {
-                Track
-                    .of(name = it.track)
-            }
+        userDatasource.getMyTrack().mapCatching { Track.of(name = it.track) }
 }
