@@ -34,18 +34,14 @@ sealed interface DiscussionDetailResponse {
                     id = id,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
-                    category = DiscussionCategory.of(
-                        commonDiscussionInfoDto.category,
-                    ),
+                    category = DiscussionCategory.of(commonDiscussionInfoDto.category),
                     content = commonDiscussionInfoDto.content,
                     createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
                     likeCount = commonDiscussionInfoDto.likeCount,
                     modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
                 ),
                 summary = commonDiscussionInfoDto.summary,
-                endDate = EndDate(
-                    onlineDiscussionInfoDto.endDate.toIsoLocalDate(),
-                ),
+                endDate = EndDate(onlineDiscussionInfoDto.endDate.toIsoLocalDate()),
             )
 
         @Serializable
@@ -71,9 +67,7 @@ sealed interface DiscussionDetailResponse {
                     id = id,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
-                    category = DiscussionCategory.of(
-                        commonDiscussionInfoDto.category,
-                    ),
+                    category = DiscussionCategory.of(commonDiscussionInfoDto.category),
                     content = commonDiscussionInfoDto.content,
                     createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
                     likeCount = commonDiscussionInfoDto.likeCount,
@@ -114,11 +108,7 @@ sealed interface DiscussionDetailResponse {
                 @SerialName("name")
                 val name: String,
             ) {
-                fun toDomain(): Participant =
-                    Participant(
-                        id = id,
-                        name = name,
-                    )
+                fun toDomain(): Participant = Participant(id = id, name = name)
             }
         }
     }
@@ -152,11 +142,7 @@ sealed interface DiscussionDetailResponse {
             val profileImageDto: ProfileImageDto?,
         ) {
             fun toDomain(): Author =
-                Author(
-                    id = id,
-                    nickname = name,
-                    profileImage = profileImageDto?.toDomain(),
-                )
+                Author(id = id, nickname = name, profileImage = profileImageDto?.toDomain())
 
             @Serializable
             data class ProfileImageDto(
@@ -166,10 +152,7 @@ sealed interface DiscussionDetailResponse {
                 val customImageUri: String?,
             ) {
                 fun toDomain(): ProfileImage =
-                    ProfileImage(
-                        basicImageUri = basicImageUri,
-                        customImageUri = customImageUri,
-                    )
+                    ProfileImage(basicImageUri = basicImageUri, customImageUri = customImageUri)
             }
         }
     }

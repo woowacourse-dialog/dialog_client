@@ -12,8 +12,5 @@ data class DiscussionSummaryResponse(
     val summary: String,
 ) {
     fun toDomain(): DiscussionSummary =
-        DiscussionSummary(
-            discussionId = discussionId,
-            summary = summary,
-        )
+        DiscussionSummary(discussionId = discussionId, summary = summary)
 }

@@ -128,10 +128,7 @@ data class DiscussionCursorPageResponse(
                 val customImageUri: String?,
             ) {
                 fun toDomain(): ProfileImage =
-                    ProfileImage(
-                        basicImageUri = basicImageUri,
-                        customImageUri = customImageUri,
-                    )
+                    ProfileImage(basicImageUri = basicImageUri, customImageUri = customImageUri)
             }
         }
 

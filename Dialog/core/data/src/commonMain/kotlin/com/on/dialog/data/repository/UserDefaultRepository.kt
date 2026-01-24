@@ -26,7 +26,8 @@ internal class UserDefaultRepository(
         )
 
     override suspend fun updateNotificationSetting(isNotificationEnable: Boolean): Result<Boolean> =
-        userDatasource.updateNotificationSetting(request = isNotificationEnable.toRequest())
+        userDatasource
+            .updateNotificationSetting(request = isNotificationEnable.toRequest())
             .map { it.isNotificationEnable }
 
     override suspend fun getMyProfileImage(): Result<ProfileImage> =

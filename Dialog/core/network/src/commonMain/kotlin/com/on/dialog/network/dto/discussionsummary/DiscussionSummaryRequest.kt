@@ -10,8 +10,6 @@ data class DiscussionSummaryRequest(
 ) {
     companion object {
         fun Long.toRequest(): DiscussionSummaryRequest =
-            DiscussionSummaryRequest(
-                discussionId = this,
-            )
+            DiscussionSummaryRequest(discussionId = this)
     }
 }
