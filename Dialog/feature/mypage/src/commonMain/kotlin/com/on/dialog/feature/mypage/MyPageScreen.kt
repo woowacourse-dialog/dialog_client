@@ -20,6 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +32,9 @@ import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.mypage.viewmodel.MyPageIntent
+import com.on.dialog.feature.mypage.viewmodel.MyPageState
+import com.on.dialog.feature.mypage.viewmodel.MyPageViewModel
 import com.on.dialog.ui.component.ProfileImage
 import com.on.model.common.Track
 import dialog.feature.mypage.generated.resources.Res
@@ -56,6 +62,11 @@ fun MyPageScreen(
         uiState = uiState,
         onLoginClick = { navigateToLogin() },
         onLogoutClick = { viewModel.onIntent(intent = MyPageIntent.Logout) },
+        onUpdateProfile = { nickname: String, track: Track ->
+            viewModel.onIntent(
+                intent = MyPageIntent.EditProfile(nickname = nickname, track = track)
+            )
+        },
         modifier = modifier,
     )
 }
@@ -65,6 +76,7 @@ private fun MyPageScreen(
     uiState: MyPageState,
     onLoginClick: () -> Unit,
     onLogoutClick: () -> Unit,
+    onUpdateProfile: (nickname: String, track: Track) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -72,7 +84,11 @@ private fun MyPageScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (uiState.isLoggedIn) {
-            MyPageScreenLoggedIn(uiState = uiState, onLogoutClick = onLogoutClick)
+            MyPageScreenLoggedIn(
+                uiState = uiState,
+                onLogoutClick = onLogoutClick,
+                onUpdateProfile = onUpdateProfile
+            )
         } else {
             MyPageScreenLoggedOut(onLoginClick = onLoginClick)
         }
@@ -83,8 +99,11 @@ private fun MyPageScreen(
 private fun MyPageScreenLoggedIn(
     uiState: MyPageState,
     onLogoutClick: () -> Unit,
+    onUpdateProfile: (nickname: String, track: Track) -> Unit,
 ) {
-    ProfileSection(uiState)
+    var showProfileEditDialog by rememberSaveable { mutableStateOf(false) }
+
+    ProfileSection(uiState = uiState, onEditClick = { showProfileEditDialog = true })
     Spacer(Modifier.height(height = DialogTheme.spacing.extraLarge))
     DialogCard(
         modifier = Modifier.fillMaxWidth(),
@@ -103,6 +122,15 @@ private fun MyPageScreenLoggedIn(
                 onClick = onLogoutClick,
             ) { Icon(imageVector = DialogIcons.Logout, contentDescription = "") }
         }
+    }
+
+    if (showProfileEditDialog) {
+        ProfileEditDialog(
+            nickname = uiState.nickname,
+            track = uiState.track,
+            onDismissRequest = { showProfileEditDialog = false },
+            onUpdateProfile = onUpdateProfile
+        )
     }
 }
 
@@ -159,6 +187,7 @@ private fun MyPageMenuButton(
 @Composable
 private fun ProfileSection(
     uiState: MyPageState,
+    onEditClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DialogCard(modifier = modifier) {
@@ -178,11 +207,11 @@ private fun ProfileSection(
                 )
                 ProfileInfo(
                     nickname = uiState.nickname,
-                    track = uiState.track,
+                    track = uiState.track.initial,
                     githubId = uiState.githubId,
                 )
             }
-            DialogIconButton(onClick = {}) {
+            DialogIconButton(onClick = onEditClick) {
                 Icon(imageVector = DialogIcons.Edit, contentDescription = "")
             }
         }
@@ -226,11 +255,12 @@ private fun ProfileSectionPreview() {
                 uiState = MyPageState(
                     imageUrl = "",
                     nickname = "크림",
-                    track = Track.ANDROID.initial,
+                    track = Track.ANDROID,
                     githubId = "ijh1298",
                     isNotificationEnable = false,
                     isLoggedIn = true,
                 ),
+                onEditClick = {},
             )
         }
     }
@@ -245,13 +275,14 @@ private fun MyPageScreenLoggedInPreview() {
                 uiState = MyPageState(
                     imageUrl = "",
                     nickname = "크림",
-                    track = Track.ANDROID.initial,
+                    track = Track.ANDROID,
                     githubId = "ijh1298",
                     isNotificationEnable = false,
                     isLoggedIn = true,
                 ),
                 onLoginClick = {},
                 onLogoutClick = {},
+                onUpdateProfile = { _, _ -> },
             )
         }
     }
@@ -268,6 +299,7 @@ private fun MyPageScreenLoggedOutPreview() {
                 ),
                 onLoginClick = {},
                 onLogoutClick = {},
+                onUpdateProfile = { _, _ -> },
             )
         }
     }

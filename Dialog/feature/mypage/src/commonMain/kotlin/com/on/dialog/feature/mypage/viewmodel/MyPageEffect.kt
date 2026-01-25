@@ -1,4 +1,4 @@
-package com.on.dialog.feature.mypage
+package com.on.dialog.feature.mypage.viewmodel
 
 import com.on.dialog.ui.viewmodel.UiEffect
 

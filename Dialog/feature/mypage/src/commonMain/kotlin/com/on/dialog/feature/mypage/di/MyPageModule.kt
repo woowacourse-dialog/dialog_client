@@ -1,6 +1,6 @@
 package com.on.dialog.feature.mypage.di
 
-import com.on.dialog.feature.mypage.MyPageViewModel
+import com.on.dialog.feature.mypage.viewmodel.MyPageViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -24,12 +25,11 @@ import dialog.core.ui.generated.resources.discussion_card_endAt
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DiscussionCard(
     chips: ImmutableList<ChipCategory>,
-    onChipsChange: (ImmutableList<ChipCategory>) -> Unit,
+    onChipsChange: (List<ChipCategory>) -> Unit,
     title: String,
     author: String,
     endAt: String,
@@ -40,6 +40,7 @@ fun DiscussionCard(
         Column(
             verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
         ) {
+            DialogChipGroup(chips = chips, onChipsChange = onChipsChange)
             Text(text = title, style = DialogTheme.typography.titleMedium)
             DiscussionCardFooter(author = author, endAt = endAt, discussionCount = discussionCount)
         }

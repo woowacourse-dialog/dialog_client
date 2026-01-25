@@ -1,10 +1,11 @@
-package com.on.dialog.feature.mypage
+package com.on.dialog.feature.mypage.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.UserRepository
 import com.on.dialog.ui.viewmodel.BaseViewModel
+import com.on.model.common.Track
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
@@ -16,6 +17,10 @@ class MyPageViewModel(
         when (intent) {
             MyPageIntent.CheckLoginStatus -> getLoginStatus()
             MyPageIntent.Logout -> logout()
+            is MyPageIntent.EditProfile -> updateProfile(
+                nickname = intent.nickname,
+                track = intent.track
+            )
         }
     }
 
@@ -50,7 +55,7 @@ class MyPageViewModel(
                             copy(
                                 isLoggedIn = true,
                                 isLoading = false,
-                                track = userInfo.track.initial,
+                                track = userInfo.track,
                                 nickname = userInfo.nickname,
                                 githubId = userInfo.githubId,
                                 isNotificationEnable = userInfo.isNotificationEnabled,
@@ -84,7 +89,7 @@ class MyPageViewModel(
                                 isLoggedIn = true,
                                 isLoading = false,
                                 imageUrl = profileImage.customImageUri ?: profileImage.basicImageUri
-                                    ?: "",
+                                ?: "",
                             )
                         }
                     }.onFailure { result: Throwable ->
@@ -102,6 +107,20 @@ class MyPageViewModel(
             }.invokeOnCompletion {
                 updateState { copy(isLoading = false) }
             }
+    }
+
+    private fun updateProfile(nickname: String, track: Track) {
+        viewModelScope.launch {
+            userRepository
+                .updateMyProfile(nickname = nickname, track = track)
+                .onSuccess {
+                    updateState { copy(nickname = nickname, track = track) }
+                    Napier.d("프로필 수정 성공")
+                }.onFailure { result ->
+                    Napier.d("프로필 수정 실패: ${result.message}")
+                    emitEffect(MyPageEffect.ShowError(message = "프로필 업데이트를 실패했습니다."))
+                }
+        }
     }
 
     private fun logout() {
