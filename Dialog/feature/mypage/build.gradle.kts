@@ -22,6 +22,9 @@ kotlin {
 
             // koin
             implementation(libs.koin.compose.viewmodel)
+
+            // immutable
+            implementation(libs.kotlinx.collections.immutable)
         }
     }
 }
