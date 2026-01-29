@@ -25,6 +25,9 @@ kotlin {
 
             // immutable
             implementation(libs.kotlinx.collections.immutable)
+
+            // image
+            implementation(libs.imagepicker)
         }
     }
 }

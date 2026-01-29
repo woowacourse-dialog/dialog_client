@@ -45,6 +45,7 @@ build-konfig = "0.17.1"
 
 # Image
 coil = "3.3.0"
+imagepicker = "1.0.30"
 
 # Util
 napier = "2.7.1"
@@ -75,7 +76,7 @@ kotlinx-serialization-gradle-plugin = { group = "org.jetbrains.kotlin", name = "
 
 # Kotlinx
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines"}
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
@@ -91,7 +92,7 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle-runtime" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle-runtime" }
 androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "jetbrains-androidx-navigation" }
-androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test"}
+androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test" }
 
 # Ktor
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
@@ -121,17 +122,18 @@ ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.r
 # Image
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
+imagepicker = { module = "io.github.ismoy:imagepickerkmp", version.ref = "imagepicker" }
 
 # Util
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 
 # Test
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit5" }
-junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api"}
-junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine"}
-junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params"}
-junit-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine"}
-junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher"}
+junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api" }
+junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine" }
+junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params" }
+junit-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 junit = { group = "junit", name = "junit", version.ref = "junit4" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit-android" }
