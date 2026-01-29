@@ -21,7 +21,7 @@ class DialogAppState(
         get() = navigationState.currentKey
 
     val shouldShowBottomBar: Boolean
-        @Composable get() = navigationState.currentKey in TopLevel.routes.keys
+        get() = navigationState.currentKey in TopLevel.routes.keys
 }
 
 @Composable
