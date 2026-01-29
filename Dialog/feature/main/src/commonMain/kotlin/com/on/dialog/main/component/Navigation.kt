@@ -31,7 +31,6 @@ import dialog.feature.main.generated.resources.Res
 import dialog.feature.main.generated.resources.top_level_nav_item_home
 import dialog.feature.main.generated.resources.top_level_nav_item_my_page
 import dialog.feature.main.generated.resources.top_level_nav_item_scrap
-import kotlinx.collections.immutable.persistentMapOf
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -120,7 +119,7 @@ private fun DialogNavigationBarPreviewDark() {
 private fun DialogNavigationBarPreviewContent() {
     var selectedIndex by remember { mutableStateOf(DiscussionListNavKey) }
     DialogNavigationBar(
-        items = persistentMapOf(
+        items = mapOf(
             DiscussionListNavKey to NavigationItem(
                 icon = DialogIcons.Home,
                 label = Res.string.top_level_nav_item_home,
