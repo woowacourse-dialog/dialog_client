@@ -10,9 +10,10 @@ import dialog.feature.main.generated.resources.Res
 import dialog.feature.main.generated.resources.top_level_nav_item_home
 import dialog.feature.main.generated.resources.top_level_nav_item_my_page
 import dialog.feature.main.generated.resources.top_level_nav_item_scrap
+import kotlinx.collections.immutable.persistentMapOf
 
 object TopLevel {
-    val routes: Map<NavKey, NavigationItem> = mapOf(
+    val routes: Map<NavKey, NavigationItem> = persistentMapOf(
         DiscussionListNavKey to NavigationItem(
             icon = DialogIcons.Home,
             label = Res.string.top_level_nav_item_home,

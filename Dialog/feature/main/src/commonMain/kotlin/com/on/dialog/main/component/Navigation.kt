@@ -9,6 +9,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,13 +31,15 @@ import dialog.feature.main.generated.resources.Res
 import dialog.feature.main.generated.resources.top_level_nav_item_home
 import dialog.feature.main.generated.resources.top_level_nav_item_my_page
 import dialog.feature.main.generated.resources.top_level_nav_item_scrap
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentMapOf
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
+@Immutable
 data class NavigationItem(
     val label: StringResource,
     val icon: ImageVector,
-    val selectedIcon: ImageVector = icon,
 )
 
 /**
@@ -75,7 +78,7 @@ fun DialogNavigationBar(
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         Icon(
-                            imageVector = if (isSelected) item.selectedIcon else item.icon,
+                            imageVector = item.icon,
                             contentDescription = stringResource(resource = item.label),
                             tint = iconColor,
                             modifier = Modifier.size(32.dp),
@@ -118,7 +121,7 @@ private fun DialogNavigationBarPreviewDark() {
 private fun DialogNavigationBarPreviewContent() {
     var selectedIndex by remember { mutableStateOf(DiscussionListNavKey) }
     DialogNavigationBar(
-        items = mapOf(
+        items = persistentMapOf(
             DiscussionListNavKey to NavigationItem(
                 icon = DialogIcons.Home,
                 label = Res.string.top_level_nav_item_home,
