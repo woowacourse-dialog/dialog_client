@@ -14,6 +14,8 @@ interface UserDatasource {
 
     suspend fun updateMyProfile(request: UserMypageUpdateRequest): Result<Unit>
 
+    suspend fun deleteMyAccount(): Result<Unit>
+
     suspend fun updateNotificationSetting(request: NotificationSettingRequest): Result<NotificationSettingResponse>
 
     suspend fun getMyProfileImage(): Result<ProfileImageGetResponse>

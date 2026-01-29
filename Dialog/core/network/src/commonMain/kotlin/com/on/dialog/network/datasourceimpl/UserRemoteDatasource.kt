@@ -21,6 +21,9 @@ internal class UserRemoteDatasource(
     override suspend fun updateMyProfile(request: UserMypageUpdateRequest): Result<Unit> =
         safeApiCall { userService.updateMyProfile(request = request) }
 
+    override suspend fun deleteMyAccount(): Result<Unit> =
+        safeApiCall { userService.deleteMyAccount() }
+
     override suspend fun updateNotificationSetting(request: NotificationSettingRequest): Result<NotificationSettingResponse> =
         safeApiCall { userService.updateNotificationSetting(request = request) }
 

@@ -12,6 +12,8 @@ interface UserRepository {
         track: Track,
     ): Result<Unit>
 
+    suspend fun deleteAccount(): Result<Unit>
+
     suspend fun updateNotificationSetting(isNotificationEnable: Boolean): Result<Boolean>
 
     suspend fun getMyProfileImage(): Result<ProfileImage>

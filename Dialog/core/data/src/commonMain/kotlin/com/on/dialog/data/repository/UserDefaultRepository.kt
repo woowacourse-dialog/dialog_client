@@ -27,6 +27,8 @@ internal class UserDefaultRepository(
             ),
         )
 
+    override suspend fun deleteAccount(): Result<Unit> = userDatasource.deleteMyAccount()
+
     override suspend fun updateNotificationSetting(isNotificationEnable: Boolean): Result<Boolean> =
         userDatasource
             .updateNotificationSetting(request = isNotificationEnable.toRequest())
