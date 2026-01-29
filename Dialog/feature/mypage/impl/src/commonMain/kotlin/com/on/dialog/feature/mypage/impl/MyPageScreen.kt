@@ -88,6 +88,7 @@ fun MyPageScreen(
                 selectedImage?.let { image: GalleryPhotoResult ->
                     viewModel.onIntent(intent = MyPageIntent.EditProfileImage(uri = image.uri))
                 }
+                selectedImage = null
             },
             onError = { showGallery = false },
             onDismiss = { showGallery = false },
