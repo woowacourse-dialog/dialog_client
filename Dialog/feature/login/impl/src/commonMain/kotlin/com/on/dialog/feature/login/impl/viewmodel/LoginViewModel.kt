@@ -1,4 +1,4 @@
-package com.on.dialog.feature.login.impl
+package com.on.dialog.feature.login.impl.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.domain.repository.SessionRepository

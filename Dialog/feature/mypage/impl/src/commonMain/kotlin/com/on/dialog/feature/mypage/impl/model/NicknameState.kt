@@ -5,7 +5,8 @@ enum class NicknameState(
 ) {
     Blank("닉네임을 입력해 주세요"),
     TooLong("닉네임이 너무 길어요"),
-    Valid("");
+    Valid(""),
+    ;
 
     companion object {
         fun of(nickname: String): NicknameState {

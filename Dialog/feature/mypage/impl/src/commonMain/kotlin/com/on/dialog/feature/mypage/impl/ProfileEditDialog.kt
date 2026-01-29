@@ -31,7 +31,6 @@ import com.on.dialog.ui.mapper.toStringResource
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileEditDialog(
@@ -106,7 +105,6 @@ private fun EditDialogContent(
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

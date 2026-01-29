@@ -1,6 +1,6 @@
 package com.on.dialog.feature.login.impl.di
 
-import com.on.dialog.feature.login.impl.LoginViewModel
+import com.on.dialog.feature.login.impl.viewmodel.LoginViewModel
 import com.on.dialog.navigation.NavKeyProvider
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind

@@ -1,4 +1,4 @@
-package com.on.dialog.feature.login.impl
+package com.on.dialog.feature.login.impl.viewmodel
 
 import androidx.compose.runtime.Immutable
 import com.on.dialog.ui.viewmodel.UiState
