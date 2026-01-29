@@ -10,6 +10,7 @@ import com.on.network.dto.user.ProfileImageUpdateResponse
 import com.on.network.dto.user.UserInfoResponse
 import com.on.network.dto.user.UserMypageUpdateRequest
 import com.on.network.service.UserService
+import io.ktor.client.request.forms.MultiPartFormDataContent
 
 internal class UserRemoteDatasource(
     private val userService: UserService,
@@ -26,8 +27,8 @@ internal class UserRemoteDatasource(
     override suspend fun getMyProfileImage(): Result<ProfileImageGetResponse> =
         safeApiCall { userService.getMyProfileImage() }
 
-    override suspend fun updateMyProfileImage(file: String): Result<ProfileImageUpdateResponse> =
-        safeApiCall { userService.updateMyProfileImage(request = file) }
+    override suspend fun updateMyProfileImage(request: MultiPartFormDataContent): Result<ProfileImageUpdateResponse> =
+        safeApiCall { userService.updateMyProfileImage(request = request) }
 
     override suspend fun getMyTrack(): Result<MyTrackGetTrackResponse> =
         safeApiCall { userService.getMyTrack() }

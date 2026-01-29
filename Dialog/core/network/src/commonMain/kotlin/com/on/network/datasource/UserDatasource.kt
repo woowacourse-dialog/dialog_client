@@ -7,6 +7,7 @@ import com.on.network.dto.user.ProfileImageGetResponse
 import com.on.network.dto.user.ProfileImageUpdateResponse
 import com.on.network.dto.user.UserInfoResponse
 import com.on.network.dto.user.UserMypageUpdateRequest
+import io.ktor.client.request.forms.MultiPartFormDataContent
 
 interface UserDatasource {
     suspend fun getMyUserInfo(): Result<UserInfoResponse>
@@ -17,7 +18,7 @@ interface UserDatasource {
 
     suspend fun getMyProfileImage(): Result<ProfileImageGetResponse>
 
-    suspend fun updateMyProfileImage(file: String): Result<ProfileImageUpdateResponse>
+    suspend fun updateMyProfileImage(request: MultiPartFormDataContent): Result<ProfileImageUpdateResponse>
 
     suspend fun getMyTrack(): Result<MyTrackGetTrackResponse>
 }

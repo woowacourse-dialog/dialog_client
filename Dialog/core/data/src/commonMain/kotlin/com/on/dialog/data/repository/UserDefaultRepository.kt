@@ -1,5 +1,6 @@
 package com.on.dialog.data.repository
 
+import com.on.dialog.data.extension.createImageMultiPartFormDataContent
 import com.on.dialog.domain.repository.UserRepository
 import com.on.model.common.ProfileImage
 import com.on.model.common.Track
@@ -7,6 +8,7 @@ import com.on.model.user.UserInfo
 import com.on.network.datasource.UserDatasource
 import com.on.network.dto.user.NotificationSettingRequest.Companion.toRequest
 import com.on.network.dto.user.UserMypageUpdateRequest
+import io.ktor.client.request.forms.MultiPartFormDataContent
 
 internal class UserDefaultRepository(
     private val userDatasource: UserDatasource,
@@ -33,10 +35,11 @@ internal class UserDefaultRepository(
     override suspend fun getMyProfileImage(): Result<ProfileImage> =
         userDatasource.getMyProfileImage().mapCatching { it.toDomain() }
 
-    override suspend fun updateMyProfileImage(request: String): Result<ProfileImage> =
-        userDatasource
-            .updateMyProfileImage(file = request)
-            .mapCatching { it.toDomain() }
+    override suspend fun updateMyProfileImage(uri: String): Result<ProfileImage> {
+        val request: MultiPartFormDataContent =
+            createImageMultiPartFormDataContent(key = "file", uri = uri)
+        return userDatasource.updateMyProfileImage(request = request).mapCatching { it.toDomain() }
+    }
 
     override suspend fun getMyTrack(): Result<Track> =
         userDatasource.getMyTrack().mapCatching { Track.of(name = it.track) }

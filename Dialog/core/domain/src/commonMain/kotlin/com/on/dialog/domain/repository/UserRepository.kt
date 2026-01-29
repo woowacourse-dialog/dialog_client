@@ -13,7 +13,7 @@ interface UserRepository {
 
     suspend fun getMyProfileImage(): Result<ProfileImage>
 
-    suspend fun updateMyProfileImage(request: String): Result<ProfileImage>
+    suspend fun updateMyProfileImage(uri: String): Result<ProfileImage>
 
     suspend fun getMyTrack(): Result<Track>
 }

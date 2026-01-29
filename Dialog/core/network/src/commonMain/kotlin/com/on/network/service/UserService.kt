@@ -11,6 +11,7 @@ import com.on.network.dto.user.UserMypageUpdateRequest
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.PATCH
+import io.ktor.client.request.forms.MultiPartFormDataContent
 
 interface UserService {
     @GET("api/user/mine")
@@ -34,7 +35,7 @@ interface UserService {
     @PATCH("api/user/mine/profile-image")
     suspend fun updateMyProfileImage(
         @Body
-        request: String, // 업로드할 이미지 파일 Binary (JPEG, PNG 등)
+        request: MultiPartFormDataContent, // 업로드할 이미지 파일 Binary (JPEG, PNG 등)
     ): DataResponse<ProfileImageUpdateResponse>
 
     @GET("api/user/mine/track")
