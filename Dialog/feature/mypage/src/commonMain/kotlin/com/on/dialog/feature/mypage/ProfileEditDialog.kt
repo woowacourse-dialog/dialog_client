@@ -30,6 +30,14 @@ import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+enum class NicknameState(
+    val message: String,
+) {
+    Blank("닉네임을 입력해 주세요"),
+    TooLong("닉네임이 너무 길어요"),
+    Valid(""),
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileEditDialog(
@@ -49,7 +57,7 @@ fun ProfileEditDialog(
             nickname = nickname,
             track = track,
             onDismissRequest = onDismissRequest,
-            onUpdateProfile = onUpdateProfile
+            onUpdateProfile = onUpdateProfile,
         )
     }
 }
@@ -105,12 +113,6 @@ private fun EditDialogContent(
     }
 }
 
-enum class NicknameState(val message: String) {
-    Blank("닉네임이 비었어요"),
-    TooLong("닉네임이 너무 길어요"),
-    Valid("")
-}
-
 private fun validateNickname(nickname: String): NicknameState {
     if (nickname.isBlank()) return NicknameState.Blank
     if (nickname.length > 12) return NicknameState.TooLong
@@ -126,7 +128,7 @@ private fun ProfileEditDialogPreview() {
                 nickname = "크림",
                 track = Track.ANDROID,
                 onDismissRequest = {},
-                onUpdateProfile = { _, _ -> }
+                onUpdateProfile = { _, _ -> },
             )
         }
     }

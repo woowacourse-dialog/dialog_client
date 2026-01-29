@@ -5,6 +5,7 @@ import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.UserRepository
 import com.on.dialog.ui.viewmodel.BaseViewModel
+import com.on.model.common.ProfileImage
 import com.on.model.common.Track
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
@@ -19,8 +20,10 @@ class MyPageViewModel(
             MyPageIntent.Logout -> logout()
             is MyPageIntent.EditProfile -> updateProfile(
                 nickname = intent.nickname,
-                track = intent.track
+                track = intent.track,
             )
+
+            is MyPageIntent.EditProfileImage -> updateProfileImage(uri = intent.uri)
         }
     }
 
@@ -89,7 +92,7 @@ class MyPageViewModel(
                                 isLoggedIn = true,
                                 isLoading = false,
                                 imageUrl = profileImage.customImageUri ?: profileImage.basicImageUri
-                                ?: "",
+                                    ?: "",
                             )
                         }
                     }.onFailure { result: Throwable ->
@@ -119,6 +122,22 @@ class MyPageViewModel(
                 }.onFailure { result ->
                     Napier.d("프로필 수정 실패: ${result.message}")
                     emitEffect(MyPageEffect.ShowError(message = "프로필 업데이트를 실패했습니다."))
+                }
+        }
+    }
+
+    private fun updateProfileImage(uri: String) {
+        viewModelScope.launch {
+            userRepository
+                .updateMyProfileImage(uri = uri)
+                .onSuccess { image: ProfileImage ->
+                    updateState {
+                        copy(imageUrl = image.customImageUri ?: image.basicImageUri ?: "")
+                    }
+                    Napier.d("프로필 이미지 업로드 성공: $image")
+                }.onFailure { result ->
+                    Napier.d("프로필 이미지 업로드 실패: ${result.message}")
+                    emitEffect(MyPageEffect.ShowError(message = "프로필 이미지 업로드를 실패했습니다."))
                 }
         }
     }

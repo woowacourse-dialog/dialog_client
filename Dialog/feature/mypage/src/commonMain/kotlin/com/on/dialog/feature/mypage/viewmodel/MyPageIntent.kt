@@ -12,4 +12,8 @@ sealed interface MyPageIntent : UiIntent {
         val nickname: String,
         val track: Track,
     ) : MyPageIntent
+
+    data class EditProfileImage(
+        val uri: String,
+    ) : MyPageIntent
 }

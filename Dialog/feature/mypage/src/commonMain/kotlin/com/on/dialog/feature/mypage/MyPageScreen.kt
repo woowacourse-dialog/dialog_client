@@ -42,6 +42,11 @@ import dialog.feature.mypage.generated.resources.login
 import dialog.feature.mypage.generated.resources.logout
 import dialog.feature.mypage.generated.resources.my_discussions
 import dialog.feature.mypage.generated.resources.my_scraps
+import io.github.aakira.napier.Napier
+import io.github.ismoy.imagepickerkmp.domain.config.CameraCaptureConfig
+import io.github.ismoy.imagepickerkmp.domain.models.CompressionLevel
+import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
+import io.github.ismoy.imagepickerkmp.presentation.ui.components.GalleryPickerLauncher
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -54,6 +59,9 @@ fun MyPageScreen(
 ) {
     val uiState: MyPageState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    var showGallery by rememberSaveable { mutableStateOf(false) }
+    var selectedImage by rememberSaveable { mutableStateOf<GalleryPhotoResult?>(null) }
+
     LaunchedEffect(Unit) {
         viewModel.onIntent(intent = MyPageIntent.CheckLoginStatus)
     }
@@ -64,11 +72,30 @@ fun MyPageScreen(
         onLogoutClick = { viewModel.onIntent(intent = MyPageIntent.Logout) },
         onUpdateProfile = { nickname: String, track: Track ->
             viewModel.onIntent(
-                intent = MyPageIntent.EditProfile(nickname = nickname, track = track)
+                intent = MyPageIntent.EditProfile(nickname = nickname, track = track),
             )
         },
+        onProfileImageClick = { showGallery = true },
         modifier = modifier,
     )
+
+    if (showGallery) {
+        GalleryPickerLauncher(
+            onPhotosSelected = { photos: List<GalleryPhotoResult> ->
+                showGallery = false
+                selectedImage = photos.firstOrNull()
+                Napier.d("selectedImage: $selectedImage")
+                selectedImage?.let { image: GalleryPhotoResult ->
+                    viewModel.onIntent(intent = MyPageIntent.EditProfileImage(uri = image.uri))
+                }
+            },
+            onError = { showGallery = false },
+            onDismiss = { showGallery = false },
+            allowMultiple = false,
+            selectionLimit = 1,
+            cameraCaptureConfig = CameraCaptureConfig(compressionLevel = CompressionLevel.HIGH),
+        )
+    }
 }
 
 @Composable
@@ -77,6 +104,7 @@ private fun MyPageScreen(
     onLoginClick: () -> Unit,
     onLogoutClick: () -> Unit,
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
+    onProfileImageClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -87,7 +115,8 @@ private fun MyPageScreen(
             MyPageScreenLoggedIn(
                 uiState = uiState,
                 onLogoutClick = onLogoutClick,
-                onUpdateProfile = onUpdateProfile
+                onUpdateProfile = onUpdateProfile,
+                onProfileImageClick = onProfileImageClick,
             )
         } else {
             MyPageScreenLoggedOut(onLoginClick = onLoginClick)
@@ -100,10 +129,15 @@ private fun MyPageScreenLoggedIn(
     uiState: MyPageState,
     onLogoutClick: () -> Unit,
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
+    onProfileImageClick: () -> Unit,
 ) {
     var showProfileEditDialog by rememberSaveable { mutableStateOf(false) }
 
-    ProfileSection(uiState = uiState, onEditClick = { showProfileEditDialog = true })
+    ProfileSection(
+        uiState = uiState,
+        onEditClick = { showProfileEditDialog = true },
+        onProfileImageClick = onProfileImageClick,
+    )
     Spacer(Modifier.height(height = DialogTheme.spacing.extraLarge))
     DialogCard(
         modifier = Modifier.fillMaxWidth(),
@@ -129,7 +163,7 @@ private fun MyPageScreenLoggedIn(
             nickname = uiState.nickname,
             track = uiState.track,
             onDismissRequest = { showProfileEditDialog = false },
-            onUpdateProfile = onUpdateProfile
+            onUpdateProfile = onUpdateProfile,
         )
     }
 }
@@ -188,6 +222,7 @@ private fun MyPageMenuButton(
 private fun ProfileSection(
     uiState: MyPageState,
     onEditClick: () -> Unit,
+    onProfileImageClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DialogCard(modifier = modifier) {
@@ -204,6 +239,7 @@ private fun ProfileSection(
                     imageUrl = uiState.imageUrl,
                     contentDescription = "",
                     modifier = Modifier.size(size = 60.dp),
+                    onClick = onProfileImageClick,
                 )
                 ProfileInfo(
                     nickname = uiState.nickname,
@@ -261,6 +297,7 @@ private fun ProfileSectionPreview() {
                     isLoggedIn = true,
                 ),
                 onEditClick = {},
+                onProfileImageClick = {},
             )
         }
     }
@@ -283,6 +320,7 @@ private fun MyPageScreenLoggedInPreview() {
                 onLoginClick = {},
                 onLogoutClick = {},
                 onUpdateProfile = { _, _ -> },
+                onProfileImageClick = {},
             )
         }
     }
@@ -300,6 +338,7 @@ private fun MyPageScreenLoggedOutPreview() {
                 onLoginClick = {},
                 onLogoutClick = {},
                 onUpdateProfile = { _, _ -> },
+                onProfileImageClick = {},
             )
         }
     }
