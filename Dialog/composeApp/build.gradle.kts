@@ -6,22 +6,14 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // core
-            implementation(projects.core.ui)
             implementation(projects.core.designsystem)
-            implementation(projects.core.network)
             implementation(projects.core.data)
-            implementation(projects.core.common)
-            implementation(projects.core.domain)
-            implementation(projects.core.model)
-            implementation(projects.core.local)
-            implementation(projects.core.navigation)
-            // feature
 
+            // main
+            implementation(projects.feature.main)
             // discussionlist
             implementation(projects.feature.discussionlist.api)
             implementation(projects.feature.discussionlist.impl)
-            // main
-            implementation(projects.feature.main)
             // login
             implementation(projects.feature.login.impl)
             // mypage
@@ -30,9 +22,6 @@ kotlin {
             implementation(projects.feature.scrap.impl)
             // discussiondetail
             implementation(projects.feature.discussiondetail.impl)
-
-            //nav3
-            implementation(libs.jetbrains.navigation3.ui)
         }
     }
 }

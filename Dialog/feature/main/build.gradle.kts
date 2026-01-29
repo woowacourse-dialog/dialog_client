@@ -10,8 +10,6 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // feature
-
             // login
             implementation(projects.feature.login.api)
             implementation(projects.feature.login.impl)
