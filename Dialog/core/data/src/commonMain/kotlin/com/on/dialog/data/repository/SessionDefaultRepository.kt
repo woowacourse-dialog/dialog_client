@@ -2,8 +2,8 @@ package com.on.dialog.data.repository
 
 import com.on.dialog.core.data.BuildKonfig
 import com.on.dialog.domain.repository.SessionRepository
-import com.on.network.datasource.CookieStore
-import com.on.network.dto.session.CookieNetworkEntity
+import com.on.dialog.network.datasource.CookieStore
+import com.on.dialog.network.dto.session.CookieNetworkEntity
 import io.ktor.http.Url
 
 internal class SessionDefaultRepository(

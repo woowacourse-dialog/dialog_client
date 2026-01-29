@@ -10,9 +10,7 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.materialIconsExtended)
-
-            // Kotlinx
+            implementation(libs.material.icons.extended)
             implementation(libs.kotlinx.collections.immutable)
         }
     }

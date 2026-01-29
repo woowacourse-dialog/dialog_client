@@ -2,9 +2,9 @@ package com.on.dialog.ui.mapper
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.on.dialog.model.common.Track
+import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.ui.component.ChipCategory
-import com.on.model.common.Track
-import com.on.model.discussion.content.DiscussionType
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.discussion_type_offline
 import dialog.core.ui.generated.resources.discussion_type_online

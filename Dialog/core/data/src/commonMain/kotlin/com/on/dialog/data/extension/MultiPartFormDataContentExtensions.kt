@@ -9,8 +9,8 @@ internal fun createImageMultiPartFormDataContent(
     key: String,
     uri: String,
 ): MultiPartFormDataContent {
-    val fileName = uri.substringAfterLast("file://")
-    val contentType = when (fileName.substringAfterLast('.').lowercase()) {
+    val filePath = uri.removePrefix("file://")
+    val contentType = when (filePath.substringAfterLast('.').lowercase()) {
         "jpg", "jpeg" -> "image/jpeg"
         "png" -> "image/png"
         "heic", "heif" -> "image/heic"
@@ -21,7 +21,7 @@ internal fun createImageMultiPartFormDataContent(
         parts = formData {
             append(
                 key = key,
-                value = readFileBytes(filePath = uri),
+                value = readFileBytes(filePath = filePath),
                 headers = Headers.build {
                     append(name = HttpHeaders.ContentType, value = contentType)
                     append(

@@ -1,9 +1,11 @@
 package com.on.dialog.data.repository
 
 import com.on.dialog.domain.repository.AuthRepository
-import com.on.model.common.Track
-import com.on.network.datasource.AuthDatasource
-import com.on.network.dto.auth.SignupRequest
+import com.on.dialog.model.common.Track
+import com.on.dialog.network.datasource.AuthDatasource
+import com.on.dialog.network.dto.auth.LoginCheckResponse
+import com.on.dialog.network.dto.auth.SignupRequest
+import com.on.dialog.network.dto.auth.SignupResponse
 
 internal class AuthDefaultRepository(
     private val authDatasource: AuthDatasource,
@@ -13,11 +15,17 @@ internal class AuthDefaultRepository(
         webPushNotification: Boolean,
     ): Result<Long> =
         authDatasource
-            .signup(SignupRequest(track = track.name, webPushNotification = webPushNotification))
-            .map { it.userId }
+            .signup(
+                request = SignupRequest(
+                    track = track.name,
+                    webPushNotification = webPushNotification,
+                ),
+            ).map { signUpResponse: SignupResponse -> signUpResponse.userId }
 
     override suspend fun getLoginStatus(): Result<Boolean> =
-        authDatasource.getLoginStatus().map { it.isLoggedIn }
+        authDatasource
+            .getLoginStatus()
+            .map { loginCheckResponse: LoginCheckResponse -> loginCheckResponse.isLoggedIn }
 
     override suspend fun logout(): Result<Unit> = authDatasource.logout()
 }

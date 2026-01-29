@@ -1,6 +1,6 @@
 package com.on.dialog.ui.mapper
 
-import com.on.model.common.Track
+import com.on.dialog.model.common.Track
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.track_android
 import dialog.core.ui.generated.resources.track_backend

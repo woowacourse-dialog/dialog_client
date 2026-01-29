@@ -1,11 +1,11 @@
 package com.on.dialog.domain.repository
 
-import com.on.model.discussion.criteria.DiscussionCriteria
-import com.on.model.discussion.cursorpage.DiscussionCatalogCursorPage
-import com.on.model.discussion.detail.DiscussionDetail
-import com.on.model.discussion.draft.OfflineDiscussionDraft
-import com.on.model.discussion.draft.OnlineDiscussionDraft
-import com.on.model.discussion.summary.DiscussionSummary
+import com.on.dialog.model.discussion.criteria.DiscussionCriteria
+import com.on.dialog.model.discussion.cursorpage.DiscussionCatalogCursorPage
+import com.on.dialog.model.discussion.detail.DiscussionDetail
+import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
+import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
+import com.on.dialog.model.discussion.summary.DiscussionSummary
 
 interface DiscussionRepository {
     suspend fun getDiscussionDetail(id: Long): Result<DiscussionDetail>

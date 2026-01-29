@@ -2,12 +2,12 @@ package com.on.dialog.data.repository
 
 import com.on.dialog.data.extension.createImageMultiPartFormDataContent
 import com.on.dialog.domain.repository.UserRepository
-import com.on.model.common.ProfileImage
-import com.on.model.common.Track
-import com.on.model.user.UserInfo
-import com.on.network.datasource.UserDatasource
-import com.on.network.dto.user.NotificationSettingRequest.Companion.toRequest
-import com.on.network.dto.user.UserMypageUpdateRequest
+import com.on.dialog.model.common.ProfileImage
+import com.on.dialog.model.common.Track
+import com.on.dialog.model.user.UserInfo
+import com.on.dialog.network.datasource.UserDatasource
+import com.on.dialog.network.dto.user.NotificationSettingRequest.Companion.toRequest
+import com.on.dialog.network.dto.user.UserMypageUpdateRequest
 import io.ktor.client.request.forms.MultiPartFormDataContent
 
 internal class UserDefaultRepository(

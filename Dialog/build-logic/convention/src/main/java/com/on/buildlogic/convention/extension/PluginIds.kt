@@ -9,4 +9,8 @@ internal object PluginIds {
     const val KOTLIN_COMPOSE = "org.jetbrains.kotlin.plugin.compose"
 
     const val KOTLINX_SERIALIZATION = "org.jetbrains.kotlin.plugin.serialization"
+
+    const val KMP_COMPOSE_CONVENTION = "dialog.convention.kmp.compose"
+
+    const val KMP_LIBRARY_CONVENTION = "dialog.convention.kmp.library"
 }

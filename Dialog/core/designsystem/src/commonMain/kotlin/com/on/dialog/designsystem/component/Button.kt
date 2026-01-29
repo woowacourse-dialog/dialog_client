@@ -13,10 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.Gray400
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class DialogButtonStyle { Primary, Secondary, None }
 

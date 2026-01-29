@@ -11,20 +11,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.model.common.Track
+import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.ui.mapper.toChipCategory
-import com.on.model.common.Track
-import com.on.model.discussion.content.DiscussionType
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.discussion_card_author
 import dialog.core.ui.generated.resources.discussion_card_endAt
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DiscussionCard(
@@ -35,8 +35,12 @@ fun DiscussionCard(
     endAt: String,
     discussionCount: Int,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
 ) {
-    DialogCard(modifier = modifier) {
+    DialogCard(
+        modifier = modifier,
+        onClick = onClick,
+    ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
         ) {
@@ -110,6 +114,7 @@ private fun DiscussionCardPreviewContent() {
             endAt = "2026.01.31",
             discussionCount = 25,
             modifier = Modifier.padding(all = 12.dp),
+            onClick = {},
         )
     }
 }

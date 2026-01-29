@@ -10,7 +10,7 @@ import platform.posix.memcpy
 
 @OptIn(ExperimentalForeignApi::class)
 internal actual fun readFileBytes(filePath: String): ByteArray {
-    val url = NSURL.fileURLWithPath(filePath.removePrefix("file://"))
+    val url = NSURL.fileURLWithPath(filePath)
     val nsData = NSData.dataWithContentsOfURL(url) ?: error("파일 찾을 수 없음, 경로: $filePath")
     val byteArray = ByteArray(size = nsData.length.toInt()).apply {
         usePinned { pinned ->
