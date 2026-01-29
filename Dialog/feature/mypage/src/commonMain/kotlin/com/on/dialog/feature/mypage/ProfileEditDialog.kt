@@ -24,19 +24,13 @@ import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.mypage.model.NicknameState
 import com.on.dialog.ui.mapper.toStringResource
 import com.on.model.common.Track
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-enum class NicknameState(
-    val message: String,
-) {
-    Blank("닉네임을 입력해 주세요"),
-    TooLong("닉네임이 너무 길어요"),
-    Valid(""),
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,7 +65,7 @@ private fun EditDialogContent(
 ) {
     var nickname: String by rememberSaveable { mutableStateOf(nickname) }
     var selectedIndex by rememberSaveable { mutableIntStateOf(track.ordinal) }
-    val nicknameState: NicknameState by derivedStateOf { validateNickname(nickname) }
+    val nicknameState: NicknameState by derivedStateOf { NicknameState.of(nickname = nickname) }
 
     Column {
         DialogTextField(
@@ -113,11 +107,6 @@ private fun EditDialogContent(
     }
 }
 
-private fun validateNickname(nickname: String): NicknameState {
-    if (nickname.isBlank()) return NicknameState.Blank
-    if (nickname.length > 12) return NicknameState.TooLong
-    return NicknameState.Valid
-}
 
 @Preview(showBackground = true)
 @Composable
