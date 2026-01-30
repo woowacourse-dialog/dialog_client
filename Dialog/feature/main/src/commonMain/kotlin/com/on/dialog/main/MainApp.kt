@@ -6,75 +6,78 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation3.runtime.EntryProviderScope
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import androidx.savedstate.serialization.SavedStateConfiguration
+import com.on.dialog.designsystem.component.snackbar.DialogSnackbar
+import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
+import com.on.dialog.feature.discussionlist.api.DiscussionListNavKey
 import com.on.dialog.main.component.DialogNavigationBar
-import com.on.dialog.navigation.NavigationState
+import com.on.dialog.main.navigation.SavedStateConfigurationProvider
+import com.on.dialog.main.navigation.appScreens
 import com.on.dialog.navigation.Navigator
 import com.on.dialog.navigation.rememberNavigationState
 import com.on.dialog.navigation.toEntries
+import org.koin.compose.koinInject
 
 @Composable
-@Preview
-fun MainApp(
-    startKey: NavKey,
-    savedStateConfiguration: SavedStateConfiguration,
-    registerScreens: EntryProviderScope<NavKey>.(Navigator) -> Unit,
-) {
-    val navigationState: NavigationState = rememberNavigationState(
-        startKey = startKey,
+fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = koinInject()) {
+    val navigationState = rememberNavigationState(
+        startKey = DiscussionListNavKey,
         topLevelKeys = TopLevel.routes.keys,
-        configuration = savedStateConfiguration,
+        configuration = savedStateConfigurationProvider.savedStateConfiguration,
     )
-    val navigator = remember { Navigator(navigationState) }
+
+    val appState = rememberDialogAppState(navigationState = navigationState)
+    val navigator = remember { Navigator(appState.navigationState) }
 
     Scaffold(
         bottomBar = {
-            MainBottomBar(
-                currentKey = navigationState.currentKey,
-                onNavigate = navigator::navigate,
+            if (appState.shouldShowBottomBar) {
+                DialogNavigationBar(
+                    items = TopLevel.routes,
+                    selectedKey = appState.currentScreenKey,
+                    onSelectedKeyChange = navigator::navigate,
+                )
+            }
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = appState.snackbarHostState,
+                snackbar = { snackbarData ->
+                    DialogSnackbar(snackbarData = snackbarData)
+                },
             )
         },
     ) { paddingValues ->
-        NavDisplay(
-            entries = navigationState.toEntries { key ->
-                entryProvider { registerScreens(navigator) }.invoke(key)
-            },
-            onBack = navigator::goBack,
-            modifier = Modifier.padding(paddingValues),
-            transitionSpec = {
-                ContentTransform(
-                    targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                    initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
-                )
-            },
-            popTransitionSpec = {
-                ContentTransform(
-                    targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                    initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
-                )
-            },
-        )
+        CompositionLocalProvider(
+            LocalSnackbarDelegate provides appState.snackbarDelegate,
+        ) {
+            NavDisplay(
+                entries = appState.navigationState.toEntries { key ->
+                    entryProvider {
+                        appScreens(navigator, savedStateConfigurationProvider.providers)
+                    }.invoke(key)
+                },
+                onBack = navigator::goBack,
+                modifier = Modifier.padding(paddingValues),
+                transitionSpec = {
+                    ContentTransform(
+                        targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                        initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
+                    )
+                },
+                popTransitionSpec = {
+                    ContentTransform(
+                        targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                        initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
+                    )
+                },
+            )
+        }
     }
-}
-
-@Composable
-private fun MainBottomBar(
-    currentKey: NavKey,
-    onNavigate: (NavKey) -> Unit,
-) {
-    if (currentKey !in TopLevel.routes.keys) return
-
-    DialogNavigationBar(
-        items = TopLevel.routes,
-        selectedKey = currentKey,
-        onSelectedKeyChange = onNavigate,
-    )
 }
