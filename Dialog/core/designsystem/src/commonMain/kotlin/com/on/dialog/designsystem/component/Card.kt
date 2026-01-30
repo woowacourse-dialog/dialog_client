@@ -13,12 +13,11 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.designsystem.theme.ShadowLevel
 import com.on.dialog.designsystem.theme.dropShadow
 
 enum class DialogCardTone { Surface }
@@ -37,21 +36,21 @@ fun DialogCard(
     modifier: Modifier = Modifier,
     tone: DialogCardTone = DialogCardTone.Surface,
     contentPadding: PaddingValues = PaddingValues(DialogTheme.spacing.large),
+    shape: Shape = DialogTheme.shapes.medium,
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
     Box(
+        content = content,
         modifier =
             modifier
-                .dropShadow(level = ShadowLevel.SMALL)
-                .clip(shape = DialogTheme.shapes.medium)
+                .dropShadow(shape = shape)
                 .background(color = tone.backgroundColor())
                 .clickableCard(
                     enabled = onClick != null,
                     tone = tone,
                 ) { onClick?.invoke() }
                 .padding(contentPadding),
-        content = content,
     )
 }
 
