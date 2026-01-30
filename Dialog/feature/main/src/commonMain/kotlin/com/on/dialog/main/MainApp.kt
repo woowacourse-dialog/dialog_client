@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.on.dialog.designsystem.component.snackbar.DialogSnackbar
@@ -26,7 +25,6 @@ import com.on.dialog.navigation.toEntries
 import org.koin.compose.koinInject
 
 @Composable
-@Preview
 fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = koinInject()) {
     val navigationState = rememberNavigationState(
         startKey = DiscussionListNavKey,
@@ -50,7 +48,9 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
         snackbarHost = {
             SnackbarHost(
                 hostState = appState.snackbarHostState,
-                snackbar = ::DialogSnackbar,
+                snackbar = { snackbarData ->
+                    DialogSnackbar(snackbarData = snackbarData)
+                },
             )
         },
     ) { paddingValues ->
