@@ -28,6 +28,12 @@ import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.mypage.impl.model.NicknameState
 import com.on.dialog.model.common.Track
 import com.on.dialog.ui.mapper.toStringResource
+import dialog.feature.mypage.impl.generated.resources.Res
+import dialog.feature.mypage.impl.generated.resources.cancel
+import dialog.feature.mypage.impl.generated.resources.nickname
+import dialog.feature.mypage.impl.generated.resources.nickname_placeholder
+import dialog.feature.mypage.impl.generated.resources.save
+import dialog.feature.mypage.impl.generated.resources.track
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 
@@ -64,14 +70,14 @@ private fun EditDialogContent(
 ) {
     var nickname: String by rememberSaveable { mutableStateOf(nickname) }
     var selectedIndex by rememberSaveable { mutableIntStateOf(track.ordinal) }
-    val nicknameState: NicknameState by derivedStateOf { NicknameState.Companion.of(nickname = nickname) }
+    val nicknameState: NicknameState by derivedStateOf { NicknameState.of(nickname = nickname) }
 
     Column {
         DialogTextField(
             value = nickname,
             onValueChange = { nickname = it },
-            label = "닉네임",
-            placeholder = "닉네임을 입력하세요",
+            label = stringResource(Res.string.nickname),
+            placeholder = stringResource(Res.string.nickname_placeholder),
             supportingText = nicknameState.message,
             isError = nicknameState != NicknameState.Valid,
         )
@@ -79,7 +85,7 @@ private fun EditDialogContent(
         DialogDropdownMenu(
             options = Track.entries.map { stringResource(it.toStringResource()) }.toImmutableList(),
             onSelectedIndexChange = { selectedIndex = it },
-            label = "트랙",
+            label = stringResource(Res.string.track),
             selectedIndex = selectedIndex,
         )
 
@@ -87,13 +93,13 @@ private fun EditDialogContent(
 
         Row(horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium)) {
             DialogButton(
-                text = "취소",
+                text = stringResource(Res.string.cancel),
                 style = DialogButtonStyle.Secondary,
                 onClick = onDismissRequest,
                 modifier = Modifier.weight(1f),
             )
             DialogButton(
-                text = "저장",
+                text = stringResource(Res.string.save),
                 onClick = {
                     if (nicknameState == NicknameState.Valid) {
                         onUpdateProfile(nickname, Track.entries[selectedIndex])
