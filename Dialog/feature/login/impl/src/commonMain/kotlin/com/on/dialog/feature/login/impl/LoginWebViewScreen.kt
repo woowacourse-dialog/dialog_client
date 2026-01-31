@@ -15,7 +15,7 @@ import io.github.aakira.napier.Napier
 import org.koin.compose.viewmodel.koinViewModel
 
 /**
- * 지정된 [com.on.dialog.feature.login.impl.model.LoginType]으로 소셜 로그인을 수행하는 웹뷰 화면입니다.
+ * 지정된 [LoginType]으로 소셜 로그인을 수행하는 웹뷰 화면입니다.
  *
  * @param loginType 로그인 방식 (GitHub, Google 등)
  * @param onLoginSuccess 로그인 성공 시 호출되는 콜백
