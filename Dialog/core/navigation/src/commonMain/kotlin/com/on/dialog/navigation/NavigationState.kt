@@ -1,6 +1,7 @@
 package com.on.dialog.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -47,7 +48,7 @@ fun rememberNavigationState(
  * @param topLevelKeys - 최상위 라우트들
  * @param currentSubStack - 현재 선택된 최상위 라우트의 백 스택
  */
-
+@Stable
 class NavigationState(
     val startKey: NavKey,
     val topLevelStack: NavBackStack<NavKey>,
