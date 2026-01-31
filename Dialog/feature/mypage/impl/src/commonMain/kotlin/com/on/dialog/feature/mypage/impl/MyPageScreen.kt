@@ -60,7 +60,6 @@ fun MyPageScreen(
     val uiState: MyPageState by viewModel.uiState.collectAsStateWithLifecycle()
 
     var showGallery by rememberSaveable { mutableStateOf(false) }
-    var selectedImage by rememberSaveable { mutableStateOf<GalleryPhotoResult?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.onIntent(intent = MyPageIntent.CheckLoginStatus)
@@ -83,12 +82,11 @@ fun MyPageScreen(
         GalleryPickerLauncher(
             onPhotosSelected = { photos: List<GalleryPhotoResult> ->
                 showGallery = false
-                selectedImage = photos.firstOrNull()
-                Napier.d("selectedImage: $selectedImage")
-                selectedImage?.let { image: GalleryPhotoResult ->
+
+                photos.firstOrNull()?.let { image: GalleryPhotoResult ->
+                    Napier.d("selectedImage: $image")
                     viewModel.onIntent(intent = MyPageIntent.EditProfileImage(uri = image.uri))
                 }
-                selectedImage = null
             },
             onError = { showGallery = false },
             onDismiss = { showGallery = false },
