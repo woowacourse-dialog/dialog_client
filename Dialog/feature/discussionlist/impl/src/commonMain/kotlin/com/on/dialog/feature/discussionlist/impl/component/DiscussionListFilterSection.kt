@@ -43,16 +43,6 @@ internal fun DiscussionListFilterSection(
     onClickTypeFilter: (type: DiscussionTypeUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (!visible) {
-        val selected = filters.selectedFilters
-        if (selected.isEmpty()) return
-        Text(
-            text = "현재 적용 중인 필터: \n$selected",
-            style = DialogTheme.typography.titleSmall,
-            modifier = Modifier.fillMaxWidth().padding(DialogTheme.spacing.large),
-        )
-    }
-
     AnimatedVisibility(
         visible = visible,
         modifier = modifier

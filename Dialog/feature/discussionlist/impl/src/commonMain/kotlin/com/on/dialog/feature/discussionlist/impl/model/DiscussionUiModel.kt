@@ -46,8 +46,8 @@ internal sealed interface DiscussionUiModel {
         @Composable
         override fun toChipCategories(): ImmutableList<ChipCategory> =
             persistentListOf(
-                track.toDomain().toChipCategory(),
                 DiscussionType.ONLINE.toChipCategory(),
+                track.toDomain().toChipCategory(),
             )
 
         companion object {
@@ -80,8 +80,8 @@ internal sealed interface DiscussionUiModel {
     ) : DiscussionUiModel {
         @Composable
         override fun toChipCategories(): ImmutableList<ChipCategory> = persistentListOf(
-            track.toDomain().toChipCategory(),
             DiscussionType.OFFLINE.toChipCategory(),
+            track.toDomain().toChipCategory(),
         )
 
         companion object {

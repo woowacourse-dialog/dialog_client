@@ -21,6 +21,7 @@ import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.discussionlist.impl.component.DiscussionListFilterSection
 import com.on.dialog.feature.discussionlist.impl.component.DiscussionListSection
+import com.on.dialog.feature.discussionlist.impl.component.DiscussionListTopAppBar
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionStatusUiModel
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionTypeUiModel
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionUiModel
@@ -34,7 +35,6 @@ import com.on.dialog.ui.extensions.shouldLoadNextPage
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun DiscussionListScreen(
@@ -94,15 +94,24 @@ private fun DiscussionListScreen(
     onClickTypeFilter: (type: DiscussionTypeUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var shouldShowFilterSection by rememberSaveable { mutableStateOf(true) }
+    var shouldShowFilterSection by rememberSaveable { mutableStateOf(false) }
+
     LaunchedEffect(listState) {
-        snapshotFlow { listState.firstVisibleItemIndex }
-            .collect { index ->
-                shouldShowFilterSection = index == 0
+        snapshotFlow { listState.isScrollInProgress }
+            .distinctUntilChanged()
+            .collect { isScrolling ->
+                if (isScrolling && shouldShowFilterSection) {
+                    shouldShowFilterSection = false
+                }
             }
     }
 
     Column(modifier = modifier.fillMaxSize()) {
+        DiscussionListTopAppBar(
+            isFilterVisible = shouldShowFilterSection,
+            onFilterClick = { shouldShowFilterSection = !shouldShowFilterSection },
+        )
+
         DiscussionListFilterSection(
             visible = shouldShowFilterSection,
             filters = uiState.filter,
@@ -119,7 +128,6 @@ private fun DiscussionListScreen(
     }
 }
 
-@OptIn(ExperimentalTime::class)
 @Composable
 @Preview(showBackground = true)
 private fun DiscussionListScreenPreview() {
@@ -133,8 +141,8 @@ private fun DiscussionListScreenPreview() {
                 onClickTypeFilter = {},
                 listState = rememberLazyListState(),
                 uiState = DiscussionListState(
-                    discussions = List(3) {
-                        if(it % 2 == 0) {
+                    discussions = List(4) {
+                        if (it % 2 == 0) {
                             DiscussionUiModel.OnlineDiscussionUiModel(
                                 id = it.toLong(),
                                 title = "토론 제목 $it",

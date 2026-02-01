@@ -38,7 +38,7 @@ internal fun DiscussionListSection(
         overscrollEffect = null,
         verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
     ) {
-        item { Spacer(modifier = Modifier.height(DialogTheme.spacing.small)) }
+        item { Spacer(modifier = Modifier.height(DialogTheme.spacing.extraSmall)) }
         items(items = discussions, key = { discussion -> discussion.id }) { discussion ->
             DiscussionCard(
                 chips = discussion.toChipCategories(),
