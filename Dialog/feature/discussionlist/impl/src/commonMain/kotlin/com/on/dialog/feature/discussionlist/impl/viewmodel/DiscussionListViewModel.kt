@@ -77,7 +77,7 @@ internal class DiscussionListViewModel(
                     ).onSuccess(::handleFetchDiscussionsSuccess)
                     .onFailure(::handleFetchDiscussionsFailure)
             }.apply {
-                invokeOnCompletion { updateState { copy(isLoading = false) } }
+                invokeOnCompletion { updateState { copy(isLoading = false, isRefreshing = false) } }
             }
     }
 
@@ -101,6 +101,7 @@ internal class DiscussionListViewModel(
     }
 
     private fun refreshListImmediate() {
+        updateState { copy(isRefreshing = true) }
         refreshListInternal()
     }
 

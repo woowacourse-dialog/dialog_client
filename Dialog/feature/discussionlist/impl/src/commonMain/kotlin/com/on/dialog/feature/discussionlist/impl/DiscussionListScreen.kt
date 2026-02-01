@@ -70,6 +70,8 @@ internal fun DiscussionListScreen(
     DiscussionListScreen(
         uiState = uiState,
         listState = listState,
+        isRefreshing = uiState.isRefreshing,
+        onRefresh = { viewModel.onIntent(DiscussionListIntent.RefreshList) },
         onClickDiscussion = navigateToDiscussionDetail,
         onClickTrackFilter = { track ->
             viewModel.onIntent(DiscussionListIntent.ClickTrackFilter(track))
@@ -88,6 +90,8 @@ internal fun DiscussionListScreen(
 private fun DiscussionListScreen(
     uiState: DiscussionListState,
     listState: LazyListState,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     onClickDiscussion: (discussionId: Long) -> Unit,
     onClickTrackFilter: (track: TrackUiModel) -> Unit,
     onClickStatusFilter: (status: DiscussionStatusUiModel) -> Unit,
@@ -124,6 +128,8 @@ private fun DiscussionListScreen(
             listState = listState,
             discussions = uiState.filteredDiscussions,
             onClickDiscussion = onClickDiscussion,
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
         )
     }
 }
@@ -172,6 +178,8 @@ private fun DiscussionListScreenPreview() {
                         selectedTypeFilter = listOf(DiscussionTypeUiModel.entries[0]),
                     ),
                 ),
+                isRefreshing = false,
+                onRefresh = {},
             )
         }
     }

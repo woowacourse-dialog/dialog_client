@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +25,28 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun DiscussionListSection(
+    listState: LazyListState,
+    discussions: ImmutableList<DiscussionUiModel>,
+    onClickDiscussion: (discussionId: Long) -> Unit,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
+        modifier = modifier.fillMaxSize(),
+    ) {
+        DiscussionListSection(
+            listState = listState,
+            discussions = discussions,
+            onClickDiscussion = onClickDiscussion,
+        )
+    }
+}
+
+@Composable
+private fun DiscussionListSection(
     listState: LazyListState,
     discussions: ImmutableList<DiscussionUiModel>,
     onClickDiscussion: (discussionId: Long) -> Unit,
