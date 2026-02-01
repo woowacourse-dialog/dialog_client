@@ -37,51 +37,53 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
     val appState = rememberDialogAppState(navigationState = navigationState)
     val navigator = remember { Navigator(appState.navigationState) }
 
-    Scaffold(
-        bottomBar = {
-            if (appState.shouldShowBottomBar) {
-                DialogNavigationBar(
-                    items = TopLevel.routes,
-                    selectedKey = appState.currentScreenKey,
-                    onSelectedKeyChange = navigator::navigate,
+    DialogTheme {
+        Scaffold(
+            bottomBar = {
+                if (appState.shouldShowBottomBar) {
+                    DialogNavigationBar(
+                        items = TopLevel.routes,
+                        selectedKey = appState.currentScreenKey,
+                        onSelectedKeyChange = navigator::navigate,
+                    )
+                }
+            },
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = appState.snackbarHostState,
+                    snackbar = { snackbarData ->
+                        DialogSnackbar(snackbarData = snackbarData)
+                    },
+                )
+            },
+        ) { paddingValues ->
+            CompositionLocalProvider(
+                LocalSnackbarDelegate provides appState.snackbarDelegate,
+            ) {
+                NavDisplay(
+                    entries = appState.navigationState.toEntries { key ->
+                        entryProvider {
+                            appScreens(navigator, savedStateConfigurationProvider.providers)
+                        }.invoke(key)
+                    },
+                    onBack = navigator::goBack,
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .background(DialogTheme.colorScheme.surfaceContainer),
+                    transitionSpec = {
+                        ContentTransform(
+                            targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                            initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
+                        )
+                    },
+                    popTransitionSpec = {
+                        ContentTransform(
+                            targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                            initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
+                        )
+                    },
                 )
             }
-        },
-        snackbarHost = {
-            SnackbarHost(
-                hostState = appState.snackbarHostState,
-                snackbar = { snackbarData ->
-                    DialogSnackbar(snackbarData = snackbarData)
-                },
-            )
-        },
-    ) { paddingValues ->
-        CompositionLocalProvider(
-            LocalSnackbarDelegate provides appState.snackbarDelegate,
-        ) {
-            NavDisplay(
-                entries = appState.navigationState.toEntries { key ->
-                    entryProvider {
-                        appScreens(navigator, savedStateConfigurationProvider.providers)
-                    }.invoke(key)
-                },
-                onBack = navigator::goBack,
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .background(DialogTheme.colorScheme.surfaceContainer),
-                transitionSpec = {
-                    ContentTransform(
-                        targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                        initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
-                    )
-                },
-                popTransitionSpec = {
-                    ContentTransform(
-                        targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                        initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
-                    )
-                },
-            )
         }
     }
 }
