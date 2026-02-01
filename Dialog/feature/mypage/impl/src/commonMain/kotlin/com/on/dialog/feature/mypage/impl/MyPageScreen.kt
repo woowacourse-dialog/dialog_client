@@ -67,9 +67,7 @@ fun MyPageScreen(
 
     LaunchedEffect(Unit) {
         viewModel.onIntent(intent = MyPageIntent.CheckLoginStatus)
-    }
 
-    LaunchedEffect(Unit) {
         viewModel.effect.collect { effect: MyPageEffect ->
             if (effect is MyPageEffect.ShowSnackbar) {
                 snackbarHostState.showSnackbar(message = effect.message, state = effect.state)
@@ -79,7 +77,7 @@ fun MyPageScreen(
 
     MyPageScreen(
         uiState = uiState,
-        onLoginClick = { navigateToLogin() },
+        onLoginClick = navigateToLogin,
         onLogoutClick = { viewModel.onIntent(intent = MyPageIntent.Logout) },
         onUpdateProfile = { nickname: String, track: Track ->
             viewModel.onIntent(
@@ -165,7 +163,12 @@ private fun MyPageScreenLoggedIn(
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.logout),
                 onClick = onLogoutClick,
-            ) { Icon(imageVector = DialogIcons.Logout, contentDescription = "") }
+            ) {
+                Icon(
+                    imageVector = DialogIcons.Logout,
+                    contentDescription = stringResource(resource = Res.string.logout),
+                )
+            }
         }
     }
 

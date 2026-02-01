@@ -99,7 +99,7 @@ class MyPageViewModel(
                                 isLoggedIn = true,
                                 isLoading = false,
                                 imageUrl = profileImage.customImageUri ?: profileImage.basicImageUri
-                                ?: "",
+                                    ?: "",
                             )
                         }
                     }.onFailure { result: Throwable ->
