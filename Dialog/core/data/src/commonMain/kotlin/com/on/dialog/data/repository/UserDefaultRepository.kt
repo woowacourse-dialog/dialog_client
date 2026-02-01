@@ -38,8 +38,12 @@ internal class UserDefaultRepository(
         userDatasource.getMyProfileImage().mapCatching { it.toDomain() }
 
     override suspend fun updateMyProfileImage(uri: String): Result<ProfileImage> {
-        val request: MultiPartFormDataContent =
+        val request: MultiPartFormDataContent = runCatching {
             createImageMultiPartFormDataContent(key = "file", uri = uri)
+        }.getOrElse { exception ->
+            return Result.failure(exception)
+        }
+
         return userDatasource.updateMyProfileImage(request = request).mapCatching { it.toDomain() }
     }
 
