@@ -4,7 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import com.on.dialog.core.common.extension.now
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionStatusUiModel.Companion.toUiModel
-import com.on.dialog.feature.discussionlist.impl.model.DiscussionTypeUiModel.Companion.toUiModel
+import com.on.dialog.feature.discussionlist.impl.model.DiscussionUiModel.OfflineDiscussionUiModel.Companion.toOfflineUiModel
+import com.on.dialog.feature.discussionlist.impl.model.DiscussionUiModel.OnlineDiscussionUiModel.Companion.toOnlineUiModel
 import com.on.dialog.feature.discussionlist.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.model.discussion.catalog.DiscussionCatalog
 import com.on.dialog.model.discussion.catalog.OfflineDiscussionCatalog
@@ -12,49 +13,102 @@ import com.on.dialog.model.discussion.catalog.OnlineDiscussionCatalog
 import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.ui.component.ChipCategory
 import com.on.dialog.ui.mapper.toChipCategory
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.LocalDateTime
 import kotlin.time.ExperimentalTime
 
 @Immutable
-internal data class DiscussionUiModel(
-    val id: Long,
-    val title: String,
-    val author: String,
-    val track: TrackUiModel,
-    val status: DiscussionStatusUiModel,
-    val type: DiscussionTypeUiModel,
-    val createdAt: LocalDateTime,
-    val modifiedAt: LocalDateTime,
-    val commentCount: Int,
-    val profileImage: String,
-) {
+internal sealed interface DiscussionUiModel {
+    val id: Long
+    val title: String
+    val author: String
+    val track: TrackUiModel
+    val status: DiscussionStatusUiModel
+    val commentCount: Int
+    val period: String
+    val type: DiscussionTypeUiModel
+
     @Composable
-    fun toChipCategories(): List<ChipCategory> = listOf(
-        type.toDomain().toChipCategory(),
-        track.toDomain().toChipCategory(),
-    )
+    fun toChipCategories(): ImmutableList<ChipCategory>
+
+    @Immutable
+    data class OnlineDiscussionUiModel(
+        override val id: Long,
+        override val title: String,
+        override val author: String,
+        override val track: TrackUiModel,
+        override val status: DiscussionStatusUiModel,
+        override val commentCount: Int,
+        override val period: String,
+        override val type: DiscussionTypeUiModel = DiscussionTypeUiModel.ONLINE,
+    ) : DiscussionUiModel {
+        @Composable
+        override fun toChipCategories(): ImmutableList<ChipCategory> =
+            persistentListOf(
+                track.toDomain().toChipCategory(),
+                DiscussionType.ONLINE.toChipCategory(),
+            )
+
+        companion object {
+            @OptIn(ExperimentalTime::class)
+            fun OnlineDiscussionCatalog.toOnlineUiModel(now: LocalDateTime = LocalDateTime.now()): OnlineDiscussionUiModel =
+                OnlineDiscussionUiModel(
+                    id = catalogContent.id,
+                    title = catalogContent.title,
+                    author = catalogContent.author,
+                    track = catalogContent.category.toUiModel(),
+                    status = status(now = now).toUiModel(),
+                    commentCount = catalogContent.commentCount,
+                    period = "~ ${endDate.endDate}",
+                )
+        }
+    }
+
+    @Immutable
+    data class OfflineDiscussionUiModel(
+        override val id: Long,
+        override val title: String,
+        override val author: String,
+        override val track: TrackUiModel,
+        override val status: DiscussionStatusUiModel,
+        override val commentCount: Int,
+        override val period: String,
+        override val type: DiscussionTypeUiModel = DiscussionTypeUiModel.OFFLINE,
+        val partingCapacity: String,
+        val place: String,
+    ) : DiscussionUiModel {
+        @Composable
+        override fun toChipCategories(): ImmutableList<ChipCategory> = persistentListOf(
+            track.toDomain().toChipCategory(),
+            DiscussionType.OFFLINE.toChipCategory(),
+        )
+
+        companion object {
+            @OptIn(ExperimentalTime::class)
+            fun OfflineDiscussionCatalog.toOfflineUiModel(now: LocalDateTime = LocalDateTime.now()): OfflineDiscussionUiModel =
+                OfflineDiscussionUiModel(
+                    id = catalogContent.id,
+                    title = catalogContent.title,
+                    author = catalogContent.author,
+                    track = catalogContent.category.toUiModel(),
+                    status = status(now = now).toUiModel(),
+                    commentCount = catalogContent.commentCount,
+                    partingCapacity = "${participantCapacity.current}/${participantCapacity.max}",
+                    place = place,
+                    period = "${dateTimePeriod.startAt.date} ~ ${dateTimePeriod.endAt.date}",
+                )
+        }
+    }
 
     companion object {
         @OptIn(ExperimentalTime::class)
-        fun DiscussionCatalog.toUiModel(now: LocalDateTime = LocalDateTime.now()): DiscussionUiModel {
-            val type = when (this) {
-                is OnlineDiscussionCatalog -> DiscussionType.ONLINE
-                is OfflineDiscussionCatalog -> DiscussionType.OFFLINE
+        fun DiscussionCatalog.toUiModel(
+            now: LocalDateTime = LocalDateTime.now(),
+        ): DiscussionUiModel =
+            when (this) {
+                is OnlineDiscussionCatalog -> toOnlineUiModel(now = now)
+                is OfflineDiscussionCatalog -> toOfflineUiModel(now = now)
             }
-
-            return DiscussionUiModel(
-                id = catalogContent.id,
-                title = catalogContent.title,
-                author = catalogContent.author,
-                track = catalogContent.category.toUiModel(),
-                status = status(now = now).toUiModel(),
-                type = type.toUiModel(),
-                createdAt = catalogContent.createdAt,
-                modifiedAt = catalogContent.modifiedAt,
-                commentCount = catalogContent.commentCount,
-                profileImage = catalogContent.profileImage.customImageUri
-                    ?: catalogContent.profileImage.basicImageUri,
-            )
-        }
     }
 }

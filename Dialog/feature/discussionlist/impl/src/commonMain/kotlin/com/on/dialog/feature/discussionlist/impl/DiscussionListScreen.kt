@@ -33,7 +33,6 @@ import com.on.dialog.feature.discussionlist.impl.viewmodel.DiscussionListViewMod
 import com.on.dialog.ui.extensions.shouldLoadNextPage
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.datetime.LocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.ExperimentalTime
 
@@ -135,18 +134,29 @@ private fun DiscussionListScreenPreview() {
                 listState = rememberLazyListState(),
                 uiState = DiscussionListState(
                     discussions = List(3) {
-                        DiscussionUiModel(
-                            id = it.toLong(),
-                            title = "토론 제목 $it",
-                            author = "작성자 $it",
-                            track = TrackUiModel.entries[0],
-                            status = DiscussionStatusUiModel.entries[it],
-                            type = DiscussionTypeUiModel.entries[0],
-                            createdAt = LocalDateTime(2026, 1, 1, 1, 1),
-                            modifiedAt = LocalDateTime(2026, 1, 1, 1, 1),
-                            commentCount = it,
-                            profileImage = "",
-                        )
+                        if(it % 2 == 0) {
+                            DiscussionUiModel.OnlineDiscussionUiModel(
+                                id = it.toLong(),
+                                title = "토론 제목 $it",
+                                author = "작성자 $it",
+                                track = TrackUiModel.entries[0],
+                                status = DiscussionStatusUiModel.entries[0],
+                                commentCount = 3,
+                                period = "~ 2025.03.01",
+                            )
+                        } else {
+                            DiscussionUiModel.OfflineDiscussionUiModel(
+                                id = it.toLong(),
+                                title = "토론 제목 $it",
+                                author = "작성자 $it",
+                                track = TrackUiModel.entries[0],
+                                status = DiscussionStatusUiModel.entries[0],
+                                commentCount = 5,
+                                period = "2025.02.03 ~ 2025.03.01",
+                                partingCapacity = "2/4",
+                                place = "Zoom",
+                            )
+                        }
                     }.toImmutableList(),
                     filter = SelectedFilters(
                         selectedTrackFilter = listOf(TrackUiModel.entries[0]),
