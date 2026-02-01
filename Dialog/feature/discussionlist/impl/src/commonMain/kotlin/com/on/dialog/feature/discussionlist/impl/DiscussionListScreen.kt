@@ -3,57 +3,158 @@ package com.on.dialog.feature.discussionlist.impl
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.on.dialog.designsystem.component.DialogTopAppBar
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
+import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.ui.component.ChipCategory
-import com.on.dialog.ui.component.DiscussionCard
-import kotlinx.collections.immutable.persistentListOf
+import com.on.dialog.feature.discussionlist.impl.component.DiscussionListFilterSection
+import com.on.dialog.feature.discussionlist.impl.component.DiscussionListSection
+import com.on.dialog.feature.discussionlist.impl.model.DiscussionStatusUiModel
+import com.on.dialog.feature.discussionlist.impl.model.DiscussionTypeUiModel
+import com.on.dialog.feature.discussionlist.impl.model.DiscussionUiModel
+import com.on.dialog.feature.discussionlist.impl.model.SelectedFilters
+import com.on.dialog.feature.discussionlist.impl.model.TrackUiModel
+import com.on.dialog.feature.discussionlist.impl.viewmodel.DiscussionListEffect
+import com.on.dialog.feature.discussionlist.impl.viewmodel.DiscussionListIntent
+import com.on.dialog.feature.discussionlist.impl.viewmodel.DiscussionListState
+import com.on.dialog.feature.discussionlist.impl.viewmodel.DiscussionListViewModel
+import com.on.dialog.ui.extensions.shouldLoadNextPage
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.datetime.LocalDateTime
+import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
 
 @Composable
-fun DiscussionListScreen(
-    navigateToDiscussionDetail: () -> Unit,
+internal fun DiscussionListScreen(
+    navigateToDiscussionDetail: (discussionId: Long) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: DiscussionListViewModel = koinViewModel(),
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        DialogTopAppBar(
-            title = "토론 목록 화면",
-            centerAligned = true,
-        )
+    val snackbarState = LocalSnackbarDelegate.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val listState = rememberLazyListState()
 
-        Column(
-            modifier = Modifier
-                .padding(DialogTheme.spacing.huge),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            DiscussionCard(
-                chips = persistentListOf(
-                    ChipCategory(
-                        text = "Android",
-                        textColor = Color(0xFF003D2E),
-                        backgroundColor = Color(0xFF3DDC84),
-                    ),
-                ),
-                onChipsChange = {},
-                title = "KMP 전망",
-                author = "크림",
-                endAt = "2026.01.31",
-                discussionCount = 3,
-            ) {
-                navigateToDiscussionDetail()
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is DiscussionListEffect.ShowSnackbar -> {
+                    snackbarState.showSnackbar(
+                        state = SnackbarState.NEGATIVE,
+                        message = effect.message,
+                    )
+                }
             }
         }
     }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.shouldLoadNextPage() }
+            .distinctUntilChanged()
+            .collect { shouldLoad ->
+                if (shouldLoad) viewModel.onIntent(DiscussionListIntent.LoadNextPage)
+            }
+    }
+
+    DiscussionListScreen(
+        uiState = uiState,
+        listState = listState,
+        onClickDiscussion = navigateToDiscussionDetail,
+        onClickTrackFilter = { track ->
+            viewModel.onIntent(DiscussionListIntent.ClickTrackFilter(track))
+        },
+        onClickStatusFilter = { status ->
+            viewModel.onIntent(DiscussionListIntent.ClickDiscussionStatusFilter(status))
+        },
+        onClickTypeFilter = { type ->
+            viewModel.onIntent(DiscussionListIntent.ClickDiscussionTypeFilter(type))
+        },
+        modifier = modifier,
+    )
 }
 
+@Composable
+private fun DiscussionListScreen(
+    uiState: DiscussionListState,
+    listState: LazyListState,
+    onClickDiscussion: (discussionId: Long) -> Unit,
+    onClickTrackFilter: (track: TrackUiModel) -> Unit,
+    onClickStatusFilter: (status: DiscussionStatusUiModel) -> Unit,
+    onClickTypeFilter: (type: DiscussionTypeUiModel) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var shouldShowFilterSection by rememberSaveable { mutableStateOf(true) }
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemIndex }
+            .collect { index ->
+                shouldShowFilterSection = index == 0
+            }
+    }
+
+    Column(modifier = modifier.fillMaxSize()) {
+        DiscussionListFilterSection(
+            visible = shouldShowFilterSection,
+            filters = uiState.filter,
+            onClickTrackFilter = onClickTrackFilter,
+            onClickStatusFilter = onClickStatusFilter,
+            onClickTypeFilter = onClickTypeFilter,
+        )
+
+        DiscussionListSection(
+            listState = listState,
+            discussions = uiState.filteredDiscussions,
+            onClickDiscussion = onClickDiscussion,
+        )
+    }
+}
+
+@OptIn(ExperimentalTime::class)
 @Composable
 @Preview(showBackground = true)
 private fun DiscussionListScreenPreview() {
     DialogTheme {
-        DiscussionListScreen(navigateToDiscussionDetail = {})
+        Scaffold { innerPadding ->
+            DiscussionListScreen(
+                modifier = Modifier.padding(innerPadding),
+                onClickDiscussion = {},
+                onClickTrackFilter = {},
+                onClickStatusFilter = {},
+                onClickTypeFilter = {},
+                listState = rememberLazyListState(),
+                uiState = DiscussionListState(
+                    discussions = List(3) {
+                        DiscussionUiModel(
+                            id = it.toLong(),
+                            title = "토론 제목 $it",
+                            author = "작성자 $it",
+                            track = TrackUiModel.entries[0],
+                            status = DiscussionStatusUiModel.entries[it],
+                            type = DiscussionTypeUiModel.entries[0],
+                            createdAt = LocalDateTime(2026, 1, 1, 1, 1),
+                            modifiedAt = LocalDateTime(2026, 1, 1, 1, 1),
+                            commentCount = it,
+                            profileImage = "",
+                        )
+                    }.toImmutableList(),
+                    filter = SelectedFilters(
+                        selectedTrackFilter = listOf(TrackUiModel.entries[0]),
+                        selectedStatusFilter = listOf(DiscussionStatusUiModel.entries[1]),
+                        selectedTypeFilter = listOf(DiscussionTypeUiModel.entries[0]),
+                    ),
+                ),
+            )
+        }
     }
 }
