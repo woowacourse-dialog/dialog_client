@@ -22,7 +22,7 @@ fun ProfileImage(
     onSuccess: () -> Unit = {},
     onLoading: () -> Unit = {},
     onError: () -> Unit = {},
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
 ) {
     DialogAsyncImage(
         imageUrl = imageUrl,
@@ -37,7 +37,7 @@ fun ProfileImage(
         modifier = modifier
             .border(width = 0.5.dp, color = DialogTheme.colorScheme.onSurface, shape = CircleShape)
             .clip(CircleShape)
-            .clickable(enabled = onClick != null, onClick = { onClick?.invoke() })
+            .clickable(enabled = onClick != null, onClick = { onClick?.invoke() }),
     )
 }
 

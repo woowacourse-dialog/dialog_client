@@ -31,8 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogIconButton
+import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.mypage.impl.viewmodel.MyPageEffect
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageIntent
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageState
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageViewModel
@@ -57,12 +59,22 @@ fun MyPageScreen(
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = koinViewModel(),
 ) {
+    val snackbarHostState = LocalSnackbarDelegate.current
+
     val uiState: MyPageState by viewModel.uiState.collectAsStateWithLifecycle()
 
     var showGallery by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.onIntent(intent = MyPageIntent.CheckLoginStatus)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect: MyPageEffect ->
+            if (effect is MyPageEffect.ShowSnackbar) {
+                snackbarHostState.showSnackbar(message = effect.message, state = effect.state)
+            }
+        }
     }
 
     MyPageScreen(

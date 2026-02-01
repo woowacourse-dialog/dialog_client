@@ -2,6 +2,7 @@ package com.on.dialog.feature.mypage.impl.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
+import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.UserRepository
 import com.on.dialog.model.common.ProfileImage
@@ -68,12 +69,18 @@ class MyPageViewModel(
                         if (result is NetworkError.Unauthorized) {
                             updateState { copy(isLoggedIn = false) }
                             emitEffect(
-                                MyPageEffect.ShowError(
+                                MyPageEffect.ShowSnackbar(
                                     message = result.message ?: "로그인 후 이용할 수 있습니다.",
+                                    state = SnackbarState.NEGATIVE,
                                 ),
                             )
                         } else {
-                            emitEffect(MyPageEffect.ShowError(message = "내 정보를 불러오는데 실패했습니다."))
+                            emitEffect(
+                                MyPageEffect.ShowSnackbar(
+                                    message = "내 정보를 불러오는데 실패했습니다.",
+                                    state = SnackbarState.NEGATIVE,
+                                ),
+                            )
                         }
                     }
             }.invokeOnCompletion {
@@ -92,19 +99,20 @@ class MyPageViewModel(
                                 isLoggedIn = true,
                                 isLoading = false,
                                 imageUrl = profileImage.customImageUri ?: profileImage.basicImageUri
-                                    ?: "",
+                                ?: "",
                             )
                         }
                     }.onFailure { result: Throwable ->
                         if (result is NetworkError.Unauthorized) {
                             updateState { copy(isLoggedIn = false) }
                             emitEffect(
-                                MyPageEffect.ShowError(
+                                MyPageEffect.ShowSnackbar(
                                     message = result.message ?: "로그인 후 이용할 수 있습니다.",
+                                    state = SnackbarState.NEGATIVE,
                                 ),
                             )
                         } else {
-                            emitEffect(MyPageEffect.ShowError(message = "내 프로필 이미지를 불러오는데 실패했습니다."))
+                            Napier.d("내 프로필 이미지를 불러오는데 실패했습니다.")
                         }
                     }
             }.invokeOnCompletion {
@@ -119,9 +127,20 @@ class MyPageViewModel(
                 .onSuccess {
                     updateState { copy(nickname = nickname, track = track) }
                     Napier.d("프로필 수정 성공")
+                    emitEffect(
+                        MyPageEffect.ShowSnackbar(
+                            message = "프로필이 수정되었습니다.",
+                            state = SnackbarState.POSITIVE,
+                        ),
+                    )
                 }.onFailure { result ->
                     Napier.d("프로필 수정 실패: ${result.message}")
-                    emitEffect(MyPageEffect.ShowError(message = "프로필 업데이트를 실패했습니다."))
+                    emitEffect(
+                        MyPageEffect.ShowSnackbar(
+                            message = "프로필 수정에 실패했습니다.",
+                            state = SnackbarState.NEGATIVE,
+                        ),
+                    )
                 }
         }
     }
@@ -134,10 +153,20 @@ class MyPageViewModel(
                     updateState {
                         copy(imageUrl = image.customImageUri ?: image.basicImageUri ?: "")
                     }
-                    Napier.d("프로필 이미지 업로드 성공: $image")
+                    emitEffect(
+                        MyPageEffect.ShowSnackbar(
+                            message = "프로필 이미지가 수정되었습니다.",
+                            state = SnackbarState.POSITIVE,
+                        ),
+                    )
                 }.onFailure { result ->
                     Napier.d("프로필 이미지 업로드 실패: ${result.message}")
-                    emitEffect(MyPageEffect.ShowError(message = "프로필 이미지 업로드를 실패했습니다."))
+                    emitEffect(
+                        MyPageEffect.ShowSnackbar(
+                            message = "프로필 이미지 업로드를 실패했습니다.",
+                            state = SnackbarState.NEGATIVE,
+                        ),
+                    )
                 }
         }
     }
@@ -152,8 +181,9 @@ class MyPageViewModel(
                 }.onFailure { result: Throwable ->
                     Napier.w("로그아웃 실패")
                     emitEffect(
-                        MyPageEffect.ShowError(
+                        MyPageEffect.ShowSnackbar(
                             message = result.message ?: "로그아웃에 실패했습니다.",
+                            state = SnackbarState.NEGATIVE,
                         ),
                     )
                 }
