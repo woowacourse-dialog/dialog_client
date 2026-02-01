@@ -4,6 +4,7 @@ import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -15,6 +16,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.on.dialog.designsystem.component.snackbar.DialogSnackbar
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
+import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.discussionlist.api.DiscussionListNavKey
 import com.on.dialog.main.component.DialogNavigationBar
 import com.on.dialog.main.navigation.SavedStateConfigurationProvider
@@ -64,7 +66,9 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
                     }.invoke(key)
                 },
                 onBack = navigator::goBack,
-                modifier = Modifier.padding(paddingValues),
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .background(DialogTheme.colorScheme.surfaceContainer),
                 transitionSpec = {
                     ContentTransform(
                         targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
