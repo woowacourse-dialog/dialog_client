@@ -14,10 +14,10 @@ data class OnlineDiscussionCatalog(
             endDate.isInPeriod(
                 startAt = catalogContent.createdAt,
                 dateTime = now,
-            ) -> DiscussionStatus.INDISCUSSION
+            ) -> DiscussionStatus.IN_DISCUSSION
 
-            endDate.isAfterEnd(dateTime = now) -> DiscussionStatus.DISCUSSIONCOMPLETE
+            endDate.isAfterEnd(dateTime = now) -> DiscussionStatus.DISCUSSION_COMPLETE
 
-            else -> DiscussionStatus.UNDEFINED
+            else -> throw IllegalStateException("Unknown DiscussionStatus")
         }
 }

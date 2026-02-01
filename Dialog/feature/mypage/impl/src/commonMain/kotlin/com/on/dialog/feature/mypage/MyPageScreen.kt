@@ -226,7 +226,7 @@ private fun ProfileSectionPreview() {
                 uiState = MyPageState(
                     imageUrl = "",
                     nickname = "크림",
-                    track = Track.ANDROID.initial,
+                    track = "AN",
                     githubId = "ijh1298",
                     isNotificationEnable = false,
                     isLoggedIn = true,
@@ -245,7 +245,7 @@ private fun MyPageScreenLoggedInPreview() {
                 uiState = MyPageState(
                     imageUrl = "",
                     nickname = "크림",
-                    track = Track.ANDROID.initial,
+                    track = "AN",
                     githubId = "ijh1298",
                     isNotificationEnable = false,
                     isLoggedIn = true,

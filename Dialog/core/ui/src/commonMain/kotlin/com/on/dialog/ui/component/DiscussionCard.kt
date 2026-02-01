@@ -29,7 +29,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun DiscussionCard(
     chips: ImmutableList<ChipCategory>,
-    onChipsChange: (List<ChipCategory>) -> Unit,
     title: String,
     author: String,
     endAt: String,
@@ -44,7 +43,7 @@ fun DiscussionCard(
         Column(
             verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
         ) {
-            DialogChipGroup(chips = chips, onChipsChange = onChipsChange)
+            DialogChipGroup(chips = chips, onChipsChange = {})
             Text(text = title, style = DialogTheme.typography.titleMedium)
             DiscussionCardFooter(author = author, endAt = endAt, discussionCount = discussionCount)
         }
@@ -108,7 +107,6 @@ private fun DiscussionCardPreviewContent() {
     Surface(color = DialogTheme.colorScheme.surfaceContainer) {
         DiscussionCard(
             chips = chips,
-            onChipsChange = {},
             title = "MVVM 패턴 적용 시 ViewModel과 Repository 간 책임 분리 기준은?",
             author = "크림",
             endAt = "2026.01.31",

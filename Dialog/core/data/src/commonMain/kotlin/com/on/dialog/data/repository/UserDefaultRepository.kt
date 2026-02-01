@@ -37,5 +37,5 @@ internal class UserDefaultRepository(
         userDatasource.updateMyProfileImage(file = request).mapCatching { it.toDomain() }
 
     override suspend fun getMyTrack(): Result<Track> =
-        userDatasource.getMyTrack().mapCatching { Track.of(name = it.track) }
+        userDatasource.getMyTrack().mapCatching { Track.valueOf(it.track) }
 }

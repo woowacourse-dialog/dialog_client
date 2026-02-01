@@ -38,7 +38,6 @@ fun ScrapScreen(
                         backgroundColor = Color(0xFF3DDC84),
                     ),
                 ),
-                onChipsChange = {},
                 title = "KMP 전망",
                 author = "크림",
                 endAt = "2026.01.31",
