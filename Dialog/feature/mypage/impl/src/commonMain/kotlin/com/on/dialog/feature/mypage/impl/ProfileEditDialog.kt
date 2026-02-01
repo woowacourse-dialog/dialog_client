@@ -48,7 +48,7 @@ fun ProfileEditDialog(
 ) {
     BasicAlertDialog(
         modifier = modifier
-            .background(color = DialogTheme.colorScheme.surface)
+            .background(color = DialogTheme.colorScheme.surface, shape = DialogTheme.shapes.medium)
             .padding(all = 20.dp),
         onDismissRequest = onDismissRequest,
     ) {
