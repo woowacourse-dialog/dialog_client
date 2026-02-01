@@ -31,13 +31,16 @@ data class DiscussionQuery(
     }
 
     private fun DiscussionStatus.toCamelCase(): String =
-        name.lowercase()
+        name
+            .lowercase()
             .split("_")
             .mapIndexed { index, word ->
-                if (index == 0) word
-                else word.replaceFirstChar { it.uppercase() }
-            }
-            .joinToString("")
+                if (index == 0) {
+                    word
+                } else {
+                    word.replaceFirstChar { it.uppercase() }
+                }
+            }.joinToString("")
 
     companion object {
         fun DiscussionCriteria.toQuery(): DiscussionQuery =
