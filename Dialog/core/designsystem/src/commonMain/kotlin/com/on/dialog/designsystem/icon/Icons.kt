@@ -16,6 +16,8 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.FilterAlt
+import androidx.compose.material.icons.rounded.FilterAltOff
 import androidx.compose.material.icons.rounded.Forum
 import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.Home
@@ -54,4 +56,6 @@ object DialogIcons {
     val Share = Icons.Rounded.Share
     val Notifications = Icons.Rounded.Notifications
     val NotificationsOff = Icons.Rounded.NotificationsOff
+    val Filter = Icons.Rounded.FilterAlt
+    val FilterOff = Icons.Rounded.FilterAltOff
 }
