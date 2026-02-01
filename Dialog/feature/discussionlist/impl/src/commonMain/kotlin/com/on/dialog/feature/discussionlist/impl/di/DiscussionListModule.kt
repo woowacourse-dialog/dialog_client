@@ -1,5 +1,6 @@
 package com.on.dialog.feature.discussionlist.impl.di
 
+import com.on.dialog.feature.discussionlist.impl.navigation.DiscussionListNavKeyProvider
 import com.on.dialog.navigation.NavKeyProvider
 import org.koin.dsl.bind
 import org.koin.dsl.module
