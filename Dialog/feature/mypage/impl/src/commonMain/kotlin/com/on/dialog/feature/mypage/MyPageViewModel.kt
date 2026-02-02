@@ -58,10 +58,10 @@ class MyPageViewModel(
         updateState {
             copy(
                 isLoggedIn = true,
-                track = track,
-                nickname = nickname,
-                githubId = githubId,
-                isNotificationEnable = isNotificationEnabled,
+                track = this@with.track,
+                nickname = this@with.nickname,
+                githubId = this@with.githubId,
+                isNotificationEnable = this@with.isNotificationEnabled,
             )
         }
     }
