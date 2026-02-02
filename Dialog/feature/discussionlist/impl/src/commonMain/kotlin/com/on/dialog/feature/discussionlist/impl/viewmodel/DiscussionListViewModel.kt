@@ -77,7 +77,9 @@ internal class DiscussionListViewModel(
                     ).onSuccess(::handleFetchDiscussionsSuccess)
                     .onFailure(::handleFetchDiscussionsFailure)
             }.apply {
-                invokeOnCompletion { updateState { copy(isLoading = false, isRefreshing = false) } }
+                invokeOnCompletion {
+                    updateState { copy(isLoading = false, isRefreshing = false) }
+                }
             }
     }
 
@@ -91,7 +93,7 @@ internal class DiscussionListViewModel(
                 (discussions + newDiscussions)
                     .distinctBy { discussion -> discussion.id }
                     .toImmutableList()
-            copy(discussions = mergedDiscussions)
+            copy(discussions = mergedDiscussions, isFetched = true)
         }
     }
 

@@ -13,6 +13,7 @@ internal data class DiscussionListState(
     val discussions: ImmutableList<DiscussionUiModel> = persistentListOf(),
     val filter: SelectedFilters = SelectedFilters(),
     val isLoading: Boolean = false,
+    val isFetched: Boolean = false,
     val isRefreshing: Boolean = false,
 ) : UiState {
     val filteredDiscussions: ImmutableList<DiscussionUiModel> =
@@ -22,5 +23,5 @@ internal data class DiscussionListState(
                 filter.matches(discussion)
             }.toImmutableList()
 
-    val shouldShowEmptyView: Boolean = filteredDiscussions.isEmpty()
+    val shouldShowEmptyView: Boolean = isFetched && filteredDiscussions.isEmpty()
 }
