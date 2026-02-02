@@ -12,5 +12,10 @@
 
     <string name="discussion_card_title_format">%1$s (%2$s)</string>
 
+    <!-- Empty View   -->
+    <string name="discussion_list_empty_view_title">진행 중이거나 모집 중인 토론이 없어요</string>
+    <string name="discussion_list_empty_view_body">필터를 해제해 보거나, 새로운 토론을 만들어 시작해 보세요.</string>
+    <string name="discussion_list_empty_view_create_discussion_button">토론 만들기</string>
+
     <string name="discussion_list_filter_action_icon_content_description">필터</string>
 </resources>

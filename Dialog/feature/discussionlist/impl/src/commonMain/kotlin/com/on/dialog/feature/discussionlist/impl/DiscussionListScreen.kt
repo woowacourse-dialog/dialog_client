@@ -19,6 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.discussionlist.impl.component.DiscussionListEmptyView
 import com.on.dialog.feature.discussionlist.impl.component.DiscussionListFilterSection
 import com.on.dialog.feature.discussionlist.impl.component.DiscussionListSection
 import com.on.dialog.feature.discussionlist.impl.component.DiscussionListTopAppBar
@@ -39,6 +40,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun DiscussionListScreen(
     navigateToDiscussionDetail: (discussionId: Long) -> Unit,
+    navigateToCreateDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiscussionListViewModel = koinViewModel(),
 ) {
@@ -73,6 +75,7 @@ internal fun DiscussionListScreen(
         isRefreshing = uiState.isRefreshing,
         onRefresh = { viewModel.onIntent(DiscussionListIntent.RefreshList) },
         onClickDiscussion = navigateToDiscussionDetail,
+        onClickCreateDiscussion = navigateToCreateDiscussion,
         onClickTrackFilter = { track ->
             viewModel.onIntent(DiscussionListIntent.ClickTrackFilter(track))
         },
@@ -93,6 +96,7 @@ private fun DiscussionListScreen(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     onClickDiscussion: (discussionId: Long) -> Unit,
+    onClickCreateDiscussion: () -> Unit,
     onClickTrackFilter: (track: TrackUiModel) -> Unit,
     onClickStatusFilter: (status: DiscussionStatusUiModel) -> Unit,
     onClickTypeFilter: (type: DiscussionTypeUiModel) -> Unit,
@@ -124,13 +128,17 @@ private fun DiscussionListScreen(
             onClickTypeFilter = onClickTypeFilter,
         )
 
-        DiscussionListSection(
-            listState = listState,
-            discussions = uiState.filteredDiscussions,
-            onClickDiscussion = onClickDiscussion,
-            isRefreshing = isRefreshing,
-            onRefresh = onRefresh,
-        )
+        if (uiState.shouldShowEmptyView) {
+            DiscussionListEmptyView(onClickCreateDiscussion = onClickCreateDiscussion)
+        } else {
+            DiscussionListSection(
+                listState = listState,
+                discussions = uiState.filteredDiscussions,
+                onClickDiscussion = onClickDiscussion,
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh,
+            )
+        }
     }
 }
 
@@ -141,6 +149,7 @@ private fun DiscussionListScreenPreview() {
         Scaffold { innerPadding ->
             DiscussionListScreen(
                 modifier = Modifier.padding(innerPadding),
+                onClickCreateDiscussion = {},
                 onClickDiscussion = {},
                 onClickTrackFilter = {},
                 onClickStatusFilter = {},

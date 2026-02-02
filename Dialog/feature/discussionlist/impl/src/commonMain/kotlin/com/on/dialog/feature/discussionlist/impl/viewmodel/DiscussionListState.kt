@@ -21,4 +21,6 @@ internal data class DiscussionListState(
                 if (filter.noFiltersSelected) return@filter true
                 filter.matches(discussion)
             }.toImmutableList()
+
+    val shouldShowEmptyView: Boolean = filteredDiscussions.isEmpty()
 }
