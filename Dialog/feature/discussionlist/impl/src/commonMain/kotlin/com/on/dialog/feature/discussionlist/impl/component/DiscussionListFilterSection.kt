@@ -84,7 +84,7 @@ internal fun DiscussionListFilterSection(
             ) {
                 items(
                     items = DiscussionStatusUiModel.entries,
-                    key = { status -> status.title },
+                    key = { status -> status.name },
                 ) { status ->
                     FilterToggleChip(
                         text = status.title,
@@ -99,7 +99,7 @@ internal fun DiscussionListFilterSection(
             ) {
                 items(
                     items = DiscussionTypeUiModel.entries,
-                    key = { type -> type.title },
+                    key = { type -> type.name },
                 ) { type ->
                     FilterToggleChip(
                         text = type.title,

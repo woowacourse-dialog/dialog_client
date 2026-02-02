@@ -20,8 +20,11 @@ import com.on.dialog.feature.discussionlist.impl.model.DiscussionStatusUiModel
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionUiModel
 import com.on.dialog.feature.discussionlist.impl.model.TrackUiModel
 import com.on.dialog.ui.component.DiscussionCard
+import dialog.feature.discussionlist.impl.generated.resources.Res
+import dialog.feature.discussionlist.impl.generated.resources.discussion_card_title_format
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionListSection(
@@ -65,7 +68,11 @@ private fun DiscussionListSection(
         items(items = discussions, key = { discussion -> discussion.id }) { discussion ->
             DiscussionCard(
                 chips = discussion.toChipCategories(),
-                title = discussion.title,
+                title = stringResource(
+                    Res.string.discussion_card_title_format,
+                    discussion.title,
+                    discussion.status.title,
+                ),
                 author = discussion.author,
                 period = discussion.period,
                 discussionCount = discussion.commentCount,
@@ -90,7 +97,7 @@ private fun DiscussionListSectionPreview() {
                         title = "Jetpack Compose is awesome",
                         author = "Android Dev",
                         track = TrackUiModel.ANDROID,
-                        status = DiscussionStatusUiModel.INDISCUSSION,
+                        status = DiscussionStatusUiModel.IN_DISCUSSION,
                         commentCount = 10,
                         period = "~ 2025.02.03",
                     ),

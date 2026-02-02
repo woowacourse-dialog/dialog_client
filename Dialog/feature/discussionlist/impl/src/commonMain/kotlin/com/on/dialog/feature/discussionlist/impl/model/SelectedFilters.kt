@@ -13,12 +13,6 @@ internal data class SelectedFilters(
         selectedTypeFilter.isEmpty() &&
         selectedStatusFilter.isEmpty()
 
-    val selectedFilters: String = buildList {
-        addAll(selectedTrackFilter.map { it.title })
-        addAll(selectedTypeFilter.map { it.title })
-        addAll(selectedStatusFilter.map { it.title })
-    }.joinToString()
-
     fun updateTrackFilter(track: TrackUiModel): SelectedFilters = copy(
         selectedTrackFilter = if (selectedTrackFilter.contains(track)) {
             selectedTrackFilter - track
