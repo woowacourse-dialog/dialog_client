@@ -3,7 +3,7 @@ package com.on.dialog.feature.mypage.model
 import com.on.dialog.model.common.Track
 import com.on.dialog.model.user.UserInfo
 
-data class UserInfoUiModel(
+internal data class UserInfoUiModel(
     val id: Long,
     val nickname: String,
     val githubId: String,
@@ -11,7 +11,7 @@ data class UserInfoUiModel(
     val isNotificationEnabled: Boolean,
 ) {
     companion object {
-        fun UserInfo.toDomain() = UserInfoUiModel(
+        fun UserInfo.toUiDomain() = UserInfoUiModel(
             id = id,
             nickname = nickname,
             githubId = githubId,
