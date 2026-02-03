@@ -10,6 +10,8 @@
 
     <string name="nickname">닉네임</string>
     <string name="nickname_placeholder">닉네임을 입력해 주세요</string>
+    <string name="nickname_too_long">닉네임이 너무 길어요.</string>
+    <string name="nickname_too_short">닉네임이 너무 짧아요.</string>
 
     <string name="track">트랙</string>
     <string name="track_common">공통</string>

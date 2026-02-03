@@ -99,7 +99,7 @@ class MyPageViewModel(
                                 isLoggedIn = true,
                                 isLoading = false,
                                 imageUrl = profileImage.customImageUri ?: profileImage.basicImageUri
-                                ?: "",
+                                    ?: "",
                             )
                         }
                     }.onFailure { result: Throwable ->
@@ -129,8 +129,8 @@ class MyPageViewModel(
                         copy(
                             userInfo = userInfo.copy(
                                 nickname = nickname,
-                                track = track.toInitial()
-                            )
+                                track = track.toInitial(),
+                            ),
                         )
                     }
                     Napier.d("프로필 수정 성공")

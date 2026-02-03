@@ -305,7 +305,7 @@ private fun ProfileSectionPreview() {
                         nickname = "크림",
                         track = Track.ANDROID.toInitial(),
                         githubId = "ijh1298",
-                    )
+                    ),
                 ),
                 onEditClick = {},
                 onProfileImageClick = {},
@@ -327,7 +327,7 @@ private fun MyPageScreenLoggedInPreview() {
                         nickname = "크림",
                         track = Track.ANDROID.toInitial(),
                         githubId = "ijh1298",
-                    )
+                    ),
                 ),
                 onLoginClick = {},
                 onLogoutClick = {},

@@ -25,10 +25,11 @@ import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.mypage.impl.mapper.message
 import com.on.dialog.feature.mypage.impl.mapper.toFullName
 import com.on.dialog.feature.mypage.impl.mapper.toInitial
-import com.on.dialog.feature.mypage.impl.model.NicknameState
 import com.on.dialog.model.common.Track
+import com.on.dialog.model.user.NicknameState
 import dialog.feature.mypage.impl.generated.resources.Res
 import dialog.feature.mypage.impl.generated.resources.cancel
 import dialog.feature.mypage.impl.generated.resources.nickname
@@ -71,11 +72,14 @@ private fun EditDialogContent(
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
 ) {
     val tracks: ImmutableList<String> =
-        Track.entries.filter { it != Track.COMMON }.map { it.toFullName() }.toImmutableList()
+        Track.entries
+            .filter { it != Track.COMMON }
+            .map { it.toFullName() }
+            .toImmutableList()
 
     var nickname: String by rememberSaveable { mutableStateOf(nickname) }
     var selectedIndex by rememberSaveable { mutableIntStateOf(track.indexOf(track)) }
-    val nicknameState: NicknameState by derivedStateOf { NicknameState.of(nickname = nickname) }
+    val nicknameState: NicknameState by derivedStateOf { NicknameState.from(nickname = nickname) }
 
     Column {
         DialogTextField(
@@ -83,8 +87,8 @@ private fun EditDialogContent(
             onValueChange = { nickname = it },
             label = stringResource(Res.string.nickname),
             placeholder = stringResource(Res.string.nickname_placeholder),
-            supportingText = nicknameState.message,
-            isError = nicknameState != NicknameState.Valid,
+            supportingText = nicknameState.message(),
+            isError = nicknameState !is NicknameState.Valid,
         )
 
         DialogDropdownMenu(
@@ -106,7 +110,7 @@ private fun EditDialogContent(
             DialogButton(
                 text = stringResource(Res.string.save),
                 onClick = {
-                    if (nicknameState == NicknameState.Valid) {
+                    if (nicknameState is NicknameState.Valid) {
                         onUpdateProfile(nickname, Track.entries[selectedIndex])
                         onDismissRequest()
                     }
