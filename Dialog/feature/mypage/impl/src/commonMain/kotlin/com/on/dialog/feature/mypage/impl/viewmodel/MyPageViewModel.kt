@@ -5,8 +5,11 @@ import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.UserRepository
+import com.on.dialog.feature.mypage.impl.mapper.toInitial
+import com.on.dialog.feature.mypage.impl.model.UserInfoUiModel.Companion.toUiModel
 import com.on.dialog.model.common.ProfileImage
 import com.on.dialog.model.common.Track
+import com.on.dialog.model.user.UserInfo
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
@@ -54,15 +57,12 @@ class MyPageViewModel(
             .launch {
                 userRepository
                     .getMyUserInfo()
-                    .onSuccess { userInfo ->
+                    .onSuccess { userInfo: UserInfo ->
                         updateState {
                             copy(
                                 isLoggedIn = true,
                                 isLoading = false,
-                                track = userInfo.track,
-                                nickname = userInfo.nickname,
-                                githubId = userInfo.githubId,
-                                isNotificationEnable = userInfo.isNotificationEnabled,
+                                userInfo = userInfo.toUiModel(),
                             )
                         }
                     }.onFailure { result ->
@@ -99,7 +99,7 @@ class MyPageViewModel(
                                 isLoggedIn = true,
                                 isLoading = false,
                                 imageUrl = profileImage.customImageUri ?: profileImage.basicImageUri
-                                    ?: "",
+                                ?: "",
                             )
                         }
                     }.onFailure { result: Throwable ->
@@ -125,7 +125,14 @@ class MyPageViewModel(
             userRepository
                 .updateMyProfile(nickname = nickname, track = track)
                 .onSuccess {
-                    updateState { copy(nickname = nickname, track = track) }
+                    updateState {
+                        copy(
+                            userInfo = userInfo.copy(
+                                nickname = nickname,
+                                track = track.toInitial()
+                            )
+                        )
+                    }
                     Napier.d("프로필 수정 성공")
                     emitEffect(
                         MyPageEffect.ShowSnackbar(

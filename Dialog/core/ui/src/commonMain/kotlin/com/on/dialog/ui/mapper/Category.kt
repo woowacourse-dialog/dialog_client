@@ -10,6 +10,7 @@ import dialog.core.ui.generated.resources.discussion_type_offline
 import dialog.core.ui.generated.resources.discussion_type_online
 import dialog.core.ui.generated.resources.track_android
 import dialog.core.ui.generated.resources.track_backend
+import dialog.core.ui.generated.resources.track_common
 import dialog.core.ui.generated.resources.track_frontend
 import org.jetbrains.compose.resources.stringResource
 
@@ -31,6 +32,12 @@ fun Track.toChipCategory(): ChipCategory = when (this) {
         text = stringResource(resource = Res.string.track_frontend),
         textColor = Color.White,
         backgroundColor = Color(color = 0xFF2196F3),
+    )
+
+    Track.COMMON -> ChipCategory(
+        text = stringResource(resource = Res.string.track_common),
+        textColor = Color.White,
+        backgroundColor = Color(0xFF607D8B),
     )
 }
 

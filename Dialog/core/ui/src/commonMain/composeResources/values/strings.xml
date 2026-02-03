@@ -3,6 +3,7 @@
     <string name="track_android">안드로이드</string>
     <string name="track_backend">백엔드</string>
     <string name="track_frontend">프론트엔드</string>
+    <string name="track_common">공통</string>
 
     <!-- Discussion Type -->
     <string name="discussion_type_online">온라인</string>

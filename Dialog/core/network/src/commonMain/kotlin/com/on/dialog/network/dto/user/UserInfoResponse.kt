@@ -23,7 +23,7 @@ class UserInfoResponse(
             id = id,
             nickname = nickname,
             githubId = githubId,
-            track = Track.of(track),
+            track = Track.valueOf(track),
             isNotificationEnabled = isNotificationEnabled,
         )
 }

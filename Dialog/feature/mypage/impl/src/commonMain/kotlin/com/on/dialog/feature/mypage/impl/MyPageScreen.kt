@@ -34,6 +34,8 @@ import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.mypage.impl.mapper.toInitial
+import com.on.dialog.feature.mypage.impl.model.UserInfoUiModel
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageEffect
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageIntent
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageState
@@ -174,8 +176,8 @@ private fun MyPageScreenLoggedIn(
 
     if (showProfileEditDialog) {
         ProfileEditDialog(
-            nickname = uiState.nickname,
-            track = uiState.track,
+            nickname = uiState.userInfo.nickname,
+            track = uiState.userInfo.track,
             onDismissRequest = { showProfileEditDialog = false },
             onUpdateProfile = onUpdateProfile,
         )
@@ -255,11 +257,7 @@ private fun ProfileSection(
                     modifier = Modifier.size(size = 60.dp),
                     onClick = onProfileImageClick,
                 )
-                ProfileInfo(
-                    nickname = uiState.nickname,
-                    track = uiState.track.initial,
-                    githubId = uiState.githubId,
-                )
+                ProfileInfo(userInfo = uiState.userInfo)
             }
             DialogIconButton(onClick = onEditClick) {
                 Icon(imageVector = DialogIcons.Edit, contentDescription = "")
@@ -270,9 +268,7 @@ private fun ProfileSection(
 
 @Composable
 private fun ProfileInfo(
-    nickname: String,
-    track: String,
-    githubId: String,
+    userInfo: UserInfoUiModel,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -284,15 +280,15 @@ private fun ProfileInfo(
             horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.extraSmall),
         ) {
             Text(
-                text = nickname,
+                text = userInfo.nickname,
                 style = DialogTheme.typography.titleMedium,
             )
             Text(
-                text = track,
+                text = userInfo.track,
                 style = DialogTheme.typography.labelLarge,
             )
         }
-        Text(text = githubId, style = DialogTheme.typography.bodyMedium)
+        Text(text = userInfo.githubId, style = DialogTheme.typography.bodyMedium)
     }
 }
 
@@ -304,11 +300,12 @@ private fun ProfileSectionPreview() {
             ProfileSection(
                 uiState = MyPageState(
                     imageUrl = "",
-                    nickname = "크림",
-                    track = Track.ANDROID,
-                    githubId = "ijh1298",
-                    isNotificationEnable = false,
                     isLoggedIn = true,
+                    userInfo = UserInfoUiModel(
+                        nickname = "크림",
+                        track = Track.ANDROID.toInitial(),
+                        githubId = "ijh1298",
+                    )
                 ),
                 onEditClick = {},
                 onProfileImageClick = {},
@@ -325,11 +322,12 @@ private fun MyPageScreenLoggedInPreview() {
             MyPageScreen(
                 uiState = MyPageState(
                     imageUrl = "",
-                    nickname = "크림",
-                    track = Track.ANDROID,
-                    githubId = "ijh1298",
-                    isNotificationEnable = false,
                     isLoggedIn = true,
+                    userInfo = UserInfoUiModel(
+                        nickname = "크림",
+                        track = Track.ANDROID.toInitial(),
+                        githubId = "ijh1298",
+                    )
                 ),
                 onLoginClick = {},
                 onLogoutClick = {},

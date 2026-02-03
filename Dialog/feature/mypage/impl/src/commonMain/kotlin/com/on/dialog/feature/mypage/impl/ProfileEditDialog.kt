@@ -25,15 +25,17 @@ import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.mypage.impl.mapper.toFullName
+import com.on.dialog.feature.mypage.impl.mapper.toInitial
 import com.on.dialog.feature.mypage.impl.model.NicknameState
 import com.on.dialog.model.common.Track
-import com.on.dialog.ui.mapper.toStringResource
 import dialog.feature.mypage.impl.generated.resources.Res
 import dialog.feature.mypage.impl.generated.resources.cancel
 import dialog.feature.mypage.impl.generated.resources.nickname
 import dialog.feature.mypage.impl.generated.resources.nickname_placeholder
 import dialog.feature.mypage.impl.generated.resources.save
 import dialog.feature.mypage.impl.generated.resources.track
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 
@@ -41,7 +43,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ProfileEditDialog(
     nickname: String,
-    track: Track,
+    track: String,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
@@ -64,12 +66,15 @@ fun ProfileEditDialog(
 @Composable
 private fun EditDialogContent(
     nickname: String,
-    track: Track,
+    track: String,
     onDismissRequest: () -> Unit,
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
 ) {
+    val tracks: ImmutableList<String> =
+        Track.entries.filter { it != Track.COMMON }.map { it.toFullName() }.toImmutableList()
+
     var nickname: String by rememberSaveable { mutableStateOf(nickname) }
-    var selectedIndex by rememberSaveable { mutableIntStateOf(track.ordinal) }
+    var selectedIndex by rememberSaveable { mutableIntStateOf(track.indexOf(track)) }
     val nicknameState: NicknameState by derivedStateOf { NicknameState.of(nickname = nickname) }
 
     Column {
@@ -83,7 +88,7 @@ private fun EditDialogContent(
         )
 
         DialogDropdownMenu(
-            options = Track.entries.map { stringResource(it.toStringResource()) }.toImmutableList(),
+            options = tracks,
             onSelectedIndexChange = { selectedIndex = it },
             label = stringResource(Res.string.track),
             selectedIndex = selectedIndex,
@@ -119,7 +124,7 @@ private fun ProfileEditDialogPreview() {
         Surface {
             ProfileEditDialog(
                 nickname = "크림",
-                track = Track.ANDROID,
+                track = Track.ANDROID.toInitial(),
                 onDismissRequest = {},
                 onUpdateProfile = { _, _ -> },
             )
