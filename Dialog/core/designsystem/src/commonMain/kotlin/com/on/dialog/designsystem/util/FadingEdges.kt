@@ -29,64 +29,57 @@ fun Modifier.drawFadingEdges(
     fadingColor: Color = Color.Black,
     directions: Set<FadingEdgeDirection> = setOf(FadingEdgeDirection.Top),
     fadingSize: Dp = 4.dp,
-) = then(
+): Modifier = then(
     Modifier
         .graphicsLayer(
             compositingStrategy = CompositingStrategy.Offscreen,
         ).drawWithContent {
             drawContent()
             val fadingSizePx = fadingSize.toPx()
+            require(fadingSizePx >= 1f) { "잘못된 fadingSizePx 값입니다. 최소값: 1f, 입력값: $fadingSizePx" }
 
             if (directions.contains(FadingEdgeDirection.Top) && scrollableState.canScrollBackward) {
-                if (fadingSizePx >= 1f) {
-                    drawRect(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(Color.Transparent, fadingColor),
-                            startY = 0f,
-                            endY = fadingSizePx,
-                        ),
-                        blendMode = BlendMode.DstIn,
-                    )
-                }
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, fadingColor),
+                        startY = 0f,
+                        endY = fadingSizePx,
+                    ),
+                    blendMode = BlendMode.DstIn,
+                )
             }
 
             if (directions.contains(FadingEdgeDirection.Bottom) && scrollableState.canScrollForward) {
-                if (fadingSizePx >= 1f) {
-                    drawRect(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(fadingColor, Color.Transparent),
-                            startY = size.height - fadingSizePx,
-                            endY = size.height,
-                        ),
-                        blendMode = BlendMode.DstIn,
-                    )
-                }
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(fadingColor, Color.Transparent),
+                        startY = size.height - fadingSizePx,
+                        endY = size.height,
+                    ),
+                    blendMode = BlendMode.DstIn,
+                )
             }
 
             if (directions.contains(FadingEdgeDirection.Start) && scrollableState.canScrollBackward) {
-                if (fadingSizePx >= 1f) {
-                    drawRect(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(Color.Transparent, fadingColor),
-                            startX = 0f,
-                            endX = fadingSizePx,
-                        ),
-                        blendMode = BlendMode.DstIn,
-                    )
-                }
+                drawRect(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(Color.Transparent, fadingColor),
+                        startX = 0f,
+                        endX = fadingSizePx,
+                    ),
+                    blendMode = BlendMode.DstIn,
+                )
             }
 
             if (directions.contains(FadingEdgeDirection.End) && scrollableState.canScrollForward) {
-                if (fadingSizePx >= 1f) {
-                    drawRect(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(fadingColor, Color.Transparent),
-                            startX = size.width - fadingSizePx,
-                            endX = size.width,
-                        ),
-                        blendMode = BlendMode.DstIn,
-                    )
-                }
+                drawRect(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(fadingColor, Color.Transparent),
+                        startX = size.width - fadingSizePx,
+                        endX = size.width,
+                    ),
+                    blendMode = BlendMode.DstIn,
+                )
             }
         },
 )
