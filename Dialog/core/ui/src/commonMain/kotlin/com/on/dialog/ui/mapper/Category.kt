@@ -8,24 +8,27 @@ import com.on.dialog.ui.component.ChipCategory
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.discussion_type_offline
 import dialog.core.ui.generated.resources.discussion_type_online
+import dialog.core.ui.generated.resources.track_android
+import dialog.core.ui.generated.resources.track_backend
+import dialog.core.ui.generated.resources.track_frontend
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun Track.toChipCategory(): ChipCategory = when (this) {
     Track.ANDROID -> ChipCategory(
-        text = stringResource(resource = this.toStringResource()),
+        text = stringResource(resource = Res.string.track_android),
         textColor = Color(color = 0xFF003D2E),
         backgroundColor = Color(color = 0xFF3DDC84),
     )
 
     Track.BACKEND -> ChipCategory(
-        text = stringResource(resource = this.toStringResource()),
+        text = stringResource(resource = Res.string.track_backend),
         textColor = Color.White,
         backgroundColor = Color(color = 0xFFFF6F00),
     )
 
     Track.FRONTEND -> ChipCategory(
-        text = stringResource(resource = this.toStringResource()),
+        text = stringResource(resource = Res.string.track_frontend),
         textColor = Color.White,
         backgroundColor = Color(color = 0xFF2196F3),
     )
