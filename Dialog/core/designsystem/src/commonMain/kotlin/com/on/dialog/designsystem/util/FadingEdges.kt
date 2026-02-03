@@ -26,7 +26,6 @@ enum class FadingEdgeDirection {
 
 fun Modifier.drawFadingEdges(
     scrollableState: ScrollableState,
-    fadingColor: Color = Color.Black,
     directions: Set<FadingEdgeDirection> = setOf(FadingEdgeDirection.Top),
     fadingSize: Dp = 4.dp,
 ): Modifier = then(
@@ -41,7 +40,7 @@ fun Modifier.drawFadingEdges(
             if (directions.contains(FadingEdgeDirection.Top) && scrollableState.canScrollBackward) {
                 drawRect(
                     brush = Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, fadingColor),
+                        colors = listOf(Color.Transparent, Color.Black),
                         startY = 0f,
                         endY = fadingSizePx,
                     ),
@@ -52,7 +51,7 @@ fun Modifier.drawFadingEdges(
             if (directions.contains(FadingEdgeDirection.Bottom) && scrollableState.canScrollForward) {
                 drawRect(
                     brush = Brush.verticalGradient(
-                        colors = listOf(fadingColor, Color.Transparent),
+                        colors = listOf(Color.Black, Color.Transparent),
                         startY = size.height - fadingSizePx,
                         endY = size.height,
                     ),
@@ -63,7 +62,7 @@ fun Modifier.drawFadingEdges(
             if (directions.contains(FadingEdgeDirection.Start) && scrollableState.canScrollBackward) {
                 drawRect(
                     brush = Brush.horizontalGradient(
-                        colors = listOf(Color.Transparent, fadingColor),
+                        colors = listOf(Color.Transparent, Color.Black),
                         startX = 0f,
                         endX = fadingSizePx,
                     ),
@@ -74,7 +73,7 @@ fun Modifier.drawFadingEdges(
             if (directions.contains(FadingEdgeDirection.End) && scrollableState.canScrollForward) {
                 drawRect(
                     brush = Brush.horizontalGradient(
-                        colors = listOf(fadingColor, Color.Transparent),
+                        colors = listOf(Color.Black, Color.Transparent),
                         startX = size.width - fadingSizePx,
                         endX = size.width,
                     ),

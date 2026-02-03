@@ -58,7 +58,7 @@ private fun DiscussionListSection(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .drawFadingEdges(listState, DialogTheme.colorScheme.surface)
+            .drawFadingEdges(scrollableState = listState)
             .padding(horizontal = DialogTheme.spacing.large),
         state = listState,
         overscrollEffect = null,
