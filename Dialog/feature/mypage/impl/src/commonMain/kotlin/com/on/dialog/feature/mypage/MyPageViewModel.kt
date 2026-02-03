@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.UserRepository
-import com.on.dialog.feature.mypage.model.UserInfoUiModel.Companion.toUiDomain
+import com.on.dialog.feature.mypage.model.UserInfoUiModel.Companion.toUiModel
 import com.on.dialog.model.common.ProfileImage
 import com.on.dialog.model.user.UserInfo
 import com.on.dialog.ui.viewmodel.BaseViewModel
@@ -54,7 +54,7 @@ class MyPageViewModel(
             }
     }
 
-    private fun handleLoadMyPageSuccess(userInfo: UserInfo) = with(userInfo.toUiDomain()) {
+    private fun handleLoadMyPageSuccess(userInfo: UserInfo) = with(userInfo.toUiModel()) {
         updateState {
             copy(
                 isLoggedIn = true,

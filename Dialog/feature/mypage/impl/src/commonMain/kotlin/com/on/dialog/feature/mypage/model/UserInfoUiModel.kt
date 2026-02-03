@@ -11,7 +11,7 @@ internal data class UserInfoUiModel(
     val isNotificationEnabled: Boolean,
 ) {
     companion object {
-        fun UserInfo.toUiDomain() = UserInfoUiModel(
+        fun UserInfo.toUiModel() = UserInfoUiModel(
             id = id,
             nickname = nickname,
             githubId = githubId,
