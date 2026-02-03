@@ -104,7 +104,7 @@ fun MyPageScreen(
                 showGallery = false
                 snackbarHostState.showSnackbar(
                     message = errorMessage,
-                    state = SnackbarState.NEGATIVE
+                    state = SnackbarState.NEGATIVE,
                 )
             },
             onDismiss = { showGallery = false },
