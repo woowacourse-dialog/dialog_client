@@ -49,7 +49,6 @@ internal fun DiscussionListEmptyView(
         Text(
             text = stringResource(Res.string.discussion_list_empty_view_title),
             style = DialogTheme.typography.titleMedium,
-            color = DialogTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
         )
 
