@@ -1,7 +1,12 @@
 package com.on.dialog.feature.discussionlist.impl.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,8 +18,9 @@ import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.feature.discussionlist.impl.generated.resources.Res
 import dialog.feature.discussionlist.impl.generated.resources.discussion_list_filter_action_icon_content_description
-import dialog.feature.discussionlist.impl.generated.resources.discussion_list_top_app_bar_title
+import dialog.feature.discussionlist.impl.generated.resources.logo_dialog
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun DiscussionListTopAppBar(
@@ -24,8 +30,18 @@ fun DiscussionListTopAppBar(
 ) {
     DialogTopAppBar(
         modifier = modifier,
-        title = stringResource(Res.string.discussion_list_top_app_bar_title),
+        title = "Dialog",
         centerAligned = false,
+        navigationIcon = {
+            Row {
+                Spacer(modifier = Modifier.width(DialogTheme.spacing.medium))
+                Image(
+                    imageVector = vectorResource(Res.drawable.logo_dialog),
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp),
+                )
+            }
+        },
         actions = {
             DialogIconButton(onClick = onFilterClick) {
                 Icon(
