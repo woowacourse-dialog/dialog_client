@@ -39,7 +39,7 @@ interface UserService {
     @PATCH("api/user/mine/profile-image")
     suspend fun updateMyProfileImage(
         @Body
-        request: MultiPartFormDataContent, // 업로드할 이미지 파일 Binary (JPEG, PNG 등)
+        request: MultiPartFormDataContent,
     ): DataResponse<ProfileImageUpdateResponse>
 
     @GET("api/user/mine/track")
