@@ -32,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
+import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.mypage.impl.mapper.toInitial
@@ -43,6 +44,7 @@ import com.on.dialog.feature.mypage.impl.viewmodel.MyPageViewModel
 import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.ProfileImage
 import dialog.feature.mypage.impl.generated.resources.Res
+import dialog.feature.mypage.impl.generated.resources.error_imagepicker
 import dialog.feature.mypage.impl.generated.resources.login
 import dialog.feature.mypage.impl.generated.resources.logout
 import dialog.feature.mypage.impl.generated.resources.my_discussions
@@ -62,9 +64,7 @@ fun MyPageScreen(
     viewModel: MyPageViewModel = koinViewModel(),
 ) {
     val snackbarHostState = LocalSnackbarDelegate.current
-
     val uiState: MyPageState by viewModel.uiState.collectAsStateWithLifecycle()
-
     var showGallery by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -90,17 +90,23 @@ fun MyPageScreen(
         modifier = modifier,
     )
 
+    val errorMessage = stringResource(resource = Res.string.error_imagepicker)
     if (showGallery) {
         GalleryPickerLauncher(
             onPhotosSelected = { photos: List<GalleryPhotoResult> ->
                 showGallery = false
-
                 photos.firstOrNull()?.let { image: GalleryPhotoResult ->
                     Napier.d("selectedImage: $image")
                     viewModel.onIntent(intent = MyPageIntent.EditProfileImage(uri = image.uri))
                 }
             },
-            onError = { showGallery = false },
+            onError = {
+                showGallery = false
+                snackbarHostState.showSnackbar(
+                    message = errorMessage,
+                    state = SnackbarState.NEGATIVE
+                )
+            },
             onDismiss = { showGallery = false },
             allowMultiple = false,
             selectionLimit = 1,

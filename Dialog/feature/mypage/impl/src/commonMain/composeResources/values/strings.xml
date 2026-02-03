@@ -21,4 +21,6 @@
     <string name="track_android_initial">AN</string>
     <string name="track_backend_initial">BE</string>
     <string name="track_frontend_initial">FE</string>
+
+    <string name="error_imagepicker">이미지 선택 중에 오류가 발생했습니다.</string>
 </resources>
