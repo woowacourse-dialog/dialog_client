@@ -60,7 +60,7 @@ internal sealed interface DiscussionUiModel {
                     track = catalogContent.category.toUiModel(),
                     status = status(now = now).toUiModel(),
                     commentCount = catalogContent.commentCount,
-                    period = "~ ${endDate.endDate}",
+                    period = "~ ${endDate.endDate}".replace("-", "."),
                 )
         }
     }
@@ -96,7 +96,10 @@ internal sealed interface DiscussionUiModel {
                     commentCount = catalogContent.commentCount,
                     partingCapacity = "${participantCapacity.current}/${participantCapacity.max}",
                     place = place,
-                    period = "${dateTimePeriod.startAt.date} ~ ${dateTimePeriod.endAt.date}",
+                    period = "${dateTimePeriod.startAt.date} ~ ${dateTimePeriod.endAt.date}".replace(
+                        "-",
+                        ".",
+                    ),
                 )
         }
     }
