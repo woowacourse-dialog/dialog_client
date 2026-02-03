@@ -26,7 +26,6 @@ import com.on.dialog.feature.discussionlist.impl.component.DiscussionListTopAppB
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionStatusUiModel
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionTypeUiModel
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionUiModel
-import com.on.dialog.feature.discussionlist.impl.model.SelectedFilters
 import com.on.dialog.feature.discussionlist.impl.model.TrackUiModel
 import com.on.dialog.feature.discussionlist.impl.viewmodel.DiscussionListEffect
 import com.on.dialog.feature.discussionlist.impl.viewmodel.DiscussionListIntent
@@ -181,11 +180,6 @@ private fun DiscussionListScreenPreview() {
                             )
                         }
                     }.toImmutableList(),
-                    filter = SelectedFilters(
-                        selectedTrackFilter = listOf(TrackUiModel.entries[0]),
-                        selectedStatusFilter = listOf(DiscussionStatusUiModel.entries[1]),
-                        selectedTypeFilter = listOf(DiscussionTypeUiModel.entries[0]),
-                    ),
                 ),
                 isRefreshing = false,
                 onRefresh = {},
