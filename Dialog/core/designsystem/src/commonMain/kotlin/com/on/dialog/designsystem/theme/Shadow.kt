@@ -73,7 +73,7 @@ enum class ShadowLevel(
         blur = 4.dp,
         offsetX = 0.dp,
         offsetY = 2.dp,
-        alpha = 0.12f,
+        alpha = 0.18f,
     ),
 }
 

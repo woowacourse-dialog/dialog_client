@@ -11,10 +11,9 @@ fun EntryProviderScope<NavKey>.discussionListScreen(
     navigator: Navigator,
 ) {
     entry<DiscussionListNavKey> {
-        DiscussionListScreen(navigateToDiscussionDetail = {
-            navigator.navigate(
-                DiscussionDetailNavKey,
-            )
-        })
+        DiscussionListScreen(
+            navigateToDiscussionDetail = { navigator.navigate(DiscussionDetailNavKey) },
+            navigateToCreateDiscussion = { /* TODO: 토론 생성 화면 구현 */ },
+        )
     }
 }

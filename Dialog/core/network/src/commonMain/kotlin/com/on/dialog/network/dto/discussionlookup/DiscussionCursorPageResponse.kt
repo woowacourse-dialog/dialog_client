@@ -3,11 +3,11 @@ package com.on.dialog.network.dto.discussionlookup
 import com.on.dialog.core.common.extension.toIsoLocalDate
 import com.on.dialog.core.common.extension.toIsoLocalDateTime
 import com.on.dialog.model.common.ProfileImage
+import com.on.dialog.model.common.Track
 import com.on.dialog.model.discussion.catalog.DiscussionCatalog
 import com.on.dialog.model.discussion.catalog.OfflineDiscussionCatalog
 import com.on.dialog.model.discussion.catalog.OnlineDiscussionCatalog
 import com.on.dialog.model.discussion.content.CatalogContent
-import com.on.dialog.model.discussion.content.DiscussionCategory
 import com.on.dialog.model.discussion.cursorpage.DiscussionCatalogCursorPage
 import com.on.dialog.model.discussion.datetimeperiod.DateTimePeriod
 import com.on.dialog.model.discussion.datetimeperiod.EndDate
@@ -58,11 +58,11 @@ data class DiscussionCursorPageResponse(
                         id = id,
                         title = commonDiscussionInfoDto.title,
                         author = commonDiscussionInfoDto.author,
-                        category = DiscussionCategory.of(commonDiscussionInfoDto.category),
+                        category = Track.valueOf(commonDiscussionInfoDto.category),
                         createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
                         modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
                         commentCount = commonDiscussionInfoDto.commentCount,
-                        profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
+                        profileImage = commonDiscussionInfoDto.profileImageDto.toDomain(),
                     ),
                     endDate = EndDate(onlineDiscussionInfoDto.endDate.toIsoLocalDate()),
                 )
@@ -85,11 +85,11 @@ data class DiscussionCursorPageResponse(
                         id = id,
                         title = commonDiscussionInfoDto.title,
                         author = commonDiscussionInfoDto.author,
-                        category = DiscussionCategory.of(commonDiscussionInfoDto.category),
+                        category = Track.valueOf(commonDiscussionInfoDto.category),
                         createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
                         modifiedAt = commonDiscussionInfoDto.modifiedAt.toIsoLocalDateTime(),
                         commentCount = commonDiscussionInfoDto.commentCount,
-                        profileImage = commonDiscussionInfoDto.profileImageDto?.toDomain(),
+                        profileImage = commonDiscussionInfoDto.profileImageDto.toDomain(),
                     ),
                     dateTimePeriod = DateTimePeriod(
                         startAt = offlineDiscussionInfoDto.startAt.toIsoLocalDateTime(),
@@ -110,7 +110,7 @@ data class DiscussionCursorPageResponse(
             @SerialName("author")
             val author: String,
             @SerialName("profileImage")
-            val profileImageDto: ProfileImageDto?,
+            val profileImageDto: ProfileImageDto,
             @SerialName("category")
             val category: String,
             @SerialName("createdAt")
@@ -123,7 +123,7 @@ data class DiscussionCursorPageResponse(
             @Serializable
             data class ProfileImageDto(
                 @SerialName("basicImageUri")
-                val basicImageUri: String?,
+                val basicImageUri: String,
                 @SerialName("customImageUri")
                 val customImageUri: String?,
             ) {

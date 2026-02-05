@@ -11,5 +11,6 @@
 
     <!-- DiscussionCard.kt -->
     <string name="discussion_card_author">개설자: %1$s</string>
-    <string name="discussion_card_endAt">종료일: %1$s</string>
+    <string name="discussion_card_period">기간: %1$s</string>
+    <string name="discussion_card_participant">참여: %1$s</string>
 </resources>

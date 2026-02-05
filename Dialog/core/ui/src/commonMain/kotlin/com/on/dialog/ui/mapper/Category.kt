@@ -54,10 +54,4 @@ fun DiscussionType.toChipCategory(): ChipCategory = when (this) {
         textColor = Color.White,
         backgroundColor = Color(color = 0xFF000000),
     )
-
-    DiscussionType.UNDEFINED -> ChipCategory(
-        text = stringResource(resource = Res.string.discussion_type_online),
-        textColor = Color.White,
-        backgroundColor = Color(color = 0xFF000000),
-    )
 }

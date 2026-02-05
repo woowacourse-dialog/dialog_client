@@ -7,6 +7,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -56,45 +57,47 @@ fun DialogNavigationBar(
     onSelectedKeyChange: (NavKey) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    NavigationBar(
-        containerColor = DialogTheme.colorScheme.surface,
-        contentColor = DialogTheme.colorScheme.onSurface,
-        modifier = modifier,
-    ) {
-        items.forEach { (navKey, item) ->
-            val isSelected = selectedKey == navKey
-            val primaryColor = DialogTheme.colorScheme.primary
-            val iconColor = if (isSelected) primaryColor else primaryColor.copy(alpha = 0.3f)
-            val textColor = if (isSelected) primaryColor else primaryColor.copy(alpha = 0.3f)
+    Surface(shadowElevation = 8.dp) {
+        NavigationBar(
+            containerColor = DialogTheme.colorScheme.surface,
+            contentColor = DialogTheme.colorScheme.onSurface,
+            modifier = modifier,
+        ) {
+            items.forEach { (navKey, item) ->
+                val isSelected = selectedKey == navKey
+                val primaryColor = DialogTheme.colorScheme.primary
+                val iconColor = if (isSelected) primaryColor else primaryColor.copy(alpha = 0.3f)
+                val textColor = if (isSelected) primaryColor else primaryColor.copy(alpha = 0.3f)
 
-            NavigationBarItem(
-                selected = isSelected,
-                onClick = { onSelectedKeyChange(navKey) },
-                icon = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(2.dp),
-                    ) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = stringResource(resource = item.label),
-                            tint = iconColor,
-                            modifier = Modifier.size(32.dp),
-                        )
-                        Text(
-                            text = stringResource(resource = item.label),
-                            style = DialogTheme.typography.labelLarge,
-                            color = textColor,
-                        )
-                    }
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = Color.Transparent,
-                    selectedIconColor = DialogTheme.colorScheme.primary,
-                    unselectedIconColor = DialogTheme.colors.gray400,
-                ),
-                interactionSource = NoRippleInteractionSource,
-            )
+                NavigationBarItem(
+                    selected = isSelected,
+                    onClick = { onSelectedKeyChange(navKey) },
+                    icon = {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(2.dp),
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = stringResource(resource = item.label),
+                                tint = iconColor,
+                                modifier = Modifier.size(32.dp),
+                            )
+                            Text(
+                                text = stringResource(resource = item.label),
+                                style = DialogTheme.typography.labelLarge,
+                                color = textColor,
+                            )
+                        }
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = Color.Transparent,
+                        selectedIconColor = DialogTheme.colorScheme.primary,
+                        unselectedIconColor = DialogTheme.colors.gray400,
+                    ),
+                    interactionSource = NoRippleInteractionSource,
+                )
+            }
         }
     }
 }

@@ -1,0 +1,40 @@
+package com.on.dialog.feature.discussionlist.impl.model
+
+import androidx.compose.runtime.Composable
+import com.on.dialog.model.discussion.content.DiscussionStatus
+import dialog.feature.discussionlist.impl.generated.resources.Res
+import dialog.feature.discussionlist.impl.generated.resources.discussion_status_discussion_complete
+import dialog.feature.discussionlist.impl.generated.resources.discussion_status_in_discussion
+import dialog.feature.discussionlist.impl.generated.resources.discussion_status_recruit_complete
+import dialog.feature.discussionlist.impl.generated.resources.discussion_status_recruiting
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
+
+internal enum class DiscussionStatusUiModel(
+    private val titleResId: StringResource,
+) {
+    RECRUITING(Res.string.discussion_status_recruiting),
+    RECRUIT_COMPLETE(Res.string.discussion_status_recruit_complete),
+    IN_DISCUSSION(Res.string.discussion_status_in_discussion),
+    DISCUSSION_COMPLETE(Res.string.discussion_status_discussion_complete),
+    ;
+
+    fun toDomain(): DiscussionStatus = when (this) {
+        RECRUITING -> DiscussionStatus.RECRUITING
+        RECRUIT_COMPLETE -> DiscussionStatus.RECRUIT_COMPLETE
+        IN_DISCUSSION -> DiscussionStatus.IN_DISCUSSION
+        DISCUSSION_COMPLETE -> DiscussionStatus.DISCUSSION_COMPLETE
+    }
+
+    val title: String
+        @Composable get() = stringResource(titleResId)
+
+    companion object {
+        fun DiscussionStatus.toUiModel(): DiscussionStatusUiModel = when (this) {
+            DiscussionStatus.RECRUITING -> RECRUITING
+            DiscussionStatus.RECRUIT_COMPLETE -> RECRUIT_COMPLETE
+            DiscussionStatus.IN_DISCUSSION -> IN_DISCUSSION
+            DiscussionStatus.DISCUSSION_COMPLETE -> DISCUSSION_COMPLETE
+        }
+    }
+}

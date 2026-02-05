@@ -11,7 +11,6 @@ import com.on.dialog.model.common.ProfileImage
 import com.on.dialog.model.common.Track
 import com.on.dialog.model.user.UserInfo
 import com.on.dialog.ui.viewmodel.BaseViewModel
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 class MyPageViewModel(
@@ -38,18 +37,18 @@ class MyPageViewModel(
             .launch {
                 authRepository
                     .getLoginStatus()
-                    .onSuccess { isLoggedIn: Boolean ->
-                        if (isLoggedIn) {
-                            loadMyPage()
-                            loadMyProfileImage()
-                            updateState { copy(isLoggedIn = true) }
-                        } else {
-                            updateState { copy(isLoggedIn = false) }
-                        }
-                    }
+                    .onSuccess(::handleGetLoginStatus)
             }.invokeOnCompletion {
                 updateState { copy(isLoading = false) }
             }
+    }
+
+    private fun handleGetLoginStatus(isLoggedIn: Boolean) {
+        if (isLoggedIn) {
+            loadMyPage()
+            loadMyProfileImage()
+        }
+        updateState { copy(isLoggedIn = isLoggedIn) }
     }
 
     private fun loadMyPage() {
@@ -133,7 +132,6 @@ class MyPageViewModel(
                             ),
                         )
                     }
-                    Napier.d("프로필 수정 성공")
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = "프로필이 수정되었습니다.",
@@ -141,7 +139,6 @@ class MyPageViewModel(
                         ),
                     )
                 }.onFailure { result ->
-                    Napier.d("프로필 수정 실패: ${result.message}")
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = "프로필 수정에 실패했습니다.",
@@ -182,11 +179,8 @@ class MyPageViewModel(
         viewModelScope.launch {
             authRepository
                 .logout()
-                .onSuccess {
-                    updateState { MyPageState() }
-                    Napier.d("로그아웃 성공")
-                }.onFailure { result: Throwable ->
-                    Napier.w("로그아웃 실패")
+                .onSuccess { updateState { MyPageState() } }
+                .onFailure { result: Throwable ->
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = result.message ?: "로그아웃에 실패했습니다.",
