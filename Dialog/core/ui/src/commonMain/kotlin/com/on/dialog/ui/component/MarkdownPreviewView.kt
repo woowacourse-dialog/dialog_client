@@ -25,12 +25,12 @@ import com.on.dialog.designsystem.component.AnimatedTab
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.extensions.noRippleClickable
 import dialog.core.ui.generated.resources.Res
-import dialog.core.ui.generated.resources.markdown_preview_preview
-import dialog.core.ui.generated.resources.markdown_preview_write
+import dialog.core.ui.generated.resources.markdown_renderer_preview
+import dialog.core.ui.generated.resources.markdown_renderer_write
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MarkdownPreviewView(
+fun MarkdownRenderer(
     text: String,
     onClickContent: () -> Unit,
     modifier: Modifier = Modifier,
@@ -45,7 +45,7 @@ fun MarkdownPreviewView(
             indicator = {},
         ) {
             AnimatedTab(
-                title = stringResource(Res.string.markdown_preview_write),
+                title = stringResource(Res.string.markdown_renderer_write),
                 selected = selectedTabIndex == 0,
                 onClick = {
                     selectedTabIndex = 0
@@ -57,7 +57,7 @@ fun MarkdownPreviewView(
             )
 
             AnimatedTab(
-                title = stringResource(Res.string.markdown_preview_preview),
+                title = stringResource(Res.string.markdown_renderer_preview),
                 selected = selectedTabIndex == 1,
                 onClick = {
                     selectedTabIndex = 1
@@ -107,9 +107,9 @@ fun MarkdownPreviewView(
 
 @Preview(showBackground = true)
 @Composable
-fun MarkdownPreviewViewPreview() {
+private fun MarkdownRendererPreview() {
     DialogTheme {
-        MarkdownPreviewView(
+        MarkdownRenderer(
             text = "#### Hello World\n\nThis is a **bold** statement.",
             modifier = Modifier.size(500.dp, 300.dp),
             onClickContent = {},

@@ -17,8 +17,8 @@ import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.ui.component.MarkdownEditorView
-import com.on.dialog.ui.component.MarkdownPreviewView
+import com.on.dialog.ui.component.MarkdownEditor
+import com.on.dialog.ui.component.MarkdownRenderer
 
 @Composable
 fun DiscussionDetailScreen(
@@ -42,7 +42,7 @@ fun DiscussionDetailScreen(
             },
         )
 
-        MarkdownPreviewView(
+        MarkdownRenderer(
             text = content.text,
             modifier = Modifier.size(500.dp, 300.dp),
             onClickContent = {
@@ -52,7 +52,7 @@ fun DiscussionDetailScreen(
     }
 
     if (showMarkdownEditor) {
-        MarkdownEditorView(
+        MarkdownEditor(
             title = "댓글 작성",
             content = content,
             onContentChanged = { newContent: TextFieldValue ->
