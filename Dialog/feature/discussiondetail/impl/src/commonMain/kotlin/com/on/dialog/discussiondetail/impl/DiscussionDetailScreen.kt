@@ -54,8 +54,8 @@ fun DiscussionDetailScreen(
     if (showMarkdownEditor) {
         MarkdownEditor(
             title = "댓글 작성",
-            content = content,
-            onContentChanged = { newContent: TextFieldValue ->
+            initialContent = content,
+            onConfirm = { newContent: TextFieldValue ->
                 content = newContent
             },
             onExit = {

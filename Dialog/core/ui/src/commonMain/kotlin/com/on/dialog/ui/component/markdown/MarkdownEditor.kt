@@ -39,14 +39,16 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MarkdownEditor(
     title: String,
-    content: TextFieldValue,
-    onContentChanged: (TextFieldValue) -> Unit,
+    initialContent: TextFieldValue,
+    onConfirm: (TextFieldValue) -> Unit,
     onExit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navState: NavigationEventState<NavigationEventInfo.None> =
         rememberNavigationEventState(NavigationEventInfo.None)
     val focusRequester: FocusRequester = remember { FocusRequester() }
+
+    var content: TextFieldValue by remember { mutableStateOf(initialContent) }
 
     val markdownStyles: List<MarkdownStyle> =
         listOf(
@@ -86,7 +88,10 @@ fun MarkdownEditor(
                 }
             },
             actions = {
-                IconButton(onClick = onExit) {
+                IconButton(onClick = {
+                    onConfirm(content)
+                    onExit()
+                }) {
                     Icon(
                         imageVector = DialogIcons.Check,
                         contentDescription = null
@@ -101,12 +106,14 @@ fun MarkdownEditor(
                 if (newValue.text.length > content.text.length &&
                     newValue.text.substring(content.text.length).contains('\n')
                 ) {
-                    val handled = MarkdownStyle.Number.handleNewLine(newValue, onContentChanged)
+                    val handled: Boolean = MarkdownStyle.Number.handleNewLine(newValue) {
+                        content = it
+                    }
                     if (!handled) {
-                        onContentChanged(newValue)
+                        content = newValue
                     }
                 } else {
-                    onContentChanged(newValue)
+                    content = newValue
                 }
             },
             modifier = Modifier
@@ -125,26 +132,9 @@ fun MarkdownEditor(
                 MarkdownButton(
                     style = markdownStyles[index],
                     content = content,
-                    onContentChanged = onContentChanged
+                    onContentChanged = { content = it }
                 )
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MarkdownEditorPreview() {
-    var text by remember {
-        mutableStateOf(TextFieldValue("내용을 입력하세요"))
-    }
-
-    MarkdownEditor(
-        title = "댓글 작성",
-        content = text,
-        onContentChanged = {
-            text = it
-        },
-        onExit = {}
-    )
 }
