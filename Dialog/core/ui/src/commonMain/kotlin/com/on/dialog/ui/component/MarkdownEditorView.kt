@@ -13,11 +13,14 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,6 +54,7 @@ fun MarkdownEditorView(
 ) {
     val navState: NavigationEventState<NavigationEventInfo.None> =
         rememberNavigationEventState(NavigationEventInfo.None)
+    val focusRequester: FocusRequester = remember { FocusRequester() }
 
     val markdownActions: List<MarkdownAction> = listOf(
         MarkdownAction(MarkdownStyle.Bold, DialogIcons.bold),
@@ -68,6 +72,10 @@ fun MarkdownEditorView(
         isBackEnabled = true,
         onBackCompleted = onExit
     )
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
 
     Column(
         modifier = modifier
@@ -110,7 +118,8 @@ fun MarkdownEditorView(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
+                .weight(1f)
+                .focusRequester(focusRequester),
             singleLine = false,
             placeholder = stringResource(Res.string.markdown_editor_place_holder_please_enter_contents)
         )
