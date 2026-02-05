@@ -1,9 +1,12 @@
 package com.on.dialog.ui.component.markdown
 
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.on.dialog.designsystem.icon.DialogIcons
 
-sealed class MarkdownStyle {
+sealed class MarkdownStyle() {
+    abstract val icon: ImageVector
 
     abstract fun apply(
         content: TextFieldValue,
@@ -13,6 +16,7 @@ sealed class MarkdownStyle {
     sealed class Inline(
         protected val prefix: String,
         protected val suffix: String,
+        override val icon: ImageVector,
     ) : MarkdownStyle() {
 
         override fun apply(
@@ -74,6 +78,7 @@ sealed class MarkdownStyle {
 
     sealed class Block(
         protected val linePrefix: String,
+        override val icon: ImageVector,
     ) : MarkdownStyle() {
 
         override fun apply(
@@ -118,13 +123,15 @@ sealed class MarkdownStyle {
         }
     }
 
-    object Bold : Inline("**", "**")
-    object Italic : Inline("*", "*")
-    object Code : Inline("`", "`")
+    object Bold : Inline("**", "**", DialogIcons.bold)
+    object Italic : Inline("*", "*", DialogIcons.italic)
+    object Code : Inline("`", "`", DialogIcons.code)
 
-    object Quote : Block("> ")
-    object Bullet : Block("- ")
+    object Quote : Block("> ", DialogIcons.quote)
+    object Bullet : Block("- ", DialogIcons.bullet)
     object Number : MarkdownStyle() {
+        override val icon: ImageVector = DialogIcons.number
+
         private val numberPattern = Regex("^(\\d+)\\. ")
 
         override fun apply(
@@ -223,7 +230,7 @@ sealed class MarkdownStyle {
         }
     }
 
-    object Link : Inline("[", "](url)") {
+    object Link : Inline("[", "](url)", DialogIcons.link) {
         override fun apply(
             content: TextFieldValue,
             onContentChanged: (TextFieldValue) -> Unit,
@@ -258,6 +265,8 @@ sealed class MarkdownStyle {
     }
 
     object CodeBlock : MarkdownStyle() {
+        override val icon: ImageVector = DialogIcons.codeBlock
+
         override fun apply(
             content: TextFieldValue,
             onContentChanged: (TextFieldValue) -> Unit,

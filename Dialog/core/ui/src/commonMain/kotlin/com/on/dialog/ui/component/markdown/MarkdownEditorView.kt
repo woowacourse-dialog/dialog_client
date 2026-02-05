@@ -21,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,11 +36,6 @@ import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.markdown_editor_place_holder_please_enter_contents
 import org.jetbrains.compose.resources.stringResource
 
-private data class MarkdownAction(
-    val style: MarkdownStyle,
-    val icon: ImageVector,
-)
-
 @Composable
 fun MarkdownEditor(
     title: String,
@@ -54,16 +48,17 @@ fun MarkdownEditor(
         rememberNavigationEventState(NavigationEventInfo.None)
     val focusRequester: FocusRequester = remember { FocusRequester() }
 
-    val markdownActions: List<MarkdownAction> = listOf(
-        MarkdownAction(MarkdownStyle.Bold, DialogIcons.bold),
-        MarkdownAction(MarkdownStyle.Italic, DialogIcons.italic),
-        MarkdownAction(MarkdownStyle.Code, DialogIcons.code),
-        MarkdownAction(MarkdownStyle.CodeBlock, DialogIcons.codeBlock),
-        MarkdownAction(MarkdownStyle.Bullet, DialogIcons.bullet),
-        MarkdownAction(MarkdownStyle.Number, DialogIcons.number),
-        MarkdownAction(MarkdownStyle.Link, DialogIcons.link),
-        MarkdownAction(MarkdownStyle.Quote, DialogIcons.quote),
-    )
+    val markdownStyles: List<MarkdownStyle> =
+        listOf(
+            MarkdownStyle.Bold,
+            MarkdownStyle.Italic,
+            MarkdownStyle.Code,
+            MarkdownStyle.Quote,
+            MarkdownStyle.Bullet,
+            MarkdownStyle.Number,
+            MarkdownStyle.Link,
+            MarkdownStyle.CodeBlock
+        )
 
     NavigationBackHandler(
         state = navState,
@@ -126,11 +121,9 @@ fun MarkdownEditor(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 5.dp),
             modifier = Modifier.windowInsetsPadding(WindowInsets.ime)
         ) {
-            items(markdownActions.size) { index ->
-                val (style: MarkdownStyle, icon: ImageVector) = markdownActions[index]
+            items(markdownStyles.size) { index ->
                 MarkdownButton(
-                    style = style,
-                    icon = icon,
+                    style = markdownStyles[index],
                     content = content,
                     onContentChanged = onContentChanged
                 )
