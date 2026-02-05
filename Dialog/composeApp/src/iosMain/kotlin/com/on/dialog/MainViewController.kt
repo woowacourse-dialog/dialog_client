@@ -10,4 +10,6 @@ fun MainViewController() = ComposeUIViewController(
         initLogger()
         initKoin()
     }
-) { MainApp() }
+) {
+    MainApp()
+}

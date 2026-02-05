@@ -9,8 +9,10 @@ import com.on.dialog.network.dto.user.ProfileImageUpdateResponse
 import com.on.dialog.network.dto.user.UserInfoResponse
 import com.on.dialog.network.dto.user.UserMypageUpdateRequest
 import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.PATCH
+import io.ktor.client.request.forms.MultiPartFormDataContent
 
 interface UserService {
     @GET("api/user/mine")
@@ -21,6 +23,9 @@ interface UserService {
         @Body
         request: UserMypageUpdateRequest,
     ): DataResponse<Unit>
+
+    @DELETE("api/user/mine")
+    suspend fun deleteMyAccount(): DataResponse<Unit>
 
     @PATCH("api/user/mine/notifications")
     suspend fun updateNotificationSetting(
@@ -34,7 +39,7 @@ interface UserService {
     @PATCH("api/user/mine/profile-image")
     suspend fun updateMyProfileImage(
         @Body
-        request: String, // 업로드할 이미지 파일 Binary (JPEG, PNG 등)
+        request: MultiPartFormDataContent,
     ): DataResponse<ProfileImageUpdateResponse>
 
     @GET("api/user/mine/track")

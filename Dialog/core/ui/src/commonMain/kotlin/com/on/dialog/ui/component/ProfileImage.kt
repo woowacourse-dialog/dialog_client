@@ -1,6 +1,7 @@
 package com.on.dialog.ui.component
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ fun ProfileImage(
     onSuccess: () -> Unit = {},
     onLoading: () -> Unit = {},
     onError: () -> Unit = {},
+    onClick: (() -> Unit)? = null,
 ) {
     DialogAsyncImage(
         imageUrl = imageUrl,
@@ -34,7 +36,8 @@ fun ProfileImage(
         onError = onError,
         modifier = modifier
             .border(width = 0.5.dp, color = DialogTheme.colorScheme.onSurface, shape = CircleShape)
-            .clip(CircleShape),
+            .clip(CircleShape)
+            .clickable(enabled = onClick != null, onClick = { onClick?.invoke() }),
     )
 }
 
