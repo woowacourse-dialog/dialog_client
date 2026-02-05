@@ -22,19 +22,19 @@ data class OfflineDiscussionDetail(
             }
 
             dateTimePeriod.isBeforeStart(now) && participantCapacity.isParticipantFull() -> {
-                DiscussionStatus.RECRUITCOMPLETE
+                DiscussionStatus.RECRUIT_COMPLETE
             }
 
             dateTimePeriod.isInPeriod(now) -> {
-                DiscussionStatus.INDISCUSSION
+                DiscussionStatus.IN_DISCUSSION
             }
 
             dateTimePeriod.isAfterEnd(now) -> {
-                DiscussionStatus.DISCUSSIONCOMPLETE
+                DiscussionStatus.DISCUSSION_COMPLETE
             }
 
             else -> {
-                DiscussionStatus.UNDEFINED
+                throw IllegalStateException("Unknown DiscussionStatus")
             }
         }
 }

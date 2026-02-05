@@ -119,6 +119,7 @@ internal class KmpFeatureImplConventionPlugin : Plugin<Project> {
                     implementation(libs.library("kotlinx-collections-immutable"))
                     implementation(libs.library("jetbrains-navigation3-ui"))
                     implementation(libs.library("napier"))
+                    implementation(libs.library("kotlinx-datetime"))
                 }
             }
         }

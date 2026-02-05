@@ -27,7 +27,7 @@ fun LocalDateTime.Companion.now(
  * @throws IllegalArgumentException 문자열이 ISO 형식과 맞지 않을 경우
  */
 fun String.toIsoLocalDate(): LocalDate =
-    LocalDate.parse(this, LocalDate.Formats.ISO)
+    LocalDate.parse(this.replace(" ", "T"), LocalDate.Formats.ISO)
 
 /**
  * 이 문자열을 ISO-8601 형식으로 [LocalDateTime]로 변환합니다. (예: 2020-08-30T18:43)
@@ -35,7 +35,7 @@ fun String.toIsoLocalDate(): LocalDate =
  * @throws IllegalArgumentException 문자열이 ISO 형식과 맞지 않을 경우
  */
 fun String.toIsoLocalDateTime(): LocalDateTime =
-    LocalDateTime.parse(this, LocalDateTime.Formats.ISO)
+    LocalDateTime.parse(this.replace(" ", "T"), LocalDateTime.Formats.ISO)
 
 /**
  * [LocalDate]를 주어진 유니코드 패턴으로 문자열로 변환합니다.

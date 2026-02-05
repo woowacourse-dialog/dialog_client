@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +40,6 @@ fun InteractionIndicator(
             text = if (count >= 1000) "${count / 1000}K+" else count.toString(),
             textAlign = TextAlign.Center,
             style = DialogTheme.typography.bodyMedium,
-            modifier = Modifier.width(32.dp),
         )
     }
 }

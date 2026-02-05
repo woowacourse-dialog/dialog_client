@@ -30,7 +30,6 @@ import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.ProfileImage
 import dialog.feature.mypage.impl.generated.resources.Res
 import dialog.feature.mypage.impl.generated.resources.login
@@ -226,7 +225,7 @@ private fun ProfileSectionPreview() {
                 uiState = MyPageState(
                     imageUrl = "",
                     nickname = "크림",
-                    track = Track.ANDROID.initial,
+                    track = "AN",
                     githubId = "ijh1298",
                     isNotificationEnable = false,
                     isLoggedIn = true,
@@ -245,7 +244,7 @@ private fun MyPageScreenLoggedInPreview() {
                 uiState = MyPageState(
                     imageUrl = "",
                     nickname = "크림",
-                    track = Track.ANDROID.initial,
+                    track = "AN",
                     githubId = "ijh1298",
                     isNotificationEnable = false,
                     isLoggedIn = true,

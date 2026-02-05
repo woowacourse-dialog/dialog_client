@@ -8,6 +8,7 @@ import com.on.dialog.ui.component.ChipCategory
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.category_android
 import dialog.core.ui.generated.resources.category_backend
+import dialog.core.ui.generated.resources.category_common
 import dialog.core.ui.generated.resources.category_frontend
 import dialog.core.ui.generated.resources.discussion_type_offline
 import dialog.core.ui.generated.resources.discussion_type_online
@@ -32,6 +33,12 @@ fun Track.toChipCategory(): ChipCategory = when (this) {
         textColor = Color.White,
         backgroundColor = Color(color = 0xFF2196F3),
     )
+
+    Track.COMMON -> ChipCategory(
+        text = stringResource(resource = Res.string.category_common),
+        textColor = Color.White,
+        backgroundColor = Color(0xFF607D8B),
+    )
 }
 
 @Composable
@@ -44,12 +51,6 @@ fun DiscussionType.toChipCategory(): ChipCategory = when (this) {
 
     DiscussionType.OFFLINE -> ChipCategory(
         text = stringResource(resource = Res.string.discussion_type_offline),
-        textColor = Color.White,
-        backgroundColor = Color(color = 0xFF000000),
-    )
-
-    DiscussionType.UNDEFINED -> ChipCategory(
-        text = stringResource(resource = Res.string.discussion_type_online),
         textColor = Color.White,
         backgroundColor = Color(color = 0xFF000000),
     )
