@@ -32,7 +32,7 @@ private data class MarkdownAction(
 )
 
 @Composable
-fun MarkdownView(
+fun MarkdownEditorView(
     title: String,
     content: TextFieldValue,
     onContentChanged: (TextFieldValue) -> Unit,
@@ -105,12 +105,12 @@ fun MarkdownView(
 
 @Preview(showBackground = true)
 @Composable
-fun MarkdownViewPreview() {
+fun MarkdownEditorViewPreview() {
     var text by remember {
         mutableStateOf(TextFieldValue("여기에 입력"))
     }
 
-    MarkdownView(
+    MarkdownEditorView(
         title = "댓글 작성",
         content = text,
         onContentChanged = {
