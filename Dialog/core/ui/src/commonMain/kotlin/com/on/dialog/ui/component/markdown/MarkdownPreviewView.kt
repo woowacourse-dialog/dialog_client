@@ -1,4 +1,4 @@
-package com.on.dialog.ui.component
+package com.on.dialog.ui.component.markdown
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

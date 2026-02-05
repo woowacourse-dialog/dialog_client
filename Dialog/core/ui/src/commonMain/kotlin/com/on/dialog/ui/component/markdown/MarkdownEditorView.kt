@@ -1,4 +1,4 @@
-package com.on.dialog.ui.component
+package com.on.dialog.ui.component.markdown
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,8 +33,6 @@ import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.ui.component.button.MarkdownButton
-import com.on.dialog.ui.component.button.MarkdownStyle
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.markdown_editor_place_holder_please_enter_contents
 import org.jetbrains.compose.resources.stringResource

@@ -1,4 +1,4 @@
-package com.on.dialog.ui.component.button
+package com.on.dialog.ui.component.markdown
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Icon

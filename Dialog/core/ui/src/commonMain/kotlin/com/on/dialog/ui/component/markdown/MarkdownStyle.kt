@@ -1,4 +1,4 @@
-package com.on.dialog.ui.component.button
+package com.on.dialog.ui.component.markdown
 
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue

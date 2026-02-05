@@ -17,8 +17,8 @@ import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.ui.component.MarkdownEditor
-import com.on.dialog.ui.component.MarkdownRenderer
+import com.on.dialog.ui.component.markdown.MarkdownEditor
+import com.on.dialog.ui.component.markdown.MarkdownRenderer
 
 @Composable
 fun DiscussionDetailScreen(
