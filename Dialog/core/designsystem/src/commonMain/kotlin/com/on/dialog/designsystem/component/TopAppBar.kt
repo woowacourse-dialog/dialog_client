@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
@@ -17,9 +18,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.designsystem.theme.dropShadow
 
 /**
  * 상단에서 제목과 내비게이션, 액션을 제공하는 TopAppBar 컴포넌트입니다.
@@ -43,17 +46,21 @@ fun DialogTopAppBar(
 
     if (centerAligned) {
         CenterAlignedTopAppBar(
-            modifier = modifier,
+            modifier = modifier.dropShadow(RectangleShape),
             title = titleContent,
+            expandedHeight = 52.dp,
             navigationIcon = navigationIcon ?: {},
             actions = actions,
+            windowInsets = WindowInsets(0, 0, 0, 0),
         )
     } else {
         TopAppBar(
-            modifier = modifier,
+            modifier = modifier.dropShadow(RectangleShape),
             title = titleContent,
+            expandedHeight = 52.dp,
             navigationIcon = navigationIcon ?: {},
             actions = actions,
+            windowInsets = WindowInsets(0, 0, 0, 0),
         )
     }
 }

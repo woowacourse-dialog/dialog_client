@@ -9,7 +9,7 @@ class ProfileImageUpdateResponse(
     @SerialName("customImageUri")
     val customImageUri: String?,
     @SerialName("basicImageUri")
-    val basicImageUri: String?,
+    val basicImageUri: String,
 ) {
     fun toDomain(): ProfileImage =
         ProfileImage(

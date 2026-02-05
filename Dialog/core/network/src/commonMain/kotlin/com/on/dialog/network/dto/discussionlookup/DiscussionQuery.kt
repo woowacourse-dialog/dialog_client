@@ -1,23 +1,46 @@
 package com.on.dialog.network.dto.discussionlookup
 
+import com.on.dialog.model.discussion.content.DiscussionStatus
 import com.on.dialog.model.discussion.criteria.DiscussionCriteria
 
 data class DiscussionQuery(
     val discussionCriteria: DiscussionCriteria,
 ) {
-    fun toQueryMap(): Map<String, List<String>> {
-        val map: MutableMap<String, List<String>> = mutableMapOf()
+    fun toQueryMap(): Map<String, String> {
+        val map = mutableMapOf<String, String>()
 
-        discussionCriteria.categories?.let {
-            map["categories"] = it.map { category -> category.name }
-        }
-        discussionCriteria.statuses?.let { map["statuses"] = it.map { status -> status.name } }
-        discussionCriteria.discussionTypes?.let {
-            map["discussionTypes"] = it.map { type -> type.name }
-        }
+        discussionCriteria.tracks
+            .takeIf { it.isNotEmpty() }
+            ?.let { tracks ->
+                map["categories"] = tracks.joinToString(",") { it.name.lowercase() }
+            }
+
+        discussionCriteria.statuses
+            .takeIf { it.isNotEmpty() }
+            ?.let { statuses ->
+                map["statuses"] = statuses.joinToString(",") { it.toCamelCase() }
+            }
+
+        discussionCriteria.discussionTypes
+            .takeIf { it.isNotEmpty() }
+            ?.let { types ->
+                map["discussionTypes"] = types.joinToString(",") { it.name.lowercase() }
+            }
 
         return map
     }
+
+    private fun DiscussionStatus.toCamelCase(): String =
+        name
+            .lowercase()
+            .split("_")
+            .mapIndexed { index, word ->
+                if (index == 0) {
+                    word
+                } else {
+                    word.replaceFirstChar { it.uppercase() }
+                }
+            }.joinToString("")
 
     companion object {
         fun DiscussionCriteria.toQuery(): DiscussionQuery =

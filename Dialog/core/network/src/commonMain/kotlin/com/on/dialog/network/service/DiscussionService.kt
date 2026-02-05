@@ -38,7 +38,7 @@ internal interface DiscussionService {
 
     @GET("api/discussions")
     suspend fun getDiscussions(
-        @QueryMap query: Map<String, List<String>>,
+        @QueryMap query: Map<String, String>,
         @Query cursor: String?,
         @Query size: Int,
     ): DataResponse<DiscussionCursorPageResponse>
@@ -53,7 +53,7 @@ internal interface DiscussionService {
     suspend fun searchDiscussions(
         @Query searchBy: Int,
         @Query keyword: String,
-        @QueryMap query: Map<String, List<String>>,
+        @QueryMap query: Map<String, String>,
         @Query cursor: String?,
         @Query size: Int,
     ): DataResponse<DiscussionCursorPageResponse>

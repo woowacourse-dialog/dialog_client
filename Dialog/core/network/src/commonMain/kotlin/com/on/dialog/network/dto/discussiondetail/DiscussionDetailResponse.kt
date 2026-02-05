@@ -3,9 +3,9 @@ package com.on.dialog.network.dto.discussiondetail
 import com.on.dialog.core.common.extension.toIsoLocalDate
 import com.on.dialog.core.common.extension.toIsoLocalDateTime
 import com.on.dialog.model.common.ProfileImage
+import com.on.dialog.model.common.Track
 import com.on.dialog.model.discussion.content.Author
 import com.on.dialog.model.discussion.content.DetailContent
-import com.on.dialog.model.discussion.content.DiscussionCategory
 import com.on.dialog.model.discussion.datetimeperiod.DateTimePeriod
 import com.on.dialog.model.discussion.datetimeperiod.EndDate
 import com.on.dialog.model.discussion.detail.DiscussionDetail
@@ -34,7 +34,7 @@ sealed interface DiscussionDetailResponse {
                     id = id,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
-                    category = DiscussionCategory.of(commonDiscussionInfoDto.category),
+                    category = Track.valueOf(commonDiscussionInfoDto.category),
                     content = commonDiscussionInfoDto.content,
                     createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
                     likeCount = commonDiscussionInfoDto.likeCount,
@@ -67,7 +67,7 @@ sealed interface DiscussionDetailResponse {
                     id = id,
                     title = commonDiscussionInfoDto.title,
                     author = commonDiscussionInfoDto.authorDto.toDomain(),
-                    category = DiscussionCategory.of(commonDiscussionInfoDto.category),
+                    category = Track.valueOf(commonDiscussionInfoDto.category),
                     content = commonDiscussionInfoDto.content,
                     createdAt = commonDiscussionInfoDto.createdAt.toIsoLocalDateTime(),
                     likeCount = commonDiscussionInfoDto.likeCount,
@@ -147,7 +147,7 @@ sealed interface DiscussionDetailResponse {
             @Serializable
             data class ProfileImageDto(
                 @SerialName("basicImageUri")
-                val basicImageUri: String?,
+                val basicImageUri: String,
                 @SerialName("customImageUri")
                 val customImageUri: String?,
             ) {
