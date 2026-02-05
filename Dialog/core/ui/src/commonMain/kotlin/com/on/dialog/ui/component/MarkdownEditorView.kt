@@ -22,6 +22,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.NavigationEventState
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.ui.component.button.MarkdownButton
@@ -40,6 +44,9 @@ fun MarkdownEditorView(
     onExit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val navState: NavigationEventState<NavigationEventInfo.None> =
+        rememberNavigationEventState(NavigationEventInfo.None)
+
     val markdownActions: List<MarkdownAction> = listOf(
         MarkdownAction(MarkdownStyle.Bold, DialogIcons.bold),
         MarkdownAction(MarkdownStyle.Italic, DialogIcons.italic),
@@ -49,6 +56,12 @@ fun MarkdownEditorView(
         MarkdownAction(MarkdownStyle.Number, DialogIcons.number),
         MarkdownAction(MarkdownStyle.Link, DialogIcons.link),
         MarkdownAction(MarkdownStyle.Quote, DialogIcons.quote),
+    )
+
+    NavigationBackHandler(
+        state = navState,
+        isBackEnabled = true,
+        onBackCompleted = onExit
     )
 
     Column(modifier = modifier.fillMaxSize()) {
