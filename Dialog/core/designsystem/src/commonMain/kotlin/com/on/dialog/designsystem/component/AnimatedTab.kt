@@ -20,7 +20,7 @@ fun AnimatedTab(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     selectedBackgroundColor: Color = DialogTheme.colorScheme.primary,
-    unselectedBackgroundColor: Color = DialogTheme.colorScheme.onSurfaceVariant,
+    unselectedBackgroundColor: Color = DialogTheme.colorScheme.surface,
     selectedContentColor: Color = DialogTheme.colorScheme.onPrimary,
     unselectedContentColor: Color = DialogTheme.colorScheme.onSurfaceVariant,
 ) {
