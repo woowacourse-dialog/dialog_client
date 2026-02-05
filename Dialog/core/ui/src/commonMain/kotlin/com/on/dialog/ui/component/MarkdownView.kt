@@ -69,7 +69,18 @@ fun MarkdownView(
         )
         TextField(
             value = content,
-            onValueChange = onContentChanged,
+            onValueChange = { newValue ->
+                if (newValue.text.length > content.text.length &&
+                    newValue.text.substring(content.text.length).contains('\n')
+                ) {
+                    val handled = MarkdownStyle.Number.handleNewLine(newValue, onContentChanged)
+                    if (!handled) {
+                        onContentChanged(newValue)
+                    }
+                } else {
+                    onContentChanged(newValue)
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)

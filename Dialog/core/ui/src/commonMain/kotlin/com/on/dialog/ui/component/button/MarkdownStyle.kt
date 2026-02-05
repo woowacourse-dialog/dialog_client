@@ -124,7 +124,104 @@ sealed class MarkdownStyle {
 
     object Quote : Block("> ")
     object Bullet : Block("- ")
-    object Number : Block("1. ")
+    object Number : MarkdownStyle() {
+        private val numberPattern = Regex("^(\\d+)\\. ")
+
+        override fun apply(
+            content: TextFieldValue,
+            onContentChanged: (TextFieldValue) -> Unit,
+        ) {
+            val text = content.text
+            val selection = content.selection
+
+            val startLineStart =
+                text.lastIndexOf('\n', startIndex = selection.start - 1).let {
+                    if (it == -1) 0 else it + 1
+                }
+
+            val lineEnd = text.indexOf('\n', startLineStart).let {
+                if (it == -1) text.length else it
+            }
+            val currentLine = text.substring(startLineStart, lineEnd)
+
+            val match = numberPattern.find(currentLine)
+
+            val newText = if (match != null) {
+                text.removeRange(
+                    startLineStart,
+                    startLineStart + match.value.length
+                )
+            } else {
+                text.replaceRange(
+                    startLineStart,
+                    startLineStart,
+                    "1. "
+                )
+            }
+
+            val offset = if (match != null) -match.value.length else 3
+
+            onContentChanged(
+                content.copy(
+                    text = newText,
+                    selection = TextRange(
+                        (selection.start + offset).coerceAtLeast(0),
+                        (selection.end + offset).coerceAtLeast(0)
+                    )
+                )
+            )
+        }
+
+        fun handleNewLine(
+            content: TextFieldValue,
+            onContentChanged: (TextFieldValue) -> Unit,
+        ): Boolean {
+            val text = content.text
+            val cursorPosition = content.selection.start
+
+            val prevLineStart = text.lastIndexOf('\n', cursorPosition - 2).let {
+                if (it == -1) 0 else it + 1
+            }
+
+            val prevLineEnd = cursorPosition - 1
+            if (prevLineStart >= prevLineEnd) return false
+
+            val prevLine = text.substring(prevLineStart, prevLineEnd)
+
+            val match = numberPattern.find(prevLine) ?: return false
+
+            val currentNumber = match.groupValues[1].toInt()
+
+            if (prevLine.trim() == match.value.trim()) {
+                val newText = text.removeRange(prevLineStart, cursorPosition)
+                onContentChanged(
+                    content.copy(
+                        text = newText,
+                        selection = TextRange(prevLineStart)
+                    )
+                )
+                return true
+            }
+
+            val nextNumber = currentNumber + 1
+            val nextPrefix = "$nextNumber. "
+
+            val newText = text.replaceRange(
+                cursorPosition,
+                cursorPosition,
+                nextPrefix
+            )
+
+            onContentChanged(
+                content.copy(
+                    text = newText,
+                    selection = TextRange(cursorPosition + nextPrefix.length)
+                )
+            )
+
+            return true
+        }
+    }
 
     object Link : Inline("[", "](url)") {
         override fun apply(
