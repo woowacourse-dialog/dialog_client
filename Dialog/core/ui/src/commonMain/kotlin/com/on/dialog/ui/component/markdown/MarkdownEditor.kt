@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
@@ -33,6 +35,9 @@ import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.core.ui.generated.resources.Res
+import dialog.core.ui.generated.resources.markdown_editor_dialog_confirm
+import dialog.core.ui.generated.resources.markdown_editor_dialog_content
+import dialog.core.ui.generated.resources.markdown_editor_dialog_exit
 import dialog.core.ui.generated.resources.markdown_editor_place_holder_please_enter_contents
 import org.jetbrains.compose.resources.stringResource
 
@@ -47,8 +52,8 @@ fun MarkdownEditor(
     val navState: NavigationEventState<NavigationEventInfo.None> =
         rememberNavigationEventState(NavigationEventInfo.None)
     val focusRequester: FocusRequester = remember { FocusRequester() }
-
     var content: TextFieldValue by remember { mutableStateOf(initialContent) }
+    var showExitDialog by remember { mutableStateOf(false) }
 
     val markdownStyles: List<MarkdownStyle> =
         listOf(
@@ -65,11 +70,26 @@ fun MarkdownEditor(
     NavigationBackHandler(
         state = navState,
         isBackEnabled = true,
-        onBackCompleted = onExit
+        onBackCompleted = {
+            showExitDialog = true
+        }
     )
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+    }
+
+    if (showExitDialog) {
+        AlertDialog(
+            onDismissRequest = { showExitDialog = false },
+            text = { Text(text = stringResource(Res.string.markdown_editor_dialog_content)) },
+            confirmButton = { TextButton(onClick = onExit) { Text(stringResource(Res.string.markdown_editor_dialog_confirm)) } },
+            dismissButton = {
+                TextButton(onClick = {
+                    showExitDialog = false
+                }) { Text(stringResource(Res.string.markdown_editor_dialog_exit)) }
+            },
+        )
     }
 
     Column(
@@ -80,7 +100,9 @@ fun MarkdownEditor(
         DialogTopAppBar(
             title = title,
             navigationIcon = {
-                IconButton(onClick = onExit) {
+                IconButton(onClick = {
+                    showExitDialog = true
+                }) {
                     Icon(
                         imageVector = DialogIcons.ArrowBack,
                         contentDescription = null
