@@ -26,8 +26,9 @@ import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.mypage.impl.mapper.message
-import com.on.dialog.feature.mypage.impl.mapper.toFullName
-import com.on.dialog.feature.mypage.impl.mapper.toInitial
+import com.on.dialog.feature.mypage.impl.mapper.toFullNameRes
+import com.on.dialog.feature.mypage.impl.model.TrackUiModel
+import com.on.dialog.feature.mypage.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.model.common.Track
 import com.on.dialog.model.user.NicknameState
 import dialog.feature.mypage.impl.generated.resources.Res
@@ -44,7 +45,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ProfileEditDialog(
     nickname: String,
-    track: String,
+    track: TrackUiModel,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
@@ -67,18 +68,19 @@ fun ProfileEditDialog(
 @Composable
 private fun EditDialogContent(
     nickname: String,
-    track: String,
+    track: TrackUiModel,
     onDismissRequest: () -> Unit,
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
 ) {
     val tracks: ImmutableList<String> =
         Track.entries
             .filter { it != Track.COMMON }
-            .map { it.toFullName() }
+            .map { stringResource(it.toFullNameRes()) }
             .toImmutableList()
+    val selectedTrackFullName = stringResource(track.fullNameRes)
 
     var nickname: String by rememberSaveable { mutableStateOf(nickname) }
-    var selectedIndex by rememberSaveable { mutableIntStateOf(track.indexOf(track)) }
+    var selectedIndex by rememberSaveable { mutableIntStateOf(tracks.indexOf(selectedTrackFullName)) }
     val nicknameState: NicknameState by derivedStateOf { NicknameState.from(nickname = nickname) }
 
     Column {
@@ -128,7 +130,7 @@ private fun ProfileEditDialogPreview() {
         Surface {
             ProfileEditDialog(
                 nickname = "크림",
-                track = Track.ANDROID.toInitial(),
+                track = Track.ANDROID.toUiModel(),
                 onDismissRequest = {},
                 onUpdateProfile = { _, _ -> },
             )

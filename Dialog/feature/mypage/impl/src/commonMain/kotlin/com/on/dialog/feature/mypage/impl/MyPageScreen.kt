@@ -35,7 +35,7 @@ import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.feature.mypage.impl.mapper.toInitial
+import com.on.dialog.feature.mypage.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.feature.mypage.impl.model.UserInfoUiModel
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageEffect
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageIntent
@@ -290,7 +290,7 @@ private fun ProfileInfo(
                 style = DialogTheme.typography.titleMedium,
             )
             Text(
-                text = userInfo.track,
+                text = userInfo.track.initial,
                 style = DialogTheme.typography.labelLarge,
             )
         }
@@ -309,7 +309,7 @@ private fun ProfileSectionPreview() {
                     isLoggedIn = true,
                     userInfo = UserInfoUiModel(
                         nickname = "크림",
-                        track = Track.ANDROID.toInitial(),
+                        track = Track.ANDROID.toUiModel(),
                         githubId = "ijh1298",
                     ),
                 ),
@@ -331,7 +331,7 @@ private fun MyPageScreenLoggedInPreview() {
                     isLoggedIn = true,
                     userInfo = UserInfoUiModel(
                         nickname = "크림",
-                        track = Track.ANDROID.toInitial(),
+                        track = Track.ANDROID.toUiModel(),
                         githubId = "ijh1298",
                     ),
                 ),

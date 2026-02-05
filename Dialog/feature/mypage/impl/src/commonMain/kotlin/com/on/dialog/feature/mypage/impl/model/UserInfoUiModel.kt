@@ -1,7 +1,8 @@
 package com.on.dialog.feature.mypage.impl.model
 
 import androidx.compose.runtime.Immutable
-import com.on.dialog.feature.mypage.impl.mapper.toInitial
+import com.on.dialog.feature.mypage.impl.model.TrackUiModel.Companion.toUiModel
+import com.on.dialog.model.common.Track
 import com.on.dialog.model.user.UserInfo
 
 @Immutable
@@ -9,7 +10,7 @@ data class UserInfoUiModel(
     val id: Long = 0L,
     val nickname: String = "",
     val githubId: String = "",
-    val track: String = "",
+    val track: TrackUiModel = Track.COMMON.toUiModel(),
     val isNotificationEnabled: Boolean = false,
 ) {
     companion object {
@@ -17,7 +18,7 @@ data class UserInfoUiModel(
             id = id,
             nickname = nickname,
             githubId = githubId,
-            track = track.toInitial(),
+            track = track.toUiModel(),
             isNotificationEnabled = isNotificationEnabled,
         )
     }
