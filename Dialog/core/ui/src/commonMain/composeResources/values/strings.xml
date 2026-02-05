@@ -14,7 +14,10 @@
     <string name="discussion_card_period">기간: %1$s</string>
     <string name="discussion_card_participant">참여: %1$s</string>
 
-    <!-- MarkdownPreviewView.kt -->
+    <!-- MarkdownRenderer.kt -->
     <string name="markdown_preview_write">작성</string>
     <string name="markdown_preview_preview">미리보기</string>
+
+    <!-- MarkdownEditor.kt -->
+    <string name="markdown_editor_place_holder_please_enter_contents">내용을 입력해주세요</string>
 </resources>

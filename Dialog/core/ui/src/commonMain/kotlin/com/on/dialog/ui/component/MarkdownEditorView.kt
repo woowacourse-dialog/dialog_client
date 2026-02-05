@@ -1,5 +1,6 @@
 package com.on.dialog.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,10 +26,15 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.NavigationEventState
 import androidx.navigationevent.compose.rememberNavigationEventState
+import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
+import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.component.button.MarkdownButton
 import com.on.dialog.ui.component.button.MarkdownStyle
+import dialog.core.ui.generated.resources.Res
+import dialog.core.ui.generated.resources.markdown_editor_place_holder_please_enter_contents
+import org.jetbrains.compose.resources.stringResource
 
 private data class MarkdownAction(
     val style: MarkdownStyle,
@@ -64,7 +69,11 @@ fun MarkdownEditorView(
         onBackCompleted = onExit
     )
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(DialogTheme.colorScheme.background)
+    ) {
         DialogTopAppBar(
             title = title,
             navigationIcon = {
@@ -85,7 +94,7 @@ fun MarkdownEditorView(
             },
             centerAligned = true
         )
-        TextField(
+        DialogTextField(
             value = content,
             onValueChange = { newValue ->
                 if (newValue.text.length > content.text.length &&
@@ -101,7 +110,9 @@ fun MarkdownEditorView(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1f),
+            singleLine = false,
+            placeholder = stringResource(Res.string.markdown_editor_place_holder_please_enter_contents)
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -125,7 +136,7 @@ fun MarkdownEditorView(
 @Composable
 fun MarkdownEditorViewPreview() {
     var text by remember {
-        mutableStateOf(TextFieldValue("여기에 입력"))
+        mutableStateOf(TextFieldValue("내용을 입력하세요"))
     }
 
     MarkdownEditorView(
