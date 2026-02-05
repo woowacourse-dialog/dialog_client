@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,11 @@ import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.ui.component.button.MarkdownButton
 import com.on.dialog.ui.component.button.MarkdownStyle
+
+private data class MarkdownAction(
+    val style: MarkdownStyle,
+    val icon: ImageVector,
+)
 
 @Composable
 fun MarkdownView(
@@ -33,6 +39,17 @@ fun MarkdownView(
     onExit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val markdownActions: List<MarkdownAction> = listOf(
+        MarkdownAction(MarkdownStyle.Bold, DialogIcons.bold),
+        MarkdownAction(MarkdownStyle.Italic, DialogIcons.italic),
+        MarkdownAction(MarkdownStyle.Code, DialogIcons.code),
+        MarkdownAction(MarkdownStyle.CodeBlock, DialogIcons.codeBlock),
+        MarkdownAction(MarkdownStyle.Bullet, DialogIcons.bullet),
+        MarkdownAction(MarkdownStyle.Number, DialogIcons.number),
+        MarkdownAction(MarkdownStyle.Link, DialogIcons.link),
+        MarkdownAction(MarkdownStyle.Quote, DialogIcons.quote),
+    )
+
     Column(modifier = modifier.fillMaxSize()) {
         DialogTopAppBar(
             title = title,
@@ -62,64 +79,11 @@ fun MarkdownView(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 5.dp),
             modifier = Modifier.windowInsetsPadding(WindowInsets.ime)
         ) {
-            item {
+            items(markdownActions.size) { index ->
+                val (style: MarkdownStyle, icon: ImageVector) = markdownActions[index]
                 MarkdownButton(
-                    style = MarkdownStyle.Bold,
-                    icon = DialogIcons.bold,
-                    content = content,
-                    onContentChanged = onContentChanged
-                )
-            }
-
-            item {
-                MarkdownButton(
-                    style = MarkdownStyle.Italic,
-                    icon = DialogIcons.italic,
-                    content = content,
-                    onContentChanged = onContentChanged
-                )
-            }
-
-            item {
-                MarkdownButton(
-                    style = MarkdownStyle.Code,
-                    icon = DialogIcons.code,
-                    content = content,
-                    onContentChanged = onContentChanged
-                )
-            }
-
-            item {
-                MarkdownButton(
-                    style = MarkdownStyle.CodeBlock,
-                    icon = DialogIcons.codeBlock,
-                    content = content,
-                    onContentChanged = onContentChanged
-                )
-            }
-
-            item {
-                MarkdownButton(
-                    style = MarkdownStyle.Bullet,
-                    icon = DialogIcons.bullet,
-                    content = content,
-                    onContentChanged = onContentChanged
-                )
-            }
-
-            item {
-                MarkdownButton(
-                    style = MarkdownStyle.Link,
-                    icon = DialogIcons.link,
-                    content = content,
-                    onContentChanged = onContentChanged
-                )
-            }
-
-            item {
-                MarkdownButton(
-                    style = MarkdownStyle.Quote,
-                    icon = DialogIcons.quote,
+                    style = style,
+                    icon = icon,
                     content = content,
                     onContentChanged = onContentChanged
                 )

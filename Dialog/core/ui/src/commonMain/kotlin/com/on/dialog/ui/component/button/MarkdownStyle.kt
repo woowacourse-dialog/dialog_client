@@ -124,6 +124,7 @@ sealed class MarkdownStyle {
 
     object Quote : Block("> ")
     object Bullet : Block("- ")
+    object Number : Block("1. ")
 
     object Link : Inline("[", "](url)") {
         override fun apply(
