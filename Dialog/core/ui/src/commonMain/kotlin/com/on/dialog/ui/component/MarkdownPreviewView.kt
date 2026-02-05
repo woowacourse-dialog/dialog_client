@@ -23,6 +23,7 @@ import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.AnimatedTab
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.ui.extensions.noRippleClickable
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.markdown_preview_preview
 import dialog.core.ui.generated.resources.markdown_preview_write
@@ -31,6 +32,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MarkdownPreviewView(
     text: String,
+    onClickContent: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -76,6 +78,12 @@ fun MarkdownPreviewView(
                     shape = DialogTheme.shapes.small
                 )
                 .padding(DialogTheme.spacing.large)
+                .noRippleClickable(
+                    enabled = selectedTabIndex == 0,
+                    onClick = {
+                        onClickContent()
+                    }
+                )
         ) {
             when (selectedTabIndex == 1) {
                 true -> {
@@ -103,7 +111,8 @@ fun MarkdownPreviewViewPreview() {
     DialogTheme {
         MarkdownPreviewView(
             text = "#### Hello World\n\nThis is a **bold** statement.",
-            modifier = Modifier.size(500.dp, 300.dp)
+            modifier = Modifier.size(500.dp, 300.dp),
+            onClickContent = {},
         )
     }
 }
