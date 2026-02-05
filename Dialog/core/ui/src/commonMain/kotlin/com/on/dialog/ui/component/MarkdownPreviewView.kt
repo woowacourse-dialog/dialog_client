@@ -23,6 +23,10 @@ import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.AnimatedTab
 import com.on.dialog.designsystem.theme.DialogTheme
+import dialog.core.ui.generated.resources.Res
+import dialog.core.ui.generated.resources.markdown_preview_preview
+import dialog.core.ui.generated.resources.markdown_preview_write
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MarkdownPreviewView(
@@ -39,7 +43,7 @@ fun MarkdownPreviewView(
             indicator = {},
         ) {
             AnimatedTab(
-                title = "작성",
+                title = stringResource(Res.string.markdown_preview_write),
                 selected = selectedTabIndex == 0,
                 onClick = {
                     selectedTabIndex = 0
@@ -51,7 +55,7 @@ fun MarkdownPreviewView(
             )
 
             AnimatedTab(
-                title = "미리보기",
+                title = stringResource(Res.string.markdown_preview_preview),
                 selected = selectedTabIndex == 1,
                 onClick = {
                     selectedTabIndex = 1
