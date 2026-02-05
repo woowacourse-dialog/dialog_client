@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,16 +55,20 @@ fun MarkdownEditorView(
         DialogTopAppBar(
             title = title,
             navigationIcon = {
-                Icon(
-                    imageVector = DialogIcons.ArrowBack,
-                    contentDescription = null
-                )
+                IconButton(onClick = onExit) {
+                    Icon(
+                        imageVector = DialogIcons.ArrowBack,
+                        contentDescription = null
+                    )
+                }
             },
             actions = {
-                Icon(
-                    imageVector = DialogIcons.Check,
-                    contentDescription = null
-                )
+                IconButton(onClick = onExit) {
+                    Icon(
+                        imageVector = DialogIcons.Check,
+                        contentDescription = null
+                    )
+                }
             },
             centerAligned = true
         )
