@@ -29,6 +29,11 @@ import dialog.core.ui.generated.resources.markdown_renderer_preview
 import dialog.core.ui.generated.resources.markdown_renderer_write
 import org.jetbrains.compose.resources.stringResource
 
+enum class RendererTab {
+    WRITE,
+    PREVIEW,
+}
+
 @Composable
 fun MarkdownRenderer(
     text: String,
@@ -38,16 +43,16 @@ fun MarkdownRenderer(
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
-        var selectedTabIndex: Int by rememberSaveable { mutableStateOf(0) }
+        var selectedTab: RendererTab by rememberSaveable { mutableStateOf(RendererTab.WRITE) }
 
         SecondaryTabRow(
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = selectedTab.ordinal,
             indicator = {},
         ) {
             AnimatedTab(
                 title = stringResource(Res.string.markdown_renderer_write),
-                selected = selectedTabIndex == 0,
-                onClick = { selectedTabIndex = 0 },
+                selected = selectedTab == RendererTab.WRITE,
+                onClick = { selectedTab = RendererTab.WRITE },
                 modifier = Modifier.padding(
                     horizontal = DialogTheme.spacing.extraSmall,
                     vertical = DialogTheme.spacing.small,
@@ -56,8 +61,8 @@ fun MarkdownRenderer(
 
             AnimatedTab(
                 title = stringResource(Res.string.markdown_renderer_preview),
-                selected = selectedTabIndex == 1,
-                onClick = { selectedTabIndex = 1 },
+                selected = selectedTab == RendererTab.PREVIEW,
+                onClick = { selectedTab = RendererTab.PREVIEW },
                 modifier = Modifier.padding(
                     horizontal = DialogTheme.spacing.extraSmall,
                     vertical = DialogTheme.spacing.small,
@@ -74,23 +79,23 @@ fun MarkdownRenderer(
                     shape = DialogTheme.shapes.small,
                 ).padding(DialogTheme.spacing.large)
                 .noRippleClickable(
-                    enabled = selectedTabIndex == 0,
+                    enabled = selectedTab == RendererTab.WRITE,
                     onClick = { onClickContent() },
                 ),
         ) {
-            when (selectedTabIndex == 1) {
-                true -> {
+            when (selectedTab) {
+                RendererTab.WRITE -> {
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+
+                RendererTab.PREVIEW -> {
                     Markdown(
                         content = text,
                         colors = markdownColor(),
                         typography = markdownTypography(),
-                    )
-                }
-
-                false -> {
-                    Text(
-                        text = text,
-                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
