@@ -5,10 +5,10 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.on.dialog.designsystem.icon.DialogIcons
 
-sealed class MarkdownStyle() {
-    abstract val icon: ImageVector
+sealed interface MarkdownStyle {
+    val icon: ImageVector
 
-    abstract fun apply(
+    fun apply(
         content: TextFieldValue,
         onContentChanged: (TextFieldValue) -> Unit,
     )
@@ -17,7 +17,7 @@ sealed class MarkdownStyle() {
         protected val prefix: String,
         protected val suffix: String,
         override val icon: ImageVector,
-    ) : MarkdownStyle() {
+    ) : MarkdownStyle {
 
         override fun apply(
             content: TextFieldValue,
@@ -79,7 +79,7 @@ sealed class MarkdownStyle() {
     sealed class Block(
         protected val linePrefix: String,
         override val icon: ImageVector,
-    ) : MarkdownStyle() {
+    ) : MarkdownStyle {
 
         override fun apply(
             content: TextFieldValue,
@@ -129,7 +129,7 @@ sealed class MarkdownStyle() {
 
     object Quote : Block("> ", DialogIcons.quote)
     object Bullet : Block("- ", DialogIcons.bullet)
-    object Number : MarkdownStyle() {
+    object Number : MarkdownStyle {
         override val icon: ImageVector = DialogIcons.number
 
         private val numberPattern = Regex("^(\\d+)\\. ")
@@ -264,7 +264,7 @@ sealed class MarkdownStyle() {
         }
     }
 
-    object CodeBlock : MarkdownStyle() {
+    object CodeBlock : MarkdownStyle {
         override val icon: ImageVector = DialogIcons.codeBlock
 
         override fun apply(
