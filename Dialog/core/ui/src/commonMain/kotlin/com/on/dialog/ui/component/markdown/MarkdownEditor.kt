@@ -71,7 +71,7 @@ fun MarkdownEditor(
         state = navState,
         isBackEnabled = true,
         onBackCompleted = {
-            showExitDialog = true
+            if (content.text.isBlank()) onExit() else showExitDialog = true
         }
     )
 
@@ -101,7 +101,7 @@ fun MarkdownEditor(
             title = title,
             navigationIcon = {
                 IconButton(onClick = {
-                    showExitDialog = true
+                    if (content.text.isBlank()) onExit() else showExitDialog = true
                 }) {
                     Icon(
                         imageVector = DialogIcons.ArrowBack,
