@@ -56,7 +56,7 @@ coil = "3.3.0"
 imagepicker = "1.0.30"
 
 # Markdown
-multiplatformMarkdownRenderer = "0.39.1"
+multiplatformMarkdownRenderer = "0.37.0"
 
 # Util
 napier = "2.7.1"
