@@ -13,7 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +38,7 @@ fun MarkdownRenderer(
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
-        var selectedTabIndex: Int by remember { mutableStateOf(0) }
+        var selectedTabIndex: Int by rememberSaveable { mutableStateOf(0) }
 
         SecondaryTabRow(
             selectedTabIndex = selectedTabIndex,
@@ -47,9 +47,7 @@ fun MarkdownRenderer(
             AnimatedTab(
                 title = stringResource(Res.string.markdown_renderer_write),
                 selected = selectedTabIndex == 0,
-                onClick = {
-                    selectedTabIndex = 0
-                },
+                onClick = { selectedTabIndex = 0 },
                 modifier = Modifier.padding(
                     horizontal = DialogTheme.spacing.extraSmall,
                     vertical = DialogTheme.spacing.small,
@@ -59,9 +57,7 @@ fun MarkdownRenderer(
             AnimatedTab(
                 title = stringResource(Res.string.markdown_renderer_preview),
                 selected = selectedTabIndex == 1,
-                onClick = {
-                    selectedTabIndex = 1
-                },
+                onClick = { selectedTabIndex = 1 },
                 modifier = Modifier.padding(
                     horizontal = DialogTheme.spacing.extraSmall,
                     vertical = DialogTheme.spacing.small,
@@ -79,9 +75,7 @@ fun MarkdownRenderer(
                 ).padding(DialogTheme.spacing.large)
                 .noRippleClickable(
                     enabled = selectedTabIndex == 0,
-                    onClick = {
-                        onClickContent()
-                    },
+                    onClick = { onClickContent() },
                 ),
         ) {
             when (selectedTabIndex == 1) {
