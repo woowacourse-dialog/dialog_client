@@ -8,6 +8,7 @@ import com.on.dialog.ui.viewmodel.UiState
 data class MyPageState(
     val isLoggedIn: Boolean = false,
     val isLoading: Boolean = true,
+    val isNewUser: Boolean = false,
     val imageUrl: String = "",
     val userInfo: UserInfoUiModel = UserInfoUiModel(),
 ) : UiState

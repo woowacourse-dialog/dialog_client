@@ -87,6 +87,7 @@ fun MyPageScreen(
             )
         },
         onProfileImageClick = { showGallery = true },
+        onDeleteAccount = { viewModel.onIntent(intent = MyPageIntent.DeleteAccount) },
         modifier = modifier,
     )
 
@@ -122,6 +123,7 @@ private fun MyPageScreen(
     onLogoutClick: () -> Unit,
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
     onProfileImageClick: () -> Unit,
+    onDeleteAccount: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -129,12 +131,17 @@ private fun MyPageScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (uiState.isLoggedIn) {
-            MyPageScreenLoggedIn(
-                uiState = uiState,
-                onLogoutClick = onLogoutClick,
-                onUpdateProfile = onUpdateProfile,
-                onProfileImageClick = onProfileImageClick,
-            )
+            if (uiState.isNewUser) {
+                // 회원 가입
+            } else {
+                MyPageScreenLoggedIn(
+                    uiState = uiState,
+                    onLogoutClick = onLogoutClick,
+                    onUpdateProfile = onUpdateProfile,
+                    onProfileImageClick = onProfileImageClick,
+                    onDeleteAccount = onDeleteAccount,
+                )
+            }
         } else {
             MyPageScreenLoggedOut(onLoginClick = onLoginClick)
         }
@@ -147,6 +154,7 @@ private fun MyPageScreenLoggedIn(
     onLogoutClick: () -> Unit,
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
     onProfileImageClick: () -> Unit,
+    onDeleteAccount: () -> Unit,
 ) {
     var showProfileEditDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -175,6 +183,16 @@ private fun MyPageScreenLoggedIn(
                 Icon(
                     imageVector = DialogIcons.Logout,
                     contentDescription = stringResource(resource = Res.string.logout),
+                )
+            }
+            //  TODO 임시로 만든 회원 탈퇴 버튼, 위치 수정 고려
+            MyPageMenuButton(
+                text = "회원 탈퇴",
+                onClick = onDeleteAccount,
+            ) {
+                Icon(
+                    imageVector = DialogIcons.Logout,
+                    contentDescription = "회원 탈퇴",
                 )
             }
         }
@@ -339,6 +357,7 @@ private fun MyPageScreenLoggedInPreview() {
                 onLogoutClick = {},
                 onUpdateProfile = { _, _ -> },
                 onProfileImageClick = {},
+                onDeleteAccount = {},
             )
         }
     }
@@ -357,6 +376,7 @@ private fun MyPageScreenLoggedOutPreview() {
                 onLogoutClick = {},
                 onUpdateProfile = { _, _ -> },
                 onProfileImageClick = {},
+                onDeleteAccount = {},
             )
         }
     }
