@@ -22,13 +22,21 @@ internal val Codeblock: ImageVector
             return _codeblock!!
         }
         _codeblock = Builder(
-            name = "Codeblock", defaultWidth = 18.0.dp, defaultHeight = 18.0.dp,
-            viewportWidth = 24.0f, viewportHeight = 24.0f
+            name = "Codeblock",
+            defaultWidth = 18.0.dp,
+            defaultHeight = 18.0.dp,
+            viewportWidth = 24.0f,
+            viewportHeight = 24.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 2.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 2.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(22.0f, 9.0f)
                 horizontalLineTo(2.0f)
@@ -57,8 +65,7 @@ internal val Codeblock: ImageVector
                 curveTo(2.0f, 5.28f, 2.0f, 6.12f, 2.0f, 7.8f)
                 close()
             }
-        }
-            .build()
+        }.build()
         return _codeblock!!
     }
 
@@ -66,7 +73,7 @@ private var _codeblock: ImageVector? = null
 
 @Preview
 @Composable
-private fun Preview(): Unit {
+private fun Preview() {
     Box(modifier = Modifier.padding(12.dp)) {
         Image(imageVector = Codeblock, contentDescription = "")
     }

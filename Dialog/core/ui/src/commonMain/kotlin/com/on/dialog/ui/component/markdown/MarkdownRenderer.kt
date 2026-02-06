@@ -36,7 +36,7 @@ fun MarkdownRenderer(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         var selectedTabIndex: Int by remember { mutableStateOf(0) }
 
@@ -53,7 +53,7 @@ fun MarkdownRenderer(
                 modifier = Modifier.padding(
                     horizontal = DialogTheme.spacing.extraSmall,
                     vertical = DialogTheme.spacing.small,
-                )
+                ),
             )
 
             AnimatedTab(
@@ -65,7 +65,7 @@ fun MarkdownRenderer(
                 modifier = Modifier.padding(
                     horizontal = DialogTheme.spacing.extraSmall,
                     vertical = DialogTheme.spacing.small,
-                )
+                ),
             )
         }
 
@@ -75,29 +75,28 @@ fun MarkdownRenderer(
                 .weight(1f)
                 .background(
                     color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = DialogTheme.shapes.small
-                )
-                .padding(DialogTheme.spacing.large)
+                    shape = DialogTheme.shapes.small,
+                ).padding(DialogTheme.spacing.large)
                 .noRippleClickable(
                     enabled = selectedTabIndex == 0,
                     onClick = {
                         onClickContent()
-                    }
-                )
+                    },
+                ),
         ) {
             when (selectedTabIndex == 1) {
                 true -> {
                     Markdown(
                         content = text,
                         colors = markdownColor(),
-                        typography = markdownTypography()
+                        typography = markdownTypography(),
                     )
                 }
 
                 false -> {
                     Text(
                         text = text,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }

@@ -64,7 +64,7 @@ fun MarkdownEditor(
             MarkdownStyle.Bullet,
             MarkdownStyle.Number,
             MarkdownStyle.Link,
-            MarkdownStyle.CodeBlock
+            MarkdownStyle.CodeBlock,
         )
 
     NavigationBackHandler(
@@ -72,7 +72,7 @@ fun MarkdownEditor(
         isBackEnabled = true,
         onBackCompleted = {
             if (content.text.isBlank()) onExit() else showExitDialog = true
-        }
+        },
     )
 
     LaunchedEffect(Unit) {
@@ -95,7 +95,7 @@ fun MarkdownEditor(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(DialogTheme.colorScheme.background)
+            .background(DialogTheme.colorScheme.background),
     ) {
         DialogTopAppBar(
             title = title,
@@ -105,7 +105,7 @@ fun MarkdownEditor(
                 }) {
                     Icon(
                         imageVector = DialogIcons.ArrowBack,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             },
@@ -116,11 +116,11 @@ fun MarkdownEditor(
                 }) {
                     Icon(
                         imageVector = DialogIcons.Check,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             },
-            centerAligned = true
+            centerAligned = true,
         )
         DialogTextField(
             value = content,
@@ -143,18 +143,18 @@ fun MarkdownEditor(
                 .weight(1f)
                 .focusRequester(focusRequester),
             singleLine = false,
-            placeholder = stringResource(Res.string.markdown_editor_place_holder_please_enter_contents)
+            placeholder = stringResource(Res.string.markdown_editor_place_holder_please_enter_contents),
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 5.dp),
-            modifier = Modifier.windowInsetsPadding(WindowInsets.ime)
+            modifier = Modifier.windowInsetsPadding(WindowInsets.ime),
         ) {
             items(markdownStyles.size) { index ->
                 MarkdownButton(
                     style = markdownStyles[index],
                     content = content,
-                    onContentChanged = { content = it }
+                    onContentChanged = { content = it },
                 )
             }
         }

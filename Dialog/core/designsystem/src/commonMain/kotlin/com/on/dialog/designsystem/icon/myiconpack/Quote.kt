@@ -22,13 +22,21 @@ internal val Quote: ImageVector
             return _quote!!
         }
         _quote = Builder(
-            name = "Quote", defaultWidth = 18.0.dp, defaultHeight = 18.0.dp,
-            viewportWidth = 24.0f, viewportHeight = 24.0f
+            name = "Quote",
+            defaultWidth = 18.0.dp,
+            defaultHeight = 18.0.dp,
+            viewportWidth = 24.0f,
+            viewportHeight = 24.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 2.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 2.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(3.0f, 5.0f)
                 horizontalLineTo(21.0f)
@@ -42,8 +50,7 @@ internal val Quote: ImageVector
                 lineTo(6.0f, 12.0f)
                 lineTo(3.0f, 15.0f)
             }
-        }
-            .build()
+        }.build()
         return _quote!!
     }
 
@@ -51,7 +58,7 @@ private var _quote: ImageVector? = null
 
 @Preview
 @Composable
-private fun Preview(): Unit {
+private fun Preview() {
     Box(modifier = Modifier.padding(12.dp)) {
         Image(imageVector = Quote, contentDescription = "")
     }

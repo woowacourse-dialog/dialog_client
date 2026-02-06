@@ -46,7 +46,7 @@ fun AnimatedTab(
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelLarge,
-                color = contentColor
+                color = contentColor,
             )
         },
     )
@@ -73,17 +73,17 @@ private fun AnimatedTabPreviewContent() {
     SecondaryTabRow(
         selectedTabIndex = 0,
         indicator = {},
-        divider = {}
+        divider = {},
     ) {
         AnimatedTab(
             title = "작성",
             selected = true,
-            onClick = {}
+            onClick = {},
         )
         AnimatedTab(
             title = "미리보기",
             selected = false,
-            onClick = {}
+            onClick = {},
         )
     }
 }

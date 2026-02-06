@@ -22,13 +22,20 @@ internal val Link: ImageVector
             return _link!!
         }
         _link = Builder(
-            name = "Link", defaultWidth = 18.0.dp, defaultHeight = 18.0.dp,
-            viewportWidth = 24.0f, viewportHeight = 24.0f
+            name = "Link",
+            defaultWidth = 18.0.dp,
+            defaultHeight = 18.0.dp,
+            viewportWidth = 24.0f,
+            viewportHeight = 24.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 2.0f, strokeLineCap = Round, strokeLineJoin = Miter,
-                strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 2.0f,
+                strokeLineCap = Round,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(9.165f, 17.65f)
                 curveTo(8.925f, 17.874f, 8.74f, 18.024f, 8.55f, 18.134f)
@@ -59,8 +66,7 @@ internal val Link: ImageVector
                 curveTo(17.521f, 5.331f, 16.378f, 5.331f, 15.45f, 5.866f)
                 curveTo(15.26f, 5.976f, 15.074f, 6.126f, 14.835f, 6.35f)
             }
-        }
-            .build()
+        }.build()
         return _link!!
     }
 
@@ -68,7 +74,7 @@ private var _link: ImageVector? = null
 
 @Preview
 @Composable
-private fun Preview(): Unit {
+private fun Preview() {
     Box(modifier = Modifier.padding(12.dp)) {
         Image(imageVector = Link, contentDescription = "")
     }

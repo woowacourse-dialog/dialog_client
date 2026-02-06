@@ -83,10 +83,12 @@ fun DialogTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .then(
-                    if (!singleLine) Modifier.weight(1f, fill = true)
-                    else Modifier
-                )
-                .clip(DialogTheme.shapes.small),
+                    if (!singleLine) {
+                        Modifier.weight(1f, fill = true)
+                    } else {
+                        Modifier
+                    },
+                ).clip(DialogTheme.shapes.small),
             readOnly = readOnly,
             enabled = enabled,
             textStyle = DialogTheme.typography.bodyLarge.copy(
@@ -160,10 +162,12 @@ fun DialogTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .then(
-                    if (!singleLine) Modifier.weight(1f, fill = true)
-                    else Modifier
-                )
-                .clip(DialogTheme.shapes.small),
+                    if (!singleLine) {
+                        Modifier.weight(1f, fill = true)
+                    } else {
+                        Modifier
+                    },
+                ).clip(DialogTheme.shapes.small),
             readOnly = readOnly,
             enabled = enabled,
             textStyle = DialogTheme.typography.bodyLarge.copy(

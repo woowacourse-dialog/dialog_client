@@ -22,13 +22,20 @@ internal val Bold: ImageVector
             return _bold!!
         }
         _bold = Builder(
-            name = "Bold", defaultWidth = 18.0.dp, defaultHeight = 18.0.dp,
-            viewportWidth = 800.0f, viewportHeight = 800.0f
+            name = "Bold",
+            defaultWidth = 18.0.dp,
+            defaultHeight = 18.0.dp,
+            viewportWidth = 800.0f,
+            viewportHeight = 800.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
-                pathFillType = NonZero
+                fill = SolidColor(Color(0xFF000000)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(548.57f, 395.6f)
                 curveTo(564.67f, 381.65f, 577.59f, 364.41f, 586.46f, 345.05f)
@@ -62,8 +69,7 @@ internal val Bold: ImageVector
                 curveTo(493.3f, 624.55f, 472.1f, 633.33f, 450.0f, 633.33f)
                 close()
             }
-        }
-            .build()
+        }.build()
         return _bold!!
     }
 
@@ -71,7 +77,7 @@ private var _bold: ImageVector? = null
 
 @Preview
 @Composable
-private fun Preview(): Unit {
+private fun Preview() {
     Box(modifier = Modifier.padding(12.dp)) {
         Image(imageVector = Bold, contentDescription = "")
     }

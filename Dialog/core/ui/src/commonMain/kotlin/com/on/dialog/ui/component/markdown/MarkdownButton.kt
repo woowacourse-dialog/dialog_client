@@ -25,16 +25,16 @@ fun MarkdownButton(
         onClick = {
             style.apply(
                 content = content,
-                onContentChanged = onContentChanged
+                onContentChanged = onContentChanged,
             )
         },
         content = {
             Icon(
                 modifier = Modifier.fillMaxSize(0.6f),
                 imageVector = style.icon,
-                contentDescription = null
+                contentDescription = null,
             )
         },
-        tone = DialogIconButtonTone.Primary
+        tone = DialogIconButtonTone.Primary,
     )
 }

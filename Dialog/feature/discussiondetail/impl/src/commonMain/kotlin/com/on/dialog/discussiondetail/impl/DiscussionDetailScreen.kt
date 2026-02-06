@@ -25,7 +25,6 @@ fun DiscussionDetailScreen(
     goBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     var content by remember {
         mutableStateOf(TextFieldValue(""))
     }
@@ -47,7 +46,7 @@ fun DiscussionDetailScreen(
             modifier = Modifier.size(500.dp, 300.dp),
             onClickContent = {
                 showMarkdownEditor = true
-            }
+            },
         )
     }
 
@@ -60,7 +59,7 @@ fun DiscussionDetailScreen(
             },
             onExit = {
                 showMarkdownEditor = false
-            }
+            },
         )
     }
 }

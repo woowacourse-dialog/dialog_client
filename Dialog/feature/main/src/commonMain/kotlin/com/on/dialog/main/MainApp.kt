@@ -59,7 +59,7 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
                     },
                 )
             },
-            contentWindowInsets = WindowInsets.systemBars
+            contentWindowInsets = WindowInsets.systemBars,
         ) { paddingValues ->
             CompositionLocalProvider(
                 LocalSnackbarDelegate provides appState.snackbarDelegate,

@@ -22,13 +22,21 @@ internal val Bullet: ImageVector
             return _bullet!!
         }
         _bullet = Builder(
-            name = "Bullet", defaultWidth = 800.0.dp, defaultHeight = 800.0.dp,
-            viewportWidth = 24.0f, viewportHeight = 24.0f
+            name = "Bullet",
+            defaultWidth = 800.0.dp,
+            defaultHeight = 800.0.dp,
+            viewportWidth = 24.0f,
+            viewportHeight = 24.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 2.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 2.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(9.0f, 17.0f)
                 horizontalLineTo(19.0f)
@@ -55,8 +63,7 @@ internal val Bullet: ImageVector
                 horizontalLineTo(5.002f)
                 close()
             }
-        }
-            .build()
+        }.build()
         return _bullet!!
     }
 
@@ -64,7 +71,7 @@ private var _bullet: ImageVector? = null
 
 @Preview
 @Composable
-private fun Preview(): Unit {
+private fun Preview() {
     Box(modifier = Modifier.padding(12.dp)) {
         Image(imageVector = Bullet, contentDescription = "")
     }

@@ -22,46 +22,74 @@ internal val Number: ImageVector
             return _number!!
         }
         _number = Builder(
-            name = "Number", defaultWidth = 18.0.dp, defaultHeight = 18.0.dp,
-            viewportWidth = 48.0f, viewportHeight = 48.0f
+            name = "Number",
+            defaultWidth = 18.0.dp,
+            defaultHeight = 18.0.dp,
+            viewportWidth = 48.0f,
+            viewportHeight = 48.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 4.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 4.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(9.0f, 4.0f)
                 verticalLineTo(13.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 4.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 4.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(12.0f, 13.0f)
                 horizontalLineTo(6.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 4.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 4.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(12.0f, 27.0f)
                 horizontalLineTo(6.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 4.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 4.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(6.0f, 20.0f)
                 curveTo(6.0f, 20.0f, 9.0f, 17.0f, 11.0f, 20.0f)
                 curveTo(13.0f, 23.0f, 6.0f, 27.0f, 6.0f, 27.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 4.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 4.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(6.0f, 34.5f)
                 curveTo(6.0f, 34.5f, 8.0f, 31.5f, 11.0f, 33.5f)
@@ -70,47 +98,71 @@ internal val Number: ImageVector
                 curveTo(8.0f, 44.5f, 6.0f, 41.5f, 6.0f, 41.5f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 4.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 4.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(11.0f, 38.0f)
                 horizontalLineTo(9.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 4.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 4.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(9.0f, 4.0f)
                 lineTo(6.0f, 6.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 4.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 4.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(21.0f, 24.0f)
                 horizontalLineTo(43.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 4.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 4.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(21.0f, 38.0f)
                 horizontalLineTo(43.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 4.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 4.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(21.0f, 10.0f)
                 horizontalLineTo(43.0f)
             }
-        }
-            .build()
+        }.build()
         return _number!!
     }
 
@@ -118,7 +170,7 @@ private var _number: ImageVector? = null
 
 @Preview
 @Composable
-private fun Preview(): Unit {
+private fun Preview() {
     Box(modifier = Modifier.padding(12.dp)) {
         Image(imageVector = Number, contentDescription = "")
     }

@@ -22,13 +22,20 @@ internal val Italic: ImageVector
             return _italic!!
         }
         _italic = Builder(
-            name = "Italic", defaultWidth = 18.0.dp, defaultHeight = 18.0.dp,
-            viewportWidth = 32.0f, viewportHeight = 32.0f
+            name = "Italic",
+            defaultWidth = 18.0.dp,
+            defaultHeight = 18.0.dp,
+            viewportWidth = 32.0f,
+            viewportHeight = 32.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
-                pathFillType = NonZero
+                fill = SolidColor(Color(0xFF000000)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(22.0f, 4.0f)
                 horizontalLineToRelative(-8.0f)
@@ -49,8 +56,7 @@ internal val Italic: ImageVector
                 reflectiveCurveTo(22.6f, 4.0f, 22.0f, 4.0f)
                 close()
             }
-        }
-            .build()
+        }.build()
         return _italic!!
     }
 
@@ -58,7 +64,7 @@ private var _italic: ImageVector? = null
 
 @Preview
 @Composable
-private fun Preview(): Unit {
+private fun Preview() {
     Box(modifier = Modifier.padding(12.dp)) {
         Image(imageVector = Italic, contentDescription = "")
     }

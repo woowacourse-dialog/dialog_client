@@ -22,13 +22,21 @@ internal val Code: ImageVector
             return _code!!
         }
         _code = Builder(
-            name = "Code", defaultWidth = 18.0.dp, defaultHeight = 18.0.dp,
-            viewportWidth = 24.0f, viewportHeight = 24.0f
+            name = "Code",
+            defaultWidth = 18.0.dp,
+            defaultHeight = 18.0.dp,
+            viewportWidth = 24.0f,
+            viewportHeight = 24.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
-                strokeLineWidth = 2.0f, strokeLineCap = Round, strokeLineJoin =
-                    StrokeJoin.Companion.Round, strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeLineWidth = 2.0f,
+                strokeLineCap = Round,
+                strokeLineJoin =
+                    StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(9.0f, 8.0f)
                 lineTo(5.0f, 11.692f)
@@ -37,8 +45,7 @@ internal val Code: ImageVector
                 lineTo(19.0f, 11.692f)
                 lineTo(15.0f, 16.0f)
             }
-        }
-            .build()
+        }.build()
         return _code!!
     }
 
@@ -46,7 +53,7 @@ private var _code: ImageVector? = null
 
 @Preview
 @Composable
-private fun Preview(): Unit {
+private fun Preview() {
     Box(modifier = Modifier.padding(12.dp)) {
         Image(imageVector = Code, contentDescription = "")
     }

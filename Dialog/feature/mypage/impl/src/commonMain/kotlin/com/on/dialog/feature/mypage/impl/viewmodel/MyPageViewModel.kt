@@ -21,7 +21,9 @@ class MyPageViewModel(
     override fun onIntent(intent: MyPageIntent) {
         when (intent) {
             MyPageIntent.CheckLoginStatus -> getLoginStatus()
+
             MyPageIntent.Logout -> logout()
+
             is MyPageIntent.EditProfile -> updateMyProfile(
                 nickname = intent.nickname,
                 track = intent.track,
