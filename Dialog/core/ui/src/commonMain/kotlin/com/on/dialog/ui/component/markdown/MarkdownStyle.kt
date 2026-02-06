@@ -43,8 +43,8 @@ sealed interface MarkdownStyle {
 
             val hasStyle =
                 selectedText.startsWith(prefix) &&
-                    selectedText.endsWith(suffix) &&
-                    selectedText.length >= prefix.length + suffix.length
+                        selectedText.endsWith(suffix) &&
+                        selectedText.length >= prefix.length + suffix.length
 
             if (hasStyle) {
                 val unwrapped = selectedText
@@ -291,5 +291,10 @@ sealed interface MarkdownStyle {
                 ),
             )
         }
+    }
+
+    companion object {
+        val markdownStyles: List<MarkdownStyle> =
+            listOf(Bold, Italic, Code, Quote, Bullet, Number, Link, CodeBlock)
     }
 }

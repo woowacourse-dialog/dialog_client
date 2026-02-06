@@ -34,6 +34,7 @@ import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.ui.component.markdown.MarkdownStyle.Companion.markdownStyles
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.markdown_editor_dialog_confirm
 import dialog.core.ui.generated.resources.markdown_editor_dialog_content
@@ -54,18 +55,6 @@ fun MarkdownEditor(
     val focusRequester: FocusRequester = remember { FocusRequester() }
     var content: TextFieldValue by remember { mutableStateOf(initialContent) }
     var showExitDialog by remember { mutableStateOf(false) }
-
-    val markdownStyles: List<MarkdownStyle> =
-        listOf(
-            MarkdownStyle.Bold,
-            MarkdownStyle.Italic,
-            MarkdownStyle.Code,
-            MarkdownStyle.Quote,
-            MarkdownStyle.Bullet,
-            MarkdownStyle.Number,
-            MarkdownStyle.Link,
-            MarkdownStyle.CodeBlock,
-        )
 
     NavigationBackHandler(
         state = navState,
