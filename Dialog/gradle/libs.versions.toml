@@ -79,8 +79,6 @@ core = "1.7.0"
 # Gradle Plugin
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-plugin" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin-core" }
-multiplatform-markdown-renderer = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "multiplatformMarkdownRenderer" }
-multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRenderer" }
 room-gradle-plugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidx-room" }
 compose-compiler-gradle-plugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin-core" }
 compose-gradle-plugin = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "compose-multiplatform" }
@@ -143,6 +141,10 @@ ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.r
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 imagepicker = { module = "io.github.ismoy:imagepickerkmp", version.ref = "imagepicker" }
+
+# Markdown
+multiplatform-markdown-renderer = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "multiplatformMarkdownRenderer" }
+multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRenderer" }
 
 # Util
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
