@@ -12,6 +12,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.feature.signup.api)
+            implementation(projects.feature.discussionlist.api)
         }
     }
 }

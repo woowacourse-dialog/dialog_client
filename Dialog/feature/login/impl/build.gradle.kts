@@ -58,6 +58,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.local)
             implementation(projects.feature.login.api)
+            implementation(projects.feature.signup.api)
         }
         iosMain.dependencies {
             implementation(libs.napier)

@@ -22,6 +22,8 @@ kotlin {
             implementation(projects.feature.scrap.impl)
             // discussiondetail
             implementation(projects.feature.discussiondetail.impl)
+            // signup
+            implementation(projects.feature.signup.impl)
         }
     }
 }
