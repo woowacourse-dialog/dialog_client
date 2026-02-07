@@ -1,6 +1,7 @@
 package com.on.dialog.feature.login.impl.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.launch
@@ -28,16 +29,15 @@ class LoginViewModel(
                     .onSuccess {
                         updateState { copy(isLoginComplete = true, isNewUser = isNewUser) }
                         emitEffect(if (isNewUser) LoginEffect.NavigateToSignUp else LoginEffect.GoBack)
-                    }.onFailure { error ->
+                    }.onFailure {
                         emitEffect(
-                            effect = LoginEffect.ShowError(
-                                message = error.message ?: ERROR_MESSAGE_SESSION_SAVE_FAILED,
+                            effect = LoginEffect.ShowSnackbar(
+                                message = ERROR_MESSAGE_SESSION_SAVE_FAILED,
+                                state = SnackbarState.NEGATIVE,
                             ),
                         )
                     }
-            }.invokeOnCompletion {
-                updateState { copy(isLoading = false) }
-            }
+            }.invokeOnCompletion { updateState { LoginState() } }
     }
 
     companion object {
