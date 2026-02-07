@@ -25,7 +25,6 @@ import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.signup.impl.mapper.toFullNameRes
 import com.on.dialog.feature.signup.impl.viewmodel.SignUpEffect
-import com.on.dialog.feature.signup.impl.viewmodel.SignUpIntent
 import com.on.dialog.feature.signup.impl.viewmodel.SignUpViewModel
 import com.on.dialog.model.common.Track
 import dialog.feature.signup.impl.generated.resources.Res
@@ -47,16 +46,6 @@ fun SignUpScreen(
 ) {
     val snackbarHostState = LocalSnackbarDelegate.current
 
-    val tracks: ImmutableList<String> =
-        Track.entries
-            .filter { it != Track.COMMON }
-            .map { stringResource(it.toFullNameRes()) }
-            .toImmutableList()
-
-    var isTrackSelected by rememberSaveable { mutableStateOf<Boolean?>(null) }
-    var selectedIndex by rememberSaveable { mutableStateOf<Int?>(null) }
-    var notificationEnabled by rememberSaveable { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect: SignUpEffect ->
             when (effect) {
@@ -70,57 +59,76 @@ fun SignUpScreen(
         }
     }
 
+    SignUpScreen(onSignUp = viewModel::signup, modifier = modifier)
+}
+
+@Composable
+private fun SignUpScreen(
+    onSignUp: (track: Track, isNotificationEnabled: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(modifier = modifier.fillMaxSize()) {
         DialogTopAppBar(title = stringResource(Res.string.signup))
+        SignUpScreenContent(onSignUp = onSignUp)
+    }
+}
 
-        Column(
-            modifier = Modifier.padding(DialogTheme.spacing.large),
-            verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
-            horizontalAlignment = Alignment.CenterHorizontally,
+@Composable
+private fun SignUpScreenContent(
+    onSignUp: (track: Track, isNotificationEnabled: Boolean) -> Unit,
+) {
+    val tracks: ImmutableList<String> =
+        Track.entries
+            .filter { it != Track.COMMON }
+            .map { stringResource(it.toFullNameRes()) }
+            .toImmutableList()
+
+    var isTrackSelected by rememberSaveable { mutableStateOf<Boolean?>(null) }
+    var selectedIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+    var notificationEnabled by rememberSaveable { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier.padding(DialogTheme.spacing.large),
+        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        DialogDropdownMenu(
+            options = tracks,
+            onSelectedIndexChange = {
+                selectedIndex = it
+                isTrackSelected = true
+            },
+            label = stringResource(Res.string.track),
+            placeholder = stringResource(Res.string.track_placeholder),
+            selectedIndex = selectedIndex,
+            isError = isTrackSelected == false,
+            supportingText = stringResource(Res.string.track_supporting_text),
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            DialogDropdownMenu(
-                options = tracks,
-                onSelectedIndexChange = {
-                    selectedIndex = it
-                    isTrackSelected = true
-                },
-                label = stringResource(Res.string.track),
-                placeholder = stringResource(Res.string.track_placeholder),
-                selectedIndex = selectedIndex,
-                isError = isTrackSelected == false,
-                supportingText = stringResource(Res.string.track_supporting_text),
+            Checkbox(
+                checked = notificationEnabled,
+                onCheckedChange = { notificationEnabled = it },
             )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Checkbox(
-                    checked = notificationEnabled,
-                    onCheckedChange = { notificationEnabled = it },
-                )
-                Text(
-                    text = stringResource(Res.string.notification_confirm),
-                    style = DialogTheme.typography.bodyMedium
-                )
-            }
-
-            DialogButton(
-                text = stringResource(Res.string.signup),
-                onClick = {
-                    if (isTrackSelected != true) {
-                        isTrackSelected = false
-                    } else {
-                        viewModel.onIntent(
-                            intent = SignUpIntent.Signup(
-                                track = Track.entries[selectedIndex ?: 0],
-                                isNotificationEnabled = notificationEnabled,
-                            ),
-                        )
-                    }
-                },
+            Text(
+                text = stringResource(Res.string.notification_confirm),
+                style = DialogTheme.typography.bodyMedium,
             )
         }
+
+        DialogButton(
+            text = stringResource(Res.string.signup),
+            onClick = {
+                if (isTrackSelected != true) {
+                    isTrackSelected = false
+                } else {
+                    onSignUp(Track.entries[selectedIndex ?: 0], notificationEnabled)
+                }
+            },
+        )
     }
 }
 
@@ -129,7 +137,7 @@ fun SignUpScreen(
 private fun SignUpScreenPreview() {
     DialogTheme {
         Surface {
-            SignUpScreen(navigateToHome = {})
+            SignUpScreen(onSignUp = { _, _ -> })
         }
     }
 }
