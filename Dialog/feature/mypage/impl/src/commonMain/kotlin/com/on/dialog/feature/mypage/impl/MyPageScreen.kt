@@ -131,17 +131,13 @@ private fun MyPageScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (uiState.isLoggedIn) {
-            if (uiState.isNewUser) {
-                // 회원 가입
-            } else {
-                MyPageScreenLoggedIn(
-                    uiState = uiState,
-                    onLogoutClick = onLogoutClick,
-                    onUpdateProfile = onUpdateProfile,
-                    onProfileImageClick = onProfileImageClick,
-                    onDeleteAccount = onDeleteAccount,
-                )
-            }
+            MyPageScreenLoggedIn(
+                uiState = uiState,
+                onLogoutClick = onLogoutClick,
+                onUpdateProfile = onUpdateProfile,
+                onProfileImageClick = onProfileImageClick,
+                onDeleteAccount = onDeleteAccount,
+            )
         } else {
             MyPageScreenLoggedOut(onLoginClick = onLoginClick)
         }
