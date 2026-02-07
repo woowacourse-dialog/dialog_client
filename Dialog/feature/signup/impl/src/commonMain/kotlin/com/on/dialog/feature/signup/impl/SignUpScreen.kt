@@ -29,8 +29,11 @@ import com.on.dialog.feature.signup.impl.viewmodel.SignUpIntent
 import com.on.dialog.feature.signup.impl.viewmodel.SignUpViewModel
 import com.on.dialog.model.common.Track
 import dialog.feature.signup.impl.generated.resources.Res
+import dialog.feature.signup.impl.generated.resources.notification_confirm
 import dialog.feature.signup.impl.generated.resources.signup
 import dialog.feature.signup.impl.generated.resources.track
+import dialog.feature.signup.impl.generated.resources.track_placeholder
+import dialog.feature.signup.impl.generated.resources.track_supporting_text
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
@@ -82,10 +85,10 @@ fun SignUpScreen(
                     isTrackSelected = true
                 },
                 label = stringResource(Res.string.track),
-                placeholder = "트랙을 선택해주세요",
+                placeholder = stringResource(Res.string.track_placeholder),
                 selectedIndex = selectedIndex,
                 isError = isTrackSelected == false,
-                supportingText = "트랙은 필수 선택 항목입니다",
+                supportingText = stringResource(Res.string.track_supporting_text),
             )
 
             Row(
@@ -96,7 +99,10 @@ fun SignUpScreen(
                     checked = notificationEnabled,
                     onCheckedChange = { notificationEnabled = it },
                 )
-                Text(text = "푸시 알림 수신 동의", style = DialogTheme.typography.bodyMedium)
+                Text(
+                    text = stringResource(Res.string.notification_confirm),
+                    style = DialogTheme.typography.bodyMedium
+                )
             }
 
             DialogButton(
