@@ -46,6 +46,7 @@ fun DialogDropdownMenu(
     placeholder: String = "",
     supportingText: String? = null,
     enabled: Boolean = true,
+    isError: Boolean = false,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val initialText = options.getOrNull(selectedIndex ?: -1) ?: ""
@@ -65,6 +66,7 @@ fun DialogDropdownMenu(
                 onValueChange = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                isError = isError,
             )
         }
         ExposedDropdownMenu(
