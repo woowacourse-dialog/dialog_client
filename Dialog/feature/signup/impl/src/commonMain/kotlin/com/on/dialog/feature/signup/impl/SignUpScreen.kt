@@ -4,11 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -19,25 +21,51 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogTopAppBar
+import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.signup.impl.mapper.toFullNameRes
+import com.on.dialog.feature.signup.impl.viewmodel.SignUpEffect
+import com.on.dialog.feature.signup.impl.viewmodel.SignUpIntent
+import com.on.dialog.feature.signup.impl.viewmodel.SignUpViewModel
 import com.on.dialog.model.common.Track
 import dialog.feature.signup.impl.generated.resources.Res
+import dialog.feature.signup.impl.generated.resources.signup
 import dialog.feature.signup.impl.generated.resources.track
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SignUpScreen(
-    modifier: Modifier = Modifier
+    navigateToHome: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: SignUpViewModel = koinViewModel(),
 ) {
+    val snackbarHostState = LocalSnackbarDelegate.current
+
     val tracks: ImmutableList<String> =
-        Track.entries.filter { it != Track.COMMON }.map { stringResource(it.toFullNameRes()) }
+        Track.entries
+            .filter { it != Track.COMMON }
+            .map { stringResource(it.toFullNameRes()) }
             .toImmutableList()
 
+    var isTrackSelected by rememberSaveable { mutableStateOf<Boolean?>(null) }
     var selectedIndex by rememberSaveable { mutableStateOf<Int?>(null) }
     var notificationEnabled by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect: SignUpEffect ->
+            when (effect) {
+                SignUpEffect.NavigateHome -> navigateToHome()
+
+                is SignUpEffect.ShowSnackbar -> snackbarHostState.showSnackbar(
+                    message = effect.message,
+                    state = effect.state,
+                )
+            }
+        }
+    }
 
     Column(modifier = modifier.fillMaxSize()) {
         DialogTopAppBar(title = stringResource(Res.string.signup))
@@ -49,23 +77,42 @@ fun SignUpScreen(
         ) {
             DialogDropdownMenu(
                 options = tracks,
-                onSelectedIndexChange = { selectedIndex = it },
+                onSelectedIndexChange = {
+                    selectedIndex = it
+                    isTrackSelected = true
+                },
                 label = stringResource(Res.string.track),
                 placeholder = "트랙을 선택해주세요",
                 selectedIndex = selectedIndex,
+                isError = isTrackSelected == false,
+                supportingText = "트랙은 필수 선택 항목입니다",
             )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Checkbox(
-                    checked = notificationEnabled, onCheckedChange = { notificationEnabled = it })
+                    checked = notificationEnabled,
+                    onCheckedChange = { notificationEnabled = it },
+                )
                 Text(text = "푸시 알림 수신 동의", style = DialogTheme.typography.bodyMedium)
             }
 
             DialogButton(
                 text = stringResource(Res.string.signup),
-                onClick = {}
+                onClick = {
+                    if (isTrackSelected != true) {
+                        isTrackSelected = false
+                    } else {
+                        viewModel.onIntent(
+                            intent = SignUpIntent.Signup(
+                                track = Track.entries[selectedIndex ?: 0],
+                                isNotificationEnabled = notificationEnabled,
+                            ),
+                        )
+                    }
+                },
             )
         }
     }
@@ -76,7 +123,7 @@ fun SignUpScreen(
 private fun SignUpScreenPreview() {
     DialogTheme {
         Surface {
-            SignUpScreen()
+            SignUpScreen(navigateToHome = {})
         }
     }
 }
