@@ -35,9 +35,12 @@ import dialog.feature.signup.impl.generated.resources.track_placeholder
 import dialog.feature.signup.impl.generated.resources.track_supporting_text
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SignUpScreen(
     navigateToHome: () -> Unit,
@@ -53,7 +56,7 @@ fun SignUpScreen(
                 SignUpEffect.NavigateHome -> navigateToHome()
 
                 is SignUpEffect.ShowSnackbar -> snackbarHostState.showSnackbar(
-                    message = effect.message,
+                    message = getString(effect.stringResource),
                     state = effect.state,
                 )
             }

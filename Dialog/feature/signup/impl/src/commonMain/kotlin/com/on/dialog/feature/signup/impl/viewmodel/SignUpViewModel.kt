@@ -5,6 +5,9 @@ import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.model.common.Track
 import com.on.dialog.ui.viewmodel.BaseViewModel
+import dialog.feature.signup.impl.generated.resources.Res
+import dialog.feature.signup.impl.generated.resources.signup_failure
+import dialog.feature.signup.impl.generated.resources.signup_success
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(
@@ -42,14 +45,14 @@ class SignUpViewModel(
                     .onSuccess {
                         emitEffect(
                             effect = SignUpEffect.ShowSnackbar(
-                                message = "🎉 회원가입에 성공했습니다.",
+                                stringResource = Res.string.signup_success,
                                 state = SnackbarState.POSITIVE,
                             ),
                         )
                     }.onFailure {
                         emitEffect(
                             effect = SignUpEffect.ShowSnackbar(
-                                message = "회원가입에 실패했습니다.",
+                                stringResource = Res.string.signup_failure,
                                 state = SnackbarState.NEGATIVE,
                             ),
                         )

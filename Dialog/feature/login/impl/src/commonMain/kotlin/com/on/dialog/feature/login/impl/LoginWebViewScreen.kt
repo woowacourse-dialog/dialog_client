@@ -13,6 +13,7 @@ import com.on.dialog.feature.login.impl.viewmodel.LoginEffect
 import com.on.dialog.feature.login.impl.viewmodel.LoginIntent
 import com.on.dialog.feature.login.impl.viewmodel.LoginState
 import com.on.dialog.feature.login.impl.viewmodel.LoginViewModel
+import org.jetbrains.compose.resources.getString
 import org.koin.compose.viewmodel.koinViewModel
 
 /**
@@ -51,7 +52,10 @@ fun LoginWebViewScreen(
                 LoginEffect.GoBack -> goBack()
                 LoginEffect.NavigateToSignUp -> navigateToSignUp()
                 is LoginEffect.ShowSnackbar ->
-                    snackbarHostState.showSnackbar(message = effect.message, state = effect.state)
+                    snackbarHostState.showSnackbar(
+                        message = getString(effect.stringResource),
+                        state = effect.state,
+                    )
             }
         }
     }
