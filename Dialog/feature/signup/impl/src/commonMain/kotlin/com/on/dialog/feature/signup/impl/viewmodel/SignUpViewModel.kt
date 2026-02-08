@@ -9,17 +9,32 @@ import kotlinx.coroutines.launch
 
 class SignUpViewModel(
     private val authRepository: AuthRepository,
-) : BaseViewModel<SignUpIntent, SignUpState, SignUpEffect>(initialState = SignUpState) {
+) : BaseViewModel<SignUpIntent, SignUpState, SignUpEffect>(initialState = SignUpState()) {
     override fun onIntent(intent: SignUpIntent) {
         when (intent) {
-            is SignUpIntent.Signup -> signup(
-                track = intent.track,
-                isNotificationEnabled = intent.isNotificationEnabled,
-            )
+            is SignUpIntent.SelectTrack ->
+                updateState { copy(selectedTrackIndex = intent.index, isTrackSelected = true) }
+
+            is SignUpIntent.ToggleNotification ->
+                updateState { copy(isNotificationEnabled = intent.enabled) }
+
+            SignUpIntent.ValidateAndSignUp -> handleSignup()
         }
     }
 
-    fun signup(track: Track, isNotificationEnabled: Boolean) {
+    private fun handleSignup() {
+        val selectedIndex = currentState.selectedTrackIndex
+        if (currentState.isTrackSelected != true || selectedIndex == null) {
+            updateState { copy(isTrackSelected = false) }
+            return
+        }
+        signup(
+            track = Track.entries.filter { it != Track.COMMON }[selectedIndex],
+            isNotificationEnabled = currentState.isNotificationEnabled,
+        )
+    }
+
+    private fun signup(track: Track, isNotificationEnabled: Boolean) {
         viewModelScope
             .launch {
                 authRepository

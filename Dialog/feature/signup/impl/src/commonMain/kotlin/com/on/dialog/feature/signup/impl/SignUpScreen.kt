@@ -12,12 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogTopAppBar
@@ -25,6 +23,8 @@ import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.signup.impl.mapper.toFullNameRes
 import com.on.dialog.feature.signup.impl.viewmodel.SignUpEffect
+import com.on.dialog.feature.signup.impl.viewmodel.SignUpIntent
+import com.on.dialog.feature.signup.impl.viewmodel.SignUpState
 import com.on.dialog.feature.signup.impl.viewmodel.SignUpViewModel
 import com.on.dialog.model.common.Track
 import dialog.feature.signup.impl.generated.resources.Res
@@ -45,6 +45,7 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = koinViewModel(),
 ) {
     val snackbarHostState = LocalSnackbarDelegate.current
+    val uiState: SignUpState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect: SignUpEffect ->
@@ -59,33 +60,46 @@ fun SignUpScreen(
         }
     }
 
-    SignUpScreen(onSignUp = viewModel::signup, modifier = modifier)
+    SignUpScreen(
+        uiState = uiState,
+        onSelectTrack = { viewModel.onIntent(SignUpIntent.SelectTrack(index = it)) },
+        onToggleNotification = { viewModel.onIntent(SignUpIntent.ToggleNotification(enabled = it)) },
+        onSignUpClick = { viewModel.onIntent(SignUpIntent.ValidateAndSignUp) },
+        modifier = modifier,
+    )
 }
 
 @Composable
 private fun SignUpScreen(
-    onSignUp: (track: Track, isNotificationEnabled: Boolean) -> Unit,
+    uiState: SignUpState,
+    onSelectTrack: (Int) -> Unit,
+    onToggleNotification: (Boolean) -> Unit,
+    onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         DialogTopAppBar(title = stringResource(Res.string.signup))
-        SignUpScreenContent(onSignUp = onSignUp)
+        SignUpScreenContent(
+            uiState = uiState,
+            onSelectTrack = onSelectTrack,
+            onToggleNotification = onToggleNotification,
+            onSignUpClick = onSignUpClick,
+        )
     }
 }
 
 @Composable
 private fun SignUpScreenContent(
-    onSignUp: (track: Track, isNotificationEnabled: Boolean) -> Unit,
+    uiState: SignUpState,
+    onSelectTrack: (Int) -> Unit,
+    onToggleNotification: (Boolean) -> Unit,
+    onSignUpClick: () -> Unit,
 ) {
     val tracks: ImmutableList<String> =
         Track.entries
             .filter { it != Track.COMMON }
             .map { stringResource(it.toFullNameRes()) }
             .toImmutableList()
-
-    var isTrackSelected by rememberSaveable { mutableStateOf<Boolean?>(null) }
-    var selectedIndex by rememberSaveable { mutableStateOf<Int?>(null) }
-    var notificationEnabled by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.padding(DialogTheme.spacing.large),
@@ -94,14 +108,11 @@ private fun SignUpScreenContent(
     ) {
         DialogDropdownMenu(
             options = tracks,
-            onSelectedIndexChange = {
-                selectedIndex = it
-                isTrackSelected = true
-            },
+            onSelectedIndexChange = onSelectTrack,
             label = stringResource(Res.string.track),
             placeholder = stringResource(Res.string.track_placeholder),
-            selectedIndex = selectedIndex,
-            isError = isTrackSelected == false,
+            selectedIndex = uiState.selectedTrackIndex,
+            isError = uiState.isTrackSelected == false,
             supportingText = stringResource(Res.string.track_supporting_text),
         )
 
@@ -110,8 +121,8 @@ private fun SignUpScreenContent(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Checkbox(
-                checked = notificationEnabled,
-                onCheckedChange = { notificationEnabled = it },
+                checked = uiState.isNotificationEnabled,
+                onCheckedChange = onToggleNotification,
             )
             Text(
                 text = stringResource(Res.string.notification_confirm),
@@ -121,13 +132,7 @@ private fun SignUpScreenContent(
 
         DialogButton(
             text = stringResource(Res.string.signup),
-            onClick = {
-                if (isTrackSelected != true) {
-                    isTrackSelected = false
-                } else {
-                    onSignUp(Track.entries[selectedIndex ?: 0], notificationEnabled)
-                }
-            },
+            onClick = onSignUpClick,
         )
     }
 }
@@ -137,7 +142,12 @@ private fun SignUpScreenContent(
 private fun SignUpScreenPreview() {
     DialogTheme {
         Surface {
-            SignUpScreen(onSignUp = { _, _ -> })
+            SignUpScreen(
+                uiState = SignUpState(),
+                onSelectTrack = {},
+                onToggleNotification = {},
+                onSignUpClick = {},
+            )
         }
     }
 }
