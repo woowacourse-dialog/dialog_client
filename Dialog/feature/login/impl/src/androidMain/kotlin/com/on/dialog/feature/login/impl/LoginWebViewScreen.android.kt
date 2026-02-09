@@ -51,7 +51,7 @@ actual fun LoginWebView(
                         cookieManager = cookieManager,
                         onLoginSuccess = onLoginSuccess,
                         onLoginFailure = onLoginFailure,
-                        onHandle = { isLoginHandled = true }
+                        onHandle = { isLoginHandled = true },
                     )
                 }
             }
