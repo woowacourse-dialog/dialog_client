@@ -20,6 +20,8 @@ actual fun LoginWebView(
     onLoginCancel: () -> Unit,
     modifier: Modifier,
 ) {
+    var isLoginHandled: Boolean = false
+
     AndroidView(
         modifier = modifier.fillMaxSize(),
         factory = { context ->
@@ -39,6 +41,7 @@ actual fun LoginWebView(
             // WebViewClient 설정
             webView.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
+                    if (isLoginHandled) return
                     super.onPageFinished(view, url)
                     val url: String = url ?: return
 
@@ -48,6 +51,7 @@ actual fun LoginWebView(
                         cookieManager = cookieManager,
                         onLoginSuccess = onLoginSuccess,
                         onLoginFailure = onLoginFailure,
+                        onHandle = { isLoginHandled = true }
                     )
                 }
             }
@@ -65,7 +69,9 @@ private fun handleLoginResult(
     cookieManager: CookieManager,
     onLoginSuccess: (String, Boolean) -> Unit,
     onLoginFailure: () -> Unit,
+    onHandle: () -> Unit,
 ) {
+    onHandle()
     // 로그인 성공 페이지 감지
     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때
     if (!uiState.isLoginComplete && url.startsWith(prefix = BuildKonfig.BASE_URL)) {
