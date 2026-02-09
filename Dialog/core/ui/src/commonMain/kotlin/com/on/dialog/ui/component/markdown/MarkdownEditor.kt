@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
@@ -46,8 +47,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MarkdownEditor(
     title: String,
-    initialContent: TextFieldValue,
-    onConfirm: (TextFieldValue) -> Unit,
+    initialContent: String,
+    onConfirm: (String) -> Unit,
     onExit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -55,7 +56,7 @@ fun MarkdownEditor(
         rememberNavigationEventState(NavigationEventInfo.None)
     val focusRequester: FocusRequester = remember { FocusRequester() }
     var content by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(initialContent)
+        mutableStateOf(TextFieldValue(initialContent))
     }
     var showExitDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -63,7 +64,7 @@ fun MarkdownEditor(
         state = navState,
         isBackEnabled = true,
         onBackCompleted = {
-            if (content.text == initialContent.text) onExit() else showExitDialog = true
+            if (content.text == initialContent) onExit() else showExitDialog = true
         },
     )
 
@@ -93,7 +94,7 @@ fun MarkdownEditor(
             title = title,
             navigationIcon = {
                 IconButton(onClick = {
-                    if (content.text == initialContent.text) onExit() else showExitDialog = true
+                    if (content.text == initialContent) onExit() else showExitDialog = true
                 }) {
                     Icon(
                         imageVector = DialogIcons.ArrowBack,
@@ -103,7 +104,7 @@ fun MarkdownEditor(
             },
             actions = {
                 IconButton(onClick = {
-                    onConfirm(content)
+                    onConfirm(content.text)
                     onExit()
                 }) {
                     Icon(
@@ -150,5 +151,18 @@ fun MarkdownEditor(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MarkdownEditorPreview() {
+    DialogTheme {
+        MarkdownEditor(
+            title = "Title",
+            initialContent = "",
+            onConfirm = {},
+            onExit = {},
+        )
     }
 }
