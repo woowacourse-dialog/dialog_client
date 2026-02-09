@@ -197,7 +197,7 @@ private fun MyPageScreenLoggedIn(
     if (showProfileEditDialog) {
         ProfileEditDialog(
             nickname = uiState.userInfo.nickname,
-            track = uiState.userInfo.track,
+            selectedTrack = uiState.userInfo.track,
             onDismissRequest = { showProfileEditDialog = false },
             onUpdateProfile = onUpdateProfile,
         )

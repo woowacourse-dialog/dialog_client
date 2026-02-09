@@ -34,6 +34,7 @@ import dialog.feature.signup.impl.generated.resources.track
 import dialog.feature.signup.impl.generated.resources.track_placeholder
 import dialog.feature.signup.impl.generated.resources.track_supporting_text
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.getString
@@ -50,6 +51,12 @@ fun SignUpScreen(
     val snackbarHostState = LocalSnackbarDelegate.current
     val uiState: SignUpState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val tracks: ImmutableList<String> =
+        Track.entries
+            .filter { it != Track.COMMON }
+            .map { stringResource(it.toFullNameRes()) }
+            .toImmutableList()
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect: SignUpEffect ->
             when (effect) {
@@ -65,6 +72,7 @@ fun SignUpScreen(
 
     SignUpScreen(
         uiState = uiState,
+        tracks = tracks,
         onSelectTrack = { viewModel.onIntent(SignUpIntent.SelectTrack(index = it)) },
         onToggleNotification = { viewModel.onIntent(SignUpIntent.ToggleNotification(enabled = it)) },
         onSignUpClick = { viewModel.onIntent(SignUpIntent.ValidateAndSignUp) },
@@ -75,6 +83,7 @@ fun SignUpScreen(
 @Composable
 private fun SignUpScreen(
     uiState: SignUpState,
+    tracks: ImmutableList<String>,
     onSelectTrack: (Int) -> Unit,
     onToggleNotification: (Boolean) -> Unit,
     onSignUpClick: () -> Unit,
@@ -84,6 +93,7 @@ private fun SignUpScreen(
         DialogTopAppBar(title = stringResource(Res.string.signup))
         SignUpScreenContent(
             uiState = uiState,
+            tracks = tracks,
             onSelectTrack = onSelectTrack,
             onToggleNotification = onToggleNotification,
             onSignUpClick = onSignUpClick,
@@ -94,16 +104,11 @@ private fun SignUpScreen(
 @Composable
 private fun SignUpScreenContent(
     uiState: SignUpState,
+    tracks: ImmutableList<String>,
     onSelectTrack: (Int) -> Unit,
     onToggleNotification: (Boolean) -> Unit,
     onSignUpClick: () -> Unit,
 ) {
-    val tracks: ImmutableList<String> =
-        Track.entries
-            .filter { it != Track.COMMON }
-            .map { stringResource(it.toFullNameRes()) }
-            .toImmutableList()
-
     Column(
         modifier = Modifier.padding(DialogTheme.spacing.large),
         verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
@@ -115,7 +120,7 @@ private fun SignUpScreenContent(
             label = stringResource(Res.string.track),
             placeholder = stringResource(Res.string.track_placeholder),
             selectedIndex = uiState.selectedTrackIndex,
-            isError = uiState.isTrackSelected == false,
+            isError = uiState.isTrackUnSelected,
             supportingText = stringResource(Res.string.track_supporting_text),
         )
 
@@ -147,6 +152,7 @@ private fun SignUpScreenPreview() {
         Surface {
             SignUpScreen(
                 uiState = SignUpState(),
+                tracks = persistentListOf("안드로이드", "백엔드", "프론트엔드"),
                 onSelectTrack = {},
                 onToggleNotification = {},
                 onSignUpClick = {},
