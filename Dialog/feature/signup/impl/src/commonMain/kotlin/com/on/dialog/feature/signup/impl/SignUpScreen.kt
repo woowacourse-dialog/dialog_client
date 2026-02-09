@@ -51,11 +51,10 @@ fun SignUpScreen(
     val snackbarHostState = LocalSnackbarDelegate.current
     val uiState: SignUpState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val tracks: ImmutableList<String> =
-        Track.entries
-            .filter { it != Track.COMMON }
-            .map { stringResource(it.toFullNameRes()) }
-            .toImmutableList()
+    val trackEntries = Track.entries.filter { it != Track.COMMON }
+    val tracks: ImmutableList<String> = trackEntries
+        .map { stringResource(it.toFullNameRes()) }
+        .toImmutableList()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect: SignUpEffect ->
@@ -73,7 +72,7 @@ fun SignUpScreen(
     SignUpScreen(
         uiState = uiState,
         tracks = tracks,
-        onSelectTrack = { viewModel.onIntent(SignUpIntent.SelectTrack(index = it)) },
+        onSelectTrack = { viewModel.onIntent(SignUpIntent.SelectTrack(track = trackEntries[it])) },
         onToggleNotification = { viewModel.onIntent(SignUpIntent.ToggleNotification(enabled = it)) },
         onSignUpClick = { viewModel.onIntent(SignUpIntent.ValidateAndSignUp) },
         modifier = modifier,

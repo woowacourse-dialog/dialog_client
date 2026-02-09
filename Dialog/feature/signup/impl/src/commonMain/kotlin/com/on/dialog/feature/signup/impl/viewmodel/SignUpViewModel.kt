@@ -15,24 +15,18 @@ class SignUpViewModel(
 ) : BaseViewModel<SignUpIntent, SignUpState, SignUpEffect>(initialState = SignUpState()) {
     override fun onIntent(intent: SignUpIntent) {
         when (intent) {
-            is SignUpIntent.SelectTrack ->
-                updateState { copy(selectedTrackIndex = intent.index, isTrackSelected = true) }
+            is SignUpIntent.SelectTrack -> updateState { copy(selectedTrack = intent.track) }
 
-            is SignUpIntent.ToggleNotification ->
-                updateState { copy(isNotificationEnabled = intent.enabled) }
+            is SignUpIntent.ToggleNotification -> updateState { copy(isNotificationEnabled = intent.enabled) }
 
             SignUpIntent.ValidateAndSignUp -> handleSignup()
         }
     }
 
     private fun handleSignup() {
-        val selectedIndex = currentState.selectedTrackIndex
-        if (currentState.isTrackSelected != true || selectedIndex == null) {
-            updateState { copy(isTrackSelected = false) }
-            return
-        }
+        val selectedTrack = currentState.selectedTrack ?: return
         signup(
-            track = Track.entries.filter { it != Track.COMMON }[selectedIndex],
+            track = selectedTrack,
             isNotificationEnabled = currentState.isNotificationEnabled,
         )
     }
