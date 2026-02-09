@@ -1,8 +1,12 @@
 package com.on.dialog.feature.login.impl.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.ui.viewmodel.BaseViewModel
+import dialog.feature.login.impl.generated.resources.Res
+import dialog.feature.login.impl.generated.resources.error_save_session
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -25,19 +29,24 @@ class LoginViewModel(
             .launch {
                 sessionRepository
                     .saveSession(jsessionId = jsessionId)
-                    .onSuccess {
-                        updateState { copy(isLoginComplete = true, isNewUser = isNewUser) }
-                        emitEffect(if (isNewUser) LoginEffect.NavigateToSignUp else LoginEffect.GoBack)
-                    }.onFailure { error ->
-                        emitEffect(
-                            effect = LoginEffect.ShowError(
-                                message = error.message ?: ERROR_MESSAGE_SESSION_SAVE_FAILED,
-                            ),
-                        )
-                    }
-            }.invokeOnCompletion {
-                updateState { copy(isLoading = false) }
-            }
+                    .onSuccess { handleSaveUserSessionSuccess(isNewUser = isNewUser) }
+                    .onFailure { handleSaveUserSessionFailure() }
+            }.invokeOnCompletion { updateState { LoginState() } }
+    }
+
+    private fun handleSaveUserSessionSuccess(isNewUser: Boolean) {
+        updateState { copy(isLoginComplete = true, isNewUser = isNewUser) }
+        emitEffect(if (isNewUser) LoginEffect.NavigateToSignUp else LoginEffect.GoBack)
+    }
+
+    private fun handleSaveUserSessionFailure() {
+        Napier.e(ERROR_MESSAGE_SESSION_SAVE_FAILED)
+        emitEffect(
+            effect = LoginEffect.ShowSnackbar(
+                stringResource = Res.string.error_save_session,
+                state = SnackbarState.NEGATIVE,
+            ),
+        )
     }
 
     companion object {

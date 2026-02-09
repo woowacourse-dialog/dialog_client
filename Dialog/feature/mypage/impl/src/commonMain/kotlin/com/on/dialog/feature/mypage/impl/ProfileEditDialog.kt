@@ -45,11 +45,17 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ProfileEditDialog(
     nickname: String,
-    track: TrackUiModel,
+    selectedTrack: TrackUiModel,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
 ) {
+    val tracks: ImmutableList<String> =
+        Track.entries
+            .filter { it != Track.COMMON }
+            .map { stringResource(it.toFullNameRes()) }
+            .toImmutableList()
+
     BasicAlertDialog(
         modifier = modifier
             .background(color = DialogTheme.colorScheme.surface, shape = DialogTheme.shapes.medium)
@@ -58,7 +64,8 @@ fun ProfileEditDialog(
     ) {
         EditDialogContent(
             nickname = nickname,
-            track = track,
+            tracks = tracks,
+            selectedTrack = selectedTrack,
             onDismissRequest = onDismissRequest,
             onUpdateProfile = onUpdateProfile,
         )
@@ -68,16 +75,12 @@ fun ProfileEditDialog(
 @Composable
 private fun EditDialogContent(
     nickname: String,
-    track: TrackUiModel,
+    tracks: ImmutableList<String>,
+    selectedTrack: TrackUiModel,
     onDismissRequest: () -> Unit,
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
 ) {
-    val tracks: ImmutableList<String> =
-        Track.entries
-            .filter { it != Track.COMMON }
-            .map { stringResource(it.toFullNameRes()) }
-            .toImmutableList()
-    val selectedTrackFullName = stringResource(track.fullNameRes)
+    val selectedTrackFullName = stringResource(selectedTrack.fullNameRes)
 
     var nickname: String by rememberSaveable { mutableStateOf(nickname) }
     var selectedIndex by rememberSaveable { mutableIntStateOf(tracks.indexOf(selectedTrackFullName)) }
@@ -130,7 +133,7 @@ private fun ProfileEditDialogPreview() {
         Surface {
             ProfileEditDialog(
                 nickname = "크림",
-                track = Track.ANDROID.toUiModel(),
+                selectedTrack = Track.ANDROID.toUiModel(),
                 onDismissRequest = {},
                 onUpdateProfile = { _, _ -> },
             )

@@ -10,7 +10,7 @@ import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
 
 interface AuthService {
-    @POST("api/auth/login")
+    @POST("api/signup")
     suspend fun signup(
         @Body request: SignupRequest,
     ): DataResponse<SignupResponse>

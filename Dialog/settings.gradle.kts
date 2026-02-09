@@ -29,7 +29,6 @@ dependencyResolutionManagement {
     }
 }
 
-
 include(":composeApp")
 include(":core:designsystem")
 include(":core:data")
@@ -51,3 +50,5 @@ include(":feature:scrap:api")
 include(":feature:discussiondetail:api")
 include(":feature:discussiondetail:impl")
 include(":feature:main")
+include(":feature:signup:api")
+include(":feature:signup:impl")

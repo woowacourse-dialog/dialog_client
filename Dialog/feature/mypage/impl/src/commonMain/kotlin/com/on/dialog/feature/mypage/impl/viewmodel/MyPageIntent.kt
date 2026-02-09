@@ -16,4 +16,6 @@ sealed interface MyPageIntent : UiIntent {
     data class EditProfileImage(
         val uri: String,
     ) : MyPageIntent
+
+    data object DeleteAccount : MyPageIntent
 }

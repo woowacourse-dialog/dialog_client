@@ -6,12 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
+import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.feature.login.impl.model.LoginType
 import com.on.dialog.feature.login.impl.viewmodel.LoginEffect
 import com.on.dialog.feature.login.impl.viewmodel.LoginIntent
 import com.on.dialog.feature.login.impl.viewmodel.LoginState
 import com.on.dialog.feature.login.impl.viewmodel.LoginViewModel
-import io.github.aakira.napier.Napier
+import org.jetbrains.compose.resources.getString
 import org.koin.compose.viewmodel.koinViewModel
 
 /**
@@ -41,6 +43,7 @@ fun LoginWebViewScreen(
     navigateToSignUp: () -> Unit,
     viewModel: LoginViewModel = koinViewModel(),
 ) {
+    val snackbarHostState = LocalSnackbarDelegate.current
     val uiState: LoginState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -48,7 +51,11 @@ fun LoginWebViewScreen(
             when (effect) {
                 LoginEffect.GoBack -> goBack()
                 LoginEffect.NavigateToSignUp -> navigateToSignUp()
-                is LoginEffect.ShowError -> Unit
+                is LoginEffect.ShowSnackbar ->
+                    snackbarHostState.showSnackbar(
+                        message = getString(effect.stringResource),
+                        state = effect.state,
+                    )
             }
         }
     }
@@ -62,14 +69,13 @@ fun LoginWebViewScreen(
             )
         },
         onLoginFailure = {
-            // showSnackbar
+            snackbarHostState.showSnackbar(
+                state = SnackbarState.NEGATIVE,
+                message = "로그인 실패 (JSESSION ID 없음)",
+            )
             goBack()
         },
-        onLoginCancel = {
-            // showSnackbar
-            Napier.d("onLoginCancel")
-            goBack()
-        },
+        onLoginCancel = goBack,
     )
 }
 

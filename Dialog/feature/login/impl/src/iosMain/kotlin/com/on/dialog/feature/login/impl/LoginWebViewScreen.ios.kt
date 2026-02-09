@@ -89,7 +89,7 @@ private fun handleLoginResult(
 ) {
     // 로그인 성공 페이지 감지
     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때
-    if (!uiState.isLoginComplete && url.contains(other = BuildKonfig.BASE_URL)) {
+    if (!uiState.isLoginComplete && url.startsWith(prefix = BuildKonfig.BASE_URL)) {
         // WKWebView 전용 쿠키 저장소에서 쿠키 추출
         val cookieStore: WKHTTPCookieStore = config.websiteDataStore.httpCookieStore
         cookieStore.getAllCookies { cookies ->
