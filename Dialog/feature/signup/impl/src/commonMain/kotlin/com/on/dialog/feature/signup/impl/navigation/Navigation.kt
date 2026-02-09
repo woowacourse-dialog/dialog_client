@@ -12,7 +12,10 @@ fun EntryProviderScope<NavKey>.signUpScreen(
 ) {
     entry<SignUpNavKey> {
         SignUpScreen(
-            navigateToHome = { navigator.navigate(DiscussionListNavKey) },
+            navigateToHome = {
+                navigator.goBack()
+                navigator.navigate(DiscussionListNavKey)
+            },
         )
     }
 }
