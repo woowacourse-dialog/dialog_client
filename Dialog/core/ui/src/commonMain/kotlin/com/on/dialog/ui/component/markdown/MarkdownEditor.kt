@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -33,6 +32,7 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.NavigationEventState
 import androidx.navigationevent.compose.rememberNavigationEventState
+import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -99,7 +99,7 @@ fun MarkdownEditor(
         DialogTopAppBar(
             title = title,
             navigationIcon = {
-                IconButton(onClick = {
+                DialogIconButton(onClick = {
                     if (content.text == initialContent) onExit() else showExitDialog = true
                 }) {
                     Icon(
@@ -109,7 +109,7 @@ fun MarkdownEditor(
                 }
             },
             actions = {
-                IconButton(onClick = {
+                DialogIconButton(onClick = {
                     onConfirm(content.text)
                     onExit()
                 }) {
