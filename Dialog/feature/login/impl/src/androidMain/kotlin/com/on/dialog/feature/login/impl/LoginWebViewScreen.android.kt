@@ -57,7 +57,7 @@ actual fun LoginWebView(
                 }
             }
             // 로그인 URL 로드
-            webView.loadUrl(loginType.loginUrl)
+            webView.loadUrl(BuildKonfig.BASE_URL + loginType.loginUrl)
 
             webView
         },

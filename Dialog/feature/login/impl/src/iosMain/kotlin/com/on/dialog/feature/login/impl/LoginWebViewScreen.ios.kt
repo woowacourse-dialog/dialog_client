@@ -67,7 +67,7 @@ actual fun LoginWebView(
             webView.navigationDelegate = navigationDelegate
 
             // 로그인 URL 로드
-            val url = NSURL.URLWithString(loginType.loginUrl)
+            val url = NSURL.URLWithString(BuildKonfig.BASE_URL + loginType.loginUrl)
             if (url != null) {
                 val request = NSURLRequest.requestWithURL(url)
                 webView.loadRequest(request)
