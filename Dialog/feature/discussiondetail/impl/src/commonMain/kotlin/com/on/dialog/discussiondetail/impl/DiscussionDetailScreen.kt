@@ -80,21 +80,19 @@ private fun CommentInputPlaceholder(
             .background(
                 color = DialogTheme.colorScheme.surfaceVariant,
                 shape = DialogTheme.shapes.medium,
-            )
-            .padding(
+            ).padding(
                 horizontal = DialogTheme.spacing.medium,
                 vertical = DialogTheme.spacing.large,
-            )
+            ),
     ) {
         Markdown(
             content = if (isEmpty) "댓글을 입력해 주세요" else text,
             colors = markdownColor(),
             typography = markdownTypography(),
-            modifier = Modifier.wrapContentHeight()
+            modifier = Modifier.wrapContentHeight(),
         )
     }
 }
-
 
 @Composable
 @Preview(showBackground = true)

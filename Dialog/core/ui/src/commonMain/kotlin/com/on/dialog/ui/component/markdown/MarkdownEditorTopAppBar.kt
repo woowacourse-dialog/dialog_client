@@ -40,7 +40,7 @@ fun MarkdownEditorTopAppBar(
                 selectedTabIndex = selectedTab.ordinal,
                 indicator = {},
                 divider = {},
-                modifier = Modifier.wrapContentWidth()
+                modifier = Modifier.wrapContentWidth(),
             ) {
                 AnimatedTab(
                     title = stringResource(Res.string.markdown_renderer_write),

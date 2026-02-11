@@ -82,9 +82,8 @@ fun DialogTextField(
                         } else {
                             Modifier
                         },
-                    )
-                    .then(
-                        cornerBasedShape?.let { Modifier.clip(it) } ?: Modifier
+                    ).then(
+                        cornerBasedShape?.let { Modifier.clip(it) } ?: Modifier,
                     ),
                 readOnly = readOnly,
                 enabled = enabled,
@@ -141,9 +140,8 @@ fun DialogTextField(
                         } else {
                             Modifier
                         },
-                    )
-                    .then(
-                        cornerBasedShape?.let { Modifier.clip(it) } ?: Modifier
+                    ).then(
+                        cornerBasedShape?.let { Modifier.clip(it) } ?: Modifier,
                     ),
                 readOnly = readOnly,
                 enabled = enabled,

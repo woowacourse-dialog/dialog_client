@@ -171,7 +171,7 @@ private fun RendererView(content: String, modifier: Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .background(color = DialogTheme.colorScheme.primary.copy(alpha = 0.15F))
-            .padding(all = DialogTheme.spacing.large)
+            .padding(all = DialogTheme.spacing.large),
     )
 }
 
@@ -237,7 +237,7 @@ private fun handleNewLine(
     currentContent: TextFieldValue,
 ): TextFieldValue {
     val isNewLineAdded = newValue.text.length > currentContent.text.length &&
-            newValue.text.substring(startIndex = currentContent.text.length).contains(char = '\n')
+        newValue.text.substring(startIndex = currentContent.text.length).contains(char = '\n')
 
     if (!isNewLineAdded) {
         return newValue
@@ -252,38 +252,37 @@ private data class MarkdownEditorPreviewParams(
     val selectedTab: RendererTab,
 )
 
-private class MarkdownEditorPreviewProvider :
-    PreviewParameterProvider<MarkdownEditorPreviewParams> {
+private class MarkdownEditorPreviewProvider : PreviewParameterProvider<MarkdownEditorPreviewParams> {
     override val values = sequenceOf(
         MarkdownEditorPreviewParams(
             isDark = false,
             showExitDialog = false,
-            selectedTab = RendererTab.WRITE
+            selectedTab = RendererTab.WRITE,
         ),
         MarkdownEditorPreviewParams(
             isDark = true,
             showExitDialog = false,
-            selectedTab = RendererTab.WRITE
+            selectedTab = RendererTab.WRITE,
         ),
         MarkdownEditorPreviewParams(
             isDark = false,
             showExitDialog = true,
-            selectedTab = RendererTab.WRITE
+            selectedTab = RendererTab.WRITE,
         ),
         MarkdownEditorPreviewParams(
             isDark = true,
             showExitDialog = true,
-            selectedTab = RendererTab.WRITE
+            selectedTab = RendererTab.WRITE,
         ),
         MarkdownEditorPreviewParams(
             isDark = false,
             showExitDialog = false,
-            selectedTab = RendererTab.PREVIEW
+            selectedTab = RendererTab.PREVIEW,
         ),
         MarkdownEditorPreviewParams(
             isDark = true,
             showExitDialog = false,
-            selectedTab = RendererTab.PREVIEW
+            selectedTab = RendererTab.PREVIEW,
         ),
     )
 }
@@ -296,7 +295,7 @@ private fun MarkdownEditorPreview(
     DialogTheme(darkTheme = params.isDark) {
         MarkdownEditorPreviewContent(
             showExitDialog = params.showExitDialog,
-            selectedTab = params.selectedTab
+            selectedTab = params.selectedTab,
         )
     }
 }

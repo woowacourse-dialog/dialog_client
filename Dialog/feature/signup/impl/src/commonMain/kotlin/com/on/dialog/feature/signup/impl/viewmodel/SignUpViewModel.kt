@@ -16,9 +16,7 @@ class SignUpViewModel(
     override fun onIntent(intent: SignUpIntent) {
         when (intent) {
             is SignUpIntent.SelectTrack -> updateState { copy(selectedTrack = intent.track) }
-
             is SignUpIntent.ToggleNotification -> updateState { copy(isNotificationEnabled = intent.enabled) }
-
             SignUpIntent.ValidateAndSignUp -> handleSignup()
         }
     }
