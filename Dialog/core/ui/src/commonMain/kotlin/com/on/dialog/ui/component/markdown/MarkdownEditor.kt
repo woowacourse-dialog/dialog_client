@@ -143,10 +143,7 @@ private fun MarkdownEditor(
     ) {
         MarkdownEditorTopAppBar(
             onBackPress = onBackPress,
-            onConfirm = {
-                onConfirm(content.text)
-                onExit()
-            },
+            onConfirm = { onConfirm(content.text) },
             selectedTab = selectedTab,
             onSelectedTabChanged = onSelectedTabChanged,
         )

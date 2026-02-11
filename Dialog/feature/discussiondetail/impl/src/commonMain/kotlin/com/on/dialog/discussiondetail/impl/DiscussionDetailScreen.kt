@@ -57,7 +57,10 @@ fun DiscussionDetailScreen(
     if (showMarkdownEditor) {
         MarkdownEditor(
             initialContent = content,
-            onConfirm = { newContent: String -> content = newContent },
+            onConfirm = { newContent: String ->
+                content = newContent
+                showMarkdownEditor = false
+            },
             onExit = { showMarkdownEditor = false },
         )
     }
