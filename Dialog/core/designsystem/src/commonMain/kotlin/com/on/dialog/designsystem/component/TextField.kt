@@ -2,8 +2,10 @@ package com.on.dialog.designsystem.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -17,7 +19,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
@@ -52,66 +56,160 @@ fun DialogTextField(
     readOnly: Boolean = false,
     isError: Boolean = false,
     enabled: Boolean = true,
+    cornerBasedShape: CornerBasedShape? = DialogTheme.shapes.small,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    DialogTextFieldLayout(
+        modifier = modifier,
+        label = label,
+        supportingText = supportingText,
+        isError = isError,
+    ) {
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            singleLine = singleLine,
+            placeholder = { DialogTextFieldPlaceholder(placeholder) },
+            modifier = dialogTextFieldModifier(
+                singleLine = singleLine,
+                cornerBasedShape = cornerBasedShape,
+            ),
+            readOnly = readOnly,
+            enabled = enabled,
+            textStyle = dialogTextFieldTextStyle(),
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            colors = dialogTextFieldColors(),
+        )
+    }
+}
+
+@Composable
+fun DialogTextField(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    modifier: Modifier = Modifier,
+    placeholder: String = "",
+    label: String? = null,
+    supportingText: String? = null,
+    singleLine: Boolean = true,
+    readOnly: Boolean = false,
+    isError: Boolean = false,
+    enabled: Boolean = true,
+    cornerBasedShape: CornerBasedShape? = DialogTheme.shapes.small,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    leadingIcon: (@Composable () -> Unit)? = null,
+    trailingIcon: (@Composable () -> Unit)? = null,
+) {
+    DialogTextFieldLayout(
+        modifier = modifier,
+        label = label,
+        supportingText = supportingText,
+        isError = isError,
+    ) {
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            singleLine = singleLine,
+            placeholder = { DialogTextFieldPlaceholder(placeholder) },
+            modifier = dialogTextFieldModifier(
+                singleLine = singleLine,
+                cornerBasedShape = cornerBasedShape,
+            ),
+            readOnly = readOnly,
+            enabled = enabled,
+            textStyle = dialogTextFieldTextStyle(),
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            colors = dialogTextFieldColors(),
+        )
+    }
+}
+
+@Composable
+private fun DialogTextFieldLayout(
+    modifier: Modifier,
+    label: String?,
+    supportingText: String?,
+    isError: Boolean,
+    textField: @Composable ColumnScope.() -> Unit,
+) {
+    Column(modifier = modifier) {
         label?.let {
             Text(
-                text = label,
+                text = it,
                 color = DialogTheme.colorScheme.primary,
                 style = DialogTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(DialogTheme.spacing.small),
             )
         }
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            singleLine = singleLine,
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    color = Color.Gray,
-                    style = DialogTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(DialogTheme.shapes.small),
-            readOnly = readOnly,
-            enabled = enabled,
-            textStyle = DialogTheme.typography.bodyLarge.copy(
-                color = DialogTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold,
-            ),
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-                unfocusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-                disabledContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-                cursorColor = Color.Black,
-            ),
-        )
+
+        textField()
+
         supportingText?.let {
             Text(
                 text = it,
-                color = if (isError) Color.Red else DialogTheme.colorScheme.primary,
+                color = if (isError) DialogTheme.colorScheme.error else DialogTheme.colorScheme.primary,
                 style = DialogTheme.typography.labelSmall,
                 modifier = Modifier.padding(DialogTheme.spacing.small),
             )
         }
     }
 }
+
+@Composable
+private fun dialogTextFieldTextStyle(): TextStyle = DialogTheme.typography.bodyLarge.copy(
+    color = DialogTheme.colorScheme.onSurface,
+    fontWeight = FontWeight.SemiBold,
+)
+
+private fun ColumnScope.dialogTextFieldModifier(
+    singleLine: Boolean,
+    cornerBasedShape: CornerBasedShape?,
+): Modifier = Modifier
+    .fillMaxWidth()
+    .then(
+        if (!singleLine) {
+            Modifier.weight(1f, fill = true)
+        } else {
+            Modifier
+        },
+    ).then(
+        cornerBasedShape?.let { Modifier.clip(it) } ?: Modifier,
+    )
+
+@Composable
+private fun DialogTextFieldPlaceholder(text: String) {
+    if (text.isBlank()) return
+
+    Text(
+        text = text,
+        color = DialogTheme.colorScheme.onSurfaceVariant,
+        style = DialogTheme.typography.bodyLarge,
+        fontWeight = FontWeight.SemiBold,
+    )
+}
+
+@Composable
+private fun dialogTextFieldColors() = TextFieldDefaults.colors(
+    focusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15f),
+    unfocusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15f),
+    disabledContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15f),
+    focusedIndicatorColor = Color.Transparent,
+    unfocusedIndicatorColor = Color.Transparent,
+    disabledIndicatorColor = Color.Transparent,
+    errorIndicatorColor = Color.Transparent,
+    cursorColor = DialogTheme.colorScheme.onSurface,
+)
 
 @Preview(showBackground = true)
 @Composable

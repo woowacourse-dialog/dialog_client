@@ -5,7 +5,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
@@ -56,6 +59,7 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
                     },
                 )
             },
+            contentWindowInsets = WindowInsets.systemBars,
         ) { paddingValues ->
             CompositionLocalProvider(
                 LocalSnackbarDelegate provides appState.snackbarDelegate,
@@ -69,6 +73,7 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
                     onBack = navigator::goBack,
                     modifier = Modifier
                         .padding(paddingValues)
+                        .consumeWindowInsets(paddingValues)
                         .background(DialogTheme.colorScheme.surfaceContainer),
                     transitionSpec = {
                         ContentTransform(

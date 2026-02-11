@@ -49,13 +49,20 @@ fun LoginWebViewScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                LoginEffect.GoBack -> goBack()
-                LoginEffect.NavigateToSignUp -> navigateToSignUp()
-                is LoginEffect.ShowSnackbar ->
+                LoginEffect.GoBack -> {
+                    goBack()
+                }
+
+                LoginEffect.NavigateToSignUp -> {
+                    navigateToSignUp()
+                }
+
+                is LoginEffect.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(
                         message = getString(effect.stringResource),
                         state = effect.state,
                     )
+                }
             }
         }
     }

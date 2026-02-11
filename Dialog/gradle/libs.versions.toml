@@ -30,6 +30,8 @@ androidx-activity-compose = "1.12.1"
 jetbrains-androidx-navigation = "2.9.1"
 compose-material3 = "1.9.0"
 materialIconsExtended = "1.7.3"
+composeNavigationEvent = "1.0.0"
+
 
 # Navigation
 multiplatform-nav3-ui = "1.0.0-alpha05"
@@ -52,6 +54,9 @@ build-konfig = "0.17.1"
 # Image
 coil = "3.3.0"
 imagepicker = "1.0.30"
+
+# Markdown
+multiplatformMarkdownRenderer = "0.37.0"
 
 # Util
 napier = "2.7.1"
@@ -100,6 +105,7 @@ compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "c
 compose-ui-tooling-preview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "compose-multiplatform" }
 compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "compose-multiplatform" }
 compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "compose-material3" }
+compose-navigationevent = { module = "org.jetbrains.androidx.navigationevent:navigationevent-compose", version.ref = "composeNavigationEvent" }
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 
 # Navigation
@@ -135,6 +141,10 @@ ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.r
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 imagepicker = { module = "io.github.ismoy:imagepickerkmp", version.ref = "imagepicker" }
+
+# Markdown
+multiplatform-markdown-renderer = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "multiplatformMarkdownRenderer" }
+multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRenderer" }
 
 # Util
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
