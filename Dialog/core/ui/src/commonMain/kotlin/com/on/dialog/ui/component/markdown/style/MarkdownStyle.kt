@@ -239,12 +239,22 @@ sealed interface MarkdownStyle {
             val selectedText =
                 if (start == end) "" else text.substring(start, end)
 
-            val block = "```\n$selectedText\n```"
-
-            return content.copy(
-                text = text.replaceRange(start, end, block),
-                selection = TextRange(start + 4),
-            )
+            val isCodeBlock = selectedText.startsWith("```\n") &&
+                    selectedText.endsWith("\n```") &&
+                    selectedText.length >= 8
+            return if (isCodeBlock) {
+                val unwrapped = selectedText.removePrefix("```\n").removeSuffix("\n```")
+                content.copy(
+                    text = text.replaceRange(start, end, unwrapped),
+                    selection = TextRange(start, start + unwrapped.length),
+                )
+            } else {
+                val block = "```\n$selectedText\n```"
+                content.copy(
+                    text = text.replaceRange(start, end, block),
+                    selection = TextRange(start + 4),
+                )
+            }
         }
     }
 
