@@ -1,4 +1,4 @@
-package com.on.dialog.ui.component.markdown
+package com.on.dialog.ui.component.markdown.style
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextRange
@@ -43,8 +43,8 @@ sealed interface MarkdownStyle {
 
             val hasStyle =
                 selectedText.startsWith(prefix) &&
-                    selectedText.endsWith(suffix) &&
-                    selectedText.length >= prefix.length + suffix.length
+                        selectedText.endsWith(suffix) &&
+                        selectedText.length >= prefix.length + suffix.length
 
             if (hasStyle) {
                 val unwrapped = selectedText

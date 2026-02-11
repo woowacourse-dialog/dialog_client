@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogIconButtonTone
+import com.on.dialog.ui.component.markdown.style.MarkdownStyle
 
 /**
  * 마크다운 버튼들에 대한 style에 대한 apply처리의 책임을 위한 컴포넌트
