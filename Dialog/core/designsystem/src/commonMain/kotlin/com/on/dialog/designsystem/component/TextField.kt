@@ -2,6 +2,7 @@ package com.on.dialog.designsystem.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -58,66 +59,42 @@ fun DialogTextField(
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
 ) {
-    Column(modifier = modifier) {
-        label?.let {
-            Text(
-                text = label,
-                color = DialogTheme.colorScheme.primary,
-                style = DialogTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(DialogTheme.spacing.small),
-            )
-        }
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            singleLine = singleLine,
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    color = Color.Gray,
-                    style = DialogTheme.typography.bodyLarge,
+    DialogTextFieldLayout(
+        modifier = modifier,
+        label = label,
+        supportingText = supportingText,
+        isError = isError,
+        textField = {
+            TextField(
+                value = value,
+                onValueChange = onValueChange,
+                singleLine = singleLine,
+                placeholder = {
+                    DialogTextFieldPlaceholder(placeholder)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (!singleLine) {
+                            Modifier.weight(1f, fill = true)
+                        } else {
+                            Modifier
+                        },
+                    ).clip(DialogTheme.shapes.small),
+                readOnly = readOnly,
+                enabled = enabled,
+                textStyle = DialogTheme.typography.bodyLarge.copy(
+                    color = DialogTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .then(
-                    if (!singleLine) {
-                        Modifier.weight(1f, fill = true)
-                    } else {
-                        Modifier
-                    },
-                ).clip(DialogTheme.shapes.small),
-            readOnly = readOnly,
-            enabled = enabled,
-            textStyle = DialogTheme.typography.bodyLarge.copy(
-                color = DialogTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold,
-            ),
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-                unfocusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-                disabledContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-                cursorColor = Color.Black,
-            ),
-        )
-        supportingText?.let {
-            Text(
-                text = it,
-                color = if (isError) Color.Red else DialogTheme.colorScheme.primary,
-                style = DialogTheme.typography.labelSmall,
-                modifier = Modifier.padding(DialogTheme.spacing.small),
+                ),
+                leadingIcon = leadingIcon,
+                trailingIcon = trailingIcon,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                colors = dialogTextFieldColors(),
             )
-        }
-    }
+        },
+    )
 }
 
 @Composable
@@ -137,57 +114,67 @@ fun DialogTextField(
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
 ) {
+    DialogTextFieldLayout(
+        modifier = modifier,
+        label = label,
+        supportingText = supportingText,
+        isError = isError,
+        textField = {
+            TextField(
+                value = value,
+                onValueChange = onValueChange,
+                singleLine = singleLine,
+                placeholder = {
+                    DialogTextFieldPlaceholder(placeholder)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (!singleLine) {
+                            Modifier.weight(1f, fill = true)
+                        } else {
+                            Modifier
+                        },
+                    ).clip(DialogTheme.shapes.small),
+                readOnly = readOnly,
+                enabled = enabled,
+                textStyle = DialogTheme.typography.bodyLarge.copy(
+                    color = DialogTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.SemiBold,
+                ),
+                leadingIcon = leadingIcon,
+                trailingIcon = trailingIcon,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                colors = dialogTextFieldColors(),
+            )
+        },
+    )
+}
+
+/**
+ * DialogTextField의 공통 레이아웃을 담당하는 내부 컴포저블
+ * 라벨, 텍스트 필드, 보조 텍스트를 포함한 전체 레이아웃을 구성
+ */
+@Composable
+private fun DialogTextFieldLayout(
+    modifier: Modifier = Modifier,
+    label: String?,
+    supportingText: String?,
+    isError: Boolean,
+    textField: @Composable ColumnScope.() -> Unit,
+) {
     Column(modifier = modifier) {
         label?.let {
             Text(
-                text = label,
+                text = it,
                 color = DialogTheme.colorScheme.primary,
                 style = DialogTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(DialogTheme.spacing.small),
             )
         }
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            singleLine = singleLine,
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    color = Color.Gray,
-                    style = DialogTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .then(
-                    if (!singleLine) {
-                        Modifier.weight(1f, fill = true)
-                    } else {
-                        Modifier
-                    },
-                ).clip(DialogTheme.shapes.small),
-            readOnly = readOnly,
-            enabled = enabled,
-            textStyle = DialogTheme.typography.bodyLarge.copy(
-                color = DialogTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold,
-            ),
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-                unfocusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-                disabledContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-                cursorColor = Color.Black,
-            ),
-        )
+        textField()
         supportingText?.let {
             Text(
                 text = it,
@@ -198,6 +185,33 @@ fun DialogTextField(
         }
     }
 }
+
+/**
+ * DialogTextField의 플레이스홀더 텍스트 스타일을 정의하는 내부 컴포저블
+ */
+@Composable
+private fun DialogTextFieldPlaceholder(text: String) {
+    Text(
+        text = text,
+        color = Color.Gray,
+        style = DialogTheme.typography.bodyLarge,
+        fontWeight = FontWeight.SemiBold,
+    )
+}
+
+/**
+ * DialogTextField의 색상 구성을 정의하는 내부 함수
+ */
+@Composable
+private fun dialogTextFieldColors() = TextFieldDefaults.colors(
+    focusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
+    unfocusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
+    disabledContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
+    focusedIndicatorColor = Color.Transparent,
+    unfocusedIndicatorColor = Color.Transparent,
+    errorIndicatorColor = Color.Transparent,
+    cursorColor = Color.Black,
+)
 
 @Preview(showBackground = true)
 @Composable
