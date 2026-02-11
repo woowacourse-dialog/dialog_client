@@ -185,12 +185,11 @@ private fun WriterView(
     DialogTextField(
         value = content,
         onValueChange = { newValue ->
-            onContentChanged(
-                handleNewLine(
-                    newValue = newValue,
-                    currentContent = content,
-                ),
+            val newContent = handleNewLine(
+                newValue = newValue,
+                currentContent = content,
             )
+            onContentChanged(newContent)
         },
         modifier = modifier
             .fillMaxWidth()
