@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -54,6 +55,7 @@ fun DialogTextField(
     readOnly: Boolean = false,
     isError: Boolean = false,
     enabled: Boolean = true,
+    cornerBasedShape: CornerBasedShape? = DialogTheme.shapes.small,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     leadingIcon: (@Composable () -> Unit)? = null,
@@ -80,7 +82,10 @@ fun DialogTextField(
                         } else {
                             Modifier
                         },
-                    ).clip(DialogTheme.shapes.small),
+                    )
+                    .then(
+                        cornerBasedShape?.let { Modifier.clip(it) } ?: Modifier
+                    ),
                 readOnly = readOnly,
                 enabled = enabled,
                 textStyle = DialogTheme.typography.bodyLarge.copy(
@@ -109,6 +114,7 @@ fun DialogTextField(
     readOnly: Boolean = false,
     isError: Boolean = false,
     enabled: Boolean = true,
+    cornerBasedShape: CornerBasedShape? = DialogTheme.shapes.small,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     leadingIcon: (@Composable () -> Unit)? = null,
@@ -135,7 +141,10 @@ fun DialogTextField(
                         } else {
                             Modifier
                         },
-                    ).clip(DialogTheme.shapes.small),
+                    )
+                    .then(
+                        cornerBasedShape?.let { Modifier.clip(it) } ?: Modifier
+                    ),
                 readOnly = readOnly,
                 enabled = enabled,
                 textStyle = DialogTheme.typography.bodyLarge.copy(

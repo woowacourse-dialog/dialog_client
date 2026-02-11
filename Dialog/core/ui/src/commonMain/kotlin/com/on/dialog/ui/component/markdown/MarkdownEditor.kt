@@ -197,6 +197,7 @@ private fun WriterView(
             .focusRequester(focusRequester),
         singleLine = false,
         placeholder = stringResource(resource = Res.string.markdown_editor_place_holder_please_enter_contents),
+        cornerBasedShape = null,
     )
     MarkdownButtons(content = content, onContentChanged = onContentChanged)
 }
