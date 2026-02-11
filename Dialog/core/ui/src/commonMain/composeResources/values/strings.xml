@@ -23,5 +23,7 @@
     <string name="markdown_editor_dialog_content">뒤로 가시면 변경사항이 저장되지 않습니다.\n정말 나가시겠습니까?</string>
     <string name="markdown_editor_dialog_confirm">뒤로가기</string>
     <string name="markdown_editor_dialog_exit">취소</string>
+    <string name="markdown_editor_back">뒤로가기</string>
+    <string name="markdown_editor_confirm">확인</string>
 
 </resources>

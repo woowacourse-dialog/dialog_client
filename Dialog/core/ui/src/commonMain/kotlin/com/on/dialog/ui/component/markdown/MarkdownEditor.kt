@@ -38,6 +38,8 @@ import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.component.markdown.MarkdownStyle.Companion.markdownStyles
 import dialog.core.ui.generated.resources.Res
+import dialog.core.ui.generated.resources.markdown_editor_back
+import dialog.core.ui.generated.resources.markdown_editor_confirm
 import dialog.core.ui.generated.resources.markdown_editor_dialog_confirm
 import dialog.core.ui.generated.resources.markdown_editor_dialog_content
 import dialog.core.ui.generated.resources.markdown_editor_dialog_exit
@@ -142,7 +144,7 @@ private fun MarkdownEditor(
                 DialogIconButton(onClick = onBackPress) {
                     Icon(
                         imageVector = DialogIcons.ArrowBack,
-                        contentDescription = null,
+                        contentDescription = stringResource(resource = Res.string.markdown_editor_back),
                     )
                 }
             },
@@ -153,7 +155,7 @@ private fun MarkdownEditor(
                 }) {
                     Icon(
                         imageVector = DialogIcons.Check,
-                        contentDescription = null,
+                        contentDescription = stringResource(resource = Res.string.markdown_editor_confirm),
                     )
                 }
             },
