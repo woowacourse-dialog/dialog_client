@@ -155,7 +155,14 @@ private fun MarkdownEditor(
         )
         DialogTextField(
             value = content,
-            onValueChange = { newValue -> isNewLineAppended(newValue, content, onContentChanged) },
+            onValueChange = { newValue ->
+                onContentChanged(
+                    handleNewLine(
+                        newValue = newValue,
+                        currentContent = content
+                    )
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(weight = 1f)
@@ -175,28 +182,25 @@ private fun MarkdownEditor(
                 MarkdownButton(
                     style = markdownStyles[index],
                     content = content,
-                    onContentChanged = { onContentChanged(it) },
+                    onContentChanged = onContentChanged,
                 )
             }
         }
     }
 }
 
-private fun isNewLineAppended(
+private fun handleNewLine(
     newValue: TextFieldValue,
-    content: TextFieldValue,
-    onContentChanged: (TextFieldValue) -> Unit,
-) {
-    if (newValue.text.length > content.text.length &&
-        newValue.text.substring(startIndex = content.text.length).contains(char = '\n')
-    ) {
-        val handled: Boolean = MarkdownStyle.Number.handleNewLine(newValue) { onContentChanged(it) }
-        if (!handled) {
-            onContentChanged(newValue)
-        }
-    } else {
-        onContentChanged(newValue)
+    currentContent: TextFieldValue,
+): TextFieldValue {
+    val isNewLineAdded = newValue.text.length > currentContent.text.length &&
+            newValue.text.substring(startIndex = currentContent.text.length).contains(char = '\n')
+
+    if (!isNewLineAdded) {
+        return newValue
     }
+
+    return MarkdownStyle.Number.handleNewLine(newValue) ?: newValue
 }
 
 @Preview(showBackground = true, name = "Light - Normal")
@@ -249,4 +253,3 @@ private fun MarkdownEditorPreviewContent(
         onContentChanged = {},
     )
 }
-

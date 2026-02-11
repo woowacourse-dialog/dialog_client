@@ -8,20 +8,14 @@ import com.on.dialog.designsystem.icon.DialogIcons
 sealed interface MarkdownStyle {
     val icon: ImageVector
 
-    fun apply(
-        content: TextFieldValue,
-        onContentChanged: (TextFieldValue) -> Unit,
-    )
+    fun transform(content: TextFieldValue): TextFieldValue
 
     sealed class Inline(
         protected val prefix: String,
         protected val suffix: String,
         override val icon: ImageVector,
     ) : MarkdownStyle {
-        override fun apply(
-            content: TextFieldValue,
-            onContentChanged: (TextFieldValue) -> Unit,
-        ) {
+        override fun transform(content: TextFieldValue): TextFieldValue {
             val text = content.text
             val selection = content.selection
 
@@ -30,13 +24,10 @@ sealed interface MarkdownStyle {
 
             if (start == end) {
                 val newText = text.replaceRange(start, start, prefix + suffix)
-                onContentChanged(
-                    content.copy(
-                        text = newText,
-                        selection = TextRange(start + prefix.length),
-                    ),
+                return content.copy(
+                    text = newText,
+                    selection = TextRange(start + prefix.length),
                 )
-                return
             }
 
             val selectedText = text.substring(start, end)
@@ -46,29 +37,25 @@ sealed interface MarkdownStyle {
                         selectedText.endsWith(suffix) &&
                         selectedText.length >= prefix.length + suffix.length
 
-            if (hasStyle) {
+            return if (hasStyle) {
                 val unwrapped = selectedText
                     .removePrefix(prefix)
                     .removeSuffix(suffix)
 
-                onContentChanged(
-                    content.copy(
-                        text = text.replaceRange(start, end, unwrapped),
-                        selection = TextRange(start, start + unwrapped.length),
-                    ),
+                content.copy(
+                    text = text.replaceRange(start, end, unwrapped),
+                    selection = TextRange(start, start + unwrapped.length),
                 )
             } else {
-                onContentChanged(
-                    content.copy(
-                        text = text.replaceRange(
-                            start,
-                            end,
-                            "$prefix$selectedText$suffix",
-                        ),
-                        selection = TextRange(
-                            start,
-                            start + selectedText.length + prefix.length + suffix.length,
-                        ),
+                content.copy(
+                    text = text.replaceRange(
+                        start,
+                        end,
+                        "$prefix$selectedText$suffix",
+                    ),
+                    selection = TextRange(
+                        start,
+                        start + selectedText.length + prefix.length + suffix.length,
                     ),
                 )
             }
@@ -79,10 +66,7 @@ sealed interface MarkdownStyle {
         protected val linePrefix: String,
         override val icon: ImageVector,
     ) : MarkdownStyle {
-        override fun apply(
-            content: TextFieldValue,
-            onContentChanged: (TextFieldValue) -> Unit,
-        ) {
+        override fun transform(content: TextFieldValue): TextFieldValue {
             val text = content.text
             val selection = content.selection
 
@@ -109,13 +93,11 @@ sealed interface MarkdownStyle {
 
             val offset = if (hasPrefix) -linePrefix.length else linePrefix.length
 
-            onContentChanged(
-                content.copy(
-                    text = newText,
-                    selection = TextRange(
-                        (selection.start + offset).coerceAtLeast(0),
-                        (selection.end + offset).coerceAtLeast(0),
-                    ),
+            return content.copy(
+                text = newText,
+                selection = TextRange(
+                    (selection.start + offset).coerceAtLeast(0),
+                    (selection.end + offset).coerceAtLeast(0),
                 ),
             )
         }
@@ -136,10 +118,7 @@ sealed interface MarkdownStyle {
 
         private val numberPattern = Regex("^(\\d+)\\. ")
 
-        override fun apply(
-            content: TextFieldValue,
-            onContentChanged: (TextFieldValue) -> Unit,
-        ) {
+        override fun transform(content: TextFieldValue): TextFieldValue {
             val text = content.text
             val selection = content.selection
 
@@ -170,21 +149,16 @@ sealed interface MarkdownStyle {
 
             val offset = if (match != null) -match.value.length else 3
 
-            onContentChanged(
-                content.copy(
-                    text = newText,
-                    selection = TextRange(
-                        (selection.start + offset).coerceAtLeast(0),
-                        (selection.end + offset).coerceAtLeast(0),
-                    ),
+            return content.copy(
+                text = newText,
+                selection = TextRange(
+                    (selection.start + offset).coerceAtLeast(0),
+                    (selection.end + offset).coerceAtLeast(0),
                 ),
             )
         }
 
-        fun handleNewLine(
-            content: TextFieldValue,
-            onContentChanged: (TextFieldValue) -> Unit,
-        ): Boolean {
+        fun handleNewLine(content: TextFieldValue): TextFieldValue? {
             val text = content.text
             val cursorPosition = content.selection.start
 
@@ -193,23 +167,20 @@ sealed interface MarkdownStyle {
             }
 
             val prevLineEnd = cursorPosition - 1
-            if (prevLineStart >= prevLineEnd) return false
+            if (prevLineStart >= prevLineEnd) return null
 
             val prevLine = text.substring(prevLineStart, prevLineEnd)
 
-            val match = numberPattern.find(prevLine) ?: return false
+            val match = numberPattern.find(prevLine) ?: return null
 
             val currentNumber = match.groupValues[1].toInt()
 
             if (prevLine.trim() == match.value.trim()) {
                 val newText = text.removeRange(prevLineStart, cursorPosition)
-                onContentChanged(
-                    content.copy(
-                        text = newText,
-                        selection = TextRange(prevLineStart),
-                    ),
+                return content.copy(
+                    text = newText,
+                    selection = TextRange(prevLineStart),
                 )
-                return true
             }
 
             val nextNumber = currentNumber + 1
@@ -221,22 +192,15 @@ sealed interface MarkdownStyle {
                 nextPrefix,
             )
 
-            onContentChanged(
-                content.copy(
-                    text = newText,
-                    selection = TextRange(cursorPosition + nextPrefix.length),
-                ),
+            return content.copy(
+                text = newText,
+                selection = TextRange(cursorPosition + nextPrefix.length),
             )
-
-            return true
         }
     }
 
     object Link : Inline("[", "](url)", DialogIcons.link) {
-        override fun apply(
-            content: TextFieldValue,
-            onContentChanged: (TextFieldValue) -> Unit,
-        ) {
+        override fun transform(content: TextFieldValue): TextFieldValue {
             val text = content.text
             val selection = content.selection
             val start = minOf(selection.start, selection.end)
@@ -244,22 +208,18 @@ sealed interface MarkdownStyle {
 
             if (start == end) {
                 val newText = text.replaceRange(start, start, "[](url)")
-                onContentChanged(
-                    content.copy(
-                        text = newText,
-                        selection = TextRange(start + 3, start + 6),
-                    ),
+                return content.copy(
+                    text = newText,
+                    selection = TextRange(start + 3, start + 6),
                 )
             } else {
                 val selectedText = text.substring(start, end)
                 val newText = text.replaceRange(start, end, "[$selectedText](url)")
-                onContentChanged(
-                    content.copy(
-                        text = newText,
-                        selection = TextRange(
-                            start + selectedText.length + 3,
-                            start + selectedText.length + 6,
-                        ),
+                return content.copy(
+                    text = newText,
+                    selection = TextRange(
+                        start + selectedText.length + 3,
+                        start + selectedText.length + 6,
                     ),
                 )
             }
@@ -269,10 +229,7 @@ sealed interface MarkdownStyle {
     object CodeBlock : MarkdownStyle {
         override val icon: ImageVector = DialogIcons.codeBlock
 
-        override fun apply(
-            content: TextFieldValue,
-            onContentChanged: (TextFieldValue) -> Unit,
-        ) {
+        override fun transform(content: TextFieldValue): TextFieldValue {
             val text = content.text
             val selection = content.selection
 
@@ -284,11 +241,9 @@ sealed interface MarkdownStyle {
 
             val block = "```\n$selectedText\n```"
 
-            onContentChanged(
-                content.copy(
-                    text = text.replaceRange(start, end, block),
-                    selection = TextRange(start + 4),
-                ),
+            return content.copy(
+                text = text.replaceRange(start, end, block),
+                selection = TextRange(start + 4),
             )
         }
     }

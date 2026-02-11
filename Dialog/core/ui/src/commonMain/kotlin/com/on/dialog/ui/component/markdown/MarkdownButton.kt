@@ -24,10 +24,7 @@ fun MarkdownButton(
 ) {
     DialogIconButton(
         onClick = {
-            style.apply(
-                content = content,
-                onContentChanged = onContentChanged,
-            )
+            onContentChanged(style.transform(content))
         },
         content = {
             Icon(
