@@ -177,6 +177,7 @@ private fun MarkdownEditor(
                     typography = markdownTypography(),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(color = DialogTheme.colorScheme.primary.copy(alpha = 0.15F))
                         .padding(all = DialogTheme.spacing.large)
                         .weight(weight = 1f),
                 )
