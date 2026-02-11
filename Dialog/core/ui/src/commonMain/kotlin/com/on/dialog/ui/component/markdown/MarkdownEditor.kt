@@ -61,8 +61,8 @@ fun MarkdownEditor(
         mutableStateOf(
             TextFieldValue(
                 text = initialContent,
-                selection = TextRange(initialContent.length)
-            )
+                selection = TextRange(initialContent.length),
+            ),
         )
     }
     var showExitDialog: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -160,8 +160,8 @@ private fun MarkdownEditor(
                 onContentChanged(
                     handleNewLine(
                         newValue = newValue,
-                        currentContent = content
-                    )
+                        currentContent = content,
+                    ),
                 )
             },
             modifier = Modifier
@@ -175,7 +175,7 @@ private fun MarkdownEditor(
             horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.small),
             contentPadding = PaddingValues(
                 horizontal = DialogTheme.spacing.large,
-                vertical = DialogTheme.spacing.extraSmall
+                vertical = DialogTheme.spacing.extraSmall,
             ),
             modifier = Modifier.windowInsetsPadding(insets = WindowInsets.ime),
         ) {
@@ -201,7 +201,7 @@ private fun handleNewLine(
     currentContent: TextFieldValue,
 ): TextFieldValue {
     val isNewLineAdded = newValue.text.length > currentContent.text.length &&
-            newValue.text.substring(startIndex = currentContent.text.length).contains(char = '\n')
+        newValue.text.substring(startIndex = currentContent.text.length).contains(char = '\n')
 
     if (!isNewLineAdded) {
         return newValue

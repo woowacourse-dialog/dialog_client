@@ -34,8 +34,8 @@ sealed interface MarkdownStyle {
 
             val hasStyle =
                 selectedText.startsWith(prefix) &&
-                        selectedText.endsWith(suffix) &&
-                        selectedText.length >= prefix.length + suffix.length
+                    selectedText.endsWith(suffix) &&
+                    selectedText.length >= prefix.length + suffix.length
 
             return if (hasStyle) {
                 val unwrapped = selectedText
@@ -240,8 +240,8 @@ sealed interface MarkdownStyle {
                 if (start == end) "" else text.substring(start, end)
 
             val isCodeBlock = selectedText.startsWith("```\n") &&
-                    selectedText.endsWith("\n```") &&
-                    selectedText.length >= 8
+                selectedText.endsWith("\n```") &&
+                selectedText.length >= 8
             return if (isCodeBlock) {
                 val unwrapped = selectedText.removePrefix("```\n").removeSuffix("\n```")
                 content.copy(

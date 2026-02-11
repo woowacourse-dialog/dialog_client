@@ -40,7 +40,7 @@ fun DecisionDialog(
             onConfirm = onConfirm,
             dismissText = dismissText,
             onDismiss = onDismiss,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -57,7 +57,7 @@ private fun DecisionContent(
     Column(modifier = modifier) {
         Text(
             text = contentText,
-            modifier = Modifier.padding(vertical = DialogTheme.spacing.small)
+            modifier = Modifier.padding(vertical = DialogTheme.spacing.small),
         )
 
         Spacer(modifier = Modifier.padding(all = DialogTheme.spacing.small))
