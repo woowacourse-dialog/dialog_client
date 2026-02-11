@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Icon
@@ -28,27 +29,30 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.NavigationEventState
 import androidx.navigationevent.compose.rememberNavigationEventState
+import com.mikepenz.markdown.compose.Markdown
+import com.mikepenz.markdown.m3.markdownColor
+import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogIconButtonTone
 import com.on.dialog.designsystem.component.DialogTextField
-import com.on.dialog.designsystem.component.DialogTopAppBar
-import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.component.DecisionDialog
 import com.on.dialog.ui.component.markdown.style.MarkdownStyle
 import com.on.dialog.ui.component.markdown.style.MarkdownStyle.Companion.markdownStyles
 import dialog.core.ui.generated.resources.Res
-import dialog.core.ui.generated.resources.markdown_editor_back
-import dialog.core.ui.generated.resources.markdown_editor_confirm
 import dialog.core.ui.generated.resources.markdown_editor_dialog_confirm
 import dialog.core.ui.generated.resources.markdown_editor_dialog_content
 import dialog.core.ui.generated.resources.markdown_editor_dialog_exit
 import dialog.core.ui.generated.resources.markdown_editor_place_holder_please_enter_contents
 import org.jetbrains.compose.resources.stringResource
 
+enum class RendererTab {
+    WRITE,
+    PREVIEW,
+}
+
 @Composable
 fun MarkdownEditor(
-    title: String,
     initialContent: String,
     onConfirm: (String) -> Unit,
     onExit: () -> Unit,
@@ -77,6 +81,8 @@ fun MarkdownEditor(
         }
     }
 
+    var selectedTab: RendererTab by rememberSaveable { mutableStateOf(RendererTab.WRITE) }
+
     NavigationBackHandler(
         state = navState,
         isBackEnabled = true,
@@ -92,20 +98,20 @@ fun MarkdownEditor(
     MarkdownEditor(
         showExitDialog = showExitDialog,
         onShowExitDialog = { showExitDialog = it },
-        title = title,
         onBackPress = handleBackPress,
         onConfirm = onConfirm,
         onExit = onExit,
         focusRequester = focusRequester,
         content = content,
         onContentChanged = { content = it },
+        selectedTab = selectedTab,
+        onSelectedTabChanged = { selectedTab = it },
         modifier = modifier,
     )
 }
 
 @Composable
 private fun MarkdownEditor(
-    title: String,
     onConfirm: (String) -> Unit,
     onExit: () -> Unit,
     onBackPress: () -> Unit,
@@ -114,6 +120,8 @@ private fun MarkdownEditor(
     focusRequester: FocusRequester,
     content: TextFieldValue,
     onContentChanged: (TextFieldValue) -> Unit,
+    selectedTab: RendererTab,
+    onSelectedTabChanged: (RendererTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (showExitDialog) {
@@ -132,31 +140,48 @@ private fun MarkdownEditor(
             .background(color = DialogTheme.colorScheme.background),
     ) {
         MarkdownEditorTopAppBar(
-            title = title,
             onBackPress = onBackPress,
             onConfirm = {
                 onConfirm(content.text)
                 onExit()
             },
+            selectedTab = selectedTab,
+            onSelectedTabChanged = onSelectedTabChanged,
         )
-        DialogTextField(
-            value = content,
-            onValueChange = { newValue ->
-                onContentChanged(
-                    handleNewLine(
-                        newValue = newValue,
-                        currentContent = content,
-                    ),
+        when (selectedTab) {
+            RendererTab.WRITE -> {
+                DialogTextField(
+                    value = content,
+                    onValueChange = { newValue ->
+                        onContentChanged(
+                            handleNewLine(
+                                newValue = newValue,
+                                currentContent = content,
+                            ),
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(weight = 1f)
+                        .focusRequester(focusRequester),
+                    singleLine = false,
+                    placeholder = stringResource(resource = Res.string.markdown_editor_place_holder_please_enter_contents),
                 )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(weight = 1f)
-                .focusRequester(focusRequester),
-            singleLine = false,
-            placeholder = stringResource(resource = Res.string.markdown_editor_place_holder_please_enter_contents),
-        )
-        MarkdownButtons(content = content, onContentChanged = onContentChanged)
+                MarkdownButtons(content = content, onContentChanged = onContentChanged)
+            }
+
+            RendererTab.PREVIEW -> {
+                Markdown(
+                    content = content.text,
+                    colors = markdownColor(),
+                    typography = markdownTypography(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(all = DialogTheme.spacing.large)
+                        .weight(weight = 1f),
+                )
+            }
+        }
     }
 }
 
@@ -188,36 +213,6 @@ private fun MarkdownButtons(
             )
         }
     }
-}
-
-@Composable
-private fun MarkdownEditorTopAppBar(
-    title: String,
-    onBackPress: () -> Unit,
-    onConfirm: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    DialogTopAppBar(
-        title = title,
-        navigationIcon = {
-            DialogIconButton(onClick = onBackPress) {
-                Icon(
-                    imageVector = DialogIcons.ArrowBack,
-                    contentDescription = stringResource(resource = Res.string.markdown_editor_back),
-                )
-            }
-        },
-        actions = {
-            DialogIconButton(onClick = onConfirm) {
-                Icon(
-                    imageVector = DialogIcons.Check,
-                    contentDescription = stringResource(resource = Res.string.markdown_editor_confirm),
-                )
-            }
-        },
-        centerAligned = true,
-        modifier = modifier
-    )
 }
 
 private fun handleNewLine(
@@ -266,21 +261,39 @@ private fun MarkdownEditorExitDialogPreviewDark() {
     }
 }
 
+@Preview(showBackground = true, name = "Light - Renderer Dialog")
+@Composable
+private fun MarkdownEditorRendererDialogPreviewLight() {
+    DialogTheme {
+        MarkdownEditorPreviewContent(showExitDialog = false, selectedTab = RendererTab.PREVIEW)
+    }
+}
+
+@Preview(showBackground = true, name = "Dark - Renderer Dialog")
+@Composable
+private fun MarkdownEditorRendererDialogPreviewDark() {
+    DialogTheme(darkTheme = true) {
+        MarkdownEditorPreviewContent(showExitDialog = false, selectedTab = RendererTab.PREVIEW)
+    }
+}
+
 @Composable
 private fun MarkdownEditorPreviewContent(
     showExitDialog: Boolean,
+    selectedTab: RendererTab = RendererTab.WRITE,
 ) {
     val focusRequester: FocusRequester = remember { FocusRequester() }
 
     MarkdownEditor(
         showExitDialog = showExitDialog,
         onShowExitDialog = {},
-        title = "Title",
         onBackPress = {},
         onConfirm = {},
         onExit = {},
         focusRequester = focusRequester,
-        content = TextFieldValue("내용물들~~~"),
+        content = TextFieldValue("#### Hello World\n\nThis is a **bold** statement."),
         onContentChanged = {},
+        selectedTab = selectedTab,
+        onSelectedTabChanged = {},
     )
 }
