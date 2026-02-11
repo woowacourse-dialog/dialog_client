@@ -25,6 +25,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.NavigationEventState
@@ -243,51 +245,58 @@ private fun handleNewLine(
     return MarkdownStyle.Number.handleNewLine(newValue) ?: newValue
 }
 
-@Preview(showBackground = true, name = "Light - Normal")
-@Composable
-private fun MarkdownEditorPreviewLight() {
-    DialogTheme {
-        MarkdownEditorPreviewContent(showExitDialog = false)
-    }
+private data class MarkdownEditorPreviewParams(
+    val isDark: Boolean,
+    val showExitDialog: Boolean,
+    val selectedTab: RendererTab,
+)
+
+private class MarkdownEditorPreviewProvider :
+    PreviewParameterProvider<MarkdownEditorPreviewParams> {
+    override val values = sequenceOf(
+        MarkdownEditorPreviewParams(
+            isDark = false,
+            showExitDialog = false,
+            selectedTab = RendererTab.WRITE
+        ),
+        MarkdownEditorPreviewParams(
+            isDark = true,
+            showExitDialog = false,
+            selectedTab = RendererTab.WRITE
+        ),
+        MarkdownEditorPreviewParams(
+            isDark = false,
+            showExitDialog = true,
+            selectedTab = RendererTab.WRITE
+        ),
+        MarkdownEditorPreviewParams(
+            isDark = true,
+            showExitDialog = true,
+            selectedTab = RendererTab.WRITE
+        ),
+        MarkdownEditorPreviewParams(
+            isDark = false,
+            showExitDialog = false,
+            selectedTab = RendererTab.PREVIEW
+        ),
+        MarkdownEditorPreviewParams(
+            isDark = true,
+            showExitDialog = false,
+            selectedTab = RendererTab.PREVIEW
+        ),
+    )
 }
 
-@Preview(showBackground = true, name = "Dark - Normal")
+@Preview(showBackground = true)
 @Composable
-private fun MarkdownEditorPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        MarkdownEditorPreviewContent(showExitDialog = false)
-    }
-}
-
-@Preview(showBackground = true, name = "Light - Exit Dialog")
-@Composable
-private fun MarkdownEditorExitDialogPreviewLight() {
-    DialogTheme {
-        MarkdownEditorPreviewContent(showExitDialog = true)
-    }
-}
-
-@Preview(showBackground = true, name = "Dark - Exit Dialog")
-@Composable
-private fun MarkdownEditorExitDialogPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        MarkdownEditorPreviewContent(showExitDialog = true)
-    }
-}
-
-@Preview(showBackground = true, name = "Light - Renderer Dialog")
-@Composable
-private fun MarkdownEditorRendererDialogPreviewLight() {
-    DialogTheme {
-        MarkdownEditorPreviewContent(showExitDialog = false, selectedTab = RendererTab.PREVIEW)
-    }
-}
-
-@Preview(showBackground = true, name = "Dark - Renderer Dialog")
-@Composable
-private fun MarkdownEditorRendererDialogPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        MarkdownEditorPreviewContent(showExitDialog = false, selectedTab = RendererTab.PREVIEW)
+private fun MarkdownEditorPreview(
+    @PreviewParameter(MarkdownEditorPreviewProvider::class) params: MarkdownEditorPreviewParams,
+) {
+    DialogTheme(darkTheme = params.isDark) {
+        MarkdownEditorPreviewContent(
+            showExitDialog = params.showExitDialog,
+            selectedTab = params.selectedTab
+        )
     }
 }
 
