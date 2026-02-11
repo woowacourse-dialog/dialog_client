@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import com.mikepenz.markdown.compose.Markdown
+import com.mikepenz.markdown.m3.markdownColor
+import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -45,6 +48,7 @@ fun DiscussionDetailScreen(
         )
 
         CommentInputPlaceholder(
+            text = content,
             onClick = { showMarkdownEditor = true },
             modifier = Modifier.padding(top = DialogTheme.spacing.medium),
         )
@@ -61,9 +65,12 @@ fun DiscussionDetailScreen(
 
 @Composable
 private fun CommentInputPlaceholder(
+    text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val isEmpty = text.isBlank()
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -79,10 +86,11 @@ private fun CommentInputPlaceholder(
                 vertical = DialogTheme.spacing.large,
             )
     ) {
-        Text(
-            text = "댓글을 작성해 주세요",
-            style = DialogTheme.typography.bodyMedium,
-            color = DialogTheme.colorScheme.onSurfaceVariant,
+        Markdown(
+            content = if (isEmpty) "댓글을 입력해 주세요" else text,
+            colors = markdownColor(),
+            typography = markdownTypography(),
+            modifier = Modifier.wrapContentHeight()
         )
     }
 }

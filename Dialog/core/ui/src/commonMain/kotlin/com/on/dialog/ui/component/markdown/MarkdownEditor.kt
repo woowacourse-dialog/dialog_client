@@ -150,40 +150,53 @@ private fun MarkdownEditor(
         )
         when (selectedTab) {
             RendererTab.WRITE -> {
-                DialogTextField(
-                    value = content,
-                    onValueChange = { newValue ->
-                        onContentChanged(
-                            handleNewLine(
-                                newValue = newValue,
-                                currentContent = content,
-                            ),
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(weight = 1f)
-                        .focusRequester(focusRequester),
-                    singleLine = false,
-                    placeholder = stringResource(resource = Res.string.markdown_editor_place_holder_please_enter_contents),
-                )
-                MarkdownButtons(content = content, onContentChanged = onContentChanged)
+                WriterView(content, onContentChanged, focusRequester, Modifier.weight(weight = 1f))
             }
 
             RendererTab.PREVIEW -> {
-                Markdown(
-                    content = content.text,
-                    colors = markdownColor(),
-                    typography = markdownTypography(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = DialogTheme.colorScheme.primary.copy(alpha = 0.15F))
-                        .padding(all = DialogTheme.spacing.large)
-                        .weight(weight = 1f),
-                )
+                RendererView(content.text, Modifier.weight(weight = 1f))
             }
         }
     }
+}
+
+@Composable
+private fun RendererView(content: String, modifier: Modifier) {
+    Markdown(
+        content = content,
+        colors = markdownColor(),
+        typography = markdownTypography(),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(color = DialogTheme.colorScheme.primary.copy(alpha = 0.15F))
+            .padding(all = DialogTheme.spacing.large)
+    )
+}
+
+@Composable
+private fun WriterView(
+    content: TextFieldValue,
+    onContentChanged: (TextFieldValue) -> Unit,
+    focusRequester: FocusRequester,
+    modifier: Modifier,
+) {
+    DialogTextField(
+        value = content,
+        onValueChange = { newValue ->
+            onContentChanged(
+                handleNewLine(
+                    newValue = newValue,
+                    currentContent = content,
+                ),
+            )
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester),
+        singleLine = false,
+        placeholder = stringResource(resource = Res.string.markdown_editor_place_holder_please_enter_contents),
+    )
+    MarkdownButtons(content = content, onContentChanged = onContentChanged)
 }
 
 @Composable
