@@ -53,9 +53,9 @@ fun MarkdownEditor(
     modifier: Modifier = Modifier,
 ) {
     val navState: NavigationEventState<NavigationEventInfo.None> =
-        rememberNavigationEventState(NavigationEventInfo.None)
+        rememberNavigationEventState(currentInfo = NavigationEventInfo.None)
     val focusRequester: FocusRequester = remember { FocusRequester() }
-    var content by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+    var content: TextFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(
             TextFieldValue(
                 text = initialContent,
@@ -63,7 +63,7 @@ fun MarkdownEditor(
             )
         )
     }
-    var showExitDialog by rememberSaveable { mutableStateOf(false) }
+    var showExitDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     val handleBackPress: () -> Unit = remember {
         {
@@ -117,10 +117,16 @@ private fun MarkdownEditor(
     if (showExitDialog) {
         AlertDialog(
             onDismissRequest = { onShowExitDialog(false) },
-            text = { Text(text = stringResource(Res.string.markdown_editor_dialog_content)) },
-            confirmButton = { TextButton(onClick = onExit) { Text(stringResource(Res.string.markdown_editor_dialog_confirm)) } },
+            text = { Text(text = stringResource(resource = Res.string.markdown_editor_dialog_content)) },
+            confirmButton = { TextButton(onClick = onExit) { Text(text = stringResource(resource = Res.string.markdown_editor_dialog_confirm)) } },
             dismissButton = {
-                TextButton(onClick = { onShowExitDialog(false) }) { Text(stringResource(Res.string.markdown_editor_dialog_exit)) }
+                TextButton(onClick = { onShowExitDialog(false) }) {
+                    Text(
+                        text = stringResource(
+                            resource = Res.string.markdown_editor_dialog_exit
+                        )
+                    )
+                }
             },
         )
     }
@@ -128,7 +134,7 @@ private fun MarkdownEditor(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(DialogTheme.colorScheme.background),
+            .background(color = DialogTheme.colorScheme.background),
     ) {
         DialogTopAppBar(
             title = title,
@@ -157,7 +163,7 @@ private fun MarkdownEditor(
             value = content,
             onValueChange = { newValue ->
                 if (newValue.text.length > content.text.length &&
-                    newValue.text.substring(content.text.length).contains('\n')
+                    newValue.text.substring(startIndex = content.text.length).contains(char = '\n')
                 ) {
                     val handled: Boolean = MarkdownStyle.Number.handleNewLine(newValue) {
                         onContentChanged(it)
@@ -171,20 +177,20 @@ private fun MarkdownEditor(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(weight = 1f)
                 .focusRequester(focusRequester),
             singleLine = false,
-            placeholder = stringResource(Res.string.markdown_editor_place_holder_please_enter_contents),
+            placeholder = stringResource(resource = Res.string.markdown_editor_place_holder_please_enter_contents),
         )
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
+            horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.small),
             contentPadding = PaddingValues(
                 horizontal = DialogTheme.spacing.large,
                 vertical = DialogTheme.spacing.extraSmall
             ),
-            modifier = Modifier.windowInsetsPadding(WindowInsets.ime),
+            modifier = Modifier.windowInsetsPadding(insets = WindowInsets.ime),
         ) {
-            items(markdownStyles.size) { index ->
+            items(count = markdownStyles.size) { index ->
                 MarkdownButton(
                     style = markdownStyles[index],
                     content = content,
