@@ -27,7 +27,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.NavigationEventState
@@ -66,11 +65,21 @@ fun MarkdownEditor(
     }
     var showExitDialog by rememberSaveable { mutableStateOf(false) }
 
+    val handleBackPress: () -> Unit = remember {
+        {
+            if (content.text == initialContent) {
+                onExit()
+            } else {
+                showExitDialog = true
+            }
+        }
+    }
+
     NavigationBackHandler(
         state = navState,
         isBackEnabled = true,
         onBackCompleted = {
-            if (content.text == initialContent) onExit() else showExitDialog = true
+            handleBackPress()
         },
     )
 
@@ -82,7 +91,7 @@ fun MarkdownEditor(
         showExitDialog = showExitDialog,
         onShowExitDialog = { showExitDialog = it },
         title = title,
-        initialContent = initialContent,
+        onBackPress = handleBackPress,
         onConfirm = onConfirm,
         onExit = onExit,
         focusRequester = focusRequester,
@@ -95,9 +104,9 @@ fun MarkdownEditor(
 @Composable
 private fun MarkdownEditor(
     title: String,
-    initialContent: String,
     onConfirm: (String) -> Unit,
     onExit: () -> Unit,
+    onBackPress: () -> Unit,
     showExitDialog: Boolean,
     onShowExitDialog: (Boolean) -> Unit,
     focusRequester: FocusRequester,
@@ -111,9 +120,7 @@ private fun MarkdownEditor(
             text = { Text(text = stringResource(Res.string.markdown_editor_dialog_content)) },
             confirmButton = { TextButton(onClick = onExit) { Text(stringResource(Res.string.markdown_editor_dialog_confirm)) } },
             dismissButton = {
-                TextButton(onClick = {
-                    onShowExitDialog(false)
-                }) { Text(stringResource(Res.string.markdown_editor_dialog_exit)) }
+                TextButton(onClick = { onShowExitDialog(false) }) { Text(stringResource(Res.string.markdown_editor_dialog_exit)) }
             },
         )
     }
@@ -126,9 +133,7 @@ private fun MarkdownEditor(
         DialogTopAppBar(
             title = title,
             navigationIcon = {
-                DialogIconButton(onClick = {
-                    if (content.text == initialContent) onExit() else onShowExitDialog(true)
-                }) {
+                DialogIconButton(onClick = onBackPress) {
                     Icon(
                         imageVector = DialogIcons.ArrowBack,
                         contentDescription = null,
@@ -173,7 +178,10 @@ private fun MarkdownEditor(
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
-            contentPadding = PaddingValues(horizontal = DialogTheme.spacing.large, vertical = DialogTheme.spacing.extraSmall),
+            contentPadding = PaddingValues(
+                horizontal = DialogTheme.spacing.large,
+                vertical = DialogTheme.spacing.extraSmall
+            ),
             modifier = Modifier.windowInsetsPadding(WindowInsets.ime),
         ) {
             items(markdownStyles.size) { index ->
@@ -197,7 +205,7 @@ private fun MarkdownEditorPreview() {
             showExitDialog = false,
             onShowExitDialog = { },
             title = "Title",
-            initialContent = "",
+            onBackPress = {},
             onConfirm = {},
             onExit = {},
             focusRequester = focusRequester,
