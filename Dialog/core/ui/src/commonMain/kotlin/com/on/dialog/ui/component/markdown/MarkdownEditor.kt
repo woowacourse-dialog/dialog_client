@@ -154,20 +154,7 @@ private fun MarkdownEditor(
         )
         DialogTextField(
             value = content,
-            onValueChange = { newValue ->
-                if (newValue.text.length > content.text.length &&
-                    newValue.text.substring(startIndex = content.text.length).contains(char = '\n')
-                ) {
-                    val handled: Boolean = MarkdownStyle.Number.handleNewLine(newValue) {
-                        onContentChanged(it)
-                    }
-                    if (!handled) {
-                        onContentChanged(newValue)
-                    }
-                } else {
-                    onContentChanged(newValue)
-                }
-            },
+            onValueChange = { newValue -> isNewLineAppended(newValue, content, onContentChanged) },
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(weight = 1f)
@@ -191,6 +178,23 @@ private fun MarkdownEditor(
                 )
             }
         }
+    }
+}
+
+private fun isNewLineAppended(
+    newValue: TextFieldValue,
+    content: TextFieldValue,
+    onContentChanged: (TextFieldValue) -> Unit,
+) {
+    if (newValue.text.length > content.text.length &&
+        newValue.text.substring(startIndex = content.text.length).contains(char = '\n')
+    ) {
+        val handled: Boolean = MarkdownStyle.Number.handleNewLine(newValue) { onContentChanged(it) }
+        if (!handled) {
+            onContentChanged(newValue)
+        }
+    } else {
+        onContentChanged(newValue)
     }
 }
 
