@@ -10,10 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -117,19 +114,12 @@ private fun MarkdownEditor(
     modifier: Modifier = Modifier,
 ) {
     if (showExitDialog) {
-        AlertDialog(
-            onDismissRequest = { onShowExitDialog(false) },
-            text = { Text(text = stringResource(resource = Res.string.markdown_editor_dialog_content)) },
-            confirmButton = { TextButton(onClick = onExit) { Text(text = stringResource(resource = Res.string.markdown_editor_dialog_confirm)) } },
-            dismissButton = {
-                TextButton(onClick = { onShowExitDialog(false) }) {
-                    Text(
-                        text = stringResource(
-                            resource = Res.string.markdown_editor_dialog_exit
-                        )
-                    )
-                }
-            },
+        DecisionDialog(
+            contentText = stringResource(resource = Res.string.markdown_editor_dialog_content),
+            confirmText = stringResource(resource = Res.string.markdown_editor_dialog_confirm),
+            onConfirm = onExit,
+            dismissText = stringResource(resource = Res.string.markdown_editor_dialog_exit),
+            onDismiss = { onShowExitDialog(false) },
         )
     }
 
@@ -234,7 +224,6 @@ private fun MarkdownEditorExitDialogPreviewDark() {
         MarkdownEditorPreviewContent(showExitDialog = true)
     }
 }
-
 
 @Composable
 private fun MarkdownEditorPreviewContent(
