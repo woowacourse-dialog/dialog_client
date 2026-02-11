@@ -131,28 +131,13 @@ private fun MarkdownEditor(
             .fillMaxSize()
             .background(color = DialogTheme.colorScheme.background),
     ) {
-        DialogTopAppBar(
+        MarkdownEditorTopAppBar(
             title = title,
-            navigationIcon = {
-                DialogIconButton(onClick = onBackPress) {
-                    Icon(
-                        imageVector = DialogIcons.ArrowBack,
-                        contentDescription = stringResource(resource = Res.string.markdown_editor_back),
-                    )
-                }
+            onBackPress = onBackPress,
+            onConfirm = {
+                onConfirm(content.text)
+                onExit()
             },
-            actions = {
-                DialogIconButton(onClick = {
-                    onConfirm(content.text)
-                    onExit()
-                }) {
-                    Icon(
-                        imageVector = DialogIcons.Check,
-                        contentDescription = stringResource(resource = Res.string.markdown_editor_confirm),
-                    )
-                }
-            },
-            centerAligned = true,
         )
         DialogTextField(
             value = content,
@@ -171,29 +156,68 @@ private fun MarkdownEditor(
             singleLine = false,
             placeholder = stringResource(resource = Res.string.markdown_editor_place_holder_please_enter_contents),
         )
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.small),
-            contentPadding = PaddingValues(
-                horizontal = DialogTheme.spacing.large,
-                vertical = DialogTheme.spacing.extraSmall,
-            ),
-            modifier = Modifier.windowInsetsPadding(insets = WindowInsets.ime),
-        ) {
-            items(count = markdownStyles.size) { index ->
-                DialogIconButton(
-                    onClick = { onContentChanged(markdownStyles[index].transform(content)) },
-                    content = {
-                        Icon(
-                            modifier = Modifier.fillMaxSize(0.6f),
-                            imageVector = markdownStyles[index].icon,
-                            contentDescription = null,
-                        )
-                    },
-                    tone = DialogIconButtonTone.Primary,
-                )
-            }
+        MarkdownButtons(content = content, onContentChanged = onContentChanged)
+    }
+}
+
+@Composable
+private fun MarkdownButtons(
+    content: TextFieldValue,
+    onContentChanged: (TextFieldValue) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.small),
+        contentPadding = PaddingValues(
+            horizontal = DialogTheme.spacing.large,
+            vertical = DialogTheme.spacing.extraSmall,
+        ),
+        modifier = modifier.windowInsetsPadding(insets = WindowInsets.ime),
+    ) {
+        items(count = markdownStyles.size) { index ->
+            DialogIconButton(
+                onClick = { onContentChanged(markdownStyles[index].transform(content)) },
+                content = {
+                    Icon(
+                        modifier = Modifier.fillMaxSize(0.6f),
+                        imageVector = markdownStyles[index].icon,
+                        contentDescription = null,
+                    )
+                },
+                tone = DialogIconButtonTone.Primary,
+            )
         }
     }
+}
+
+@Composable
+private fun MarkdownEditorTopAppBar(
+    title: String,
+    onBackPress: () -> Unit,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    DialogTopAppBar(
+        title = title,
+        navigationIcon = {
+            DialogIconButton(onClick = onBackPress) {
+                Icon(
+                    imageVector = DialogIcons.ArrowBack,
+                    contentDescription = stringResource(resource = Res.string.markdown_editor_back),
+                )
+            }
+        },
+        actions = {
+            DialogIconButton(onClick = onConfirm) {
+                Icon(
+                    imageVector = DialogIcons.Check,
+                    contentDescription = stringResource(resource = Res.string.markdown_editor_confirm),
+                )
+            }
+        },
+        centerAligned = true,
+        modifier = modifier
+    )
 }
 
 private fun handleNewLine(
@@ -201,7 +225,7 @@ private fun handleNewLine(
     currentContent: TextFieldValue,
 ): TextFieldValue {
     val isNewLineAdded = newValue.text.length > currentContent.text.length &&
-        newValue.text.substring(startIndex = currentContent.text.length).contains(char = '\n')
+            newValue.text.substring(startIndex = currentContent.text.length).contains(char = '\n')
 
     if (!isNewLineAdded) {
         return newValue
