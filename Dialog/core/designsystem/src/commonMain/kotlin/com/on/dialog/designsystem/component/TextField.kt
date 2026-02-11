@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,39 +67,26 @@ fun DialogTextField(
         label = label,
         supportingText = supportingText,
         isError = isError,
-        textField = {
-            TextField(
-                value = value,
-                onValueChange = onValueChange,
+    ) {
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            singleLine = singleLine,
+            placeholder = { DialogTextFieldPlaceholder(placeholder) },
+            modifier = dialogTextFieldModifier(
                 singleLine = singleLine,
-                placeholder = {
-                    DialogTextFieldPlaceholder(placeholder)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .then(
-                        if (!singleLine) {
-                            Modifier.weight(1f, fill = true)
-                        } else {
-                            Modifier
-                        },
-                    ).then(
-                        cornerBasedShape?.let { Modifier.clip(it) } ?: Modifier,
-                    ),
-                readOnly = readOnly,
-                enabled = enabled,
-                textStyle = DialogTheme.typography.bodyLarge.copy(
-                    color = DialogTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.SemiBold,
-                ),
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                keyboardOptions = keyboardOptions,
-                keyboardActions = keyboardActions,
-                colors = dialogTextFieldColors(),
-            )
-        },
-    )
+                cornerBasedShape = cornerBasedShape,
+            ),
+            readOnly = readOnly,
+            enabled = enabled,
+            textStyle = dialogTextFieldTextStyle(),
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            colors = dialogTextFieldColors(),
+        )
+    }
 }
 
 @Composable
@@ -124,48 +112,31 @@ fun DialogTextField(
         label = label,
         supportingText = supportingText,
         isError = isError,
-        textField = {
-            TextField(
-                value = value,
-                onValueChange = onValueChange,
+    ) {
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            singleLine = singleLine,
+            placeholder = { DialogTextFieldPlaceholder(placeholder) },
+            modifier = dialogTextFieldModifier(
                 singleLine = singleLine,
-                placeholder = {
-                    DialogTextFieldPlaceholder(placeholder)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .then(
-                        if (!singleLine) {
-                            Modifier.weight(1f, fill = true)
-                        } else {
-                            Modifier
-                        },
-                    ).then(
-                        cornerBasedShape?.let { Modifier.clip(it) } ?: Modifier,
-                    ),
-                readOnly = readOnly,
-                enabled = enabled,
-                textStyle = DialogTheme.typography.bodyLarge.copy(
-                    color = DialogTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.SemiBold,
-                ),
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                keyboardOptions = keyboardOptions,
-                keyboardActions = keyboardActions,
-                colors = dialogTextFieldColors(),
-            )
-        },
-    )
+                cornerBasedShape = cornerBasedShape,
+            ),
+            readOnly = readOnly,
+            enabled = enabled,
+            textStyle = dialogTextFieldTextStyle(),
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            colors = dialogTextFieldColors(),
+        )
+    }
 }
 
-/**
- * DialogTextField의 공통 레이아웃을 담당하는 내부 컴포저블
- * 라벨, 텍스트 필드, 보조 텍스트를 포함한 전체 레이아웃을 구성
- */
 @Composable
 private fun DialogTextFieldLayout(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     label: String?,
     supportingText: String?,
     isError: Boolean,
@@ -181,11 +152,13 @@ private fun DialogTextFieldLayout(
                 modifier = Modifier.padding(DialogTheme.spacing.small),
             )
         }
+
         textField()
+
         supportingText?.let {
             Text(
                 text = it,
-                color = if (isError) Color.Red else DialogTheme.colorScheme.primary,
+                color = if (isError) DialogTheme.colorScheme.error else DialogTheme.colorScheme.primary,
                 style = DialogTheme.typography.labelSmall,
                 modifier = Modifier.padding(DialogTheme.spacing.small),
             )
@@ -193,31 +166,49 @@ private fun DialogTextFieldLayout(
     }
 }
 
-/**
- * DialogTextField의 플레이스홀더 텍스트 스타일을 정의하는 내부 컴포저블
- */
+@Composable
+private fun dialogTextFieldTextStyle(): TextStyle = DialogTheme.typography.bodyLarge.copy(
+    color = DialogTheme.colorScheme.onSurface,
+    fontWeight = FontWeight.SemiBold,
+)
+
+private fun ColumnScope.dialogTextFieldModifier(
+    singleLine: Boolean,
+    cornerBasedShape: CornerBasedShape?,
+): Modifier = Modifier
+    .fillMaxWidth()
+    .then(
+        if (!singleLine) {
+            Modifier.weight(1f, fill = true)
+        } else {
+            Modifier
+        },
+    ).then(
+        cornerBasedShape?.let { Modifier.clip(it) } ?: Modifier,
+    )
+
 @Composable
 private fun DialogTextFieldPlaceholder(text: String) {
+    if (text.isBlank()) return
+
     Text(
         text = text,
-        color = Color.Gray,
+        color = DialogTheme.colorScheme.onSurfaceVariant,
         style = DialogTheme.typography.bodyLarge,
         fontWeight = FontWeight.SemiBold,
     )
 }
 
-/**
- * DialogTextField의 색상 구성을 정의하는 내부 함수
- */
 @Composable
 private fun dialogTextFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-    unfocusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
-    disabledContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15F),
+    focusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15f),
+    unfocusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15f),
+    disabledContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15f),
     focusedIndicatorColor = Color.Transparent,
     unfocusedIndicatorColor = Color.Transparent,
+    disabledIndicatorColor = Color.Transparent,
     errorIndicatorColor = Color.Transparent,
-    cursorColor = Color.Black,
+    cursorColor = DialogTheme.colorScheme.onSurface,
 )
 
 @Preview(showBackground = true)
