@@ -33,6 +33,7 @@ import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.ui.component.DecisionDialog
 import com.on.dialog.ui.component.markdown.MarkdownStyle.Companion.markdownStyles
 import dialog.core.ui.generated.resources.Res
 import dialog.core.ui.generated.resources.markdown_editor_back
