@@ -201,22 +201,55 @@ private fun MarkdownEditor(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Light - Normal")
 @Composable
-private fun MarkdownEditorPreview() {
+private fun MarkdownEditorPreviewLight() {
     DialogTheme {
-        val focusRequester: FocusRequester = remember { FocusRequester() }
-
-        MarkdownEditor(
-            showExitDialog = false,
-            onShowExitDialog = { },
-            title = "Title",
-            onBackPress = {},
-            onConfirm = {},
-            onExit = {},
-            focusRequester = focusRequester,
-            content = TextFieldValue("내용물들~~~"),
-            onContentChanged = { },
-        )
+        MarkdownEditorPreviewContent(showExitDialog = false)
     }
 }
+
+@Preview(showBackground = true, name = "Dark - Normal")
+@Composable
+private fun MarkdownEditorPreviewDark() {
+    DialogTheme(darkTheme = true) {
+        MarkdownEditorPreviewContent(showExitDialog = false)
+    }
+}
+
+@Preview(showBackground = true, name = "Light - Exit Dialog")
+@Composable
+private fun MarkdownEditorExitDialogPreviewLight() {
+    DialogTheme {
+        MarkdownEditorPreviewContent(showExitDialog = true)
+    }
+}
+
+@Preview(showBackground = true, name = "Dark - Exit Dialog")
+@Composable
+private fun MarkdownEditorExitDialogPreviewDark() {
+    DialogTheme(darkTheme = true) {
+        MarkdownEditorPreviewContent(showExitDialog = true)
+    }
+}
+
+
+@Composable
+private fun MarkdownEditorPreviewContent(
+    showExitDialog: Boolean,
+) {
+    val focusRequester: FocusRequester = remember { FocusRequester() }
+
+    MarkdownEditor(
+        showExitDialog = showExitDialog,
+        onShowExitDialog = {},
+        title = "Title",
+        onBackPress = {},
+        onConfirm = {},
+        onExit = {},
+        focusRequester = focusRequester,
+        content = TextFieldValue("내용물들~~~"),
+        onContentChanged = {},
+    )
+}
+
