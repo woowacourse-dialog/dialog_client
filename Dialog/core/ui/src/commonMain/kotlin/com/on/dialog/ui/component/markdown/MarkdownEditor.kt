@@ -78,14 +78,41 @@ fun MarkdownEditor(
         focusRequester.requestFocus()
     }
 
+    MarkdownEditor(
+        showExitDialog = showExitDialog,
+        onShowExitDialog = { showExitDialog = it },
+        title = title,
+        initialContent = initialContent,
+        onConfirm = onConfirm,
+        onExit = onExit,
+        focusRequester = focusRequester,
+        content = content,
+        onContentChanged = { content = it },
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun MarkdownEditor(
+    title: String,
+    initialContent: String,
+    onConfirm: (String) -> Unit,
+    onExit: () -> Unit,
+    showExitDialog: Boolean,
+    onShowExitDialog: (Boolean) -> Unit,
+    focusRequester: FocusRequester,
+    content: TextFieldValue,
+    onContentChanged: (TextFieldValue) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     if (showExitDialog) {
         AlertDialog(
-            onDismissRequest = { showExitDialog = false },
+            onDismissRequest = { onShowExitDialog(false) },
             text = { Text(text = stringResource(Res.string.markdown_editor_dialog_content)) },
             confirmButton = { TextButton(onClick = onExit) { Text(stringResource(Res.string.markdown_editor_dialog_confirm)) } },
             dismissButton = {
                 TextButton(onClick = {
-                    showExitDialog = false
+                    onShowExitDialog(false)
                 }) { Text(stringResource(Res.string.markdown_editor_dialog_exit)) }
             },
         )
@@ -100,7 +127,7 @@ fun MarkdownEditor(
             title = title,
             navigationIcon = {
                 DialogIconButton(onClick = {
-                    if (content.text == initialContent) onExit() else showExitDialog = true
+                    if (content.text == initialContent) onExit() else onShowExitDialog(true)
                 }) {
                     Icon(
                         imageVector = DialogIcons.ArrowBack,
@@ -128,13 +155,13 @@ fun MarkdownEditor(
                     newValue.text.substring(content.text.length).contains('\n')
                 ) {
                     val handled: Boolean = MarkdownStyle.Number.handleNewLine(newValue) {
-                        content = it
+                        onContentChanged(it)
                     }
                     if (!handled) {
-                        content = newValue
+                        onContentChanged(newValue)
                     }
                 } else {
-                    content = newValue
+                    onContentChanged(newValue)
                 }
             },
             modifier = Modifier
@@ -145,15 +172,15 @@ fun MarkdownEditor(
             placeholder = stringResource(Res.string.markdown_editor_place_holder_please_enter_contents),
         )
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 5.dp),
+            horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
+            contentPadding = PaddingValues(horizontal = DialogTheme.spacing.large, vertical = DialogTheme.spacing.extraSmall),
             modifier = Modifier.windowInsetsPadding(WindowInsets.ime),
         ) {
             items(markdownStyles.size) { index ->
                 MarkdownButton(
                     style = markdownStyles[index],
                     content = content,
-                    onContentChanged = { content = it },
+                    onContentChanged = { onContentChanged(it) },
                 )
             }
         }
@@ -164,11 +191,18 @@ fun MarkdownEditor(
 @Composable
 private fun MarkdownEditorPreview() {
     DialogTheme {
+        val focusRequester: FocusRequester = remember { FocusRequester() }
+
         MarkdownEditor(
+            showExitDialog = false,
+            onShowExitDialog = { },
             title = "Title",
             initialContent = "",
             onConfirm = {},
             onExit = {},
+            focusRequester = focusRequester,
+            content = TextFieldValue("내용물들~~~"),
+            onContentChanged = { },
         )
     }
 }
