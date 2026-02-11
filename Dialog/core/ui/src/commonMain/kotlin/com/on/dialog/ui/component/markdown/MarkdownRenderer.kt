@@ -29,7 +29,7 @@ import dialog.core.ui.generated.resources.markdown_renderer_preview
 import dialog.core.ui.generated.resources.markdown_renderer_write
 import org.jetbrains.compose.resources.stringResource
 
-enum class RendererTab {
+private enum class RendererTab {
     WRITE,
     PREVIEW,
 }
