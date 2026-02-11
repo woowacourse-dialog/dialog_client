@@ -29,6 +29,7 @@ import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.NavigationEventState
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.on.dialog.designsystem.component.DialogIconButton
+import com.on.dialog.designsystem.component.DialogIconButtonTone
 import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -179,10 +180,16 @@ private fun MarkdownEditor(
             modifier = Modifier.windowInsetsPadding(insets = WindowInsets.ime),
         ) {
             items(count = markdownStyles.size) { index ->
-                MarkdownButton(
-                    style = markdownStyles[index],
-                    content = content,
-                    onContentChanged = onContentChanged,
+                DialogIconButton(
+                    onClick = { onContentChanged(markdownStyles[index].transform(content)) },
+                    content = {
+                        Icon(
+                            modifier = Modifier.fillMaxSize(0.6f),
+                            imageVector = markdownStyles[index].icon,
+                            contentDescription = null,
+                        )
+                    },
+                    tone = DialogIconButtonTone.Primary,
                 )
             }
         }
