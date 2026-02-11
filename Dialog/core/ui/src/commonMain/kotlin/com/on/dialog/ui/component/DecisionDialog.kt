@@ -32,7 +32,8 @@ fun DecisionDialog(
         onDismissRequest = onDismiss,
         modifier = modifier
             .background(color = DialogTheme.colorScheme.surface, shape = DialogTheme.shapes.medium)
-            .padding(all = DialogTheme.spacing.large),
+            .padding(horizontal = DialogTheme.spacing.large)
+            .padding(top = DialogTheme.spacing.large, bottom = DialogTheme.spacing.medium),
     ) {
         DecisionContent(
             contentText = contentText,
@@ -57,10 +58,10 @@ private fun DecisionContent(
     Column(modifier = modifier) {
         Text(
             text = contentText,
-            modifier = Modifier.padding(vertical = DialogTheme.spacing.small),
+            style = DialogTheme.typography.bodyMedium,
         )
 
-        Spacer(modifier = Modifier.padding(all = DialogTheme.spacing.small))
+        Spacer(modifier = Modifier.padding(all = DialogTheme.spacing.medium))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
