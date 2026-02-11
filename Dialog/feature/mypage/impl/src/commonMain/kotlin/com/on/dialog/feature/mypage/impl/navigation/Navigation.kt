@@ -11,8 +11,6 @@ fun EntryProviderScope<NavKey>.myPageScreen(
     navigator: Navigator,
 ) {
     entry<MyPageNavKey> {
-        MyPageScreen(
-            navigateToLogin = { navigator.navigate(LoginNavKey) },
-        )
+        MyPageScreen(navigateToLogin = { navigator.navigate(LoginNavKey) })
     }
 }

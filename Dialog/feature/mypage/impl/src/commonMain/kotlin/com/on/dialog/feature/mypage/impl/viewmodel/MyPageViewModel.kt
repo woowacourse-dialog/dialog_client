@@ -30,6 +30,8 @@ class MyPageViewModel(
             )
 
             is MyPageIntent.EditProfileImage -> updateProfileImage(uri = intent.uri)
+
+            MyPageIntent.DeleteAccount -> deleteAccount()
         }
     }
 
@@ -205,6 +207,29 @@ class MyPageViewModel(
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = result.message ?: "로그아웃에 실패했습니다.",
+                            state = SnackbarState.NEGATIVE,
+                        ),
+                    )
+                }
+        }
+    }
+
+    private fun deleteAccount() {
+        viewModelScope.launch {
+            userRepository
+                .deleteAccount()
+                .onSuccess {
+                    updateState { MyPageState() }
+                    emitEffect(
+                        MyPageEffect.ShowSnackbar(
+                            message = "회원 탈퇴에 성공했습니다.",
+                            state = SnackbarState.POSITIVE,
+                        ),
+                    )
+                }.onFailure { result: Throwable ->
+                    emitEffect(
+                        MyPageEffect.ShowSnackbar(
+                            message = "회원 탈퇴에 실패했습니다.",
                             state = SnackbarState.NEGATIVE,
                         ),
                     )
