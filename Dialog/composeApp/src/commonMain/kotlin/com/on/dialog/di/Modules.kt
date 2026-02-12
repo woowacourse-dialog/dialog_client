@@ -4,6 +4,7 @@ import com.on.dialog.data.di.dataModule
 import com.on.dialog.discussiondetail.impl.di.discussionDetailModule
 import com.on.dialog.feature.discussionlist.impl.di.discussionListModule
 import com.on.dialog.feature.login.impl.di.loginModule
+import com.on.dialog.feature.mycreated.impl.di.myCreatedModule
 import com.on.dialog.feature.mypage.impl.di.myPageModule
 import com.on.dialog.feature.signup.impl.di.signUpModule
 import com.on.dialog.main.di.mainModule
@@ -25,6 +26,7 @@ val featureModule =
             myPageModule,
             loginModule,
             signUpModule,
+            myCreatedModule,
         )
     }
 

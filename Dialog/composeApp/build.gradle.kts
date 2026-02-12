@@ -12,6 +12,7 @@ kotlin {
             implementation(projects.feature.signup.impl)
             implementation(projects.feature.scrap.impl)
             implementation(projects.feature.mypage.impl)
+            implementation(projects.feature.mycreated.impl)
             implementation(projects.feature.discussionlist.impl)
             implementation(projects.feature.discussiondetail.impl)
         }

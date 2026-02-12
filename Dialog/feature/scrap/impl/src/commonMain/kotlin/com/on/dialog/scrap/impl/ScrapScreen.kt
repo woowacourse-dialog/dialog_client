@@ -10,7 +10,7 @@ import com.on.dialog.designsystem.theme.DialogTheme
 
 @Composable
 fun ScrapScreen(
-    navigateToDiscussionDetail: () -> Unit,
+    navigateToDiscussionDetail: (discussionId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {

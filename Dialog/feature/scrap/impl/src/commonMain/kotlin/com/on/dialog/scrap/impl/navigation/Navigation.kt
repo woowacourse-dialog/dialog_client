@@ -11,6 +11,10 @@ fun EntryProviderScope<NavKey>.scrapScreen(
     navigator: Navigator,
 ) {
     entry<ScrapNavKey> {
-        ScrapScreen(navigateToDiscussionDetail = { navigator.navigate(DiscussionDetailNavKey) })
+        ScrapScreen(
+            navigateToDiscussionDetail = { discussionId ->
+                navigator.navigate(DiscussionDetailNavKey(discussionId = discussionId))
+            },
+        )
     }
 }
