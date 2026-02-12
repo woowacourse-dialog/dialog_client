@@ -1,10 +1,10 @@
 package com.on.dialog.feature.login.impl.model
 
-import com.on.dialog.feature.login.impl.BuildKonfig
+private const val LOGIN_BASE_URL = "api/oauth2/authorization/"
 
 enum class LoginType(
     val loginUrl: String,
 ) {
-    GITHUB(loginUrl = BuildKonfig.GITHUB_OAUTH_URL),
+    GITHUB(loginUrl = LOGIN_BASE_URL + "github"),
     GOOGLE(loginUrl = ""),
 }
