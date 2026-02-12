@@ -3,7 +3,6 @@ package com.on.buildlogic.convention
 import com.android.build.api.dsl.LibraryExtension
 import com.on.buildlogic.convention.extension.PluginIds
 import com.on.buildlogic.convention.extension.configureDialogTargets
-import com.on.buildlogic.convention.extension.configureIosFrameworkForLibrary
 import com.on.buildlogic.convention.extension.library
 import com.on.buildlogic.convention.extension.libs
 import com.on.buildlogic.convention.extension.versionInt
@@ -28,7 +27,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
  *
  * ## Kotlin Multiplatform 설정
  * - `configureDialogTargets()`로 Android / iOS 타겟을 구성한다.
- * - `configureIosFrameworkForLibrary(project)`로 라이브러리 모듈용 iOS Framework 설정을 적용한다.
  *
  * ### SourceSet 구성
  * - `commonMain`
@@ -62,7 +60,6 @@ internal class KmpLibraryConventionPlugin : Plugin<Project> {
 
             extensions.configure<KotlinMultiplatformExtension> {
                 configureDialogTargets()
-                configureIosFrameworkForLibrary(project)
 
                 sourceSets.named("commonMain") {
                     dependencies {
