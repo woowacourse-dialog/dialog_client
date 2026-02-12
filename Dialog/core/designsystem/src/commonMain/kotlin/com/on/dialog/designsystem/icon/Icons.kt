@@ -13,6 +13,7 @@ import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Drafts
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
@@ -21,12 +22,15 @@ import androidx.compose.material.icons.rounded.FilterAltOff
 import androidx.compose.material.icons.rounded.Forum
 import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.HourglassEmpty
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.NotificationsOff
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.RemoveCircle
+import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
 import com.on.dialog.designsystem.icon.myiconpack.Bold
@@ -66,6 +70,7 @@ object DialogIcons {
     val NotificationsOff = Icons.Rounded.NotificationsOff
     val Filter = Icons.Rounded.FilterAlt
     val FilterOff = Icons.Rounded.FilterAltOff
+    val Empty = Icons.Rounded.SearchOff
 
     val bold = Bold
     val italic = Italic
