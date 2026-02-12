@@ -26,8 +26,13 @@ import com.on.dialog.feature.mycreated.impl.viewmodel.MyCreatedEffect
 import com.on.dialog.feature.mycreated.impl.viewmodel.MyCreatedIntent
 import com.on.dialog.feature.mycreated.impl.viewmodel.MyCreatedState
 import com.on.dialog.feature.mycreated.impl.viewmodel.MyCreatedViewModel
+import com.on.dialog.ui.component.CommonEmptyView
+import com.on.dialog.ui.component.EmptyAction
 import com.on.dialog.ui.extensions.shouldLoadNextPage
 import dialog.feature.mycreated.impl.generated.resources.Res
+import dialog.feature.mycreated.impl.generated.resources.empty_action_label
+import dialog.feature.mycreated.impl.generated.resources.empty_description
+import dialog.feature.mycreated.impl.generated.resources.empty_title
 import dialog.feature.mycreated.impl.generated.resources.top_app_bar_title
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -38,6 +43,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun MyCreatedScreen(
     navigateToDetail: (discussionId: Long) -> Unit,
+    navigateToCreateDiscussion: () -> Unit,
     goBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyCreatedViewModel = koinViewModel(),
@@ -69,6 +75,7 @@ internal fun MyCreatedScreen(
         uiState = uiState,
         listState = listState,
         onClickDiscussion = navigateToDetail,
+        onClickCreateDiscussion = navigateToCreateDiscussion,
         onBackClick = goBack,
         modifier = modifier,
     )
@@ -79,6 +86,7 @@ private fun MyCreatedScreen(
     uiState: MyCreatedState,
     listState: LazyListState,
     onClickDiscussion: (discussionId: Long) -> Unit,
+    onClickCreateDiscussion: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -87,11 +95,28 @@ private fun MyCreatedScreen(
     ) {
         MyCreatedTopAppBar(onBackClick = onBackClick)
 
-        DiscussionListSection(
-            listState = listState,
-            discussions = uiState.discussions,
-            onClickDiscussion = onClickDiscussion,
-        )
+        when (uiState) {
+            is MyCreatedState.Empty -> {
+                CommonEmptyView(
+                    title = stringResource(Res.string.empty_title),
+                    description = stringResource(Res.string.empty_description),
+                    primaryAction = EmptyAction(
+                        label = stringResource(Res.string.empty_action_label),
+                        onClick = onClickCreateDiscussion,
+                    ),
+                )
+            }
+
+            is MyCreatedState.Loading,
+            is MyCreatedState.Content,
+            -> {
+                DiscussionListSection(
+                    listState = listState,
+                    discussions = uiState.discussions,
+                    onClickDiscussion = onClickDiscussion,
+                )
+            }
+        }
     }
 }
 
@@ -127,8 +152,8 @@ private fun MyCreatedScreenPreview() {
                                 id = it.toLong(),
                                 title = "토론 제목 $it",
                                 author = "작성자 $it",
-                                track = TrackUiModel.entries[0],
-                                status = DiscussionStatusUiModel.entries[0],
+                                track = TrackUiModel.entries.random(),
+                                status = DiscussionStatusUiModel.entries.random(),
                                 commentCount = 3,
                                 period = "~ 2025.03.01",
                             )
@@ -137,8 +162,8 @@ private fun MyCreatedScreenPreview() {
                                 id = it.toLong(),
                                 title = "토론 제목 $it",
                                 author = "작성자 $it",
-                                track = TrackUiModel.entries[0],
-                                status = DiscussionStatusUiModel.entries[0],
+                                track = TrackUiModel.entries.random(),
+                                status = DiscussionStatusUiModel.entries.random(),
                                 commentCount = 5,
                                 period = "2025.02.03 ~ 2025.03.01",
                                 partingCapacity = "2/4",
@@ -149,6 +174,23 @@ private fun MyCreatedScreenPreview() {
                 ),
                 listState = rememberLazyListState(),
                 onClickDiscussion = {},
+                onClickCreateDiscussion = {},
+                onBackClick = {},
+            )
+        }
+    }
+}
+
+@Composable
+@ThemePreview
+private fun MyCreatedScreenEmptyPreview() {
+    DialogTheme {
+        Scaffold {
+            MyCreatedScreen(
+                uiState = MyCreatedState.Empty,
+                listState = rememberLazyListState(),
+                onClickDiscussion = {},
+                onClickCreateDiscussion = {},
                 onBackClick = {},
             )
         }
