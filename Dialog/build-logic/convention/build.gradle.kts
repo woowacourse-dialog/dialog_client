@@ -2,18 +2,6 @@ plugins {
     `kotlin-dsl`
 }
 
-repositories {
-    google {
-        content {
-            includeGroupByRegex("com\\.android.*")
-            includeGroupByRegex("com\\.google.*")
-            includeGroupByRegex("androidx.*")
-        }
-    }
-    mavenCentral()
-    gradlePluginPortal()
-}
-
 kotlin {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
