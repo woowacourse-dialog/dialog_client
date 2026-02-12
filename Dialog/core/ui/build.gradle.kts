@@ -22,6 +22,13 @@ kotlin {
 
             // Network
             implementation(libs.ktor.client.core)
+
+            // Markdown
+            implementation(libs.multiplatform.markdown.renderer)
+            implementation(libs.multiplatform.markdown.renderer.m3)
+
+            // Navigation event
+            implementation(libs.compose.navigationevent)
         }
 
         androidMain.dependencies {

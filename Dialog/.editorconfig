@@ -19,3 +19,7 @@ ktlint = disabled
 
 [composeApp/src/iosMain/kotlin/**/*.kt]
 ktlint = disabled
+
+[**/designsystem/icon/**/*.kt]
+ktlint_standard_backing-property-naming = disabled
+ktlint_standard_backing-property = disabled
