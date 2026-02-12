@@ -5,25 +5,15 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // core
-            implementation(projects.core.designsystem)
             implementation(projects.core.data)
 
-            // main
             implementation(projects.feature.main)
-            // discussionlist
-            implementation(projects.feature.discussionlist.api)
-            implementation(projects.feature.discussionlist.impl)
-            // login
             implementation(projects.feature.login.impl)
-            // mypage
-            implementation(projects.feature.mypage.impl)
-            // scrap
-            implementation(projects.feature.scrap.impl)
-            // discussiondetail
-            implementation(projects.feature.discussiondetail.impl)
-            // signup
             implementation(projects.feature.signup.impl)
+            implementation(projects.feature.scrap.impl)
+            implementation(projects.feature.mypage.impl)
+            implementation(projects.feature.discussionlist.impl)
+            implementation(projects.feature.discussiondetail.impl)
         }
     }
 }
