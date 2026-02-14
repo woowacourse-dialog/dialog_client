@@ -37,7 +37,7 @@ internal class MyCreatedViewModel(
         viewModelScope
             .launch {
                 discussionRepository
-                    .getMyDiscussions(cursor = nextCursor, size = 10)
+                    .getMyDiscussions(cursor = nextCursor, size = FETCH_SIZE)
                     .onSuccess(::handleFetchMyCreatedDiscussionsSuccess)
                     .onFailure(::handleFetchMyCreatedDiscussionsFailure)
             }
@@ -62,5 +62,9 @@ internal class MyCreatedViewModel(
                 state = SnackbarState.NEGATIVE,
             ),
         )
+    }
+
+    companion object {
+        private const val FETCH_SIZE = 10
     }
 }
