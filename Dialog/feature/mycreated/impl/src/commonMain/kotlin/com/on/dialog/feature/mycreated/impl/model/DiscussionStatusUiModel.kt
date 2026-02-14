@@ -11,7 +11,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 internal enum class DiscussionStatusUiModel(
-    private val titleResId: StringResource,
+    private val titleRes: StringResource,
 ) {
     RECRUITING(Res.string.discussion_status_recruiting),
     RECRUIT_COMPLETE(Res.string.discussion_status_recruit_complete),
@@ -20,7 +20,7 @@ internal enum class DiscussionStatusUiModel(
     ;
 
     val title: String
-        @Composable get() = stringResource(titleResId)
+        @Composable get() = stringResource(titleRes)
 
     companion object {
         fun DiscussionStatus.toUiModel(): DiscussionStatusUiModel = when (this) {
