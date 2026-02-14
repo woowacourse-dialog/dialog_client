@@ -76,7 +76,7 @@ private fun DiscussionListSection(
                 author = discussion.author,
                 period = discussion.period,
                 discussionCount = discussion.commentCount,
-                participant = if (discussion is DiscussionUiModel.OfflineDiscussionUiModel) discussion.partingCapacity else null,
+                participant = if (discussion is DiscussionUiModel.OfflineDiscussionUiModel) discussion.participantCapacity else null,
                 onClick = { onClickDiscussion(discussion.id) },
             )
         }
@@ -109,7 +109,7 @@ private fun DiscussionListSectionPreview() {
                         status = DiscussionStatusUiModel.RECRUIT_COMPLETE,
                         commentCount = 20,
                         period = "2025.02.03 ~ 2025.03.31",
-                        partingCapacity = "2/4",
+                        participantCapacity = "2/4",
                         place = "Seoul",
                     ),
                 ),

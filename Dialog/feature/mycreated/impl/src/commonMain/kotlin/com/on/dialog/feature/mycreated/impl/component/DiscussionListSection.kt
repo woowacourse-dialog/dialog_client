@@ -47,7 +47,7 @@ internal fun DiscussionListSection(
                 author = discussion.author,
                 period = discussion.period,
                 discussionCount = discussion.commentCount,
-                participant = if (discussion is DiscussionUiModel.OfflineDiscussionUiModel) discussion.partingCapacity else null,
+                participant = if (discussion is DiscussionUiModel.OfflineDiscussionUiModel) discussion.participantCapacity else null,
                 onClick = { onClickDiscussion(discussion.id) },
             )
         }

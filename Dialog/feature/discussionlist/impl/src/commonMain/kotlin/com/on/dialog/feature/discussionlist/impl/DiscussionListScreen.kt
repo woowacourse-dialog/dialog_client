@@ -175,7 +175,7 @@ private fun DiscussionListScreenPreview() {
                                 status = DiscussionStatusUiModel.entries[0],
                                 commentCount = 5,
                                 period = "2025.02.03 ~ 2025.03.01",
-                                partingCapacity = "2/4",
+                                participantCapacity = "2/4",
                                 place = "Zoom",
                             )
                         }
