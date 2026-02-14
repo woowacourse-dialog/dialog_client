@@ -89,7 +89,7 @@ fun MyPageScreen(
         },
         onProfileImageClick = { showGallery = true },
         onDeleteAccount = { viewModel.onIntent(intent = MyPageIntent.DeleteAccount) },
-        onClickMyCreated = navigateToMyCreated,
+        onMyCreatedClick = navigateToMyCreated,
         modifier = modifier,
     )
 
@@ -126,7 +126,7 @@ private fun MyPageScreen(
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
     onProfileImageClick: () -> Unit,
     onDeleteAccount: () -> Unit,
-    onClickMyCreated: () -> Unit,
+    onMyCreatedClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -140,7 +140,7 @@ private fun MyPageScreen(
                 onUpdateProfile = onUpdateProfile,
                 onProfileImageClick = onProfileImageClick,
                 onDeleteAccount = onDeleteAccount,
-                onClickMyCreated = onClickMyCreated,
+                onMyCreatedClick = onMyCreatedClick,
             )
         } else {
             MyPageScreenLoggedOut(onLoginClick = onLoginClick)
@@ -155,7 +155,7 @@ private fun MyPageScreenLoggedIn(
     onUpdateProfile: (nickname: String, track: Track) -> Unit,
     onProfileImageClick: () -> Unit,
     onDeleteAccount: () -> Unit,
-    onClickMyCreated: () -> Unit,
+    onMyCreatedClick: () -> Unit,
 ) {
     var showProfileEditDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -171,7 +171,7 @@ private fun MyPageScreenLoggedIn(
         Column {
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.my_discussions),
-                onClick = onClickMyCreated,
+                onClick = onMyCreatedClick,
             ) { Icon(imageVector = DialogIcons.Forum, contentDescription = "") }
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.my_scraps),
@@ -359,7 +359,7 @@ private fun MyPageScreenLoggedInPreview() {
                 onUpdateProfile = { _, _ -> },
                 onProfileImageClick = {},
                 onDeleteAccount = {},
-                onClickMyCreated = {},
+                onMyCreatedClick = {},
             )
         }
     }
@@ -379,7 +379,7 @@ private fun MyPageScreenLoggedOutPreview() {
                 onUpdateProfile = { _, _ -> },
                 onProfileImageClick = {},
                 onDeleteAccount = {},
-                onClickMyCreated = {},
+                onMyCreatedClick = {},
             )
         }
     }
