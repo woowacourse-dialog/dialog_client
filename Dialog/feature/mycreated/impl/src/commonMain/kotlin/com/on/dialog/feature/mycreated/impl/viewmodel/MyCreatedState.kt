@@ -55,6 +55,7 @@ internal sealed interface MyCreatedState : UiState {
             incoming: ImmutableList<DiscussionUiModel>,
         ): ImmutableList<DiscussionUiModel> =
             (current + incoming)
+                .sortedBy { discussion -> discussion.id }
                 .distinctBy { discussion -> discussion.id }
                 .toImmutableList()
     }

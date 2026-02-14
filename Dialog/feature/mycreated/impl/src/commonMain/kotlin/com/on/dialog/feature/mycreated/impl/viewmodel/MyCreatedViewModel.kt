@@ -28,6 +28,7 @@ internal class MyCreatedViewModel(
     override fun onIntent(intent: MyCreatedIntent) {
         when (intent) {
             MyCreatedIntent.LoadNextPage -> fetchMyCreatedDiscussions()
+            MyCreatedIntent.Refresh -> refresh()
         }
     }
 
@@ -62,6 +63,12 @@ internal class MyCreatedViewModel(
                 state = SnackbarState.NEGATIVE,
             ),
         )
+    }
+
+    private fun refresh() {
+        nextCursor = null
+        hasNext = true
+        fetchMyCreatedDiscussions()
     }
 
     companion object {

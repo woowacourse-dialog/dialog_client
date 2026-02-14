@@ -76,6 +76,8 @@ internal fun MyCreatedScreen(
     MyCreatedScreen(
         uiState = uiState,
         listState = listState,
+        isRefreshing = uiState is MyCreatedState.Loading,
+        onRefresh = { viewModel.onIntent(MyCreatedIntent.Refresh) },
         onClickDiscussion = navigateToDetail,
         onClickCreateDiscussion = navigateToCreateDiscussion,
         onBackClick = goBack,
@@ -87,6 +89,8 @@ internal fun MyCreatedScreen(
 private fun MyCreatedScreen(
     uiState: MyCreatedState,
     listState: LazyListState,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     onClickDiscussion: (discussionId: Long) -> Unit,
     onClickCreateDiscussion: () -> Unit,
     onBackClick: () -> Unit,
@@ -114,6 +118,8 @@ private fun MyCreatedScreen(
                         listState = listState,
                         discussions = uiState.discussions,
                         onClickDiscussion = onClickDiscussion,
+                        isRefreshing = isRefreshing,
+                        onRefresh = onRefresh,
                     )
                     if (uiState is MyCreatedState.Loading) LoadingIndicator()
                 }
@@ -175,6 +181,8 @@ private fun MyCreatedScreenPreview() {
                     }.toImmutableList(),
                 ),
                 listState = rememberLazyListState(),
+                isRefreshing = false,
+                onRefresh = {},
                 onClickDiscussion = {},
                 onClickCreateDiscussion = {},
                 onBackClick = {},
@@ -191,6 +199,8 @@ private fun MyCreatedScreenEmptyPreview() {
             MyCreatedScreen(
                 uiState = MyCreatedState.Empty,
                 listState = rememberLazyListState(),
+                isRefreshing = false,
+                onRefresh = {},
                 onClickDiscussion = {},
                 onClickCreateDiscussion = {},
                 onBackClick = {},

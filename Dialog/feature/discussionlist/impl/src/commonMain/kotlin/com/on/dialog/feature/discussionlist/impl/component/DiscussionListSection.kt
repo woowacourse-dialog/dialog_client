@@ -1,9 +1,8 @@
 package com.on.dialog.feature.discussionlist.impl.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -58,13 +57,12 @@ private fun DiscussionListSection(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .drawFadingEdges(scrollableState = listState)
-            .padding(horizontal = DialogTheme.spacing.large),
+            .drawFadingEdges(scrollableState = listState),
         state = listState,
         overscrollEffect = null,
         verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
+        contentPadding = PaddingValues(DialogTheme.spacing.large),
     ) {
-        item { Spacer(modifier = Modifier.height(DialogTheme.spacing.extraSmall)) }
         items(items = discussions, key = { discussion -> discussion.id }) { discussion ->
             DiscussionCard(
                 chips = discussion.toChipCategories(),
@@ -80,7 +78,6 @@ private fun DiscussionListSection(
                 onClick = { onClickDiscussion(discussion.id) },
             )
         }
-        item { Spacer(modifier = Modifier.height(DialogTheme.spacing.large)) }
     }
 }
 
