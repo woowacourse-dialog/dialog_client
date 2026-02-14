@@ -1,5 +1,6 @@
 package com.on.dialog.feature.mycreated.impl
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyListState
@@ -93,28 +94,29 @@ private fun MyCreatedScreen(
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         MyCreatedTopAppBar(onBackClick = onBackClick)
-        if (uiState is MyCreatedState.Loading) LoadingIndicator()
+        Box {
+            when (uiState) {
+                is MyCreatedState.Empty -> {
+                    CommonEmptyView(
+                        title = stringResource(Res.string.empty_title),
+                        description = stringResource(Res.string.empty_description),
+                        primaryAction = EmptyAction(
+                            label = stringResource(Res.string.empty_action_label),
+                            onClick = onClickCreateDiscussion,
+                        ),
+                    )
+                }
 
-        when (uiState) {
-            is MyCreatedState.Empty -> {
-                CommonEmptyView(
-                    title = stringResource(Res.string.empty_title),
-                    description = stringResource(Res.string.empty_description),
-                    primaryAction = EmptyAction(
-                        label = stringResource(Res.string.empty_action_label),
-                        onClick = onClickCreateDiscussion,
-                    ),
-                )
-            }
-
-            is MyCreatedState.Loading,
-            is MyCreatedState.Content,
-            -> {
-                DiscussionListSection(
-                    listState = listState,
-                    discussions = uiState.discussions,
-                    onClickDiscussion = onClickDiscussion,
-                )
+                is MyCreatedState.Loading,
+                is MyCreatedState.Content,
+                -> {
+                    DiscussionListSection(
+                        listState = listState,
+                        discussions = uiState.discussions,
+                        onClickDiscussion = onClickDiscussion,
+                    )
+                    if (uiState is MyCreatedState.Loading) LoadingIndicator()
+                }
             }
         }
     }
