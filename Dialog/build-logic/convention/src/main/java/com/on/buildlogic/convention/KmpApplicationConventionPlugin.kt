@@ -3,15 +3,16 @@ package com.on.buildlogic.convention
 import com.android.build.api.dsl.ApplicationExtension
 import com.on.buildlogic.convention.extension.PluginIds
 import com.on.buildlogic.convention.extension.configureDialogTargets
-import com.on.buildlogic.convention.extension.configureIosFrameworkForApp
 import com.on.buildlogic.convention.extension.library
 import com.on.buildlogic.convention.extension.libs
+import com.on.buildlogic.convention.extension.version
 import com.on.buildlogic.convention.extension.versionInt
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 /**
  * KMP 기반 **Android Application 모듈**을 위한 Convention Plugin.
@@ -28,7 +29,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
  *
  * ## Kotlin Multiplatform 설정
  * - `configureDialogTargets()`를 통해 Android / iOS 타겟을 구성한다.
- * - `configureIosFrameworkForApp()`을 통해 iOS 앱에서 사용될 Framework를 설정한다.
  *
  * ### SourceSet 구성
  * - `commonMain`
@@ -71,7 +71,16 @@ internal class KmpApplicationConventionPlugin : Plugin<Project> {
 
         extensions.configure<KotlinMultiplatformExtension> {
             configureDialogTargets()
-            configureIosFrameworkForApp()
+
+            targets.filterIsInstance<KotlinNativeTarget>().forEach { target ->
+                target.binaries.framework {
+                    baseName = "ComposeApp"
+                    isStatic = true
+                    binaryOption("bundleId", "com.on.dialog")
+                    binaryOption("bundleVersion", libs.version("versionName"))
+                    binaryOption("bundleShortVersionString", libs.version("versionName"))
+                }
+            }
 
             sourceSets.named("commonMain") {
                 dependencies {
