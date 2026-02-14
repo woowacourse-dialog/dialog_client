@@ -26,19 +26,19 @@ import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 
 @Immutable
-data class EmptyAction(
+data class CommonStateAction(
     val label: String,
     val onClick: () -> Unit,
 )
 
 @Composable
-fun CommonEmptyView(
+fun CommonStateView(
     title: String,
     modifier: Modifier = Modifier,
     description: String? = null,
     icon: ImageVector? = null,
-    primaryAction: EmptyAction? = null,
-    secondaryAction: EmptyAction? = null,
+    primaryAction: CommonStateAction? = null,
+    secondaryAction: CommonStateAction? = null,
 ) {
     Column(
         modifier = modifier
@@ -105,15 +105,15 @@ fun CommonEmptyView(
 
 @ThemePreview
 @Composable
-private fun CommonEmptyViewPreview() {
+private fun CommonStateViewPreview() {
     DialogTheme {
         Scaffold {
-            CommonEmptyView(
+            CommonStateView(
                 title = "아직 개설한 토론이 없어요",
                 description = "첫 토론을 만들어보세요",
                 icon = DialogIcons.Empty,
-                primaryAction = EmptyAction(label = "토론 만들기", onClick = {}),
-                secondaryAction = EmptyAction(label = "새로고침", onClick = {}),
+                primaryAction = CommonStateAction(label = "토론 만들기", onClick = {}),
+                secondaryAction = CommonStateAction(label = "새로고침", onClick = {}),
             )
         }
     }

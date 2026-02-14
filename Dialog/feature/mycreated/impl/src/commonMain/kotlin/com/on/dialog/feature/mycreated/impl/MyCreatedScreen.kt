@@ -28,8 +28,8 @@ import com.on.dialog.feature.mycreated.impl.viewmodel.MyCreatedEffect
 import com.on.dialog.feature.mycreated.impl.viewmodel.MyCreatedIntent
 import com.on.dialog.feature.mycreated.impl.viewmodel.MyCreatedState
 import com.on.dialog.feature.mycreated.impl.viewmodel.MyCreatedViewModel
-import com.on.dialog.ui.component.CommonEmptyView
-import com.on.dialog.ui.component.EmptyAction
+import com.on.dialog.ui.component.CommonStateAction
+import com.on.dialog.ui.component.CommonStateView
 import com.on.dialog.ui.extensions.shouldLoadNextPage
 import dialog.feature.mycreated.impl.generated.resources.Res
 import dialog.feature.mycreated.impl.generated.resources.empty_action_label
@@ -97,10 +97,10 @@ private fun MyCreatedScreen(
         Box {
             when (uiState) {
                 is MyCreatedState.Empty -> {
-                    CommonEmptyView(
+                    CommonStateView(
                         title = stringResource(Res.string.empty_title),
                         description = stringResource(Res.string.empty_description),
-                        primaryAction = EmptyAction(
+                        primaryAction = CommonStateAction(
                             label = stringResource(Res.string.empty_action_label),
                             onClick = onClickCreateDiscussion,
                         ),
