@@ -11,7 +11,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.feature.mycreated.api)
-            implementation(projects.feature.mypage.api)
             implementation(projects.feature.discussiondetail.api)
         }
     }
