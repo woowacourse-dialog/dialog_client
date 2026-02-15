@@ -5,10 +5,12 @@ import androidx.compose.runtime.Immutable
 import com.on.dialog.core.common.extension.now
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.OfflineDiscussionDetailUiModel.Companion.toOfflineUiModel
+import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.OfflineDiscussionDetailUiModel.DateTimePeriodUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.OfflineDiscussionDetailUiModel.ParticipantUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.OnlineDiscussionDetailUiModel.Companion.toOnlineUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel.Companion.toUiModel
 import com.on.dialog.model.discussion.content.DiscussionType
+import com.on.dialog.model.discussion.datetimeperiod.DateTimePeriod
 import com.on.dialog.model.discussion.detail.DiscussionDetail
 import com.on.dialog.model.discussion.detail.OfflineDiscussionDetail
 import com.on.dialog.model.discussion.detail.OnlineDiscussionDetail
@@ -34,6 +36,7 @@ sealed interface DiscussionDetailUiModel {
         override val detailContent: DetailContentUiModel,
         override val summary: String?,
         override val status: DiscussionStatusUiModel,
+        val dateTimePeriod: DateTimePeriodUiModel,
         val participantCapacity: String,
         val place: String,
         val participants: List<ParticipantUiModel>,
@@ -44,6 +47,18 @@ sealed interface DiscussionDetailUiModel {
                 DiscussionType.OFFLINE.toChipCategory(),
                 detailContent.category.toDomain().toChipCategory(),
             )
+
+        data class DateTimePeriodUiModel(
+            val startAt: String,
+            val endAt: String,
+        ) {
+            companion object {
+                fun DateTimePeriod.toUiModel() = DateTimePeriodUiModel(
+                    startAt = startAt.toString(),
+                    endAt = endAt.toString(),
+                )
+            }
+        }
 
         data class ParticipantUiModel(
             val id: Long,
@@ -61,6 +76,7 @@ sealed interface DiscussionDetailUiModel {
             ): OfflineDiscussionDetailUiModel = OfflineDiscussionDetailUiModel(
                 detailContent = detailContent.toUiModel(),
                 summary = summary,
+                dateTimePeriod = dateTimePeriod.toUiModel(),
                 participantCapacity = "${participantCapacity.current}/${participantCapacity.max}",
                 place = place,
                 participants = participants.map { it.toUiModel() },
