@@ -12,7 +12,7 @@ fun EntryProviderScope<NavKey>.discussionListScreen(
 ) {
     entry<DiscussionListNavKey> {
         DiscussionListScreen(
-            navigateToDiscussionDetail = { discussionId: Long ->
+            navigateToDiscussionDetail = { discussionId ->
                 navigator.navigate(DiscussionDetailNavKey(discussionId = discussionId))
             },
             navigateToCreateDiscussion = { /* TODO: 토론 생성 화면 구현 */ },

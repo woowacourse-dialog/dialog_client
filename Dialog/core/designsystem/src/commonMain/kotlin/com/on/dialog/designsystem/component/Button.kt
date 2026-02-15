@@ -13,8 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import com.on.dialog.designsystem.icon.DialogIcons
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.Gray400
 
@@ -77,8 +77,8 @@ private fun buttonColorsByStyle(style: DialogButtonStyle) =
 
         DialogButtonStyle.Secondary -> {
             ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary,
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                 disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
                 disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
             )
@@ -94,38 +94,25 @@ private fun buttonColorsByStyle(style: DialogButtonStyle) =
         }
     }
 
-@Preview(showBackground = true)
+@ThemePreview
 @Composable
-private fun DialogButtonPreviewLight() {
+private fun DialogButtonPreview() {
     DialogTheme {
-        DialogButtonPreviewContent()
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0)
-@Composable
-private fun DialogButtonPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        DialogButtonPreviewContent()
-    }
-}
-
-@Composable
-private fun DialogButtonPreviewContent() {
-    Column {
-        DialogButton(onClick = {}, text = "Primary")
-        DialogButton(
-            onClick = {},
-            text = "Secondary",
-            style = DialogButtonStyle.Secondary,
-        )
-        DialogButton(onClick = {}, text = "None", style = DialogButtonStyle.None)
-        DialogButton(
-            onClick = {},
-            text = "Icon",
-            leadingIcon = {
-                Icon(imageVector = DialogIcons.Add, contentDescription = null)
-            },
-        )
+        Column {
+            DialogButton(onClick = {}, text = "Primary")
+            DialogButton(
+                onClick = {},
+                text = "Secondary",
+                style = DialogButtonStyle.Secondary,
+            )
+            DialogButton(onClick = {}, text = "None", style = DialogButtonStyle.None)
+            DialogButton(
+                onClick = {},
+                text = "Icon",
+                leadingIcon = {
+                    Icon(imageVector = DialogIcons.Add, contentDescription = null)
+                },
+            )
+        }
     }
 }

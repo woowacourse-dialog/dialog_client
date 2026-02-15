@@ -1,4 +1,4 @@
-package com.on.dialog.feature.discussionlist.impl.component
+package com.on.dialog.feature.mycreated.impl.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,15 +12,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.util.drawFadingEdges
-import com.on.dialog.feature.discussionlist.impl.model.DiscussionStatusUiModel
-import com.on.dialog.feature.discussionlist.impl.model.DiscussionUiModel
-import com.on.dialog.feature.discussionlist.impl.model.TrackUiModel
+import com.on.dialog.feature.mycreated.impl.model.DiscussionStatusUiModel
+import com.on.dialog.feature.mycreated.impl.model.DiscussionUiModel
+import com.on.dialog.feature.mycreated.impl.model.TrackUiModel
 import com.on.dialog.ui.component.DiscussionCard
-import dialog.feature.discussionlist.impl.generated.resources.Res
-import dialog.feature.discussionlist.impl.generated.resources.discussion_card_title_format
+import dialog.feature.mycreated.impl.generated.resources.Res
+import dialog.feature.mycreated.impl.generated.resources.discussion_card_title_format
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
@@ -81,7 +81,7 @@ private fun DiscussionListSection(
     }
 }
 
-@Preview
+@ThemePreview
 @Composable
 private fun DiscussionListSectionPreview() {
     DialogTheme {
