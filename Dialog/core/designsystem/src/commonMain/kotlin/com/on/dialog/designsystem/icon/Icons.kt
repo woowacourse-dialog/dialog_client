@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.NotificationsOff
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
 import com.on.dialog.designsystem.icon.myiconpack.Bold
@@ -66,6 +67,7 @@ object DialogIcons {
     val NotificationsOff = Icons.Rounded.NotificationsOff
     val Filter = Icons.Rounded.FilterAlt
     val FilterOff = Icons.Rounded.FilterAltOff
+    val Empty = Icons.Rounded.SearchOff
 
     val bold = Bold
     val italic = Italic
