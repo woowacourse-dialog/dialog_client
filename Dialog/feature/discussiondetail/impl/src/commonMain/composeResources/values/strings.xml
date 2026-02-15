@@ -1,0 +1,9 @@
+<resources>
+    <string name="discussion_type_online">온라인</string>
+    <string name="discussion_type_offline">오프라인</string>
+
+    <string name="discussion_status_recruiting">모집 중</string>
+    <string name="discussion_status_recruit_complete">모집 완료</string>
+    <string name="discussion_status_in_discussion">진행 중</string>
+    <string name="discussion_status_discussion_complete">종료</string>
+</resources>
