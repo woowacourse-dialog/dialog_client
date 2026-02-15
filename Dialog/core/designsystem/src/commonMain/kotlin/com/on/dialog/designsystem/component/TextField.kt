@@ -201,9 +201,9 @@ private fun DialogTextFieldPlaceholder(text: String) {
 
 @Composable
 private fun dialogTextFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15f),
-    unfocusedContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15f),
-    disabledContainerColor = DialogTheme.colorScheme.primary.copy(alpha = 0.15f),
+    focusedContainerColor = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3f),
+    unfocusedContainerColor = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3f),
+    disabledContainerColor = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3f),
     focusedIndicatorColor = Color.Transparent,
     unfocusedIndicatorColor = Color.Transparent,
     disabledIndicatorColor = Color.Transparent,
