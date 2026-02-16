@@ -202,6 +202,7 @@ private fun DiscussionDetailContent(
             typography = markdownTypography(),
             modifier = Modifier.fillMaxWidth(),
         )
+        DiscussionSummary(summary = state.discussion.summary)
     }
 }
 
@@ -248,42 +249,63 @@ private fun DiscussionInfoSection(
     discussion: DiscussionDetailUiModel,
     modifier: Modifier = Modifier,
 ) {
-    DialogCard {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
-            modifier = modifier.fillMaxWidth(),
-        ) {
-            when (discussion) {
-                is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel -> {
-                    IconTextRow(iconImage = DialogIcons.Place, text = discussion.place)
+    Column(
+        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
+        modifier = modifier.fillMaxWidth().padding(DialogTheme.spacing.small),
+    ) {
+        when (discussion) {
+            is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel -> {
+                IconTextRow(iconImage = DialogIcons.Place, text = discussion.place)
+                IconTextRow(
+                    iconImage = DialogIcons.Calendar,
+                    text = "${discussion.dateTimePeriod.startAt} ~ ${discussion.dateTimePeriod.endAt}",
+                )
+                Column {
                     IconTextRow(
-                        iconImage = DialogIcons.Calendar,
-                        text = "${discussion.dateTimePeriod.startAt} ~ ${discussion.dateTimePeriod.endAt}",
+                        iconImage = DialogIcons.Group,
+                        text = discussion.participantCapacity,
                     )
-                    Column {
-                        IconTextRow(
-                            iconImage = DialogIcons.Group,
-                            text = discussion.participantCapacity,
-                        )
 
-                        Row {
-                            discussion.participants.forEach {
-                                Text(
-                                    text = it.name,
-                                    style = DialogTheme.typography.bodyMedium,
-                                )
-                                Spacer(modifier = Modifier.width(DialogTheme.spacing.small))
-                            }
+                    Row {
+                        discussion.participants.forEach {
+                            Text(
+                                text = it.name,
+                                style = DialogTheme.typography.bodyMedium,
+                            )
+                            Spacer(modifier = Modifier.width(DialogTheme.spacing.small))
                         }
                     }
                 }
+            }
 
-                is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel -> {
-                    IconTextRow(
-                        iconImage = DialogIcons.Calendar,
-                        text = "${discussion.endDate} 종료",
-                    )
-                }
+            is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel -> {
+                IconTextRow(
+                    iconImage = DialogIcons.Calendar,
+                    text = "${discussion.endDate} 종료",
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DiscussionSummary(
+    summary: String?,
+    modifier: Modifier = Modifier
+) {
+    DialogCard(modifier.fillMaxWidth()) {
+        Column(verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small)) {
+            IconTextRow(iconImage = DialogIcons.AutoAwesome, text = "토론 요약")
+
+            if (summary == null) {
+                DialogButton(text = "AI 요약 생성하기", onClick = {})
+            } else {
+                Markdown(
+                    content = summary,
+                    colors = markdownColor(),
+                    typography = markdownTypography(),
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }
