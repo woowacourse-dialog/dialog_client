@@ -17,11 +17,9 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,12 +35,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mikepenz.markdown.compose.Markdown
 import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
-import com.on.dialog.designsystem.component.DialogButton
-import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.discussiondetail.impl.component.DiscussionDetailBottomBar
+import com.on.dialog.discussiondetail.impl.component.DiscussionSummary
+import com.on.dialog.discussiondetail.impl.component.IconTextRow
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel
@@ -110,7 +108,6 @@ private fun DiscussionDetailScreen(
                 }
             },
         )
-
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -124,41 +121,8 @@ private fun DiscussionDetailScreen(
                 modifier = Modifier.padding(top = DialogTheme.spacing.medium),
             )
         }
-
-        if (state.discussion != null) {
-            DiscussionDetailBottomBar(state.discussion)
-        }
-    }
-}
-
-@Composable
-private fun DiscussionDetailBottomBar(
-    discussion: DiscussionDetailUiModel,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxWidth()
-            .background(DialogTheme.colorScheme.primary.copy(alpha = 0.1f))
-            .padding(PaddingValues(DialogTheme.spacing.extraSmall)),
-    ) {
-        DialogIconButton(
-            onClick = {},
-        ) {
-            Icon(
-                imageVector = DialogIcons.Bookmark,
-                contentDescription = "북마크",
-            )
-        }
-
-        when (discussion) {
-            is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel -> {
-                DialogButton(text = "참여하기", onClick = {})
-            }
-
-            is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel -> {
-            }
+        state.discussion?.let { discussion ->
+            DiscussionDetailBottomBar(discussion)
         }
     }
 }
@@ -259,13 +223,9 @@ private fun DiscussionInfoSection(
                         iconImage = DialogIcons.Group,
                         text = discussion.participantCapacity,
                     )
-
                     Row {
                         discussion.participants.forEach {
-                            Text(
-                                text = it.name,
-                                style = DialogTheme.typography.bodyMedium,
-                            )
+                            Text(text = it.name, style = DialogTheme.typography.bodyMedium)
                             Spacer(modifier = Modifier.width(DialogTheme.spacing.small))
                         }
                     }
@@ -282,55 +242,6 @@ private fun DiscussionInfoSection(
     }
 }
 
-@Composable
-private fun DiscussionSummary(
-    summary: String?,
-    modifier: Modifier = Modifier
-) {
-    DialogCard(modifier.fillMaxWidth()) {
-        Column(verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small)) {
-            IconTextRow(iconImage = DialogIcons.AutoAwesome, text = "토론 요약")
-
-            if (summary == null) {
-                DialogButton(text = "AI 요약 생성하기", onClick = {})
-            } else {
-                Markdown(
-                    content = summary,
-                    colors = markdownColor(),
-                    typography = markdownTypography(),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun IconTextRow(
-    iconImage: ImageVector,
-    text: String,
-    modifier: Modifier = Modifier,
-) {
-    CompositionLocalProvider(
-        LocalContentColor provides DialogTheme.colorScheme.onSurfaceVariant,
-    ) {
-        Row(
-            modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = iconImage,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp),
-            )
-            Spacer(Modifier.width(DialogTheme.spacing.small))
-            Text(
-                text = text,
-                style = DialogTheme.typography.bodyMedium,
-            )
-        }
-    }
-}
 
 @Composable
 private fun CommentInputPlaceholder(
@@ -429,7 +340,7 @@ private fun DiscussionDetailScreenOnlinePreview() {
                     ),
                     summary = "요약된 내용",
                     status = DiscussionStatusUiModel.IN_DISCUSSION,
-                    endDate = "2026년 3월 10일 종료",
+                    endDate = "2026년 3월 10일",
                 ),
             ),
             goBack = {},
