@@ -189,7 +189,6 @@ private fun DiscussionDetailContent(
         Text(text = detailContent.title, style = DialogTheme.typography.titleLarge)
         ProfileSection(
             author = detailContent.author,
-            modifiedAt = detailContent.modifiedAt,
             createdAt = detailContent.createdAt,
         )
         DiscussionInfoSection(
@@ -209,7 +208,6 @@ private fun DiscussionDetailContent(
 @Composable
 private fun ProfileSection(
     author: DetailContentUiModel.AuthorUiModel,
-    modifiedAt: String,
     createdAt: String,
     modifier: Modifier = Modifier,
 ) {
@@ -232,11 +230,7 @@ private fun ProfileSection(
                 fontWeight = FontWeight.SemiBold,
             )
             Text(
-                text = if (modifiedAt.isBlank()) {
-                    "$createdAt 작성"
-                } else {
-                    "$modifiedAt 수정"
-                },
+                text = "$createdAt 작성",
                 style = DialogTheme.typography.bodyMedium,
                 color = DialogTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             )
@@ -258,7 +252,7 @@ private fun DiscussionInfoSection(
                 IconTextRow(iconImage = DialogIcons.Place, text = discussion.place)
                 IconTextRow(
                     iconImage = DialogIcons.Calendar,
-                    text = "${discussion.dateTimePeriod.startAt} ~ ${discussion.dateTimePeriod.endAt}",
+                    text = discussion.dateTimePeriod
                 )
                 Column {
                     IconTextRow(
@@ -405,10 +399,7 @@ private fun DiscussionDetailScreenOfflinePreview() {
                                 name = "크림",
                             ),
                         ),
-                        dateTimePeriod = DiscussionDetailUiModel.OfflineDiscussionDetailUiModel.DateTimePeriodUiModel(
-                            startAt = "2023년 3월 1일 13시",
-                            endAt = "2023년 3월 1일 15시",
-                        ),
+                        dateTimePeriod = "2023년 3월 1일 13시 ~ 15시",
                     ),
                 ),
                 goBack = {},
@@ -438,7 +429,7 @@ private fun DiscussionDetailScreenOnlinePreview() {
                     ),
                     summary = "요약된 내용",
                     status = DiscussionStatusUiModel.IN_DISCUSSION,
-                    endDate = "2026.03.10",
+                    endDate = "2026년 3월 10일 종료",
                 ),
             ),
             goBack = {},
