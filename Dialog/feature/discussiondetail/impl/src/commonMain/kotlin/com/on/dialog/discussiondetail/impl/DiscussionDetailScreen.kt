@@ -29,6 +29,7 @@ import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
+import com.on.dialog.designsystem.component.LoadingIndicator
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
@@ -125,23 +126,27 @@ private fun DiscussionDetailScreen(
                 }
             },
         )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            DiscussionDetailContent(
-                state = state,
-                onLikeClick = onLikeClick,
-                onSummaryClick = onSummaryClick,
-                onBookmarkClick = onBookmarkClick,
-                onParticipateClick = onParticipateClick,
-            )
-            CommentInputPlaceholder(
-                text = content,
-                onClick = onCommentInputClick,
-                modifier = Modifier.padding(top = DialogTheme.spacing.medium),
-            )
+        if (state.isLoading) {
+            LoadingIndicator()
+        } else {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                DiscussionDetailContent(
+                    state = state,
+                    onLikeClick = onLikeClick,
+                    onSummaryClick = onSummaryClick,
+                    onBookmarkClick = onBookmarkClick,
+                    onParticipateClick = onParticipateClick,
+                )
+                CommentInputPlaceholder(
+                    text = content,
+                    onClick = onCommentInputClick,
+                    modifier = Modifier.padding(top = DialogTheme.spacing.medium),
+                )
+            }
         }
     }
 }
@@ -216,6 +221,7 @@ private fun DiscussionDetailScreenOfflinePreview() {
         Surface {
             DiscussionDetailScreen(
                 state = DiscussionDetailState(
+                    isLoading = false,
                     discussion = DiscussionDetailUiModel.OfflineDiscussionDetailUiModel(
                         detailContent = DetailContentUiModel(
                             id = 0L,
@@ -257,6 +263,7 @@ private fun DiscussionDetailScreenOnlinePreview() {
     DialogTheme {
         DiscussionDetailScreen(
             state = DiscussionDetailState(
+                isLoading = false,
                 discussion = DiscussionDetailUiModel.OnlineDiscussionDetailUiModel(
                     detailContent = DetailContentUiModel(
                         id = 0L,
