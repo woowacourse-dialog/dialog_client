@@ -22,7 +22,11 @@ import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel
 import com.on.dialog.discussiondetail.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.model.common.Track
 import com.on.dialog.model.discussion.content.DiscussionType
+import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.participate_button
+import dialog.feature.discussiondetail.impl.generated.resources.participate_done_button
 import kotlinx.collections.immutable.persistentListOf
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionDetailBody(
@@ -62,7 +66,7 @@ private fun ParticipateButton(
     modifier: Modifier = Modifier,
 ) {
     DialogButton(
-        text = if (isParticipating) "참여 중인 토론이에요" else "오프라인 토론 참여하기",
+        text = stringResource(if (isParticipating) Res.string.participate_done_button else Res.string.participate_button),
         onClick = onParticipateClick,
         enabled = !isParticipating,
         modifier = modifier.fillMaxWidth(),

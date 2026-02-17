@@ -34,8 +34,11 @@ import com.on.dialog.ui.component.DialogChipGroup
 import com.on.dialog.ui.component.InteractionIndicator
 import com.on.dialog.ui.component.ProfileImage
 import com.on.dialog.ui.extensions.noRippleClickable
+import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.end_date_format
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionDetailHeader(
@@ -172,7 +175,7 @@ private fun DiscussionInfoSection(
             is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel -> {
                 IconTextRow(
                     iconImage = DialogIcons.Calendar,
-                    text = "${discussion.endDate} 종료",
+                    text = stringResource(Res.string.end_date_format, discussion.endDate),
                 )
             }
         }

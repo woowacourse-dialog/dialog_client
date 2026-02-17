@@ -18,6 +18,12 @@ import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogCardTone
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.summary_discussion
+import dialog.feature.discussiondetail.impl.generated.resources.summary_if_finished
+import dialog.feature.discussiondetail.impl.generated.resources.summary_only_once
+import dialog.feature.discussiondetail.impl.generated.resources.summary_with_ai
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionSummary(
@@ -30,7 +36,10 @@ internal fun DiscussionSummary(
         modifier = modifier.fillMaxWidth(),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small)) {
-            IconTextRow(iconImage = DialogIcons.AutoAwesome, text = "토론 요약")
+            IconTextRow(
+                iconImage = DialogIcons.AutoAwesome,
+                text = stringResource(Res.string.summary_discussion)
+            )
 
             if (summary == null) {
                 Column(
@@ -41,15 +50,18 @@ internal fun DiscussionSummary(
                         .padding(vertical = DialogTheme.spacing.medium),
                 ) {
                     Text(
-                        text = "토론이 모두 종료되었을 때 요약을 생성해주세요.",
+                        text = stringResource(Res.string.summary_if_finished),
                         style = DialogTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
                     )
                     Text(
-                        text = "요약은 1회만 생성할 수 있어요.",
+                        text = stringResource(Res.string.summary_only_once),
                         style = DialogTheme.typography.bodyMedium,
                     )
-                    DialogButton(text = "AI 요약 생성하기", onClick = onSummaryClick)
+                    DialogButton(
+                        text = stringResource(Res.string.summary_with_ai),
+                        onClick = onSummaryClick
+                    )
                 }
             } else {
                 Markdown(

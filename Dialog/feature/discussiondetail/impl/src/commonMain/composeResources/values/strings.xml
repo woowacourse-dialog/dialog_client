@@ -7,6 +7,19 @@
     <string name="discussion_status_in_discussion">진행 중</string>
     <string name="discussion_status_discussion_complete">종료</string>
 
+    <string name="end_date_format">%1$s 종료</string>"
+
+    <!-- DiscussionDetailBody -->
+    <string name="participate_button">"오프라인 토론 참여하기"</string>
+    <string name="participate_done_button">참여 중인 토론이에요</string>
+
+    <!-- DiscussionSummary -->
+    <string name="summary_discussion">토론 요약</string>
+    <string name="summary_with_ai">AI 요약 생성하기</string>
+    <string name="summary_if_finished">"토론이 모두 종료되었을 때 요약을 생성해주세요."</string>
+    <string name="summary_only_once">요약은 1회만 생성할 수 있어요.</string>
+
+    <!-- Error Message -->
     <string name="error_common">오류가 발생했습니다</string>
     <string name="error_should_login">먼저 로그인을 해주세요</string>
     <string name="error_not_my_discussion">토론 생성자만 가능합니다</string>
