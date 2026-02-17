@@ -24,34 +24,33 @@ internal suspend inline fun <T> safeApiCall(
         if (error is CancellationException) throw error
 
         val networkError: NetworkError = when (error) {
-            is ClientRequestException -> {
-                // 에러 응답 본문을 파싱하여 errorCode 확인
-                val errorResponse = runCatching { error.response.body<ErrorResponse>() }.getOrNull()
-
-                // errorCode가 1005인 경우 (로그인 필요) Unauthorized 에러로 처리
-                if (errorResponse?.errorCode == "1005") {
-                    NetworkError.Unauthorized(
-                        cause = error,
-                        errorCode = errorResponse.errorCode,
-                        errorMessage = errorResponse.message,
-                    )
-                } else {
-                    NetworkError.BadRequest(error)
-                }
-            }
-
-            is ServerResponseException -> {
-                NetworkError.ServerError(error)
-            }
-
-            is IOException -> {
-                NetworkError.Network(error)
-            }
-
-            else -> {
-                NetworkError.Unknown(error)
-            }
+            is ClientRequestException -> handleClientRequestException(error)
+            is ServerResponseException -> NetworkError.ServerError(error)
+            is IOException -> NetworkError.Network(error)
+            else -> NetworkError.Unknown(error)
         }
         Result.failure(networkError)
+    }
+}
+
+private suspend fun handleClientRequestException(error: ClientRequestException): NetworkError {
+    // 에러 응답 본문을 파싱하여 errorCode 확인
+    val errorResponse = runCatching { error.response.body<ErrorResponse>() }.getOrNull()
+
+    return if (errorResponse?.errorCode == "1005") {
+        // errorCode가 1005인 경우 (로그인 필요) Unauthorized 에러로 처리
+        NetworkError.Unauthorized(
+            cause = error,
+            errorCode = errorResponse.errorCode,
+            errorMessage = errorResponse.message,
+        )
+    } else if (errorResponse?.errorCode != null) {
+        // 각 API별 Custom 에러 코드 처리
+        NetworkError.ServerCustomError(
+            cause = error,
+            errorCode = errorResponse.errorCode,
+        )
+    } else {
+        NetworkError.BadRequest(error)
     }
 }

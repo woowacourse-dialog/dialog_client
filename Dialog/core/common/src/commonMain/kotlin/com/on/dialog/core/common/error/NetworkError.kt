@@ -17,6 +17,11 @@ sealed class NetworkError(
         cause: Exception,
     ) : NetworkError(cause)
 
+    class ServerCustomError(
+        cause: Exception,
+        val errorCode: String,
+    ) : NetworkError(cause)
+
     class Network(
         cause: Exception,
     ) : NetworkError(cause)

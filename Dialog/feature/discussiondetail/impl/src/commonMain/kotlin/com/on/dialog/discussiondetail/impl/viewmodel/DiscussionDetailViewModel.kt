@@ -9,12 +9,15 @@ import com.on.dialog.domain.repository.LikeRepository
 import com.on.dialog.domain.repository.ParticipantRepository
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.model.discussion.content.DiscussionType
+import com.on.dialog.model.discussion.detail.DiscussionDetail
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.error_common
+import dialog.feature.discussiondetail.impl.generated.resources.error_fetch_discussion_detail
+import dialog.feature.discussiondetail.impl.generated.resources.error_not_my_discussion
 import dialog.feature.discussiondetail.impl.generated.resources.error_should_login
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 
 class DiscussionDetailViewModel(
     private val discussionId: Long,
@@ -55,11 +58,24 @@ class DiscussionDetailViewModel(
     private suspend fun fetchDiscussionDetail() {
         discussionRepository
             .getDiscussionDetail(id = discussionId)
-            .onSuccess {
-                updateState {
-                    copy(discussion = it.toUiModel(), likeCount = it.detailContent.likeCount)
-                }
-            }.onFailure { Napier.d("토론 상세 화면을 불러오는 데 실패했습니다.") }
+            .onSuccess(::handleFetchDiscussionDetailSuccess)
+            .onFailure { handleFetchDiscussionDetailFailure() }
+    }
+
+    private fun handleFetchDiscussionDetailSuccess(discussionDetail: DiscussionDetail) =
+        with(discussionDetail) {
+            updateState {
+                copy(discussion = toUiModel(), likeCount = detailContent.likeCount)
+            }
+        }
+
+    private fun handleFetchDiscussionDetailFailure() {
+        emitEffect(
+            DiscussionDetailEffect.ShowSnackbar(
+                message = Res.string.error_fetch_discussion_detail,
+                state = SnackbarState.NEGATIVE,
+            )
+        )
     }
 
     private suspend fun fetchBookmarkStatus() {
@@ -69,7 +85,7 @@ class DiscussionDetailViewModel(
     }
 
     private fun updateBookmark() {
-        val isCurrentlyBookmarked = uiState.value.isBookmarked
+        val isCurrentlyBookmarked = currentState.isBookmarked
         updateState { copy(isBookmarked = !isCurrentlyBookmarked) }
 
         viewModelScope.launch {
@@ -77,10 +93,7 @@ class DiscussionDetailViewModel(
                 scrapRepository.deleteScrap(discussionId = discussionId)
             } else {
                 scrapRepository.postScrap(discussionId = discussionId)
-            }.onFailure {
-                updateState { copy(isBookmarked = isCurrentlyBookmarked) }
-                showErrorSnackbar(it)
-            }
+            }.onFailure { updateState { copy(isBookmarked = isCurrentlyBookmarked) } }
         }
     }
 
@@ -91,7 +104,7 @@ class DiscussionDetailViewModel(
     }
 
     private fun updateLike() {
-        val isCurrentlyLiked = uiState.value.isLiked
+        val isCurrentlyLiked = currentState.isLiked
         updateState { copy(isLiked = !isCurrentlyLiked) }
 
         viewModelScope.launch {
@@ -99,12 +112,19 @@ class DiscussionDetailViewModel(
                 likeRepository.deleteLike(discussionId = discussionId)
             } else {
                 likeRepository.postLike(discussionId = discussionId)
-            }.onSuccess { updateState { copy(likeCount = likeCount + if (isCurrentlyLiked) -1 else 1) } }
-                .onFailure {
-                    updateState { copy(isLiked = isCurrentlyLiked) }
-                    showErrorSnackbar(it)
-                }
+            }
+                .onSuccess { handleUpdateLikeSuccess(isCurrentlyLiked) }
+                .onFailure { handleUpdateLikeFailure(isCurrentlyLiked, it) }
         }
+    }
+
+    private fun handleUpdateLikeSuccess(isCurrentlyLiked: Boolean) {
+        updateState { copy(likeCount = likeCount + if (isCurrentlyLiked) -1 else 1) }
+    }
+
+    private fun handleUpdateLikeFailure(isCurrentlyLiked: Boolean, throwable: Throwable) {
+        updateState { copy(isLiked = isCurrentlyLiked) }
+        showErrorSnackbar(throwable = throwable)
     }
 
     private suspend fun fetchParticipationStatus() {
@@ -129,15 +149,32 @@ class DiscussionDetailViewModel(
         }
     }
 
-    private fun generateSummary() {}
+    private fun generateSummary() {
+        viewModelScope.launch {
+            discussionRepository
+                .createDiscussionSummary(discussionId = discussionId)
+                .onSuccess { fetchDiscussionDetail() }
+                .onFailure { showErrorSnackbar(it) }
+        }
+    }
 
     private fun showErrorSnackbar(throwable: Throwable) {
         val message = when (throwable) {
             is NetworkError.Unauthorized -> Res.string.error_should_login
+            is NetworkError.ServerCustomError -> errorCodeToStringRes(throwable.errorCode)
             else -> Res.string.error_common
         }
         emitEffect(
             DiscussionDetailEffect.ShowSnackbar(message = message, state = SnackbarState.NEGATIVE),
         )
+    }
+
+    private fun errorCodeToStringRes(errorCode: String): StringResource = when (errorCode) {
+        ERROR_CODE_NOT_MY_DISCUSSION -> Res.string.error_not_my_discussion
+        else -> Res.string.error_common
+    }
+
+    companion object {
+        private const val ERROR_CODE_NOT_MY_DISCUSSION = "5031"
     }
 }

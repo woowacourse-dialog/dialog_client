@@ -9,4 +9,6 @@
 
     <string name="error_common">오류가 발생했습니다</string>
     <string name="error_should_login">먼저 로그인을 해주세요</string>
+    <string name="error_not_my_discussion">토론 생성자만 가능합니다</string>
+    <string name="error_fetch_discussion_detail">토론 상세 정보를 가져오는데 실패했습니다</string>
 </resources>
