@@ -18,7 +18,7 @@ import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 
 @Composable
-fun IconTextRow(
+internal fun IconTextRow(
     iconImage: ImageVector,
     text: String,
     modifier: Modifier = Modifier,

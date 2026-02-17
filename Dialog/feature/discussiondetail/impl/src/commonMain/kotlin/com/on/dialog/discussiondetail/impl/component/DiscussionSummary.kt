@@ -21,6 +21,7 @@ import com.on.dialog.designsystem.theme.DialogTheme
 @Composable
 internal fun DiscussionSummary(
     summary: String?,
+    onSummaryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     DialogCard(modifier.fillMaxWidth()) {
@@ -44,7 +45,7 @@ internal fun DiscussionSummary(
                         text = "요약은 1회만 생성할 수 있어요.",
                         style = DialogTheme.typography.bodyMedium
                     )
-                    DialogButton(text = "AI 요약 생성하기", onClick = {})
+                    DialogButton(text = "AI 요약 생성하기", onClick = onSummaryClick)
                 }
             } else {
                 Markdown(
@@ -62,7 +63,11 @@ internal fun DiscussionSummary(
 @Composable
 private fun DiscussionSummaryEmptyPreview(modifier: Modifier = Modifier) {
     DialogTheme {
-        DiscussionSummary(summary = null, modifier = modifier)
+        DiscussionSummary(
+            summary = null,
+            onSummaryClick = {},
+            modifier = modifier
+        )
     }
 }
 
@@ -82,7 +87,8 @@ private fun DiscussionSummaryPreview(modifier: Modifier = Modifier) {
     | 참여자 | 주요 주장 | 근거 요약 |
     | --- | --- | --- |
     | 크림 | Koin은 Service Locator이다 | Koin |
-        """.trimIndent()
+        """.trimIndent(),
+            onSummaryClick = {},
         )
     }
 }

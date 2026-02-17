@@ -12,7 +12,15 @@ import com.on.dialog.ui.viewmodel.UiState
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
-sealed interface DiscussionDetailIntent : UiIntent
+sealed interface DiscussionDetailIntent : UiIntent {
+    data class ToggleBookmark(val discussionId: Long) : DiscussionDetailIntent
+
+    data class ToggleLike(val discussionId: Long) : DiscussionDetailIntent
+
+    data class Participate(val discussionId: Long) : DiscussionDetailIntent
+
+    data class GenerateSummary(val discussionId: Long) : DiscussionDetailIntent
+}
 
 @Immutable
 data class DiscussionDetailState(
@@ -25,10 +33,15 @@ sealed interface DiscussionDetailEffect : UiEffect
 class DiscussionDetailViewModel(
     private val discussionRepository: DiscussionRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
-        initialState = DiscussionDetailState(),
-    ) {
+    initialState = DiscussionDetailState(),
+) {
     override fun onIntent(intent: DiscussionDetailIntent) {
-        TODO("Not yet implemented")
+        when (intent) {
+            is DiscussionDetailIntent.ToggleBookmark -> updateBookmark(intent.discussionId)
+            is DiscussionDetailIntent.ToggleLike -> updateLike(intent.discussionId)
+            is DiscussionDetailIntent.Participate -> participate(intent.discussionId)
+            is DiscussionDetailIntent.GenerateSummary -> generateSummary(intent.discussionId)
+        }
     }
 
     fun fetchDiscussion(id: Long) {
@@ -41,4 +54,12 @@ class DiscussionDetailViewModel(
                     }.onFailure { Napier.d("토론 상세 화면을 불러오는 데 실패했습니다.") }
             }.invokeOnCompletion { updateState { copy(isLoading = true) } }
     }
+
+    private fun updateBookmark(id: Long) {}
+
+    private fun updateLike(id: Long) {}
+
+    private fun participate(id: Long) {}
+
+    private fun generateSummary(id: Long) {}
 }

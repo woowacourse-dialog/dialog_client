@@ -19,6 +19,7 @@ import com.on.dialog.ui.component.ChipCategory
 import com.on.dialog.ui.mapper.toChipCategory
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.LocalDateTime
 import kotlin.time.ExperimentalTime
 
@@ -39,7 +40,7 @@ sealed interface DiscussionDetailUiModel {
         val dateTimePeriod: String,
         val participantCapacity: String,
         val place: String,
-        val participants: List<ParticipantUiModel>,
+        val participants: ImmutableList<ParticipantUiModel>,
     ) : DiscussionDetailUiModel {
         @Composable
         override fun toChipCategories(): ImmutableList<ChipCategory> =
@@ -48,6 +49,7 @@ sealed interface DiscussionDetailUiModel {
                 detailContent.category.toDomain().toChipCategory(),
             )
 
+        @Immutable
         data class ParticipantUiModel(
             val id: Long,
             val name: String,
@@ -67,7 +69,7 @@ sealed interface DiscussionDetailUiModel {
                 dateTimePeriod = periodToKoreanString(dateTimePeriod.startAt, dateTimePeriod.endAt),
                 participantCapacity = "${participantCapacity.current}/${participantCapacity.max}",
                 place = place,
-                participants = participants.map { it.toUiModel() },
+                participants = participants.map { it.toUiModel() }.toImmutableList(),
                 status = status(now).toUiModel(),
             )
         }
