@@ -40,16 +40,21 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun DiscussionDetailHeader(
     discussion: DiscussionDetailUiModel,
+    isBookmarked: Boolean,
+    isLiked: Boolean,
+    likeCount: Int,
     onLikeClick: () -> Unit,
     onBookmarkClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val detailContent: DetailContentUiModel = discussion.detailContent
 
     Column {
         DiscussionActionBar(
             chips = discussion.toChipCategories(),
-            likeCount = detailContent.likeCount,
+            likeCount = likeCount,
+            isBookmarked = isBookmarked,
+            isLiked = isLiked,
             onLikeClick = onLikeClick,
             onBookmarkClick = onBookmarkClick,
             modifier = modifier,
@@ -78,6 +83,8 @@ internal fun DiscussionDetailHeader(
 private fun DiscussionActionBar(
     chips: ImmutableList<ChipCategory>,
     likeCount: Int,
+    isBookmarked: Boolean,
+    isLiked: Boolean,
     onLikeClick: () -> Unit,
     onBookmarkClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -93,14 +100,14 @@ private fun DiscussionActionBar(
             modifier = Modifier.weight(1f),
         )
         InteractionIndicator(
-            icon = DialogIcons.FavoriteBorder,
+            icon = if (isLiked) DialogIcons.Favorite else DialogIcons.FavoriteBorder,
             contentDescription = "좋아요",
             count = likeCount,
-            modifier = Modifier.noRippleClickable { onLikeClick() }
+            modifier = Modifier.noRippleClickable { onLikeClick() },
         )
         DialogIconButton(onClick = onBookmarkClick) {
             Icon(
-                imageVector = DialogIcons.Bookmark,
+                imageVector = if (isBookmarked) DialogIcons.Bookmark else DialogIcons.BookmarkBorder,
                 contentDescription = "북마크",
             )
         }
@@ -154,7 +161,7 @@ private fun DiscussionInfoSection(
                 IconTextRow(iconImage = DialogIcons.Place, text = discussion.place)
                 IconTextRow(
                     iconImage = DialogIcons.Calendar,
-                    text = discussion.dateTimePeriod
+                    text = discussion.dateTimePeriod,
                 )
                 ParticipantList(
                     capacity = discussion.participantCapacity,
@@ -220,8 +227,11 @@ private fun DiscussionDetailHeaderPreview() {
                     ),
                     dateTimePeriod = "2023년 3월 1일 13시 ~ 15시",
                 ),
+                isBookmarked = false,
+                isLiked = true,
                 onLikeClick = {},
                 onBookmarkClick = {},
+                likeCount = 100,
             )
         }
     }

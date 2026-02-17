@@ -15,7 +15,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,31 +45,28 @@ import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.markdown.MarkdownEditor
 import kotlinx.collections.immutable.persistentListOf
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun DiscussionDetailScreen(
     discussionId: Long,
     goBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: DiscussionDetailViewModel = koinViewModel(),
+    viewModel: DiscussionDetailViewModel = koinViewModel { parametersOf(discussionId) },
 ) {
     var commentContent by rememberSaveable { mutableStateOf("") }
     var showMarkdownEditor by rememberSaveable { mutableStateOf(false) }
 
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchDiscussion(id = discussionId)
-    }
-
     DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
         onCommentInputClick = { showMarkdownEditor = true },
-        onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark(discussionId)) },
-        onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike(discussionId)) },
-        onParticipateClick = { viewModel.onIntent(DiscussionDetailIntent.Participate(discussionId)) },
-        onSummaryClick = { viewModel.onIntent(DiscussionDetailIntent.GenerateSummary(discussionId)) },
+        onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
+        onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
+        onParticipateClick = { viewModel.onIntent(DiscussionDetailIntent.Participate) },
+        onSummaryClick = { viewModel.onIntent(DiscussionDetailIntent.GenerateSummary) },
         content = commentContent,
         modifier = modifier,
     )
@@ -102,7 +98,7 @@ private fun DiscussionDetailScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = DialogTheme.colorScheme.background)
+            .background(color = DialogTheme.colorScheme.background),
     ) {
         DialogTopAppBar(
             title = "",
@@ -145,18 +141,21 @@ private fun DiscussionDetailContent(
     val discussion = state.discussion ?: return
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
         modifier = modifier.padding(PaddingValues(DialogTheme.spacing.large)),
     ) {
         DiscussionDetailHeader(
             discussion = discussion,
+            isBookmarked = state.isBookmarked,
+            isLiked = state.isLiked,
+            likeCount = state.likeCount,
             onLikeClick = onLikeClick,
-            onBookmarkClick = onBookmarkClick
+            onBookmarkClick = onBookmarkClick,
         )
         DiscussionDetailBody(
             discussion = discussion,
             onSummaryClick = onSummaryClick,
-            onParticipateClick = onParticipateClick
+            onParticipateClick = onParticipateClick,
         )
     }
 }

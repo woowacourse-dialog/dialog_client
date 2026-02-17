@@ -15,6 +15,7 @@ import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.component.DialogCard
+import com.on.dialog.designsystem.component.DialogCardTone
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 
@@ -22,9 +23,12 @@ import com.on.dialog.designsystem.theme.DialogTheme
 internal fun DiscussionSummary(
     summary: String?,
     onSummaryClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    DialogCard(modifier.fillMaxWidth()) {
+    DialogCard(
+        tone = DialogCardTone.SurfaceContainerLow,
+        modifier = modifier.fillMaxWidth(),
+    ) {
         Column(verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small)) {
             IconTextRow(iconImage = DialogIcons.AutoAwesome, text = "토론 요약")
 
@@ -34,7 +38,7 @@ internal fun DiscussionSummary(
                     verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = DialogTheme.spacing.medium)
+                        .padding(vertical = DialogTheme.spacing.medium),
                 ) {
                     Text(
                         text = "토론이 모두 종료되었을 때 요약을 생성해주세요.",
@@ -43,7 +47,7 @@ internal fun DiscussionSummary(
                     )
                     Text(
                         text = "요약은 1회만 생성할 수 있어요.",
-                        style = DialogTheme.typography.bodyMedium
+                        style = DialogTheme.typography.bodyMedium,
                     )
                     DialogButton(text = "AI 요약 생성하기", onClick = onSummaryClick)
                 }
@@ -66,28 +70,28 @@ private fun DiscussionSummaryEmptyPreview(modifier: Modifier = Modifier) {
         DiscussionSummary(
             summary = null,
             onSummaryClick = {},
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
 
 @Preview
-
 @Composable
 private fun DiscussionSummaryPreview(modifier: Modifier = Modifier) {
     DialogTheme {
         DiscussionSummary(
-            summary = """
-    1. **토론의 핵심 주제**
-    
-    - 이 토론은 Koin의 기능과 역할에 대한 논의
-    
-    2. **참여자별 입장 비교**
-   
-    | 참여자 | 주요 주장 | 근거 요약 |
-    | --- | --- | --- |
-    | 크림 | Koin은 Service Locator이다 | Koin |
-        """.trimIndent(),
+            summary =
+                """
+                1. **토론의 핵심 주제**
+                
+                - 이 토론은 Koin의 기능과 역할에 대한 논의
+                
+                2. **참여자별 입장 비교**
+                
+                | 참여자 | 주요 주장 | 근거 요약 |
+                | --- | --- | --- |
+                | 크림 | Koin은 Service Locator이다 | Koin |
+                """.trimIndent(),
             onSummaryClick = {},
         )
     }

@@ -28,11 +28,11 @@ internal fun DiscussionDetailBody(
     discussion: DiscussionDetailUiModel,
     onSummaryClick: () -> Unit,
     onParticipateClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraLarge),
     ) {
         Markdown(
             content = discussion.detailContent.content,
@@ -53,12 +53,12 @@ internal fun DiscussionDetailBody(
 @Composable
 private fun ParticipateButton(
     onParticipateClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     DialogButton(
         text = "오프라인 토론 참여하기",
         onClick = onParticipateClick,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Icon(imageVector = DialogIcons.Group, contentDescription = null)
     }
