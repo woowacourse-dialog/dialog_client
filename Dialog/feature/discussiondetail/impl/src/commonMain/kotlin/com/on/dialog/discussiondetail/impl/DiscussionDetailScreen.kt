@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,6 +29,7 @@ import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
+import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailBody
@@ -38,12 +40,14 @@ import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.OfflineDiscussionDetailUiModel.ParticipantUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel
 import com.on.dialog.discussiondetail.impl.model.TrackUiModel.Companion.toUiModel
+import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailEffect
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailIntent
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailState
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailViewModel
 import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.markdown.MarkdownEditor
 import kotlinx.collections.immutable.persistentListOf
+import org.jetbrains.compose.resources.getString
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -54,10 +58,23 @@ fun DiscussionDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: DiscussionDetailViewModel = koinViewModel { parametersOf(discussionId) },
 ) {
+    val snackbarDelegate = LocalSnackbarDelegate.current
+
     var commentContent by rememberSaveable { mutableStateOf("") }
     var showMarkdownEditor by rememberSaveable { mutableStateOf(false) }
 
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is DiscussionDetailEffect.ShowSnackbar -> snackbarDelegate.showSnackbar(
+                    state = effect.state,
+                    message = getString(effect.message),
+                )
+            }
+        }
+    }
 
     DiscussionDetailScreen(
         state = uiState,
@@ -156,6 +173,7 @@ private fun DiscussionDetailContent(
             discussion = discussion,
             onSummaryClick = onSummaryClick,
             onParticipateClick = onParticipateClick,
+            isParticipating = state.isParticipating,
         )
     }
 }

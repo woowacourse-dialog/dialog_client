@@ -29,6 +29,14 @@ sealed interface DiscussionDetailUiModel {
     val summary: String?
     val status: DiscussionStatusUiModel
 
+    val discussionType: DiscussionType
+        get() {
+            return when (this) {
+                is OfflineDiscussionDetailUiModel -> DiscussionType.OFFLINE
+                is OnlineDiscussionDetailUiModel -> DiscussionType.ONLINE
+            }
+        }
+
     @Composable
     fun toChipCategories(): ImmutableList<ChipCategory>
 
@@ -43,11 +51,10 @@ sealed interface DiscussionDetailUiModel {
         val participants: ImmutableList<ParticipantUiModel>,
     ) : DiscussionDetailUiModel {
         @Composable
-        override fun toChipCategories(): ImmutableList<ChipCategory> =
-            persistentListOf(
-                DiscussionType.OFFLINE.toChipCategory(),
-                detailContent.category.toDomain().toChipCategory(),
-            )
+        override fun toChipCategories(): ImmutableList<ChipCategory> = persistentListOf(
+            DiscussionType.OFFLINE.toChipCategory(),
+            detailContent.category.toDomain().toChipCategory(),
+        )
 
         @Immutable
         data class ParticipantUiModel(
@@ -83,11 +90,10 @@ sealed interface DiscussionDetailUiModel {
         val endDate: String,
     ) : DiscussionDetailUiModel {
         @Composable
-        override fun toChipCategories(): ImmutableList<ChipCategory> =
-            persistentListOf(
-                DiscussionType.ONLINE.toChipCategory(),
-                detailContent.category.toDomain().toChipCategory(),
-            )
+        override fun toChipCategories(): ImmutableList<ChipCategory> = persistentListOf(
+            DiscussionType.ONLINE.toChipCategory(),
+            detailContent.category.toDomain().toChipCategory(),
+        )
 
         companion object {
             @OptIn(ExperimentalTime::class)

@@ -21,11 +21,13 @@ import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.Offline
 import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel
 import com.on.dialog.discussiondetail.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.model.common.Track
+import com.on.dialog.model.discussion.content.DiscussionType
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun DiscussionDetailBody(
     discussion: DiscussionDetailUiModel,
+    isParticipating: Boolean,
     onSummaryClick: () -> Unit,
     onParticipateClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -44,20 +46,25 @@ internal fun DiscussionDetailBody(
             summary = discussion.summary,
             onSummaryClick = onSummaryClick,
         )
-        if (discussion is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel) {
-            ParticipateButton(onParticipateClick = onParticipateClick)
+        if (discussion.discussionType == DiscussionType.OFFLINE) {
+            ParticipateButton(
+                isParticipating = isParticipating,
+                onParticipateClick = onParticipateClick,
+            )
         }
     }
 }
 
 @Composable
 private fun ParticipateButton(
+    isParticipating: Boolean,
     onParticipateClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DialogButton(
-        text = "오프라인 토론 참여하기",
+        text = if (isParticipating) "참여 중인 토론이에요" else "오프라인 토론 참여하기",
         onClick = onParticipateClick,
+        enabled = !isParticipating,
         modifier = modifier.fillMaxWidth(),
     ) {
         Icon(imageVector = DialogIcons.Group, contentDescription = null)
@@ -94,6 +101,7 @@ private fun DiscussionDetailBodyPreview() {
                 ),
                 onSummaryClick = {},
                 onParticipateClick = {},
+                isParticipating = false,
             )
         }
     }

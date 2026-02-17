@@ -6,4 +6,7 @@
     <string name="discussion_status_recruit_complete">모집 완료</string>
     <string name="discussion_status_in_discussion">진행 중</string>
     <string name="discussion_status_discussion_complete">종료</string>
+
+    <string name="error_common">오류가 발생했습니다</string>
+    <string name="error_should_login">먼저 로그인을 해주세요</string>
 </resources>
