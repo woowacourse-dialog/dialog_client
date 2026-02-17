@@ -12,6 +12,7 @@ import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.model.discussion.detail.DiscussionDetail
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.error_already_started
 import dialog.feature.discussiondetail.impl.generated.resources.error_common
 import dialog.feature.discussiondetail.impl.generated.resources.error_fetch_discussion_detail
 import dialog.feature.discussiondetail.impl.generated.resources.error_not_my_discussion
@@ -93,8 +94,13 @@ class DiscussionDetailViewModel(
                 scrapRepository.deleteScrap(discussionId = discussionId)
             } else {
                 scrapRepository.postScrap(discussionId = discussionId)
-            }.onFailure { updateState { copy(isBookmarked = isCurrentlyBookmarked) } }
+            }.onFailure { handleUpdateBookmarkFailure(isCurrentlyBookmarked, it) }
         }
+    }
+
+    private fun handleUpdateBookmarkFailure(isCurrentlyBookmarked: Boolean, throwable: Throwable) {
+        updateState { copy(isBookmarked = isCurrentlyBookmarked) }
+        showErrorSnackbar(throwable = throwable)
     }
 
     private suspend fun fetchLikeStatus() {
@@ -170,11 +176,13 @@ class DiscussionDetailViewModel(
     }
 
     private fun errorCodeToStringRes(errorCode: String): StringResource = when (errorCode) {
+        ERROR_CODE_ALREADY_STARTED -> Res.string.error_already_started
         ERROR_CODE_NOT_MY_DISCUSSION -> Res.string.error_not_my_discussion
         else -> Res.string.error_common
     }
 
     companion object {
+        private const val ERROR_CODE_ALREADY_STARTED = "5026"
         private const val ERROR_CODE_NOT_MY_DISCUSSION = "5031"
     }
 }
