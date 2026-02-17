@@ -38,7 +38,7 @@ internal fun DiscussionSummary(
         Column(verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small)) {
             IconTextRow(
                 iconImage = DialogIcons.AutoAwesome,
-                text = stringResource(Res.string.summary_discussion)
+                text = stringResource(Res.string.summary_discussion),
             )
 
             if (summary == null) {
@@ -60,7 +60,7 @@ internal fun DiscussionSummary(
                     )
                     DialogButton(
                         text = stringResource(Res.string.summary_with_ai),
-                        onClick = onSummaryClick
+                        onClick = onSummaryClick,
                     )
                 }
             } else {

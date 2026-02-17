@@ -27,8 +27,8 @@ class DiscussionDetailViewModel(
     private val scrapRepository: ScrapRepository,
     private val participantRepository: ParticipantRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
-    initialState = DiscussionDetailState(),
-) {
+        initialState = DiscussionDetailState(),
+    ) {
     init {
         fetchDiscussion()
     }
@@ -75,7 +75,7 @@ class DiscussionDetailViewModel(
             DiscussionDetailEffect.ShowSnackbar(
                 message = Res.string.error_fetch_discussion_detail,
                 state = SnackbarState.NEGATIVE,
-            )
+            ),
         )
     }
 
@@ -118,8 +118,7 @@ class DiscussionDetailViewModel(
                 likeRepository.deleteLike(discussionId = discussionId)
             } else {
                 likeRepository.postLike(discussionId = discussionId)
-            }
-                .onSuccess { handleUpdateLikeSuccess(isCurrentlyLiked) }
+            }.onSuccess { handleUpdateLikeSuccess(isCurrentlyLiked) }
                 .onFailure { handleUpdateLikeFailure(isCurrentlyLiked, it) }
         }
     }
