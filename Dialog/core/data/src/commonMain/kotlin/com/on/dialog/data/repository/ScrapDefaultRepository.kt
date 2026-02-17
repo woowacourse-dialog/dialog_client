@@ -16,5 +16,5 @@ internal class ScrapDefaultRepository(
     override suspend fun getScrapStatus(discussionId: Long): Result<ScrapStatus> =
         scrapDatasource
             .getScrapStatus(id = discussionId)
-            .mapCatching { it.toDomain() }
+            .map { it.toDomain() }
 }
