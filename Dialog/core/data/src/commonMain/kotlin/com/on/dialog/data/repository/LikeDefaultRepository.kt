@@ -16,5 +16,5 @@ internal class LikeDefaultRepository(
     override suspend fun getLikeStatus(discussionId: Long): Result<LikeStatus> =
         likeDatasource
             .getLikeStatus(id = discussionId)
-            .mapCatching { it.toDomain() }
+            .map { it.toDomain() }
 }
