@@ -33,6 +33,7 @@ import com.on.dialog.designsystem.component.LoadingIndicator
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.designsystem.util.drawFadingEdges
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailBody
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailHeader
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
@@ -113,6 +114,8 @@ private fun DiscussionDetailScreen(
     content: String,
     modifier: Modifier = Modifier,
 ) {
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -132,7 +135,8 @@ private fun DiscussionDetailScreen(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .verticalScroll(rememberScrollState()),
+                    .drawFadingEdges(scrollState)
+                    .verticalScroll(scrollState),
             ) {
                 DiscussionDetailContent(
                     state = state,
