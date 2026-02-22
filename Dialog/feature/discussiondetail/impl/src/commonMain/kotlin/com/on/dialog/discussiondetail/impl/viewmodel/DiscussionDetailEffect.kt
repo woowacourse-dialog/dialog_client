@@ -9,4 +9,6 @@ sealed interface DiscussionDetailEffect : UiEffect {
         val message: StringResource,
         val state: SnackbarState,
     ) : DiscussionDetailEffect
+
+    data object NavigateHome : DiscussionDetailEffect
 }

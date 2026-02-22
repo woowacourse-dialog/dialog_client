@@ -29,8 +29,8 @@ class DiscussionDetailViewModel(
     private val scrapRepository: ScrapRepository,
     private val participantRepository: ParticipantRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
-        initialState = DiscussionDetailState(),
-    ) {
+    initialState = DiscussionDetailState(),
+) {
     init {
         fetchDiscussion()
     }
@@ -81,6 +81,7 @@ class DiscussionDetailViewModel(
                 state = SnackbarState.NEGATIVE,
             ),
         )
+        emitEffect(DiscussionDetailEffect.NavigateHome)
     }
 
     private suspend fun fetchBookmarkStatus() {

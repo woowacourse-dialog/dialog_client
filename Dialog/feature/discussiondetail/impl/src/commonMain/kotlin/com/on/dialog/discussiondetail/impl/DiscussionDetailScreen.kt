@@ -74,6 +74,8 @@ fun DiscussionDetailScreen(
                     state = effect.state,
                     message = getString(effect.message),
                 )
+
+                DiscussionDetailEffect.NavigateHome -> goBack()
             }
         }
     }
