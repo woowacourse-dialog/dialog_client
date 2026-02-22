@@ -17,6 +17,8 @@ import dialog.feature.discussiondetail.impl.generated.resources.error_common
 import dialog.feature.discussiondetail.impl.generated.resources.error_fetch_discussion_detail
 import dialog.feature.discussiondetail.impl.generated.resources.error_not_my_discussion
 import dialog.feature.discussiondetail.impl.generated.resources.error_should_login
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
@@ -45,14 +47,16 @@ class DiscussionDetailViewModel(
     private fun fetchDiscussion() {
         viewModelScope
             .launch {
-                launch { fetchBookmarkStatus() }
-                launch { fetchLikeStatus() }
-                launch {
-                    fetchDiscussionDetail()
-                    if (currentState.discussion?.discussionType == DiscussionType.OFFLINE) {
-                        fetchParticipationStatus()
+                awaitAll(
+                    async { fetchBookmarkStatus() },
+                    async { fetchLikeStatus() },
+                    async {
+                        fetchDiscussionDetail()
+                        if (currentState.discussion?.discussionType == DiscussionType.OFFLINE) {
+                            fetchParticipationStatus()
+                        }
                     }
-                }
+                )
             }.invokeOnCompletion { updateState { copy(isLoading = false) } }
     }
 
