@@ -1,7 +1,7 @@
 package com.on.dialog.discussiondetail.impl.model
 
 import androidx.compose.runtime.Immutable
-import com.on.dialog.discussiondetail.impl.extensions.toKoreanString
+import com.on.dialog.core.common.extension.formatToString
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel.AuthorUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.model.discussion.content.Author
@@ -40,9 +40,9 @@ data class DetailContentUiModel(
             author = author.toUiModel(),
             category = category.toUiModel(),
             content = content,
-            createdAt = createdAt.date.toKoreanString(),
+            createdAt = createdAt.date.formatToString("yyyy년 M월 d일"),
             likeCount = likeCount,
-            modifiedAt = modifiedAt.date.toKoreanString(),
+            modifiedAt = modifiedAt.date.formatToString("yyyy년 M월 d일"),
         )
     }
 }

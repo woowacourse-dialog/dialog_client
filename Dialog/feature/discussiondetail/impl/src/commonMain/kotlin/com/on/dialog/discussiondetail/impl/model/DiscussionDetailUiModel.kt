@@ -2,9 +2,9 @@ package com.on.dialog.discussiondetail.impl.model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import com.on.dialog.core.common.extension.formatToString
 import com.on.dialog.core.common.extension.now
 import com.on.dialog.discussiondetail.impl.extensions.periodToKoreanString
-import com.on.dialog.discussiondetail.impl.extensions.toKoreanString
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.OfflineDiscussionDetailUiModel.Companion.toOfflineUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.OfflineDiscussionDetailUiModel.ParticipantUiModel.Companion.toUiModel
@@ -102,7 +102,7 @@ sealed interface DiscussionDetailUiModel {
             ): OnlineDiscussionDetailUiModel = OnlineDiscussionDetailUiModel(
                 detailContent = detailContent.toUiModel(),
                 summary = summary,
-                endDate = endDate.endDate.toKoreanString(),
+                endDate = endDate.endDate.formatToString("yyyy년 M월 d일"),
                 status = status(now).toUiModel(),
             )
         }

@@ -1,16 +1,7 @@
 package com.on.dialog.discussiondetail.impl.extensions
 
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.number
-
-/**
- * [LocalDate]를 한국어 형식의 문자열로 변환합니다.
- *
- * @return 예: "2026년 1월 30일"
- */
-fun LocalDate.toKoreanString(): String =
-    "${year}년 ${month.number}월 ${day}일"
 
 /**
  * [LocalDateTime]을 한국어 형식의 문자열로 변환합니다.
