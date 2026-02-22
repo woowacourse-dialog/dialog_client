@@ -36,21 +36,29 @@ internal suspend inline fun <T> safeApiCall(
 private suspend fun handleClientRequestException(error: ClientRequestException): NetworkError {
     // 에러 응답 본문을 파싱하여 errorCode 확인
     val errorResponse = runCatching { error.response.body<ErrorResponse>() }.getOrNull()
+    val errorCode: String = errorResponse?.errorCode ?: return NetworkError.Unknown(error)
 
-    return if (errorResponse?.errorCode == "1005") {
-        // errorCode가 1005인 경우 (로그인 필요) Unauthorized 에러로 처리
-        NetworkError.Unauthorized(
+    val dialogError: DialogError =
+        DialogError.fromCode(errorCode) ?: return NetworkError.Unknown(error)
+
+    return when (dialogError.httpStatus) {
+        HttpStatus.BAD_GATEWAY -> NetworkError.ServerError(error)
+        HttpStatus.UNAUTHORIZED -> NetworkError.Unauthorized(
             cause = error,
-            errorCode = errorResponse.errorCode,
-            errorMessage = errorResponse.message,
+            errorCode = dialogError.code,
+            errorMessage = dialogError.message,
         )
-    } else if (errorResponse?.errorCode != null) {
-        // 각 API별 Custom 에러 코드 처리
-        NetworkError.ServerCustomError(
+
+        HttpStatus.NOT_FOUND -> NetworkError.NotFound(
             cause = error,
-            errorCode = errorResponse.errorCode,
+            errorCode = dialogError.code,
+            errorMessage = dialogError.message,
         )
-    } else {
-        NetworkError.BadRequest(error)
+
+        HttpStatus.BAD_REQUEST -> NetworkError.BadRequest(
+            cause = error,
+            errorCode = dialogError.code,
+            errorMessage = dialogError.message,
+        )
     }
 }

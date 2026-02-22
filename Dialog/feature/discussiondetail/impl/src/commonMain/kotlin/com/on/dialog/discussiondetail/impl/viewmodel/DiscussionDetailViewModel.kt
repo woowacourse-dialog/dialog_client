@@ -29,8 +29,8 @@ class DiscussionDetailViewModel(
     private val scrapRepository: ScrapRepository,
     private val participantRepository: ParticipantRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
-    initialState = DiscussionDetailState(),
-) {
+        initialState = DiscussionDetailState(),
+    ) {
     init {
         fetchDiscussion()
     }
@@ -55,7 +55,7 @@ class DiscussionDetailViewModel(
                         if (currentState.discussion?.discussionType == DiscussionType.OFFLINE) {
                             fetchParticipationStatus()
                         }
-                    }
+                    },
                 )
             }.invokeOnCompletion { updateState { copy(isLoading = false) } }
     }
@@ -168,7 +168,7 @@ class DiscussionDetailViewModel(
     private fun showErrorSnackbar(throwable: Throwable) {
         val message = when (throwable) {
             is NetworkError.Unauthorized -> Res.string.error_should_login
-            is NetworkError.ServerCustomError -> errorCodeToStringRes(throwable.errorCode)
+            is NetworkError.BadRequest -> errorCodeToStringRes(throwable.errorCode)
             else -> Res.string.error_common
         }
         emitEffect(

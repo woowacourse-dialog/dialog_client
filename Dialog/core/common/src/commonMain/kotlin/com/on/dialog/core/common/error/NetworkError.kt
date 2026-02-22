@@ -5,6 +5,8 @@ sealed class NetworkError(
 ) : Exception(cause) {
     class BadRequest(
         cause: Exception,
+        val errorCode: String,
+        val errorMessage: String,
     ) : NetworkError(cause)
 
     class Unauthorized(
@@ -13,13 +15,14 @@ sealed class NetworkError(
         val errorMessage: String,
     ) : NetworkError(cause)
 
-    class ServerError(
-        cause: Exception,
-    ) : NetworkError(cause)
-
-    class ServerCustomError(
+    class NotFound(
         cause: Exception,
         val errorCode: String,
+        val errorMessage: String,
+    ) : NetworkError(cause)
+
+    class ServerError(
+        cause: Exception,
     ) : NetworkError(cause)
 
     class Network(
