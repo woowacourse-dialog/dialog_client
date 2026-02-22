@@ -33,7 +33,6 @@ import com.on.dialog.ui.component.ChipCategory
 import com.on.dialog.ui.component.DialogChipGroup
 import com.on.dialog.ui.component.InteractionIndicator
 import com.on.dialog.ui.component.ProfileImage
-import com.on.dialog.ui.extensions.noRippleClickable
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.end_date_format
 import kotlinx.collections.immutable.ImmutableList
@@ -106,7 +105,7 @@ private fun DiscussionActionBar(
             icon = if (isLiked) DialogIcons.Favorite else DialogIcons.FavoriteBorder,
             contentDescription = "좋아요",
             count = likeCount,
-            modifier = Modifier.noRippleClickable { onLikeClick() },
+            onClick = onLikeClick,
         )
         DialogIconButton(onClick = onBookmarkClick) {
             Icon(
