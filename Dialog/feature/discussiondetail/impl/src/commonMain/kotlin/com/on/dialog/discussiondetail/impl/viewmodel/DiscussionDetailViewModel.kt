@@ -27,8 +27,8 @@ class DiscussionDetailViewModel(
     private val scrapRepository: ScrapRepository,
     private val participantRepository: ParticipantRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
-        initialState = DiscussionDetailState(),
-    ) {
+    initialState = DiscussionDetailState(),
+) {
     init {
         fetchDiscussion()
     }
@@ -148,10 +148,8 @@ class DiscussionDetailViewModel(
     }
 
     private fun handleParticipateSuccess() {
-        viewModelScope.launch {
-            launch { fetchDiscussionDetail() }
-            launch { fetchParticipationStatus() }
-        }
+        viewModelScope.launch { fetchDiscussionDetail() }
+        viewModelScope.launch { fetchParticipationStatus() }
     }
 
     private fun generateSummary() {
