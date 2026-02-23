@@ -42,7 +42,6 @@ private suspend fun handleClientRequestException(error: ClientRequestException):
         DialogError.fromCode(errorCode) ?: return NetworkError.Unknown(error)
 
     return when (dialogError.httpStatus) {
-        HttpStatus.BAD_GATEWAY -> NetworkError.ServerError(error)
         HttpStatus.UNAUTHORIZED -> NetworkError.Unauthorized(
             cause = error,
             errorCode = dialogError.code,

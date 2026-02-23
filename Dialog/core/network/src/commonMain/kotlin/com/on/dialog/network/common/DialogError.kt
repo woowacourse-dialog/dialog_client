@@ -1,7 +1,6 @@
 package com.on.dialog.network.common
 
 enum class HttpStatus {
-    BAD_GATEWAY,
     UNAUTHORIZED,
     NOT_FOUND,
     BAD_REQUEST,
@@ -13,7 +12,6 @@ enum class DialogError(
     val httpStatus: HttpStatus,
 ) {
     // 1XXX - 인증/보안 관련
-    GITHUB_USER_ID_MISSING("1001", "GitHub에서 사용자 ID를 가져올 수 없습니다.", HttpStatus.BAD_GATEWAY),
     INVALID_SIGNUP("1002", "유효하지 않은 회원가입입니다.", HttpStatus.UNAUTHORIZED),
     LOGIN_REQUIRED("1005", "로그인 후 이용할 수 있습니다.", HttpStatus.UNAUTHORIZED),
 
