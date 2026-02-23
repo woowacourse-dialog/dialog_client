@@ -10,4 +10,6 @@ interface SessionRepository {
     suspend fun saveUserId(userId: Long): Result<Unit>
 
     suspend fun getUserId(): Result<Long?>
+
+    suspend fun clearUserId(): Result<Unit>
 }

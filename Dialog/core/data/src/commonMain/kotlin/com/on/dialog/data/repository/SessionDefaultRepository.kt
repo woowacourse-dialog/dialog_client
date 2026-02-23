@@ -28,7 +28,6 @@ internal class SessionDefaultRepository(
 
     override suspend fun clearSession(): Result<Unit> = runCatching {
         cookieStore.clear()
-        localUserStorage.clearUserId()
     }
 
     override suspend fun hasValidSession(): Result<Boolean> = runCatching {
@@ -47,6 +46,10 @@ internal class SessionDefaultRepository(
 
     override suspend fun getUserId(): Result<Long?> = runCatching {
         localUserStorage.getUserId()
+    }
+
+    override suspend fun clearUserId(): Result<Unit> = runCatching {
+        localUserStorage.clearUserId()
     }
 
     companion object {
