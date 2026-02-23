@@ -31,8 +31,8 @@ class DiscussionDetailViewModel(
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
-    initialState = DiscussionDetailState(),
-) {
+        initialState = DiscussionDetailState(),
+    ) {
     init {
         fetchDiscussion()
     }
@@ -141,7 +141,10 @@ class DiscussionDetailViewModel(
     }
 
     private suspend fun checkIsMyDiscussion() {
-        val authorId = currentState.discussion?.detailContent?.author?.id ?: return
+        val authorId = currentState.discussion
+            ?.detailContent
+            ?.author
+            ?.id ?: return
         sessionRepository
             .getUserId()
             .onSuccess { userId ->

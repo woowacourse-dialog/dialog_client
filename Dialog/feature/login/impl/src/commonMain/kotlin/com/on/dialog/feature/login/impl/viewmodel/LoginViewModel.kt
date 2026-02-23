@@ -44,8 +44,7 @@ class LoginViewModel(
                     .saveUserId(userId = userInfo.id)
                     .onSuccess { handleSaveUserSessionSuccess(isNewUser = isNewUser) }
                     .onFailure { handleSaveUserSessionFailure() }
-            }
-            .onFailure { handleSaveUserSessionFailure() }
+            }.onFailure { handleSaveUserSessionFailure() }
     }
 
     private fun handleSaveUserSessionSuccess(isNewUser: Boolean) {

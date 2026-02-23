@@ -135,8 +135,7 @@ private fun SummaryMarkdownContent(
                         dampingRatio = Spring.DampingRatioNoBouncy,
                         stiffness = Spring.StiffnessMedium,
                     ),
-                )
-                .then(if (!isExpanded) Modifier.heightIn(max = maxCollapsedHeight) else Modifier)
+                ).then(if (!isExpanded) Modifier.heightIn(max = maxCollapsedHeight) else Modifier)
                 .clipToBounds(),
         ) {
             Markdown(

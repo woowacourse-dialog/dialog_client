@@ -18,11 +18,10 @@ class LocalUserStorage(
         }
     }
 
-    suspend fun getUserId(): Long? {
-        return dataStore.data.map { preferences ->
+    suspend fun getUserId(): Long? = dataStore.data
+        .map { preferences ->
             preferences[userIdKey]
         }.first()
-    }
 
     suspend fun clearUserId() {
         dataStore.edit { preferences ->
