@@ -1,6 +1,7 @@
 package com.on.dialog.data.repository
 
 import com.on.dialog.core.data.BuildKonfig
+import com.on.dialog.core.local.datasourceimpl.LocalUserStorage
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.network.datasource.CookieStore
 import com.on.dialog.network.dto.session.CookieNetworkEntity
@@ -8,6 +9,7 @@ import io.ktor.http.Url
 
 internal class SessionDefaultRepository(
     private val cookieStore: CookieStore,
+    private val localUserStorage: LocalUserStorage,
 ) : SessionRepository {
     override suspend fun saveSession(
         jsessionId: String,
@@ -26,6 +28,7 @@ internal class SessionDefaultRepository(
 
     override suspend fun clearSession(): Result<Unit> = runCatching {
         cookieStore.clear()
+        localUserStorage.clearUserId()
     }
 
     override suspend fun hasValidSession(): Result<Boolean> = runCatching {
@@ -36,6 +39,14 @@ internal class SessionDefaultRepository(
             requestPath = url.encodedPath,
         )
         cookies.any { it.name == JSESSIONID }
+    }
+
+    override suspend fun saveUserId(userId: Long): Result<Unit> = runCatching {
+        localUserStorage.saveUserId(userId = userId)
+    }
+
+    override suspend fun getUserId(): Result<Long?> = runCatching {
+        localUserStorage.getUserId()
     }
 
     companion object {

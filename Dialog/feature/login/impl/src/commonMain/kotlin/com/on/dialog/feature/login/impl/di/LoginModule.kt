@@ -7,7 +7,12 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val loginModule = module {
-    viewModel { LoginViewModel(sessionRepository = get()) }
+    viewModel {
+        LoginViewModel(
+            sessionRepository = get(),
+            userRepository = get(),
+        )
+    }
 
     single { LoginNavKeyProvider() } bind NavKeyProvider::class
 }
