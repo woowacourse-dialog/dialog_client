@@ -31,6 +31,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun DiscussionDetailBody(
     discussion: DiscussionDetailUiModel,
+    isMyDiscussion: Boolean,
     isParticipating: Boolean,
     onSummaryClick: () -> Unit,
     onParticipateClick: () -> Unit,
@@ -48,6 +49,7 @@ internal fun DiscussionDetailBody(
         )
         DiscussionSummary(
             summary = discussion.summary,
+            isMyDiscussion = isMyDiscussion,
             onSummaryClick = onSummaryClick,
         )
         if (discussion.discussionType == DiscussionType.OFFLINE) {
@@ -103,9 +105,10 @@ private fun DiscussionDetailBodyPreview() {
                     ),
                     dateTimePeriod = "2023년 3월 1일 13시 ~ 15시",
                 ),
+                isMyDiscussion = true,
+                isParticipating = false,
                 onSummaryClick = {},
                 onParticipateClick = {},
-                isParticipating = false,
             )
         }
     }

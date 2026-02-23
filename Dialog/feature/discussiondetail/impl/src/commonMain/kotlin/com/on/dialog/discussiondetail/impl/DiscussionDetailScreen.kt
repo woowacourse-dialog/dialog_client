@@ -52,6 +52,8 @@ import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailViewModel
 import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.markdown.MarkdownEditor
 import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.action_delete
+import dialog.feature.discussiondetail.impl.generated.resources.action_edit
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -199,9 +201,10 @@ private fun DiscussionDetailContent(
         )
         DiscussionDetailBody(
             discussion = discussion,
+            isMyDiscussion = state.isMyDiscussion,
+            isParticipating = state.isParticipating,
             onSummaryClick = onSummaryClick,
             onParticipateClick = onParticipateClick,
-            isParticipating = state.isParticipating,
         )
     }
 }

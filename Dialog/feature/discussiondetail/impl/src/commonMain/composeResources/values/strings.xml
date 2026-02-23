@@ -18,6 +18,7 @@
     <string name="summary_with_ai">AI 요약 생성하기</string>
     <string name="summary_if_finished">토론이 모두 종료되었을 때 요약을 생성해주세요.</string>
     <string name="summary_only_once">요약은 1회만 생성할 수 있어요.</string>
+    <string name="summary_only_author">작성자만 요약 생성이 가능합니다</string>
 
     <!-- Actions -->
     <string name="action_edit">수정</string>
