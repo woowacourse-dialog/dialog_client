@@ -31,8 +31,8 @@ class DiscussionDetailViewModel(
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
-        initialState = DiscussionDetailState(),
-    ) {
+    initialState = DiscussionDetailState(),
+) {
     init {
         fetchDiscussion()
     }
@@ -168,8 +168,12 @@ class DiscussionDetailViewModel(
     }
 
     private fun handleParticipateSuccess() {
-        viewModelScope.launch { fetchDiscussionDetail() }
-        viewModelScope.launch { fetchParticipationStatus() }
+        viewModelScope.launch {
+            awaitAll(
+                async { fetchDiscussionDetail() },
+                async { fetchParticipationStatus() },
+            )
+        }
     }
 
     private fun generateSummary() {
@@ -192,7 +196,7 @@ class DiscussionDetailViewModel(
         )
     }
 
-    private fun errorCodeToStringRes(errorCode: String): StringResource = when (errorCode) {
+    private fun errorCodeToStringRes(errorCode: String?): StringResource = when (errorCode) {
         ERROR_CODE_ALREADY_STARTED -> Res.string.error_already_started
         ERROR_CODE_NOT_MY_DISCUSSION -> Res.string.error_not_my_discussion
         else -> Res.string.error_common
