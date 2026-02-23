@@ -1,19 +1,31 @@
 package com.on.dialog.discussiondetail.impl.component
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.mikepenz.markdown.compose.Markdown
 import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogButton
+import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogCardTone
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -23,6 +35,8 @@ import dialog.feature.discussiondetail.impl.generated.resources.summary_discussi
 import dialog.feature.discussiondetail.impl.generated.resources.summary_if_finished
 import dialog.feature.discussiondetail.impl.generated.resources.summary_only_author
 import dialog.feature.discussiondetail.impl.generated.resources.summary_only_once
+import dialog.feature.discussiondetail.impl.generated.resources.summary_show_less
+import dialog.feature.discussiondetail.impl.generated.resources.summary_show_more
 import dialog.feature.discussiondetail.impl.generated.resources.summary_with_ai
 import org.jetbrains.compose.resources.stringResource
 
@@ -49,12 +63,7 @@ internal fun DiscussionSummary(
                     onSummaryClick = onSummaryClick,
                 )
             } else {
-                Markdown(
-                    content = summary,
-                    colors = markdownColor(),
-                    typography = markdownTypography(),
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                SummaryMarkdownContent(summary = summary)
             }
         }
     }
@@ -106,6 +115,43 @@ private fun SummaryEmptyContent(
                 style = DialogTheme.typography.bodyMedium,
             )
         }
+    }
+}
+
+@Composable
+private fun SummaryMarkdownContent(
+    summary: String,
+    modifier: Modifier = Modifier,
+) {
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
+    val maxCollapsedHeight = 120.dp
+
+    Column(modifier = modifier.fillMaxWidth()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMedium,
+                    ),
+                )
+                .then(if (!isExpanded) Modifier.heightIn(max = maxCollapsedHeight) else Modifier)
+                .clipToBounds(),
+        ) {
+            Markdown(
+                content = summary,
+                colors = markdownColor(),
+                typography = markdownTypography(),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        DialogButton(
+            text = stringResource(if (isExpanded) Res.string.summary_show_less else Res.string.summary_show_more),
+            onClick = { isExpanded = !isExpanded },
+            style = DialogButtonStyle.Secondary,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
