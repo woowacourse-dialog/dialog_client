@@ -230,9 +230,7 @@ private fun DiscussionDetailActions(
                     showMenu = false
                     onEditClick()
                 },
-                leadingIcon = {
-                    Icon(imageVector = DialogIcons.Edit, contentDescription = null)
-                },
+                leadingIcon = { Icon(imageVector = DialogIcons.Edit, contentDescription = null) },
             )
             DropdownMenuItem(
                 text = { Text(text = stringResource(Res.string.action_delete)) },
@@ -240,9 +238,7 @@ private fun DiscussionDetailActions(
                     showMenu = false
                     onDeleteClick()
                 },
-                leadingIcon = {
-                    Icon(imageVector = DialogIcons.Delete, contentDescription = null)
-                },
+                leadingIcon = { Icon(imageVector = DialogIcons.Delete, contentDescription = null) },
             )
         }
     }
