@@ -141,10 +141,9 @@ class DiscussionDetailViewModel(
     }
 
     private suspend fun checkIsMyDiscussion() {
-        val authorId = currentState.discussion
-            ?.detailContent
-            ?.author
-            ?.id ?: return
+        val discussion = currentState.discussion ?: return
+        val authorId = discussion.detailContent.author.id
+
         sessionRepository
             .getUserId()
             .onSuccess { userId ->
