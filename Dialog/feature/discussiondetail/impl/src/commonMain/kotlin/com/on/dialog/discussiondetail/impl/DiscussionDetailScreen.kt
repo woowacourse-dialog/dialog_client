@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,8 +51,10 @@ import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailState
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailViewModel
 import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.markdown.MarkdownEditor
+import dialog.feature.discussiondetail.impl.generated.resources.Res
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -88,6 +93,8 @@ fun DiscussionDetailScreen(
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
         onParticipateClick = { viewModel.onIntent(DiscussionDetailIntent.Participate) },
         onSummaryClick = { viewModel.onIntent(DiscussionDetailIntent.GenerateSummary) },
+        onEditClick = { /* TODO: 수정 화면으로 이동 */ },
+        onDeleteClick = { /* TODO: 삭제 확인 다이얼로그 표시 */ },
         content = commentContent,
         modifier = modifier,
     )
@@ -113,6 +120,8 @@ private fun DiscussionDetailScreen(
     onLikeClick: () -> Unit,
     onParticipateClick: () -> Unit,
     onSummaryClick: () -> Unit,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     content: String,
     modifier: Modifier = Modifier,
 ) {
@@ -128,6 +137,14 @@ private fun DiscussionDetailScreen(
             navigationIcon = {
                 DialogIconButton(onClick = goBack) {
                     Icon(imageVector = DialogIcons.ArrowBack, contentDescription = null)
+                }
+            },
+            actions = {
+                if (state.isMyDiscussion) {
+                    DiscussionDetailActions(
+                        onEditClick = onEditClick,
+                        onDeleteClick = onDeleteClick,
+                    )
                 }
             },
         )
@@ -186,6 +203,45 @@ private fun DiscussionDetailContent(
             onParticipateClick = onParticipateClick,
             isParticipating = state.isParticipating,
         )
+    }
+}
+
+@Composable
+private fun DiscussionDetailActions(
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+) {
+    var showMenu by rememberSaveable { mutableStateOf(false) }
+
+    Box {
+        DialogIconButton(onClick = { showMenu = true }) {
+            Icon(imageVector = DialogIcons.MoreVert, contentDescription = "더보기")
+        }
+        DropdownMenu(
+            expanded = showMenu,
+            onDismissRequest = { showMenu = false },
+        ) {
+            DropdownMenuItem(
+                text = { Text(text = stringResource(Res.string.action_edit)) },
+                onClick = {
+                    showMenu = false
+                    onEditClick()
+                },
+                leadingIcon = {
+                    Icon(imageVector = DialogIcons.Edit, contentDescription = null)
+                },
+            )
+            DropdownMenuItem(
+                text = { Text(text = stringResource(Res.string.action_delete)) },
+                onClick = {
+                    showMenu = false
+                    onDeleteClick()
+                },
+                leadingIcon = {
+                    Icon(imageVector = DialogIcons.Delete, contentDescription = null)
+                },
+            )
+        }
     }
 }
 
@@ -250,6 +306,7 @@ private fun DiscussionDetailScreenOfflinePreview() {
                         ),
                         dateTimePeriod = "2023년 3월 1일 13시 ~ 15시",
                     ),
+                    isMyDiscussion = true,
                 ),
                 goBack = {},
                 onCommentInputClick = {},
@@ -257,6 +314,8 @@ private fun DiscussionDetailScreenOfflinePreview() {
                 onLikeClick = {},
                 onParticipateClick = {},
                 onSummaryClick = {},
+                onEditClick = {},
+                onDeleteClick = {},
                 content = "",
             )
         }
@@ -285,6 +344,7 @@ private fun DiscussionDetailScreenOnlinePreview() {
                     status = DiscussionStatusUiModel.IN_DISCUSSION,
                     endDate = "2026년 3월 10일",
                 ),
+                isMyDiscussion = false,
             ),
             goBack = {},
             onCommentInputClick = {},
@@ -292,6 +352,8 @@ private fun DiscussionDetailScreenOnlinePreview() {
             onLikeClick = {},
             onParticipateClick = {},
             onSummaryClick = {},
+            onEditClick = {},
+            onDeleteClick = {},
             content = "",
         )
     }

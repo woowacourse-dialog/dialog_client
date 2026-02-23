@@ -8,6 +8,7 @@ import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.domain.repository.LikeRepository
 import com.on.dialog.domain.repository.ParticipantRepository
 import com.on.dialog.domain.repository.ScrapRepository
+import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.model.discussion.detail.DiscussionDetail
 import com.on.dialog.ui.viewmodel.BaseViewModel
@@ -28,6 +29,7 @@ class DiscussionDetailViewModel(
     private val likeRepository: LikeRepository,
     private val scrapRepository: ScrapRepository,
     private val participantRepository: ParticipantRepository,
+    private val sessionRepository: SessionRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
     initialState = DiscussionDetailState(),
 ) {
@@ -52,6 +54,7 @@ class DiscussionDetailViewModel(
                     async { fetchLikeStatus() },
                     async {
                         fetchDiscussionDetail()
+                        checkIsMyDiscussion()
                         if (currentState.discussion?.discussionType == DiscussionType.OFFLINE) {
                             fetchParticipationStatus()
                         }
@@ -135,6 +138,15 @@ class DiscussionDetailViewModel(
     private fun handleUpdateLikeFailure(isCurrentlyLiked: Boolean, throwable: Throwable) {
         updateState { copy(isLiked = isCurrentlyLiked) }
         showErrorSnackbar(throwable = throwable)
+    }
+
+    private suspend fun checkIsMyDiscussion() {
+        val authorId = currentState.discussion?.detailContent?.author?.id ?: return
+        sessionRepository
+            .getUserId()
+            .onSuccess { userId ->
+                updateState { copy(isMyDiscussion = userId == authorId) }
+            }
     }
 
     private suspend fun fetchParticipationStatus() {

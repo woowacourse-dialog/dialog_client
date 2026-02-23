@@ -12,4 +12,5 @@ data class DiscussionDetailState(
     val isLiked: Boolean = false,
     val likeCount: Int = 0,
     val isParticipating: Boolean = false,
+    val isMyDiscussion: Boolean = false,
 ) : UiState

@@ -231,9 +231,9 @@ private fun DiscussionDetailHeaderPreview() {
                 ),
                 isBookmarked = false,
                 isLiked = true,
+                likeCount = 100,
                 onLikeClick = {},
                 onBookmarkClick = {},
-                likeCount = 100,
             )
         }
     }

@@ -19,6 +19,10 @@
     <string name="summary_if_finished">토론이 모두 종료되었을 때 요약을 생성해주세요.</string>
     <string name="summary_only_once">요약은 1회만 생성할 수 있어요.</string>
 
+    <!-- Actions -->
+    <string name="action_edit">수정</string>
+    <string name="action_delete">삭제</string>
+
     <!-- Error Message -->
     <string name="error_common">오류가 발생했습니다</string>
     <string name="error_should_login">먼저 로그인을 해주세요</string>
