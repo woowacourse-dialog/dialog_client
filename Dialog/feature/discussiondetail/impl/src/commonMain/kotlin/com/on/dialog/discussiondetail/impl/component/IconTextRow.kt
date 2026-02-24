@@ -12,6 +12,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -21,6 +22,7 @@ import com.on.dialog.designsystem.theme.DialogTheme
 internal fun IconTextRow(
     iconImage: ImageVector,
     text: String,
+    textStyle: TextStyle,
     modifier: Modifier = Modifier,
 ) {
     CompositionLocalProvider(
@@ -38,7 +40,7 @@ internal fun IconTextRow(
             Spacer(Modifier.width(DialogTheme.spacing.small))
             Text(
                 text = text,
-                style = DialogTheme.typography.bodyMedium,
+                style = textStyle,
             )
         }
     }
@@ -46,8 +48,12 @@ internal fun IconTextRow(
 
 @Preview(showBackground = true)
 @Composable
-private fun IconTextRowPreview(modifier: Modifier = Modifier) {
+private fun IconTextRowPreview() {
     DialogTheme {
-        IconTextRow(iconImage = DialogIcons.Group, text = "1/4")
+        IconTextRow(
+            iconImage = DialogIcons.Group,
+            text = "1/4",
+            textStyle = DialogTheme.typography.titleMedium,
+        )
     }
 }

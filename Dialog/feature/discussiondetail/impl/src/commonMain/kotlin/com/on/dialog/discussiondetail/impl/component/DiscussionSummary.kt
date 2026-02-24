@@ -4,22 +4,25 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.mikepenz.markdown.compose.Markdown
 import com.mikepenz.markdown.m3.markdownColor
@@ -29,6 +32,7 @@ import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogCardTone
 import com.on.dialog.designsystem.icon.DialogIcons
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.summary_discussion
@@ -55,6 +59,7 @@ internal fun DiscussionSummary(
             IconTextRow(
                 iconImage = DialogIcons.AutoAwesome,
                 text = stringResource(Res.string.summary_discussion),
+                textStyle = DialogTheme.typography.titleMedium,
             )
 
             if (summary == null) {
@@ -75,14 +80,14 @@ private fun SummaryEmptyContent(
     onSummaryClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (isMyDiscussion) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(vertical = DialogTheme.spacing.medium),
-        ) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = DialogTheme.spacing.medium),
+    ) {
+        if (isMyDiscussion) {
             Text(
                 text = stringResource(Res.string.summary_if_finished),
                 style = DialogTheme.typography.bodyLarge,
@@ -96,15 +101,7 @@ private fun SummaryEmptyContent(
                 text = stringResource(Res.string.summary_with_ai),
                 onClick = onSummaryClick,
             )
-        }
-    } else {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(vertical = DialogTheme.spacing.medium),
-        ) {
+        } else {
             Text(
                 text = stringResource(Res.string.summary_if_finished),
                 style = DialogTheme.typography.bodyLarge,
@@ -125,9 +122,14 @@ private fun SummaryMarkdownContent(
 ) {
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     val maxCollapsedHeight = 120.dp
+    val collapsedPx = with(LocalDensity.current) { maxCollapsedHeight.roundToPx() }
+
+    // 전체 콘텐츠 높이(px)
+    var fullContentHeightPx by remember { mutableIntStateOf(0) }
+    val shouldShowToggle = fullContentHeightPx > collapsedPx
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Box(
+        SubcomposeLayout(
             modifier = Modifier
                 .fillMaxWidth()
                 .animateContentSize(
@@ -135,70 +137,159 @@ private fun SummaryMarkdownContent(
                         dampingRatio = Spring.DampingRatioNoBouncy,
                         stiffness = Spring.StiffnessMedium,
                     ),
-                ).then(if (!isExpanded) Modifier.heightIn(max = maxCollapsedHeight) else Modifier)
-                .clipToBounds(),
-        ) {
-            Markdown(
-                content = summary,
-                colors = markdownColor(),
-                typography = markdownTypography(),
+                ).clipToBounds(),
+        ) { constraints ->
+            // 1) 전체 높이 측정(세로 무제한)
+            val looseConstraints = constraints.copy(maxHeight = Constraints.Infinity)
+            val fullPlaceable = subcompose("measure") {
+                Markdown(
+                    content = summary,
+                    colors = markdownColor(),
+                    typography = markdownTypography(),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }.first().measure(looseConstraints)
+
+            if (fullContentHeightPx != fullPlaceable.height) {
+                fullContentHeightPx = fullPlaceable.height
+            }
+
+            // 2) 실제 표시용 측정(접힘이면 maxHeight 제한)
+            val displayConstraints =
+                if (!isExpanded && fullPlaceable.height > collapsedPx) {
+                    constraints.copy(maxHeight = collapsedPx)
+                } else {
+                    constraints
+                }
+
+            val displayPlaceable = subcompose("content") {
+                Markdown(
+                    content = summary,
+                    colors = markdownColor(),
+                    typography = markdownTypography(),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }.first().measure(displayConstraints)
+
+            layout(width = displayPlaceable.width, height = displayPlaceable.height) {
+                displayPlaceable.place(0, 0)
+            }
+        }
+
+        if (shouldShowToggle) {
+            DialogButton(
+                text = stringResource(
+                    if (isExpanded) Res.string.summary_show_less else Res.string.summary_show_more,
+                ),
+                onClick = { isExpanded = !isExpanded },
+                style = DialogButtonStyle.Secondary,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
-        DialogButton(
-            text = stringResource(if (isExpanded) Res.string.summary_show_less else Res.string.summary_show_more),
-            onClick = { isExpanded = !isExpanded },
-            style = DialogButtonStyle.Secondary,
-            modifier = Modifier.fillMaxWidth(),
-        )
     }
 }
+//
+// @Composable
+// private fun SummaryMarkdownContent(
+//    summary: String,
+//    modifier: Modifier = Modifier,
+// ) {
+//    var isExpanded by rememberSaveable { mutableStateOf(false) }
+//    val maxCollapsedHeight = 120.dp
+//
+//    Column(modifier = modifier.fillMaxWidth()) {
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .animateContentSize(
+//                    animationSpec = spring(
+//                        dampingRatio = Spring.DampingRatioNoBouncy,
+//                        stiffness = Spring.StiffnessMedium,
+//                    ),
+//                ).then(if (!isExpanded) Modifier.heightIn(max = maxCollapsedHeight) else Modifier)
+//                .clipToBounds(),
+//        ) {
+//            Markdown(
+//                content = summary,
+//                colors = markdownColor(),
+//                typography = markdownTypography(),
+//                modifier = Modifier.fillMaxWidth(),
+//            )
+//        }
+//        DialogButton(
+//            text = stringResource(if (isExpanded) Res.string.summary_show_less else Res.string.summary_show_more),
+//            onClick = { isExpanded = !isExpanded },
+//            style = DialogButtonStyle.Secondary,
+//            modifier = Modifier.fillMaxWidth(),
+//        )
+//    }
+// }
 
-@Preview
+@ThemePreview
 @Composable
 private fun DiscussionSummaryEmptyMyDiscussionPreview(modifier: Modifier = Modifier) {
     DialogTheme {
-        DiscussionSummary(
-            summary = null,
-            isMyDiscussion = true,
-            onSummaryClick = {},
-            modifier = modifier,
-        )
+        Surface {
+            DiscussionSummary(
+                summary = null,
+                isMyDiscussion = true,
+                onSummaryClick = {},
+                modifier = modifier,
+            )
+        }
     }
 }
 
-@Preview
+@ThemePreview
 @Composable
 private fun DiscussionSummaryEmptyNotMyDiscussionPreview(modifier: Modifier = Modifier) {
     DialogTheme {
-        DiscussionSummary(
-            summary = null,
-            isMyDiscussion = false,
-            onSummaryClick = {},
-            modifier = modifier,
-        )
+        Surface {
+            DiscussionSummary(
+                summary = null,
+                isMyDiscussion = false,
+                onSummaryClick = {},
+                modifier = modifier,
+            )
+        }
     }
 }
 
-@Preview
+@ThemePreview
 @Composable
-private fun DiscussionSummaryPreview(modifier: Modifier = Modifier) {
+private fun DiscussionLongSummaryPreview() {
     DialogTheme {
-        DiscussionSummary(
-            summary =
-                """
-                1. **토론의 핵심 주제**
+        Surface {
+            DiscussionSummary(
+                summary =
+                    """
+                    1. **토론의 핵심 주제**
 
-                - 이 토론은 Koin의 기능과 역할에 대한 논의
+                    - 이 토론은 Koin의 기능과 역할에 대한 논의
 
-                2. **참여자별 입장 비교**
+                    2. **참여자별 입장 비교**
 
-                | 참여자 | 주요 주장 | 근거 요약 |
-                | --- | --- | --- |
-                | 크림 | Koin은 Service Locator이다 | Koin |
-                """.trimIndent(),
-            isMyDiscussion = true,
-            onSummaryClick = {},
-        )
+                    | 참여자 | 주요 주장 | 근거 요약 |
+                    | --- | --- | --- |
+                    | 크림 | Koin은 Service Locator이다 | Koin |
+                    """.trimIndent(),
+                isMyDiscussion = true,
+                onSummaryClick = {},
+            )
+        }
+    }
+}
+
+@ThemePreview
+@Composable
+private fun DiscussionShortSummaryPreview() {
+    DialogTheme {
+        Surface {
+            DiscussionSummary(
+                summary = "이 토론은 Koin의 기능과 역할에 대한 논의",
+                isMyDiscussion = true,
+                onSummaryClick = {},
+            )
+        }
     }
 }

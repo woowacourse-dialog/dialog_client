@@ -2,6 +2,7 @@ package com.on.dialog.discussiondetail.impl.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,15 +10,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.on.dialog.designsystem.component.DialogHorizontalDivider
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
@@ -51,7 +51,7 @@ internal fun DiscussionDetailHeader(
 ) {
     val detailContent: DetailContentUiModel = discussion.detailContent
 
-    Column {
+    Column(modifier = modifier) {
         DiscussionActionBar(
             chips = discussion.toChipCategories(),
             likeCount = likeCount,
@@ -59,25 +59,23 @@ internal fun DiscussionDetailHeader(
             isLiked = isLiked,
             onLikeClick = onLikeClick,
             onBookmarkClick = onBookmarkClick,
-            modifier = modifier,
         )
         Spacer(modifier = Modifier.height(DialogTheme.spacing.extraSmall))
 
-        Text(text = detailContent.title, style = DialogTheme.typography.titleLarge)
+        Text(
+            text = detailContent.title,
+            style = DialogTheme.typography.titleLarge,
+            modifier = modifier.fillMaxWidth().padding(horizontal = DialogTheme.spacing.large),
+        )
         Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
-
+        DialogHorizontalDivider()
         ProfileSection(
             author = detailContent.author,
             createdAt = detailContent.createdAt,
         )
-        Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
-
-        DiscussionInfoSection(
-            discussion = discussion,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Spacer(modifier = Modifier.height(DialogTheme.spacing.extraSmall))
-        HorizontalDivider()
+        DialogHorizontalDivider()
+        DiscussionInfoSection(discussion = discussion)
+        DialogHorizontalDivider()
     }
 }
 
@@ -92,7 +90,9 @@ private fun DiscussionActionBar(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = DialogTheme.spacing.large, end = DialogTheme.spacing.extraSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
@@ -123,27 +123,39 @@ private fun ProfileSection(
     modifier: Modifier = Modifier,
 ) {
     Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = DialogTheme.spacing.small, horizontal = DialogTheme.spacing.large),
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        ProfileImage(
-            imageUrl = author.imageUrl,
-            contentDescription = "프로필 이미지",
-            modifier = Modifier.size(40.dp),
-        )
-        Spacer(Modifier.width(DialogTheme.spacing.medium))
-        Column(
-            verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraSmall),
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
+            ProfileImage(
+                imageUrl = author.imageUrl,
+                contentDescription = "프로필 이미지",
+                modifier = Modifier.size(28.dp),
+            )
+            Spacer(Modifier.width(DialogTheme.spacing.small))
             Text(
                 text = author.nickname,
-                style = DialogTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold,
+                style = DialogTheme.typography.titleMedium,
+            )
+        }
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.End,
+        ) {
+            Text(
+                text = "작성일",
+                style = DialogTheme.typography.titleSmall,
             )
             Text(
-                text = "$createdAt 작성",
+                text = createdAt,
                 style = DialogTheme.typography.bodyMedium,
-                color = DialogTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             )
         }
     }
@@ -155,16 +167,19 @@ private fun DiscussionInfoSection(
     modifier: Modifier = Modifier,
 ) {
     Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = DialogTheme.spacing.small),
         verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
-        modifier = modifier.fillMaxWidth().padding(DialogTheme.spacing.small),
     ) {
         when (discussion) {
             is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel -> {
-                IconTextRow(iconImage = DialogIcons.Place, text = discussion.place)
-                IconTextRow(
-                    iconImage = DialogIcons.Calendar,
-                    text = discussion.dateTimePeriod,
+                InfoSection(
+                    formattedDateTime = discussion.dateTimePeriod,
+                    discussionPlace = discussion.place,
                 )
+                DialogHorizontalDivider()
+
                 ParticipantList(
                     capacity = discussion.participantCapacity,
                     participants = discussion.participants,
@@ -172,9 +187,47 @@ private fun DiscussionInfoSection(
             }
 
             is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel -> {
-                IconTextRow(
+                InfoSection(
+                    formattedDateTime = stringResource(
+                        Res.string.end_date_format,
+                        discussion.endDate,
+                    ),
+                    discussionPlace = null,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun InfoSection(
+    formattedDateTime: String?,
+    discussionPlace: String?,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxWidth().padding(horizontal = DialogTheme.spacing.large)) {
+        IconTextRow(
+            iconImage = DialogIcons.Info,
+            text = "정보",
+            textStyle = DialogTheme.typography.titleSmall,
+        )
+
+        Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
+        ) {
+            formattedDateTime?.let { text ->
+                MetaChip(
+                    text = text,
                     iconImage = DialogIcons.Calendar,
-                    text = stringResource(Res.string.end_date_format, discussion.endDate),
+                )
+            }
+            discussionPlace?.let { place ->
+                MetaChip(
+                    text = place,
+                    iconImage = DialogIcons.Place,
                 )
             }
         }
@@ -187,23 +240,62 @@ private fun ParticipantList(
     participants: ImmutableList<ParticipantUiModel>,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = DialogTheme.spacing.large),
+    ) {
         IconTextRow(
             iconImage = DialogIcons.Group,
-            text = capacity,
+            text = "참여자 ($capacity)",
+            textStyle = DialogTheme.typography.titleSmall,
         )
-        Row {
-            participants.forEach {
-                Text(text = it.name, style = DialogTheme.typography.bodyMedium)
-                Spacer(modifier = Modifier.width(DialogTheme.spacing.small))
-            }
+
+        Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
+        ) {
+            participants.forEach { participant -> MetaChip(text = participant.name) }
         }
     }
 }
 
 @ThemePreview
 @Composable
-private fun DiscussionDetailHeaderPreview() {
+private fun OnlineDiscussionDetailHeaderPreview() {
+    DialogTheme {
+        Surface {
+            DiscussionDetailHeader(
+                discussion = DiscussionDetailUiModel.OnlineDiscussionDetailUiModel(
+                    detailContent = DetailContentUiModel(
+                        id = 0L,
+                        title = "다이얼로그는 무슨 뜻인가요?",
+                        author = AuthorUiModel(0L, "크림", ""),
+                        category = Track.ANDROID.toUiModel(),
+                        content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
+                        createdAt = "2023.03.01",
+                        likeCount = 100,
+                        modifiedAt = "2023.03.01",
+                    ),
+                    summary = "요약된 내용",
+                    status = DiscussionStatusUiModel.IN_DISCUSSION,
+                    endDate = "2026년 3월 28일",
+                ),
+                isBookmarked = false,
+                isLiked = true,
+                likeCount = 100,
+                onLikeClick = {},
+                onBookmarkClick = {},
+            )
+        }
+    }
+}
+
+@ThemePreview
+@Composable
+private fun OfflineDiscussionDetailHeaderPreview() {
     DialogTheme {
         Surface {
             DiscussionDetailHeader(
@@ -220,7 +312,7 @@ private fun DiscussionDetailHeaderPreview() {
                     ),
                     summary = "요약된 내용",
                     status = DiscussionStatusUiModel.IN_DISCUSSION,
-                    participantCapacity = "1/4",
+                    participantCapacity = "3/4",
                     place = "우아한테크코스",
                     participants = persistentListOf(
                         ParticipantUiModel(id = 0L, name = "다이스"),
