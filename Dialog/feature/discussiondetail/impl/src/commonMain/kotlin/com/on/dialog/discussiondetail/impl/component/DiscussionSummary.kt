@@ -188,42 +188,6 @@ private fun SummaryMarkdownContent(
         }
     }
 }
-//
-// @Composable
-// private fun SummaryMarkdownContent(
-//    summary: String,
-//    modifier: Modifier = Modifier,
-// ) {
-//    var isExpanded by rememberSaveable { mutableStateOf(false) }
-//    val maxCollapsedHeight = 120.dp
-//
-//    Column(modifier = modifier.fillMaxWidth()) {
-//        Box(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .animateContentSize(
-//                    animationSpec = spring(
-//                        dampingRatio = Spring.DampingRatioNoBouncy,
-//                        stiffness = Spring.StiffnessMedium,
-//                    ),
-//                ).then(if (!isExpanded) Modifier.heightIn(max = maxCollapsedHeight) else Modifier)
-//                .clipToBounds(),
-//        ) {
-//            Markdown(
-//                content = summary,
-//                colors = markdownColor(),
-//                typography = markdownTypography(),
-//                modifier = Modifier.fillMaxWidth(),
-//            )
-//        }
-//        DialogButton(
-//            text = stringResource(if (isExpanded) Res.string.summary_show_less else Res.string.summary_show_more),
-//            onClick = { isExpanded = !isExpanded },
-//            style = DialogButtonStyle.Secondary,
-//            modifier = Modifier.fillMaxWidth(),
-//        )
-//    }
-// }
 
 @ThemePreview
 @Composable
