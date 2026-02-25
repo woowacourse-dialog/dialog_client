@@ -55,6 +55,7 @@ class DiscussionDetailViewModel(
                     async { fetchLikeStatus() },
                     async {
                         fetchDiscussionDetail()
+                            .onFailure { handleFetchDiscussionDetailFailure() }
                         checkIsMyDiscussion()
                         if (currentState.discussion?.discussionType == DiscussionType.OFFLINE) {
                             fetchParticipationStatus()
@@ -64,20 +65,10 @@ class DiscussionDetailViewModel(
             }.invokeOnCompletion { updateState { copy(isLoading = false) } }
     }
 
-    private suspend fun fetchDiscussionDetail(canShowError: Boolean = true): Boolean {
-        var isSuccess = false
+    private suspend fun fetchDiscussionDetail(): Result<DiscussionDetail> =
         discussionRepository
             .getDiscussionDetail(id = discussionId)
-            .onSuccess {
-                handleFetchDiscussionDetailSuccess(it)
-                isSuccess = true
-            }.onFailure {
-                if (canShowError) {
-                    handleFetchDiscussionDetailFailure()
-                }
-            }
-        return isSuccess
-    }
+            .onSuccess(::handleFetchDiscussionDetailSuccess)
 
     private fun handleFetchDiscussionDetailSuccess(discussionDetail: DiscussionDetail) =
         with(discussionDetail) {
@@ -178,7 +169,10 @@ class DiscussionDetailViewModel(
     private fun handleParticipateSuccess() {
         viewModelScope.launch {
             awaitAll(
-                async { fetchDiscussionDetail() },
+                async {
+                    fetchDiscussionDetail()
+                        .onFailure { handleFetchDiscussionDetailFailure() }
+                },
                 async { fetchParticipationStatus() },
             )
         }
@@ -198,13 +192,12 @@ class DiscussionDetailViewModel(
     }
 
     private suspend fun pollSummaryUntilLoaded() {
-        repeat(SUMMARY_POLL_MAX_RETRY) { attempt ->
-            fetchDiscussionDetail(canShowError = false)
-            if (currentState.discussion?.summary != null) return
-
-            if (attempt < SUMMARY_POLL_MAX_RETRY + 1) {
-                delay(SUMMARY_POLL_INTERVAL_MS)
-            }
+        repeat(SUMMARY_POLL_MAX_RETRY) {
+            delay(SUMMARY_POLL_INTERVAL_MS)
+            fetchDiscussionDetail()
+                .onSuccess { detail ->
+                    if (detail.summary != null) return
+                }
         }
     }
 
