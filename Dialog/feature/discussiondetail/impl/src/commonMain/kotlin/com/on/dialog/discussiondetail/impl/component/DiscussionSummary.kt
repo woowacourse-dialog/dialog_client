@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.mikepenz.markdown.compose.Markdown
@@ -38,6 +39,7 @@ import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.summary_discussion
 import dialog.feature.discussiondetail.impl.generated.resources.summary_generating_base
+import dialog.feature.discussiondetail.impl.generated.resources.summary_generating_notice
 import dialog.feature.discussiondetail.impl.generated.resources.summary_if_finished
 import dialog.feature.discussiondetail.impl.generated.resources.summary_only_author
 import dialog.feature.discussiondetail.impl.generated.resources.summary_only_once
@@ -110,10 +112,19 @@ private fun SummaryEmptyContent(
                 text = stringResource(Res.string.summary_if_finished),
                 style = DialogTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center
             )
             Text(
-                text = stringResource(Res.string.summary_only_once),
+                text = stringResource(
+                    if (isGeneratingSummary) {
+                        Res.string.summary_generating_notice
+                    } else {
+                        Res.string.summary_only_once
+                    },
+                ),
                 style = DialogTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+                modifier = if (isGeneratingSummary) Modifier.fillMaxWidth() else Modifier,
             )
             DialogButton(
                 text = if (isGeneratingSummary) {
@@ -123,6 +134,7 @@ private fun SummaryEmptyContent(
                 },
                 onClick = onSummaryClick,
                 enabled = !isGeneratingSummary,
+                modifier = Modifier.fillMaxWidth()
             )
         } else {
             Text(
