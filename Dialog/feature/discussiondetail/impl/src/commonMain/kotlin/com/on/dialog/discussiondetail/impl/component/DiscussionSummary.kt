@@ -36,6 +36,7 @@ import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.summary_discussion
+import dialog.feature.discussiondetail.impl.generated.resources.summary_generating
 import dialog.feature.discussiondetail.impl.generated.resources.summary_if_finished
 import dialog.feature.discussiondetail.impl.generated.resources.summary_only_author
 import dialog.feature.discussiondetail.impl.generated.resources.summary_only_once
@@ -48,6 +49,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun DiscussionSummary(
     summary: String?,
     isMyDiscussion: Boolean,
+    isGeneratingSummary: Boolean,
     onSummaryClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -65,6 +67,7 @@ internal fun DiscussionSummary(
             if (summary == null) {
                 SummaryEmptyContent(
                     isMyDiscussion = isMyDiscussion,
+                    isGeneratingSummary = isGeneratingSummary,
                     onSummaryClick = onSummaryClick,
                 )
             } else {
@@ -77,6 +80,7 @@ internal fun DiscussionSummary(
 @Composable
 private fun SummaryEmptyContent(
     isMyDiscussion: Boolean,
+    isGeneratingSummary: Boolean,
     onSummaryClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -98,8 +102,9 @@ private fun SummaryEmptyContent(
                 style = DialogTheme.typography.bodyMedium,
             )
             DialogButton(
-                text = stringResource(Res.string.summary_with_ai),
+                text = stringResource(if (isGeneratingSummary) Res.string.summary_generating else Res.string.summary_with_ai),
                 onClick = onSummaryClick,
+                enabled = !isGeneratingSummary,
             )
         } else {
             Text(
@@ -197,6 +202,23 @@ private fun DiscussionSummaryEmptyMyDiscussionPreview(modifier: Modifier = Modif
             DiscussionSummary(
                 summary = null,
                 isMyDiscussion = true,
+                isGeneratingSummary = false,
+                onSummaryClick = {},
+                modifier = modifier,
+            )
+        }
+    }
+}
+
+@ThemePreview
+@Composable
+private fun DiscussionSummaryGeneratingMyDiscussionPreview(modifier: Modifier = Modifier) {
+    DialogTheme {
+        Surface {
+            DiscussionSummary(
+                summary = null,
+                isMyDiscussion = true,
+                isGeneratingSummary = true,
                 onSummaryClick = {},
                 modifier = modifier,
             )
@@ -212,6 +234,7 @@ private fun DiscussionSummaryEmptyNotMyDiscussionPreview(modifier: Modifier = Mo
             DiscussionSummary(
                 summary = null,
                 isMyDiscussion = false,
+                isGeneratingSummary = false,
                 onSummaryClick = {},
                 modifier = modifier,
             )
@@ -238,6 +261,7 @@ private fun DiscussionLongSummaryPreview() {
                     | 크림 | Koin은 Service Locator이다 | Koin |
                     """.trimIndent(),
                 isMyDiscussion = true,
+                isGeneratingSummary = false,
                 onSummaryClick = {},
             )
         }
@@ -252,6 +276,7 @@ private fun DiscussionShortSummaryPreview() {
             DiscussionSummary(
                 summary = "이 토론은 Koin의 기능과 역할에 대한 논의",
                 isMyDiscussion = true,
+                isGeneratingSummary = false,
                 onSummaryClick = {},
             )
         }

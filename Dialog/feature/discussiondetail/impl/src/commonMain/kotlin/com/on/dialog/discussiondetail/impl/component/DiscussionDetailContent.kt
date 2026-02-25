@@ -29,6 +29,7 @@ internal fun DiscussionDetailContent(
     content: String,
     summary: String?,
     isMyDiscussion: Boolean,
+    isGeneratingSummary: Boolean,
     isParticipating: Boolean,
     onSummaryClick: () -> Unit,
     onParticipateClick: () -> Unit,
@@ -57,6 +58,7 @@ internal fun DiscussionDetailContent(
                     DiscussionSummary(
                         summary = summary,
                         isMyDiscussion = isMyDiscussion,
+                        isGeneratingSummary = isGeneratingSummary,
                         onSummaryClick = onSummaryClick,
                     )
                 }
@@ -98,6 +100,7 @@ private fun OnlineDiscussionDetailContentPreview() {
                 content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
                 summary = "요약된 내용",
                 isMyDiscussion = true,
+                isGeneratingSummary = false,
                 isParticipating = false,
                 onSummaryClick = {},
                 onParticipateClick = {},
@@ -116,6 +119,7 @@ private fun OfflineDiscussionDetailContentPreview() {
                 content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
                 summary = "요약된 내용",
                 isMyDiscussion = true,
+                isGeneratingSummary = false,
                 isParticipating = false,
                 onSummaryClick = {},
                 onParticipateClick = {},

@@ -20,6 +20,7 @@ import dialog.feature.discussiondetail.impl.generated.resources.error_not_my_dis
 import dialog.feature.discussiondetail.impl.generated.resources.error_should_login
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
@@ -31,8 +32,8 @@ class DiscussionDetailViewModel(
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
-        initialState = DiscussionDetailState(),
-    ) {
+    initialState = DiscussionDetailState(),
+) {
     init {
         fetchDiscussion()
     }
@@ -63,11 +64,19 @@ class DiscussionDetailViewModel(
             }.invokeOnCompletion { updateState { copy(isLoading = false) } }
     }
 
-    private suspend fun fetchDiscussionDetail() {
+    private suspend fun fetchDiscussionDetail(canShowError: Boolean = true): Boolean {
+        var isSuccess = false
         discussionRepository
             .getDiscussionDetail(id = discussionId)
-            .onSuccess(::handleFetchDiscussionDetailSuccess)
-            .onFailure { handleFetchDiscussionDetailFailure() }
+            .onSuccess {
+                handleFetchDiscussionDetailSuccess(it)
+                isSuccess = true
+            }.onFailure {
+                if (canShowError) {
+                    handleFetchDiscussionDetailFailure()
+                }
+            }
+        return isSuccess
     }
 
     private fun handleFetchDiscussionDetailSuccess(discussionDetail: DiscussionDetail) =
@@ -176,11 +185,26 @@ class DiscussionDetailViewModel(
     }
 
     private fun generateSummary() {
+        if (currentState.isGeneratingSummary) return
+        updateState { copy(isGeneratingSummary = true) }
+
         viewModelScope.launch {
             discussionRepository
                 .createDiscussionSummary(discussionId = discussionId)
-                .onSuccess { fetchDiscussionDetail() }
+                .onSuccess { pollSummaryUntilLoaded() }
                 .onFailure { showErrorSnackbar(it) }
+            updateState { copy(isGeneratingSummary = false) }
+        }
+    }
+
+    private suspend fun pollSummaryUntilLoaded() {
+        repeat(SUMMARY_POLL_MAX_RETRY) { attempt ->
+            fetchDiscussionDetail(canShowError = false)
+            if (currentState.discussion?.summary != null) return
+
+            if (attempt < SUMMARY_POLL_MAX_RETRY + 1) {
+                delay(SUMMARY_POLL_INTERVAL_MS)
+            }
         }
     }
 
@@ -204,5 +228,7 @@ class DiscussionDetailViewModel(
     companion object {
         private const val ERROR_CODE_ALREADY_STARTED = "5026"
         private const val ERROR_CODE_NOT_MY_DISCUSSION = "5031"
+        private const val SUMMARY_POLL_INTERVAL_MS = 10_000L
+        private const val SUMMARY_POLL_MAX_RETRY = 3
     }
 }

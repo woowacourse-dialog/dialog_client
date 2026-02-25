@@ -7,6 +7,7 @@ import com.on.dialog.ui.viewmodel.UiState
 @Immutable
 data class DiscussionDetailState(
     val isLoading: Boolean = true,
+    val isGeneratingSummary: Boolean = false,
     val discussion: DiscussionDetailUiModel? = null,
     val isBookmarked: Boolean = false,
     val isLiked: Boolean = false,

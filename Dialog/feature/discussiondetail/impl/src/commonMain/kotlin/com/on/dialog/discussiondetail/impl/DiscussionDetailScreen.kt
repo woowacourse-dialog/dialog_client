@@ -150,6 +150,7 @@ private fun DiscussionDetailScreen(
                     content = discussion.detailContent.content,
                     summary = discussion.summary,
                     isMyDiscussion = state.isMyDiscussion,
+                    isGeneratingSummary = state.isGeneratingSummary,
                     isParticipating = state.isParticipating,
                     onSummaryClick = onSummaryClick,
                     onParticipateClick = onParticipateClick,
