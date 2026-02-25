@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,13 +37,14 @@ import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.summary_discussion
-import dialog.feature.discussiondetail.impl.generated.resources.summary_generating
+import dialog.feature.discussiondetail.impl.generated.resources.summary_generating_base
 import dialog.feature.discussiondetail.impl.generated.resources.summary_if_finished
 import dialog.feature.discussiondetail.impl.generated.resources.summary_only_author
 import dialog.feature.discussiondetail.impl.generated.resources.summary_only_once
 import dialog.feature.discussiondetail.impl.generated.resources.summary_show_less
 import dialog.feature.discussiondetail.impl.generated.resources.summary_show_more
 import dialog.feature.discussiondetail.impl.generated.resources.summary_with_ai
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -84,6 +86,18 @@ private fun SummaryEmptyContent(
     onSummaryClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var generatingDotCount by remember { mutableIntStateOf(1) }
+    LaunchedEffect(isGeneratingSummary) {
+        if (!isGeneratingSummary) {
+            generatingDotCount = 1
+            return@LaunchedEffect
+        }
+        while (true) {
+            delay(350L)
+            generatingDotCount = (generatingDotCount % 3) + 1
+        }
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.medium),
@@ -102,7 +116,11 @@ private fun SummaryEmptyContent(
                 style = DialogTheme.typography.bodyMedium,
             )
             DialogButton(
-                text = stringResource(if (isGeneratingSummary) Res.string.summary_generating else Res.string.summary_with_ai),
+                text = if (isGeneratingSummary) {
+                    stringResource(Res.string.summary_generating_base) + ".".repeat(generatingDotCount)
+                } else {
+                    stringResource(Res.string.summary_with_ai)
+                },
                 onClick = onSummaryClick,
                 enabled = !isGeneratingSummary,
             )
