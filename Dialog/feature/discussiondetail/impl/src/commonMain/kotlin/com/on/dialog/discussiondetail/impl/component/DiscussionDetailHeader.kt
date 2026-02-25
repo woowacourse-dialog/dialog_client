@@ -65,7 +65,7 @@ internal fun DiscussionDetailHeader(
         Text(
             text = detailContent.title,
             style = DialogTheme.typography.titleLarge,
-            modifier = modifier.fillMaxWidth().padding(horizontal = DialogTheme.spacing.large),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = DialogTheme.spacing.large),
         )
         Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
         DialogHorizontalDivider()
