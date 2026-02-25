@@ -31,18 +31,23 @@ class LoginViewModel(
             .launch {
                 sessionRepository
                     .saveSession(jsessionId = jsessionId)
-                    .onSuccess { saveUserId(isNewUser = isNewUser) }
-                    .onFailure { handleSaveUserSessionFailure() }
+                    .onSuccess {
+                        if (isNewUser) {
+                            handleSaveUserSessionSuccess(isNewUser = true)
+                        } else {
+                            saveUserId()
+                        }
+                    }.onFailure { handleSaveUserSessionFailure() }
             }.invokeOnCompletion { updateState { LoginState() } }
     }
 
-    private suspend fun saveUserId(isNewUser: Boolean) {
+    private suspend fun saveUserId() {
         userRepository
             .getMyUserInfo()
             .onSuccess { userInfo ->
                 sessionRepository
                     .saveUserId(userId = userInfo.id)
-                    .onSuccess { handleSaveUserSessionSuccess(isNewUser = isNewUser) }
+                    .onSuccess { handleSaveUserSessionSuccess(isNewUser = false) }
                     .onFailure { handleSaveUserSessionFailure() }
             }.onFailure { handleSaveUserSessionFailure() }
     }
