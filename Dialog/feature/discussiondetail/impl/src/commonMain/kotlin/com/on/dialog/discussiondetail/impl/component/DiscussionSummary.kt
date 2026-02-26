@@ -124,7 +124,7 @@ private fun SummaryEmptyContent(
                 ),
                 style = DialogTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
-                modifier = if (isGeneratingSummary) Modifier.fillMaxWidth() else Modifier,
+                modifier = Modifier.fillMaxWidth(),
             )
             DialogButton(
                 text = if (isGeneratingSummary) {
