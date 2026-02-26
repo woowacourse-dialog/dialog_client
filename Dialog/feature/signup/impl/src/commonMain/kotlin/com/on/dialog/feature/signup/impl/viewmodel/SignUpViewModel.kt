@@ -68,6 +68,7 @@ class SignUpViewModel(
                         state = SnackbarState.NEGATIVE,
                     ),
                 )
+                emitEffect(SignUpEffect.NavigateHome)
             }
     }
 }
