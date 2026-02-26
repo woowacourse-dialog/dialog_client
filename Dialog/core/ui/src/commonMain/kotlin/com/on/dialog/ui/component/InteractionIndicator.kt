@@ -1,14 +1,18 @@
 package com.on.dialog.ui.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
@@ -42,6 +46,30 @@ fun InteractionIndicator(
             style = DialogTheme.typography.bodyMedium,
         )
     }
+}
+
+@Composable
+fun InteractionIndicator(
+    icon: ImageVector,
+    count: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    iconTint: Color = DialogTheme.colorScheme.primary,
+    contentDescription: String? = null,
+) {
+    InteractionIndicator(
+        icon = icon,
+        count = count,
+        modifier = modifier
+            .clip(DialogTheme.shapes.medium)
+            .clickable(
+                indication = ripple(),
+                interactionSource = null,
+            ) { onClick() }
+            .padding(DialogTheme.spacing.extraSmall),
+        iconTint = iconTint,
+        contentDescription = contentDescription,
+    )
 }
 
 @Preview(showBackground = true)

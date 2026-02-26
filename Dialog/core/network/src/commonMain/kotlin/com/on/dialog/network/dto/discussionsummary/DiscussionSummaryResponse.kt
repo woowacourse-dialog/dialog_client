@@ -9,7 +9,7 @@ data class DiscussionSummaryResponse(
     @SerialName("discussionId")
     val discussionId: Long,
     @SerialName("summary")
-    val summary: String,
+    val summary: String?,
 ) {
     fun toDomain(): DiscussionSummary =
         DiscussionSummary(discussionId = discussionId, summary = summary)
