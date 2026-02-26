@@ -7,6 +7,7 @@ import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.model.common.Track
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.signup.impl.generated.resources.Res
+import dialog.feature.signup.impl.generated.resources.save_user_id_fail
 import dialog.feature.signup.impl.generated.resources.signup_failure
 import dialog.feature.signup.impl.generated.resources.signup_success
 import kotlinx.coroutines.launch
@@ -60,9 +61,10 @@ class SignUpViewModel(
                 )
                 emitEffect(SignUpEffect.NavigateHome)
             }.onFailure {
+                authRepository.logout()
                 emitEffect(
                     SignUpEffect.ShowSnackbar(
-                        stringResource = Res.string.signup_failure,
+                        stringResource = Res.string.save_user_id_fail,
                         state = SnackbarState.NEGATIVE,
                     ),
                 )
