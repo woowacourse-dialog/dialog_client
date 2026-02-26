@@ -112,7 +112,7 @@ private fun SummaryEmptyContent(
                 text = stringResource(Res.string.summary_if_finished),
                 style = DialogTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             Text(
                 text = stringResource(
@@ -134,7 +134,7 @@ private fun SummaryEmptyContent(
                 },
                 onClick = onSummaryClick,
                 enabled = !isGeneratingSummary,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         } else {
             Text(
