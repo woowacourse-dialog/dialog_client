@@ -19,7 +19,6 @@ fun EntryProviderScope<NavKey>.scrapScreen(
             navigateToLogin = {
                 navigator.navigate(MyPageNavKey)
             },
-            goBack = navigator::goBack,
         )
     }
 }

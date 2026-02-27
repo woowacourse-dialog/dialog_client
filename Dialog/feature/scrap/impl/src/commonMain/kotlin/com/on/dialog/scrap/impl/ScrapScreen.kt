@@ -26,12 +26,16 @@ import com.on.dialog.scrap.impl.viewmodel.ScrapEffect
 import com.on.dialog.scrap.impl.viewmodel.ScrapIntent
 import com.on.dialog.scrap.impl.viewmodel.ScrapState
 import com.on.dialog.scrap.impl.viewmodel.ScrapViewModel
+import com.on.dialog.ui.component.CommonStateAction
 import com.on.dialog.ui.component.CommonStateView
 import com.on.dialog.ui.extensions.shouldLoadNextPage
 import dialog.feature.scrap.impl.generated.resources.Res
 import dialog.feature.scrap.impl.generated.resources.empty_description
 import dialog.feature.scrap.impl.generated.resources.empty_title
 import dialog.feature.scrap.impl.generated.resources.top_app_bar_title
+import dialog.feature.scrap.impl.generated.resources.unauthorized_primary_action
+import dialog.feature.scrap.impl.generated.resources.unauthorized_title
+import dialog.feature.scrap.impl.generated.resources.unauthorized_title_description
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.jetbrains.compose.resources.getString
@@ -73,6 +77,7 @@ internal fun ScrapScreen(
         listState = listState,
         isRefreshing = uiState is ScrapState.Loading,
         onRefresh = { viewModel.onIntent(ScrapIntent.Refresh) },
+        onClickNavigateToLogin = navigateToLogin,
         onClickDiscussion = navigateToDetail,
         modifier = modifier,
     )
@@ -84,6 +89,7 @@ private fun ScrapScreen(
     listState: LazyListState,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
+    onClickNavigateToLogin: () -> Unit,
     onClickDiscussion: (discussionId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -110,6 +116,18 @@ private fun ScrapScreen(
                         onRefresh = onRefresh,
                     )
                     if (uiState is ScrapState.Loading) LoadingIndicator()
+                }
+
+                is ScrapState.UnAuthorized -> {
+                    CommonStateView(
+                        title = stringResource(Res.string.unauthorized_title),
+                        description = stringResource(Res.string.unauthorized_title_description),
+                        primaryAction = CommonStateAction(
+                            label = stringResource(Res.string.unauthorized_primary_action),
+                            onClick = onClickNavigateToLogin,
+                        ),
+                        icon = DialogIcons.Unauthorized,
+                    )
                 }
             }
         }
@@ -161,6 +179,7 @@ private fun ScrapScreenPreview() {
                 ),
                 listState = rememberLazyListState(),
                 isRefreshing = false,
+                onClickNavigateToLogin = {},
                 onRefresh = {},
                 onClickDiscussion = {},
             )
@@ -176,6 +195,24 @@ private fun ScrapScreenEmptyPreview() {
             ScrapScreen(
                 uiState = ScrapState.Empty,
                 listState = rememberLazyListState(),
+                onClickNavigateToLogin = {},
+                isRefreshing = false,
+                onRefresh = {},
+                onClickDiscussion = {},
+            )
+        }
+    }
+}
+
+@Composable
+@ThemePreview
+private fun ScrapScreenUnauthorizedPreview() {
+    DialogTheme {
+        Scaffold {
+            ScrapScreen(
+                uiState = ScrapState.UnAuthorized,
+                listState = rememberLazyListState(),
+                onClickNavigateToLogin = {},
                 isRefreshing = false,
                 onRefresh = {},
                 onClickDiscussion = {},

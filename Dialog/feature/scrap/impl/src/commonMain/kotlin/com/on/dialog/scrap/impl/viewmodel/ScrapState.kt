@@ -35,6 +35,11 @@ internal sealed interface ScrapState : UiState {
     }
 
     @Immutable
+    data object UnAuthorized : ScrapState {
+        override val scraps: ImmutableList<ScrapUiModel> = persistentListOf()
+    }
+
+    @Immutable
     data class Loading(
         override val scraps: ImmutableList<ScrapUiModel> = persistentListOf(),
     ) : ScrapState
