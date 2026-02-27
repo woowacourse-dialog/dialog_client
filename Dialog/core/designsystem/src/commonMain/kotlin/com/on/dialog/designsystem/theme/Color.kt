@@ -112,7 +112,7 @@ val LocalColors =
         DialogColors(
             gray200 = Gray200,
             gray400 = Gray400,
-            blue = blue
+            blue = blue,
         )
     }
 

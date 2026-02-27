@@ -9,9 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.mikepenz.markdown.compose.Markdown
-import com.mikepenz.markdown.m3.markdownColor
-import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.component.DialogHorizontalDivider
 import com.on.dialog.designsystem.icon.DialogIcons

@@ -127,7 +127,7 @@ private fun SummaryEmptyContent(
             DialogButton(
                 text = if (isGeneratingSummary) {
                     stringResource(Res.string.summary_generating_base) + ".".repeat(
-                        generatingDotCount
+                        generatingDotCount,
                     )
                 } else {
                     stringResource(Res.string.summary_with_ai)

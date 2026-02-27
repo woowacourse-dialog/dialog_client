@@ -31,9 +31,6 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.NavigationEventState
 import androidx.navigationevent.compose.rememberNavigationEventState
-import com.mikepenz.markdown.compose.Markdown
-import com.mikepenz.markdown.m3.markdownColor
-import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogIconButtonTone
 import com.on.dialog.designsystem.component.DialogTextField
