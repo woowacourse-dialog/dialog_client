@@ -20,7 +20,7 @@ data class ScrapCursorPageResponse(
     @SerialName("content")
     val contentDto: List<ContentDto>,
     @SerialName("nextCursorId")
-    val nextCursorId: Long,
+    val nextCursorId: Long?,
     @SerialName("hasNext")
     val hasNext: Boolean,
     @SerialName("size")

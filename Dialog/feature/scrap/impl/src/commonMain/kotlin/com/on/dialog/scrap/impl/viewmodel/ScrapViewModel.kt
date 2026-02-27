@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 internal class ScrapViewModel(
     private val scrapRepository: ScrapRepository,
 ) : BaseViewModel<ScrapIntent, ScrapState, ScrapEffect>(ScrapState.Loading()) {
-    private var nextCursor: Long = 0L
+    private var nextCursor: Long? = null
     private var hasNext: Boolean = true
 
     init {

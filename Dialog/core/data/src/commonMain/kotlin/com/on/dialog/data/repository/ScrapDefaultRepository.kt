@@ -8,7 +8,7 @@ import com.on.dialog.network.datasource.ScrapDatasource
 internal class ScrapDefaultRepository(
     private val scrapDatasource: ScrapDatasource,
 ) : ScrapRepository {
-    override suspend fun getScraps(lastCursorId: Long, size: Int): Result<ScrapCatalogCursorPage> =
+    override suspend fun getScraps(lastCursorId: Long?, size: Int): Result<ScrapCatalogCursorPage> =
         scrapDatasource.getScraps(lastCursorId, size).mapCatching {
             it.toDomain()
         }
