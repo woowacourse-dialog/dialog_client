@@ -161,10 +161,8 @@ private fun MarkdownEditor(
 
 @Composable
 private fun RendererView(content: String, modifier: Modifier) {
-    Markdown(
+    DialogMarkdown(
         content = content,
-        colors = markdownColor(),
-        typography = markdownTypography(),
         modifier = modifier
             .fillMaxWidth()
             .background(color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F))
@@ -310,7 +308,7 @@ private fun MarkdownEditorPreviewContent(
         onConfirm = {},
         onExit = {},
         focusRequester = focusRequester,
-        content = TextFieldValue("#### Hello World\n\nThis is a **bold** statement."),
+        content = TextFieldValue("# Hello World\n\nThis is a **bold** statement."),
         onContentChanged = {},
         selectedTab = selectedTab,
         onSelectedTabChanged = {},

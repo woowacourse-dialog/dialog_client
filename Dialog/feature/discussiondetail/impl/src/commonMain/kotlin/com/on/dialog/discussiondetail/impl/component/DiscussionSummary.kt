@@ -26,9 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import com.mikepenz.markdown.compose.Markdown
-import com.mikepenz.markdown.m3.markdownColor
-import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogCard
@@ -36,6 +33,7 @@ import com.on.dialog.designsystem.component.DialogCardTone
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.ui.component.markdown.DialogMarkdown
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.summary_discussion
 import dialog.feature.discussiondetail.impl.generated.resources.summary_generating_base
@@ -128,7 +126,9 @@ private fun SummaryEmptyContent(
             )
             DialogButton(
                 text = if (isGeneratingSummary) {
-                    stringResource(Res.string.summary_generating_base) + ".".repeat(generatingDotCount)
+                    stringResource(Res.string.summary_generating_base) + ".".repeat(
+                        generatingDotCount
+                    )
                 } else {
                     stringResource(Res.string.summary_with_ai)
                 },
@@ -177,10 +177,8 @@ private fun SummaryMarkdownContent(
             // 1) 전체 높이 측정(세로 무제한)
             val looseConstraints = constraints.copy(maxHeight = Constraints.Infinity)
             val fullPlaceable = subcompose("measure") {
-                Markdown(
+                DialogMarkdown(
                     content = summary,
-                    colors = markdownColor(),
-                    typography = markdownTypography(),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }.first().measure(looseConstraints)
@@ -198,10 +196,8 @@ private fun SummaryMarkdownContent(
                 }
 
             val displayPlaceable = subcompose("content") {
-                Markdown(
+                DialogMarkdown(
                     content = summary,
-                    colors = markdownColor(),
-                    typography = markdownTypography(),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }.first().measure(displayConstraints)
