@@ -4,6 +4,8 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
+import com.on.dialog.domain.event.AuthEvent
+import com.on.dialog.domain.event.AuthEventBus
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
 import com.on.dialog.model.discussion.scrap.ScrapCatalog
@@ -20,11 +22,13 @@ import kotlinx.coroutines.launch
 @Stable
 internal class ScrapViewModel(
     private val scrapRepository: ScrapRepository,
+    private val authEventBus: AuthEventBus,
 ) : BaseViewModel<ScrapIntent, ScrapState, ScrapEffect>(ScrapState.Loading()) {
     private var nextCursor: Long? = null
     private var hasNext: Boolean = true
 
     init {
+        observeAuthEvent()
         fetchScraps()
     }
 
@@ -89,6 +93,21 @@ internal class ScrapViewModel(
         nextCursor = null
         hasNext = true
         fetchScraps()
+    }
+
+    private fun observeAuthEvent() {
+        viewModelScope.launch {
+            authEventBus.events.collect { event ->
+                when (event) {
+                    AuthEvent.LogIn -> refresh()
+                    AuthEvent.LogOut -> {
+                        nextCursor = null
+                        hasNext = true
+                        updateState { ScrapState.Empty }
+                    }
+                }
+            }
+        }
     }
 
     companion object {

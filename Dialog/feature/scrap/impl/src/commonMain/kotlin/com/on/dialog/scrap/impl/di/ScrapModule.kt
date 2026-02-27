@@ -9,5 +9,10 @@ import org.koin.dsl.module
 val scrapModule = module {
     single { ScrapNavKeyProvider() } bind NavKeyProvider::class
 
-    viewModel { ScrapViewModel(scrapRepository = get()) }
+    viewModel {
+        ScrapViewModel(
+            scrapRepository = get(),
+            authEventBus = get(),
+        )
+    }
 }

@@ -2,6 +2,8 @@ package com.on.dialog.feature.login.impl.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
+import com.on.dialog.domain.event.AuthEvent
+import com.on.dialog.domain.event.AuthEventBus
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.repository.UserRepository
 import com.on.dialog.ui.viewmodel.BaseViewModel
@@ -13,6 +15,7 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val sessionRepository: SessionRepository,
     private val userRepository: UserRepository,
+    private val authEventBus: AuthEventBus,
 ) : BaseViewModel<LoginIntent, LoginState, LoginEffect>(initialState = LoginState()) {
     override fun onIntent(intent: LoginIntent) {
         when (intent) {
@@ -53,6 +56,9 @@ class LoginViewModel(
     }
 
     private fun handleSaveUserSessionSuccess(isNewUser: Boolean) {
+        viewModelScope.launch {
+            authEventBus.emit(AuthEvent.LogIn)
+        }
         updateState { copy(isLoginComplete = true, isNewUser = isNewUser) }
         emitEffect(if (isNewUser) LoginEffect.NavigateToSignUp else LoginEffect.GoBack)
     }

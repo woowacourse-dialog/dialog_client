@@ -3,6 +3,8 @@ package com.on.dialog.feature.mypage.impl.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
+import com.on.dialog.domain.event.AuthEvent
+import com.on.dialog.domain.event.AuthEventBus
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.repository.UserRepository
@@ -19,6 +21,7 @@ class MyPageViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
     private val sessionRepository: SessionRepository,
+    private val authEventBus: AuthEventBus,
 ) : BaseViewModel<MyPageIntent, MyPageState, MyPageEffect>(initialState = MyPageState()) {
     override fun onIntent(intent: MyPageIntent) {
         when (intent) {
@@ -207,6 +210,7 @@ class MyPageViewModel(
                 .onSuccess {
                     updateState { MyPageState() }
                     sessionRepository.clearUserId()
+                    authEventBus.emit(AuthEvent.LogOut)
                 }.onFailure { result: Throwable ->
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
