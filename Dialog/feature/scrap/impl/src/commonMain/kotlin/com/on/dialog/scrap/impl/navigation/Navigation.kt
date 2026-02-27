@@ -12,9 +12,13 @@ fun EntryProviderScope<NavKey>.scrapScreen(
 ) {
     entry<ScrapNavKey> {
         ScrapScreen(
-            navigateToDiscussionDetail = { discussionId ->
+            navigateToDetail = { discussionId ->
                 navigator.navigate(DiscussionDetailNavKey(discussionId = discussionId))
             },
+            navigateToCreateDiscussion = {
+                // todo: 토론 생성 화면으로 이동
+            },
+            goBack = navigator::goBack,
         )
     }
 }
