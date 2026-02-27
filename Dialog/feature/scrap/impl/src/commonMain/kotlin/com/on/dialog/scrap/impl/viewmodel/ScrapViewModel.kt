@@ -68,7 +68,7 @@ internal class ScrapViewModel(
     }
 
     private fun refresh() {
-        nextCursor = 0L
+        nextCursor = null
         hasNext = true
         fetchScraps()
     }
