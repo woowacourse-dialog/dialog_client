@@ -11,6 +11,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.feature.discussiondetail.api)
+            implementation(projects.feature.scrap.api)
 
             // Markdown
             implementation(libs.multiplatform.markdown.renderer)

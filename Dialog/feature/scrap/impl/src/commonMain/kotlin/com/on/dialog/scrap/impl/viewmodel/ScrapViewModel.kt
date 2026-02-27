@@ -6,6 +6,8 @@ import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.event.AuthEvent
 import com.on.dialog.domain.event.AuthEventBus
+import com.on.dialog.feature.scrap.api.event.ScrapEvent
+import com.on.dialog.feature.scrap.api.event.ScrapEventBus
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
 import com.on.dialog.model.discussion.scrap.ScrapCatalog
@@ -22,12 +24,14 @@ import kotlinx.coroutines.launch
 internal class ScrapViewModel(
     private val scrapRepository: ScrapRepository,
     private val authEventBus: AuthEventBus,
+    private val scrapEventBus: ScrapEventBus,
 ) : BaseViewModel<ScrapIntent, ScrapState, ScrapEffect>(ScrapState.Loading()) {
     private var nextCursor: Long? = null
     private var hasNext: Boolean = true
 
     init {
         observeAuthEvent()
+        observeScrapEvent()
         fetchScraps()
     }
 
@@ -99,6 +103,25 @@ internal class ScrapViewModel(
                         nextCursor = null
                         hasNext = true
                         updateState { ScrapState.UnAuthorized }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeScrapEvent() {
+        viewModelScope.launch {
+            scrapEventBus.events.collect { event ->
+                when (event) {
+                    is ScrapEvent.Added -> refresh()
+                    is ScrapEvent.Removed -> {
+                        updateState {
+                            val filteredScraps =
+                                scraps.filterNot { scrap -> scrap.id == event.discussionId }
+                                    .toImmutableList()
+                            if (filteredScraps.isEmpty()) ScrapState.Empty
+                            else ScrapState.Content(scraps = filteredScraps)
+                        }
                     }
                 }
             }
