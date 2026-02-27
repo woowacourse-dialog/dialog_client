@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.component.LoadingIndicator
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
@@ -28,11 +26,9 @@ import com.on.dialog.scrap.impl.viewmodel.ScrapEffect
 import com.on.dialog.scrap.impl.viewmodel.ScrapIntent
 import com.on.dialog.scrap.impl.viewmodel.ScrapState
 import com.on.dialog.scrap.impl.viewmodel.ScrapViewModel
-import com.on.dialog.ui.component.CommonStateAction
 import com.on.dialog.ui.component.CommonStateView
 import com.on.dialog.ui.extensions.shouldLoadNextPage
 import dialog.feature.scrap.impl.generated.resources.Res
-import dialog.feature.scrap.impl.generated.resources.empty_action_label
 import dialog.feature.scrap.impl.generated.resources.empty_description
 import dialog.feature.scrap.impl.generated.resources.empty_title
 import dialog.feature.scrap.impl.generated.resources.top_app_bar_title
@@ -45,8 +41,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ScrapScreen(
     navigateToDetail: (discussionId: Long) -> Unit,
-    navigateToCreateDiscussion: () -> Unit,
-    goBack: () -> Unit,
+    navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ScrapViewModel = koinViewModel(),
 ) {
@@ -79,8 +74,6 @@ internal fun ScrapScreen(
         isRefreshing = uiState is ScrapState.Loading,
         onRefresh = { viewModel.onIntent(ScrapIntent.Refresh) },
         onClickDiscussion = navigateToDetail,
-        onClickCreateDiscussion = navigateToCreateDiscussion,
-        onBackClick = goBack,
         modifier = modifier,
     )
 }
@@ -92,22 +85,17 @@ private fun ScrapScreen(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     onClickDiscussion: (discussionId: Long) -> Unit,
-    onClickCreateDiscussion: () -> Unit,
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
-        ScrapScreenTopAppBar(onBackClick = onBackClick)
+        ScrapScreenTopAppBar()
         Box {
             when (uiState) {
                 is ScrapState.Empty -> {
                     CommonStateView(
                         title = stringResource(Res.string.empty_title),
                         description = stringResource(Res.string.empty_description),
-                        primaryAction = CommonStateAction(
-                            label = stringResource(Res.string.empty_action_label),
-                            onClick = onClickCreateDiscussion,
-                        ),
+                        icon = DialogIcons.BookmarkBorder,
                     )
                 }
 
@@ -130,7 +118,6 @@ private fun ScrapScreen(
 
 @Composable
 private fun ScrapScreenTopAppBar(
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DialogTopAppBar(
@@ -176,8 +163,6 @@ private fun ScrapScreenPreview() {
                 isRefreshing = false,
                 onRefresh = {},
                 onClickDiscussion = {},
-                onClickCreateDiscussion = {},
-                onBackClick = {},
             )
         }
     }
@@ -194,8 +179,6 @@ private fun ScrapScreenEmptyPreview() {
                 isRefreshing = false,
                 onRefresh = {},
                 onClickDiscussion = {},
-                onClickCreateDiscussion = {},
-                onBackClick = {},
             )
         }
     }

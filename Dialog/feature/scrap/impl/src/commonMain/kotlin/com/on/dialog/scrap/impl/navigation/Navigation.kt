@@ -3,6 +3,7 @@ package com.on.dialog.scrap.impl.navigation
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.on.dialog.discussiondetail.api.DiscussionDetailNavKey
+import com.on.dialog.feature.mypage.api.MyPageNavKey
 import com.on.dialog.feature.scrap.api.ScrapNavKey
 import com.on.dialog.navigation.Navigator
 import com.on.dialog.scrap.impl.ScrapScreen
@@ -15,8 +16,8 @@ fun EntryProviderScope<NavKey>.scrapScreen(
             navigateToDetail = { discussionId ->
                 navigator.navigate(DiscussionDetailNavKey(discussionId = discussionId))
             },
-            navigateToCreateDiscussion = {
-                // todo: 토론 생성 화면으로 이동
+            navigateToLogin = {
+                navigator.navigate(MyPageNavKey)
             },
             goBack = navigator::goBack,
         )
