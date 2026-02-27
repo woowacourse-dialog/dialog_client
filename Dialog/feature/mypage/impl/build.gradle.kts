@@ -14,6 +14,7 @@ kotlin {
             implementation(projects.feature.mypage.api)
             implementation(projects.feature.login.api)
             implementation(projects.feature.mycreated.api)
+            implementation(projects.feature.scrap.api)
 
             implementation(libs.imagepicker)
         }
