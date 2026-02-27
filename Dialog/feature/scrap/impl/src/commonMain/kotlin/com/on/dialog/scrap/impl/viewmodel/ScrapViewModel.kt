@@ -2,6 +2,7 @@ package com.on.dialog.scrap.impl.viewmodel
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.viewModelScope
+import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
@@ -10,6 +11,7 @@ import com.on.dialog.scrap.impl.model.ScrapUiModel.Companion.toUiModel
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.scrap.impl.generated.resources.Res
 import dialog.feature.scrap.impl.generated.resources.fetch_scrap_discussions_failure_message
+import dialog.feature.scrap.impl.generated.resources.fetch_scrap_discussions_failure_unauthorized_message
 import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -41,7 +43,13 @@ internal class ScrapViewModel(
                 scrapRepository
                     .getScraps(lastCursorId = nextCursor, size = FETCH_SIZE)
                     .onSuccess(::handleFetchScrapSuccess)
-                    .onFailure(::handleFetchScrapFailure)
+                    .onFailure { it: Throwable ->
+                        if (it is NetworkError.Unauthorized) {
+                            handleUnauthorized()
+                        } else {
+                            handleFetchScrapFailure(it)
+                        }
+                    }
             }
     }
 
@@ -62,6 +70,16 @@ internal class ScrapViewModel(
         emitEffect(
             ScrapEffect.ShowSnackbar(
                 message = Res.string.fetch_scrap_discussions_failure_message,
+                state = SnackbarState.NEGATIVE,
+            ),
+        )
+    }
+
+    private fun handleUnauthorized() {
+        updateState { ScrapState.Empty }
+        emitEffect(
+            ScrapEffect.ShowSnackbar(
+                message = Res.string.fetch_scrap_discussions_failure_unauthorized_message,
                 state = SnackbarState.NEGATIVE,
             ),
         )
