@@ -1,5 +1,7 @@
 package com.on.dialog.feature.login.impl.di
 
+import com.on.dialog.feature.login.api.event.AuthEventBus
+import com.on.dialog.feature.login.impl.event.DefaultAuthEventBus
 import com.on.dialog.feature.login.impl.viewmodel.LoginViewModel
 import com.on.dialog.navigation.NavKeyProvider
 import org.koin.core.module.dsl.viewModel
@@ -7,6 +9,8 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val loginModule = module {
+    single<AuthEventBus> { DefaultAuthEventBus() }
+
     viewModel {
         LoginViewModel(
             sessionRepository = get(),

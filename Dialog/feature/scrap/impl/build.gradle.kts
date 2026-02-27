@@ -12,6 +12,7 @@ kotlin {
             implementation(projects.feature.scrap.api)
             implementation(projects.feature.discussiondetail.api)
             implementation(projects.feature.mypage.api)
+            implementation(projects.feature.login.api)
         }
     }
 }

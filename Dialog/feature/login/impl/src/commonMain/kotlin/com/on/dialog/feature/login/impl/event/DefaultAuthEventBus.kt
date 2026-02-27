@@ -1,7 +1,7 @@
-package com.on.dialog.data.event
+package com.on.dialog.feature.login.impl.event
 
-import com.on.dialog.domain.event.AuthEvent
-import com.on.dialog.domain.event.AuthEventBus
+import com.on.dialog.feature.login.api.event.AuthEvent
+import com.on.dialog.feature.login.api.event.AuthEventBus
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,7 +11,7 @@ internal class DefaultAuthEventBus : AuthEventBus {
     private val _events = MutableSharedFlow<AuthEvent>(
         replay = 0,
         extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
     override val events: Flow<AuthEvent> = _events.asSharedFlow()
 

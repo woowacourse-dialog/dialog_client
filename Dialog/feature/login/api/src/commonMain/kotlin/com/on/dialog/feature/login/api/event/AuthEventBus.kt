@@ -1,4 +1,4 @@
-package com.on.dialog.domain.event
+package com.on.dialog.feature.login.api.event
 
 import kotlinx.coroutines.flow.Flow
 

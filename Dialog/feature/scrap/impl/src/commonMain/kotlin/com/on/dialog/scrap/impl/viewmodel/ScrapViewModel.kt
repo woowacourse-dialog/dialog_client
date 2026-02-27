@@ -4,11 +4,11 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
-import com.on.dialog.domain.event.AuthEvent
-import com.on.dialog.domain.event.AuthEventBus
 import com.on.dialog.feature.scrap.api.event.ScrapEvent
 import com.on.dialog.feature.scrap.api.event.ScrapEventBus
 import com.on.dialog.domain.repository.ScrapRepository
+import com.on.dialog.feature.login.api.event.AuthEvent
+import com.on.dialog.feature.login.api.event.AuthEventBus
 import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
 import com.on.dialog.model.discussion.scrap.ScrapCatalog
 import com.on.dialog.scrap.impl.model.ScrapUiModel.Companion.toUiModel

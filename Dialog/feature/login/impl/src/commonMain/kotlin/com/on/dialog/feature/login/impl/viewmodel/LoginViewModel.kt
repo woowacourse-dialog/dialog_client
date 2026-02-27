@@ -2,8 +2,8 @@ package com.on.dialog.feature.login.impl.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
-import com.on.dialog.domain.event.AuthEvent
-import com.on.dialog.domain.event.AuthEventBus
+import com.on.dialog.feature.login.api.event.AuthEvent
+import com.on.dialog.feature.login.api.event.AuthEventBus
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.repository.UserRepository
 import com.on.dialog.ui.viewmodel.BaseViewModel
