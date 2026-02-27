@@ -3,6 +3,7 @@ package com.on.dialog.feature.login.impl.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.SessionRepository
+import com.on.dialog.domain.repository.UserRepository
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.login.impl.generated.resources.Res
 import dialog.feature.login.impl.generated.resources.error_save_session
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val sessionRepository: SessionRepository,
+    private val userRepository: UserRepository,
 ) : BaseViewModel<LoginIntent, LoginState, LoginEffect>(initialState = LoginState()) {
     override fun onIntent(intent: LoginIntent) {
         when (intent) {
@@ -29,9 +31,25 @@ class LoginViewModel(
             .launch {
                 sessionRepository
                     .saveSession(jsessionId = jsessionId)
-                    .onSuccess { handleSaveUserSessionSuccess(isNewUser = isNewUser) }
-                    .onFailure { handleSaveUserSessionFailure() }
+                    .onSuccess {
+                        if (isNewUser) {
+                            handleSaveUserSessionSuccess(isNewUser = true)
+                        } else {
+                            saveUserId()
+                        }
+                    }.onFailure { handleSaveUserSessionFailure() }
             }.invokeOnCompletion { updateState { LoginState() } }
+    }
+
+    private suspend fun saveUserId() {
+        userRepository
+            .getMyUserInfo()
+            .onSuccess { userInfo ->
+                sessionRepository
+                    .saveUserId(userId = userInfo.id)
+                    .onSuccess { handleSaveUserSessionSuccess(isNewUser = false) }
+                    .onFailure { handleSaveUserSessionFailure() }
+            }.onFailure { handleSaveUserSessionFailure() }
     }
 
     private fun handleSaveUserSessionSuccess(isNewUser: Boolean) {

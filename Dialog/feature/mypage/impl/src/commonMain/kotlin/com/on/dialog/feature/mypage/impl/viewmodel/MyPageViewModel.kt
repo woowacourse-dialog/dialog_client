@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.AuthRepository
+import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.repository.UserRepository
 import com.on.dialog.feature.mypage.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.feature.mypage.impl.model.UserInfoUiModel.Companion.toUiModel
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 class MyPageViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
+    private val sessionRepository: SessionRepository,
 ) : BaseViewModel<MyPageIntent, MyPageState, MyPageEffect>(initialState = MyPageState()) {
     override fun onIntent(intent: MyPageIntent) {
         when (intent) {
@@ -202,8 +204,10 @@ class MyPageViewModel(
         viewModelScope.launch {
             authRepository
                 .logout()
-                .onSuccess { updateState { MyPageState() } }
-                .onFailure { result: Throwable ->
+                .onSuccess {
+                    updateState { MyPageState() }
+                    sessionRepository.clearUserId()
+                }.onFailure { result: Throwable ->
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = result.message ?: "로그아웃에 실패했습니다.",

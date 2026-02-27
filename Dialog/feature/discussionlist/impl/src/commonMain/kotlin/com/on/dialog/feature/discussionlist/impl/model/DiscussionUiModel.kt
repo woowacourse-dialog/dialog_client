@@ -75,7 +75,7 @@ internal sealed interface DiscussionUiModel {
         override val commentCount: Int,
         override val period: String,
         override val type: DiscussionTypeUiModel = DiscussionTypeUiModel.OFFLINE,
-        val partingCapacity: String,
+        val participantCapacity: String,
         val place: String,
     ) : DiscussionUiModel {
         @Composable
@@ -94,7 +94,7 @@ internal sealed interface DiscussionUiModel {
                     track = catalogContent.category.toUiModel(),
                     status = status(now = now).toUiModel(),
                     commentCount = catalogContent.commentCount,
-                    partingCapacity = "${participantCapacity.current}/${participantCapacity.max}",
+                    participantCapacity = "${participantCapacity.current}/${participantCapacity.max}",
                     place = place,
                     period = "${dateTimePeriod.startAt.date} ~ ${dateTimePeriod.endAt.date}".replace(
                         "-",

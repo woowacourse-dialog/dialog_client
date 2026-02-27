@@ -4,4 +4,6 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object DiscussionDetailNavKey : NavKey
+data class DiscussionDetailNavKey(
+    val discussionId: Long,
+) : NavKey

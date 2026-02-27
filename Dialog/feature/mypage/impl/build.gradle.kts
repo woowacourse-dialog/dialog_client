@@ -13,8 +13,8 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.feature.mypage.api)
             implementation(projects.feature.login.api)
+            implementation(projects.feature.mycreated.api)
 
-            // imagepicker
             implementation(libs.imagepicker)
         }
     }

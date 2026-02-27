@@ -1,6 +1,4 @@
 <resources>
-    <string name="discussion_list_top_app_bar_title">생각을 나누는 토론 플랫폼</string>
-
     <string name="discussion_type_online">온라인</string>
     <string name="discussion_type_offline">오프라인</string>
 

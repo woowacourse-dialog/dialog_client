@@ -2,9 +2,15 @@ package com.on.dialog.network.di
 
 import com.on.dialog.network.service.AuthService
 import com.on.dialog.network.service.DiscussionService
+import com.on.dialog.network.service.LikeService
+import com.on.dialog.network.service.ParticipantService
+import com.on.dialog.network.service.ScrapService
 import com.on.dialog.network.service.UserService
 import com.on.dialog.network.service.createAuthService
 import com.on.dialog.network.service.createDiscussionService
+import com.on.dialog.network.service.createLikeService
+import com.on.dialog.network.service.createParticipantService
+import com.on.dialog.network.service.createScrapService
 import com.on.dialog.network.service.createUserService
 import de.jensklingenberg.ktorfit.Ktorfit
 import org.koin.dsl.module
@@ -18,5 +24,14 @@ val serviceModule = module {
     }
     single<UserService> {
         get<Ktorfit>().createUserService()
+    }
+    single<LikeService> {
+        get<Ktorfit>().createLikeService()
+    }
+    single<ScrapService> {
+        get<Ktorfit>().createScrapService()
+    }
+    single<ParticipantService> {
+        get<Ktorfit>().createParticipantService()
     }
 }
