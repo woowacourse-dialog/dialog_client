@@ -2,9 +2,11 @@ package com.on.dialog.network.di
 
 import com.on.dialog.network.datasource.AuthDatasource
 import com.on.dialog.network.datasource.DiscussionDatasource
+import com.on.dialog.network.datasource.ScrapDatasource
 import com.on.dialog.network.datasource.UserDatasource
 import com.on.dialog.network.datasourceimpl.AuthRemoteDatasource
 import com.on.dialog.network.datasourceimpl.DiscussionRemoteDatasource
+import com.on.dialog.network.datasourceimpl.ScrapRemoteDatasource
 import com.on.dialog.network.datasourceimpl.UserRemoteDatasource
 import org.koin.dsl.module
 
@@ -17,5 +19,8 @@ val datasourceModule = module {
     }
     single<UserDatasource> {
         UserRemoteDatasource(userService = get())
+    }
+    single<ScrapDatasource> {
+        ScrapRemoteDatasource(scrapService = get())
     }
 }
