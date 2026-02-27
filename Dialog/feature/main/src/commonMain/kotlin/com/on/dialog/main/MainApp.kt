@@ -1,8 +1,6 @@
 package com.on.dialog.main
 
 import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -89,12 +87,6 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
                             initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
                         )
                     },
-                    predictivePopTransitionSpec = {
-                        ContentTransform(
-                            targetContentEnter = EnterTransition.None,
-                            initialContentExit = ExitTransition.None,
-                        )
-                    }
                 )
             }
         }
