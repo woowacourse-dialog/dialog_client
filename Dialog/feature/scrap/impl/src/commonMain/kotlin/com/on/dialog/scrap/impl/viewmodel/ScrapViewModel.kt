@@ -13,7 +13,6 @@ import com.on.dialog.scrap.impl.model.ScrapUiModel.Companion.toUiModel
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.scrap.impl.generated.resources.Res
 import dialog.feature.scrap.impl.generated.resources.fetch_scrap_discussions_failure_message
-import dialog.feature.scrap.impl.generated.resources.fetch_scrap_discussions_failure_unauthorized_message
 import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -80,13 +79,9 @@ internal class ScrapViewModel(
     }
 
     private fun handleUnauthorized() {
-        updateState { ScrapState.Empty }
-        emitEffect(
-            ScrapEffect.ShowSnackbar(
-                message = Res.string.fetch_scrap_discussions_failure_unauthorized_message,
-                state = SnackbarState.NEGATIVE,
-            ),
-        )
+        nextCursor = null
+        hasNext = true
+        updateState { ScrapState.UnAuthorized }
     }
 
     private fun refresh() {
@@ -103,7 +98,7 @@ internal class ScrapViewModel(
                     AuthEvent.LogOut -> {
                         nextCursor = null
                         hasNext = true
-                        updateState { ScrapState.Empty }
+                        updateState { ScrapState.UnAuthorized }
                     }
                 }
             }
