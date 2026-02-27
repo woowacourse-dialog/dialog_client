@@ -4,11 +4,11 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
-import com.on.dialog.feature.scrap.api.event.ScrapEvent
-import com.on.dialog.feature.scrap.api.event.ScrapEventBus
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.feature.login.api.event.AuthEvent
 import com.on.dialog.feature.login.api.event.AuthEventBus
+import com.on.dialog.feature.scrap.api.event.ScrapEvent
+import com.on.dialog.feature.scrap.api.event.ScrapEventBus
 import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
 import com.on.dialog.model.discussion.scrap.ScrapCatalog
 import com.on.dialog.scrap.impl.model.ScrapUiModel.Companion.toUiModel
@@ -26,7 +26,7 @@ internal class ScrapViewModel(
     private val authEventBus: AuthEventBus,
     private val scrapEventBus: ScrapEventBus,
 ) : BaseViewModel<ScrapIntent, ScrapState, ScrapEffect>(ScrapState.Loading()) {
-    private var nextCursor: Long? = null
+    private var nextCursorId: Long? = null
     private var hasNext: Boolean = true
 
     init {
@@ -48,7 +48,7 @@ internal class ScrapViewModel(
         viewModelScope
             .launch {
                 scrapRepository
-                    .getScraps(lastCursorId = nextCursor, size = FETCH_SIZE)
+                    .getScraps(lastCursorId = nextCursorId, size = FETCH_SIZE)
                     .onSuccess(::handleFetchScrapSuccess)
                     .onFailure { it: Throwable ->
                         if (it is NetworkError.Unauthorized) {
@@ -61,7 +61,7 @@ internal class ScrapViewModel(
     }
 
     private fun handleFetchScrapSuccess(result: ScrapCatalogCursorPage) {
-        nextCursor = result.nextCursorId
+        nextCursorId = result.nextCursorId
         hasNext = result.hasNext
 
         updateState {
@@ -83,13 +83,13 @@ internal class ScrapViewModel(
     }
 
     private fun handleUnauthorized() {
-        nextCursor = null
+        nextCursorId = null
         hasNext = true
         updateState { ScrapState.UnAuthorized }
     }
 
     private fun refresh() {
-        nextCursor = null
+        nextCursorId = null
         hasNext = true
         fetchScraps()
     }
@@ -100,7 +100,7 @@ internal class ScrapViewModel(
                 when (event) {
                     AuthEvent.LogIn -> refresh()
                     AuthEvent.LogOut -> {
-                        nextCursor = null
+                        nextCursorId = null
                         hasNext = true
                         updateState { ScrapState.UnAuthorized }
                     }
