@@ -8,6 +8,6 @@ import com.on.dialog.network.service.ScrapService
 class ScrapRemoteDatasource(
     private val scrapService: ScrapService,
 ) : ScrapDatasource {
-    override suspend fun getScraps(): Result<ScrapCursorPageResponse> =
-        safeApiCall { scrapService.getScraps() }
+    override suspend fun getScraps(lastCursorId: Long, size: Int): Result<ScrapCursorPageResponse> =
+        safeApiCall { scrapService.getScraps(lastCursorId, size) }
 }
