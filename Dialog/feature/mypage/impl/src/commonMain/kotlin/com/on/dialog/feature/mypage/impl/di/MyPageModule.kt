@@ -7,7 +7,13 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val myPageModule = module {
-    viewModel { MyPageViewModel(authRepository = get(), userRepository = get()) }
+    viewModel {
+        MyPageViewModel(
+            authRepository = get(),
+            userRepository = get(),
+            sessionRepository = get(),
+        )
+    }
 
     single { MyPageNavKeyProvider() } bind NavKeyProvider::class
 }

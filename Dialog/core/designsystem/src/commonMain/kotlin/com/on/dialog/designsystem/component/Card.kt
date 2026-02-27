@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.dropShadow
 
-enum class DialogCardTone { Surface }
+enum class DialogCardTone { Surface, SurfaceContainerLow }
 
 /**
  * 그림자와 둥근 모서리를 가진 카드 컴포넌트입니다.
@@ -69,6 +69,7 @@ private fun Modifier.clickableCard(
                 bounded = true,
                 color = when (tone) {
                     DialogCardTone.Surface -> DialogTheme.colorScheme.onSurface
+                    DialogCardTone.SurfaceContainerLow -> DialogTheme.colorScheme.onSurface
                 },
             ),
     )
@@ -76,6 +77,7 @@ private fun Modifier.clickableCard(
 @Composable
 private fun DialogCardTone.backgroundColor(): Color = when (this) {
     DialogCardTone.Surface -> DialogTheme.colorScheme.surface
+    DialogCardTone.SurfaceContainerLow -> DialogTheme.colorScheme.surfaceContainerLow
 }
 
 @Preview(showBackground = true)

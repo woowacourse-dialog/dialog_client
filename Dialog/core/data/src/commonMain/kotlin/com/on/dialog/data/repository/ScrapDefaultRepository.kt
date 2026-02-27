@@ -2,13 +2,25 @@ package com.on.dialog.data.repository
 
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
+import com.on.dialog.model.scrap.ScrapStatus
 import com.on.dialog.network.datasource.ScrapDatasource
 
-class ScrapDefaultRepository(
+internal class ScrapDefaultRepository(
     private val scrapDatasource: ScrapDatasource,
 ) : ScrapRepository {
     override suspend fun getScraps(lastCursorId: Long, size: Int): Result<ScrapCatalogCursorPage> =
         scrapDatasource.getScraps(lastCursorId, size).mapCatching {
             it.toDomain()
         }
+
+    override suspend fun postScrap(discussionId: Long): Result<Unit> =
+        scrapDatasource.postScrap(id = discussionId)
+
+    override suspend fun deleteScrap(discussionId: Long): Result<Unit> =
+        scrapDatasource.deleteScrap(id = discussionId)
+
+    override suspend fun getScrapStatus(discussionId: Long): Result<ScrapStatus> =
+        scrapDatasource
+            .getScrapStatus(id = discussionId)
+            .map { it.toDomain() }
 }

@@ -167,7 +167,7 @@ private fun RendererView(content: String, modifier: Modifier) {
         typography = markdownTypography(),
         modifier = modifier
             .fillMaxWidth()
-            .background(color = DialogTheme.colorScheme.primary.copy(alpha = 0.15F))
+            .background(color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F))
             .padding(all = DialogTheme.spacing.large),
     )
 }

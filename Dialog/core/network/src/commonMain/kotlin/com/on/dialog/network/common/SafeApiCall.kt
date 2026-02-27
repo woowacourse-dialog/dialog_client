@@ -24,34 +24,40 @@ internal suspend inline fun <T> safeApiCall(
         if (error is CancellationException) throw error
 
         val networkError: NetworkError = when (error) {
-            is ClientRequestException -> {
-                // 에러 응답 본문을 파싱하여 errorCode 확인
-                val errorResponse = runCatching { error.response.body<ErrorResponse>() }.getOrNull()
-
-                // errorCode가 1005인 경우 (로그인 필요) Unauthorized 에러로 처리
-                if (errorResponse?.errorCode == "1005") {
-                    NetworkError.Unauthorized(
-                        cause = error,
-                        errorCode = errorResponse.errorCode,
-                        errorMessage = errorResponse.message,
-                    )
-                } else {
-                    NetworkError.BadRequest(error)
-                }
-            }
-
-            is ServerResponseException -> {
-                NetworkError.ServerError(error)
-            }
-
-            is IOException -> {
-                NetworkError.Network(error)
-            }
-
-            else -> {
-                NetworkError.Unknown(error)
-            }
+            is ClientRequestException -> handleClientRequestException(error)
+            is ServerResponseException -> NetworkError.ServerError(error)
+            is IOException -> NetworkError.Network(error)
+            else -> NetworkError.Unknown(error)
         }
         Result.failure(networkError)
+    }
+}
+
+private suspend fun handleClientRequestException(error: ClientRequestException): NetworkError {
+    // 에러 응답 본문을 파싱하여 errorCode 확인
+    val errorResponse = runCatching { error.response.body<ErrorResponse>() }.getOrNull()
+    val errorCode: String = errorResponse?.errorCode ?: return NetworkError.Unknown(error)
+
+    val dialogError: DialogError =
+        DialogError.fromCode(errorCode) ?: return NetworkError.Unknown(error)
+
+    return when (dialogError.httpStatus) {
+        HttpStatus.UNAUTHORIZED -> NetworkError.Unauthorized(
+            cause = error,
+            errorCode = dialogError.code,
+            errorMessage = dialogError.message,
+        )
+
+        HttpStatus.NOT_FOUND -> NetworkError.NotFound(
+            cause = error,
+            errorCode = dialogError.code,
+            errorMessage = dialogError.message,
+        )
+
+        HttpStatus.BAD_REQUEST -> NetworkError.BadRequest(
+            cause = error,
+            errorCode = dialogError.code,
+            errorMessage = dialogError.message,
+        )
     }
 }

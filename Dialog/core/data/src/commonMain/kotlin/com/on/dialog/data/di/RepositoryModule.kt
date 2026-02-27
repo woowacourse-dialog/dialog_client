@@ -2,11 +2,15 @@ package com.on.dialog.data.di
 
 import com.on.dialog.data.repository.AuthDefaultRepository
 import com.on.dialog.data.repository.DiscussionDefaultRepository
+import com.on.dialog.data.repository.LikeDefaultRepository
+import com.on.dialog.data.repository.ParticipantDefaultRepository
 import com.on.dialog.data.repository.ScrapDefaultRepository
 import com.on.dialog.data.repository.SessionDefaultRepository
 import com.on.dialog.data.repository.UserDefaultRepository
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.DiscussionRepository
+import com.on.dialog.domain.repository.LikeRepository
+import com.on.dialog.domain.repository.ParticipantRepository
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.repository.UserRepository
@@ -21,6 +25,7 @@ val repositoryModule = module {
     single<SessionRepository> {
         SessionDefaultRepository(
             cookieStore = get(),
+            localUserStorage = get(),
         )
     }
     single<UserRepository> {
@@ -33,9 +38,19 @@ val repositoryModule = module {
             authDatasource = get(),
         )
     }
+    single<LikeRepository> {
+        LikeDefaultRepository(
+            likeDatasource = get(),
+        )
+    }
     single<ScrapRepository> {
         ScrapDefaultRepository(
             scrapDatasource = get(),
+        )
+    }
+    single<ParticipantRepository> {
+        ParticipantDefaultRepository(
+            participantDatasource = get(),
         )
     }
 }
