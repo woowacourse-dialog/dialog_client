@@ -9,15 +9,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.mikepenz.markdown.compose.Markdown
-import com.mikepenz.markdown.m3.markdownColor
-import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.component.DialogHorizontalDivider
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.model.discussion.content.DiscussionType
+import com.on.dialog.ui.component.markdown.DialogMarkdown
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.participate_button
 import dialog.feature.discussiondetail.impl.generated.resources.participate_done_button
@@ -39,10 +37,8 @@ internal fun DiscussionDetailContent(
         verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
         modifier = modifier.padding(top = DialogTheme.spacing.medium),
     ) {
-        Markdown(
+        DialogMarkdown(
             content = content,
-            colors = markdownColor(),
-            typography = markdownTypography(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = DialogTheme.spacing.large),
