@@ -6,8 +6,6 @@ import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.repository.UserRepository
-import com.on.dialog.feature.login.api.event.AuthEvent
-import com.on.dialog.feature.login.api.event.AuthEventBus
 import com.on.dialog.feature.mypage.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.feature.mypage.impl.model.UserInfoUiModel.Companion.toUiModel
 import com.on.dialog.model.common.ProfileImage
@@ -21,7 +19,6 @@ class MyPageViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
     private val sessionRepository: SessionRepository,
-    private val authEventBus: AuthEventBus,
 ) : BaseViewModel<MyPageIntent, MyPageState, MyPageEffect>(initialState = MyPageState()) {
     override fun onIntent(intent: MyPageIntent) {
         when (intent) {
@@ -210,7 +207,6 @@ class MyPageViewModel(
                 .onSuccess {
                     updateState { MyPageState() }
                     sessionRepository.clearUserId()
-                    authEventBus.emit(AuthEvent.LogOut)
                 }.onFailure { result: Throwable ->
                     emitEffect(
                         MyPageEffect.ShowSnackbar(

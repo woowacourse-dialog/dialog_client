@@ -29,6 +29,7 @@ import com.on.dialog.scrap.impl.viewmodel.ScrapViewModel
 import com.on.dialog.ui.component.CommonStateAction
 import com.on.dialog.ui.component.CommonStateView
 import com.on.dialog.ui.extensions.shouldLoadNextPage
+import com.on.dialog.ui.state.LocalAppLoginStateHolder
 import dialog.feature.scrap.impl.generated.resources.Res
 import dialog.feature.scrap.impl.generated.resources.empty_description
 import dialog.feature.scrap.impl.generated.resources.empty_title
@@ -50,6 +51,8 @@ internal fun ScrapScreen(
     viewModel: ScrapViewModel = koinViewModel(),
 ) {
     val uiState: ScrapState by viewModel.uiState.collectAsStateWithLifecycle()
+    val appLoginStateHolder = LocalAppLoginStateHolder.current
+    val isLoggedIn by appLoginStateHolder.isLoggedIn.collectAsStateWithLifecycle()
     val snackbarState = LocalSnackbarDelegate.current
     val listState: LazyListState = rememberLazyListState()
 
@@ -70,6 +73,10 @@ internal fun ScrapScreen(
             .collect { shouldLoad ->
                 if (shouldLoad) viewModel.onIntent(ScrapIntent.LoadNextPage)
             }
+    }
+
+    LaunchedEffect(isLoggedIn) {
+        viewModel.onIntent(ScrapIntent.LoginStatusChanged(isLoggedIn = isLoggedIn))
     }
 
     ScrapScreen(

@@ -8,12 +8,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation3.runtime.NavKey
 import com.on.dialog.designsystem.component.snackbar.SnackbarDelegate
 import com.on.dialog.navigation.NavigationState
+import com.on.dialog.ui.state.AppLoginStateHolder
 import kotlinx.coroutines.CoroutineScope
 
 @Stable
 class DialogAppState(
     val snackbarDelegate: SnackbarDelegate,
     val navigationState: NavigationState,
+    val loginStateHolder: AppLoginStateHolder,
 ) {
     val snackbarHostState: SnackbarHostState = snackbarDelegate.snackbarHostState
 
@@ -28,10 +30,12 @@ class DialogAppState(
 fun rememberDialogAppState(
     navigationState: NavigationState,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    loginStateHolder: AppLoginStateHolder = remember { AppLoginStateHolder() },
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ): DialogAppState = remember(snackbarHostState, coroutineScope, navigationState) {
     DialogAppState(
         snackbarDelegate = SnackbarDelegate(snackbarHostState, coroutineScope),
         navigationState = navigationState,
+        loginStateHolder = loginStateHolder,
     )
 }

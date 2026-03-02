@@ -15,7 +15,6 @@ val scrapModule = module {
     viewModel {
         ScrapViewModel(
             scrapRepository = get(),
-            authEventBus = get(),
             scrapEventBus = get(),
         )
     }

@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.ScrapRepository
-import com.on.dialog.feature.login.api.event.AuthEvent
-import com.on.dialog.feature.login.api.event.AuthEventBus
 import com.on.dialog.feature.scrap.api.event.ScrapEvent
 import com.on.dialog.feature.scrap.api.event.ScrapEventBus
 import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
@@ -23,14 +21,12 @@ import kotlinx.coroutines.launch
 @Stable
 internal class ScrapViewModel(
     private val scrapRepository: ScrapRepository,
-    private val authEventBus: AuthEventBus,
     private val scrapEventBus: ScrapEventBus,
 ) : BaseViewModel<ScrapIntent, ScrapState, ScrapEffect>(ScrapState.Loading()) {
     private var nextCursorId: Long? = null
     private var hasNext: Boolean = true
 
     init {
-        observeAuthEvent()
         observeScrapEvent()
         fetchScraps()
     }
@@ -39,6 +35,7 @@ internal class ScrapViewModel(
         when (intent) {
             ScrapIntent.LoadNextPage -> fetchScraps()
             ScrapIntent.Refresh -> refresh()
+            is ScrapIntent.LoginStatusChanged -> handleLoginStatusChanged(intent.isLoggedIn)
         }
     }
 
@@ -94,21 +91,6 @@ internal class ScrapViewModel(
         fetchScraps()
     }
 
-    private fun observeAuthEvent() {
-        viewModelScope.launch {
-            authEventBus.events.collect { event ->
-                when (event) {
-                    AuthEvent.LogIn -> refresh()
-                    AuthEvent.LogOut -> {
-                        nextCursorId = null
-                        hasNext = true
-                        updateState { ScrapState.UnAuthorized }
-                    }
-                }
-            }
-        }
-    }
-
     private fun observeScrapEvent() {
         viewModelScope.launch {
             scrapEventBus.events.collect { event ->
@@ -124,6 +106,18 @@ internal class ScrapViewModel(
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun handleLoginStatusChanged(isLoggedIn: Boolean?) {
+        when (isLoggedIn) {
+            null -> Unit
+            true -> refresh()
+            false -> {
+                nextCursorId = null
+                hasNext = true
+                updateState { ScrapState.UnAuthorized }
             }
         }
     }

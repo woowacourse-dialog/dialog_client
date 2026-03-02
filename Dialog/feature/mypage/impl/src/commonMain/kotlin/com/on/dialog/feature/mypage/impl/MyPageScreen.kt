@@ -43,6 +43,7 @@ import com.on.dialog.feature.mypage.impl.viewmodel.MyPageState
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageViewModel
 import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.ProfileImage
+import com.on.dialog.ui.state.LocalAppLoginStateHolder
 import dialog.feature.mypage.impl.generated.resources.Res
 import dialog.feature.mypage.impl.generated.resources.error_imagepicker
 import dialog.feature.mypage.impl.generated.resources.login
@@ -66,6 +67,7 @@ fun MyPageScreen(
     viewModel: MyPageViewModel = koinViewModel(),
 ) {
     val snackbarHostState = LocalSnackbarDelegate.current
+    val appLoginStateHolder = LocalAppLoginStateHolder.current
     val uiState: MyPageState by viewModel.uiState.collectAsStateWithLifecycle()
     var showGallery by rememberSaveable { mutableStateOf(false) }
 
@@ -76,6 +78,12 @@ fun MyPageScreen(
             if (effect is MyPageEffect.ShowSnackbar) {
                 snackbarHostState.showSnackbar(message = effect.message, state = effect.state)
             }
+        }
+    }
+
+    LaunchedEffect(uiState.isLoading, uiState.isLoggedIn) {
+        if (!uiState.isLoading) {
+            appLoginStateHolder.setLoggedIn(isLoggedIn = uiState.isLoggedIn)
         }
     }
 

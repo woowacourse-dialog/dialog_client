@@ -12,7 +12,6 @@ val myPageModule = module {
             authRepository = get(),
             userRepository = get(),
             sessionRepository = get(),
-            authEventBus = get(),
         )
     }
 

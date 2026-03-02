@@ -13,6 +13,7 @@ import com.on.dialog.feature.login.impl.viewmodel.LoginEffect
 import com.on.dialog.feature.login.impl.viewmodel.LoginIntent
 import com.on.dialog.feature.login.impl.viewmodel.LoginState
 import com.on.dialog.feature.login.impl.viewmodel.LoginViewModel
+import com.on.dialog.ui.state.LocalAppLoginStateHolder
 import org.jetbrains.compose.resources.getString
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -44,16 +45,19 @@ fun LoginWebViewScreen(
     viewModel: LoginViewModel = koinViewModel(),
 ) {
     val snackbarHostState = LocalSnackbarDelegate.current
+    val appLoginStateHolder = LocalAppLoginStateHolder.current
     val uiState: LoginState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 LoginEffect.GoBack -> {
+                    appLoginStateHolder.setLoggedIn(isLoggedIn = true)
                     goBack()
                 }
 
                 LoginEffect.NavigateToSignUp -> {
+                    appLoginStateHolder.setLoggedIn(isLoggedIn = true)
                     navigateToSignUp()
                 }
 

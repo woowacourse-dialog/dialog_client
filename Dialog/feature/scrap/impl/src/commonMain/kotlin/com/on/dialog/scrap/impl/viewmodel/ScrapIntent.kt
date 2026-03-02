@@ -6,4 +6,8 @@ internal sealed interface ScrapIntent : UiIntent {
     data object LoadNextPage : ScrapIntent
 
     data object Refresh : ScrapIntent
+
+    data class LoginStatusChanged(
+        val isLoggedIn: Boolean?,
+    ) : ScrapIntent
 }
