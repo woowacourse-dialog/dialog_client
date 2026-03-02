@@ -17,11 +17,7 @@ class Navigator(
     }
 
     fun goBack() {
-        when (state.currentKey) {
-            state.startKey -> Unit
-            state.currentTopLevelKey -> Unit
-            else -> state.currentSubStack.removeLastOrNull()
-        }
+        state.currentSubStack.removeLastOrNull()
         log(action = "goBack")
     }
 
