@@ -3,12 +3,15 @@ package com.on.dialog.discussiondetail.impl.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
+import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.Companion.toUiModel
+import com.on.dialog.domain.repository.CommentRepository
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.domain.repository.LikeRepository
 import com.on.dialog.domain.repository.ParticipantRepository
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.domain.repository.SessionRepository
+import com.on.dialog.model.discussion.comment.DiscussionComment
 import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.model.discussion.detail.DiscussionDetail
 import com.on.dialog.ui.viewmodel.BaseViewModel
@@ -18,19 +21,22 @@ import dialog.feature.discussiondetail.impl.generated.resources.error_common
 import dialog.feature.discussiondetail.impl.generated.resources.error_fetch_discussion_detail
 import dialog.feature.discussiondetail.impl.generated.resources.error_not_my_discussion
 import dialog.feature.discussiondetail.impl.generated.resources.error_should_login
+import io.github.aakira.napier.Napier
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
-class DiscussionDetailViewModel(
+internal class DiscussionDetailViewModel(
     private val discussionId: Long,
     private val discussionRepository: DiscussionRepository,
     private val likeRepository: LikeRepository,
     private val scrapRepository: ScrapRepository,
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
+    private val commentRepository: CommentRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
         initialState = DiscussionDetailState(),
     ) {
@@ -53,14 +59,8 @@ class DiscussionDetailViewModel(
                 awaitAll(
                     async { fetchBookmarkStatus() },
                     async { fetchLikeStatus() },
-                    async {
-                        fetchDiscussionDetail()
-                            .onFailure { handleFetchDiscussionDetailFailure() }
-                        checkIsMyDiscussion()
-                        if (currentState.discussion?.discussionType == DiscussionType.OFFLINE) {
-                            fetchParticipationStatus()
-                        }
-                    },
+                    async { fetchDiscussionDetail() },
+                    async { fetchComments() },
                 )
             }.invokeOnCompletion { updateState { copy(isLoading = false) } }
     }
@@ -69,6 +69,13 @@ class DiscussionDetailViewModel(
         discussionRepository
             .getDiscussionDetail(id = discussionId)
             .onSuccess(::handleFetchDiscussionDetailSuccess)
+            .onFailure { handleFetchDiscussionDetailFailure() }
+            .also {
+                checkIsMyDiscussion()
+                if (currentState.discussion?.discussionType == DiscussionType.OFFLINE) {
+                    fetchParticipationStatus()
+                }
+            }
 
     private fun handleFetchDiscussionDetailSuccess(discussionDetail: DiscussionDetail) =
         with(discussionDetail) {
@@ -116,6 +123,16 @@ class DiscussionDetailViewModel(
             .getLikeStatus(discussionId = discussionId)
             .onSuccess { updateState { copy(isLiked = it.isLiked) } }
     }
+
+    private suspend fun fetchComments(): Result<List<DiscussionComment>> =
+        commentRepository
+            .fetchComments(discussionId = discussionId)
+            .onSuccess { comments ->
+                val newComments = comments.map { comment -> comment.toUiModel() }.toImmutableList()
+                updateState { copy(comments = newComments) }
+            }.onFailure { throwable ->
+                Napier.e(message = throwable.message.orEmpty(), throwable = throwable)
+            }
 
     private fun updateLike() {
         val isCurrentlyLiked = currentState.isLiked

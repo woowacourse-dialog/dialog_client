@@ -2,9 +2,7 @@ package com.on.dialog.discussiondetail.impl
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
@@ -17,12 +15,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.on.dialog.designsystem.component.DialogHorizontalDivider
 import com.on.dialog.designsystem.component.LoadingIndicator
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.util.drawFadingEdges
-import com.on.dialog.discussiondetail.impl.component.CommentInputPlaceholder
+import com.on.dialog.discussiondetail.impl.component.CommentSection
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailContent
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailHeader
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailTopAppBar
@@ -44,7 +42,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun DiscussionDetailScreen(
+internal fun DiscussionDetailScreen(
     discussionId: Long,
     goBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -146,10 +144,11 @@ private fun DiscussionDetailScreen(
                 )
 
                 DiscussionDetailContent(
-                    discussionType = discussion.discussionType,
                     content = discussion.detailContent.content,
                     summary = discussion.summary,
                     isMyDiscussion = state.isMyDiscussion,
+                    isShowParticipateButton = state.isShowParticipateButton,
+                    isShowSummary = state.isShowSummary,
                     isGeneratingSummary = state.isGeneratingSummary,
                     isParticipating = state.isParticipating,
                     onSummaryClick = onSummaryClick,
@@ -157,17 +156,15 @@ private fun DiscussionDetailScreen(
                 )
             }
 
-            DialogHorizontalDivider()
-            Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
-            CommentInputPlaceholder(
-                text = commentContent,
-                onClick = onCommentInputClick,
+            CommentSection(
+                comments = state.comments,
+                onCommentInputClick = onCommentInputClick,
             )
         }
     }
 }
 
-@Preview
+@ThemePreview
 @Composable
 private fun DiscussionDetailScreenOfflinePreview() {
     DialogTheme {
@@ -232,7 +229,7 @@ private fun DiscussionDetailScreenOnlinePreview() {
                         modifiedAt = "2023.03.01",
                     ),
                     summary = null,
-                    status = DiscussionStatusUiModel.IN_DISCUSSION,
+                    status = DiscussionStatusUiModel.DISCUSSION_COMPLETE,
                     endDate = "2026년 3월 10일",
                 ),
                 isMyDiscussion = false,
