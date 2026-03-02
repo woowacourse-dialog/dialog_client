@@ -1,6 +1,7 @@
 package com.on.dialog.data.di
 
 import com.on.dialog.data.repository.AuthDefaultRepository
+import com.on.dialog.data.repository.DefaultCommentRepository
 import com.on.dialog.data.repository.DiscussionDefaultRepository
 import com.on.dialog.data.repository.LikeDefaultRepository
 import com.on.dialog.data.repository.ParticipantDefaultRepository
@@ -8,6 +9,7 @@ import com.on.dialog.data.repository.ScrapDefaultRepository
 import com.on.dialog.data.repository.SessionDefaultRepository
 import com.on.dialog.data.repository.UserDefaultRepository
 import com.on.dialog.domain.repository.AuthRepository
+import com.on.dialog.domain.repository.CommentRepository
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.domain.repository.LikeRepository
 import com.on.dialog.domain.repository.ParticipantRepository
@@ -51,6 +53,11 @@ val repositoryModule = module {
     single<ParticipantRepository> {
         ParticipantDefaultRepository(
             participantDatasource = get(),
+        )
+    }
+    single<CommentRepository> {
+        DefaultCommentRepository(
+            source = get(),
         )
     }
 }
