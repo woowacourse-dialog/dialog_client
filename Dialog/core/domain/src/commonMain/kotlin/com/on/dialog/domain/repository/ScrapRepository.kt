@@ -1,9 +1,13 @@
 package com.on.dialog.domain.repository
 
 import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
+import com.on.dialog.model.discussion.scrap.ScrapCatalog
 import com.on.dialog.model.scrap.ScrapStatus
+import kotlinx.coroutines.flow.StateFlow
 
 interface ScrapRepository {
+    val scrapCatalogs: StateFlow<Map<Long, ScrapCatalog>>
+
     suspend fun getScraps(lastCursorId: Long?, size: Int): Result<ScrapCatalogCursorPage>
     suspend fun postScrap(discussionId: Long): Result<Unit>
 

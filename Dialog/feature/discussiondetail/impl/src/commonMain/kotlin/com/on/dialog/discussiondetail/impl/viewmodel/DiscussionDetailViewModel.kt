@@ -9,8 +9,6 @@ import com.on.dialog.domain.repository.LikeRepository
 import com.on.dialog.domain.repository.ParticipantRepository
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.domain.repository.SessionRepository
-import com.on.dialog.feature.scrap.api.event.ScrapEvent
-import com.on.dialog.feature.scrap.api.event.ScrapEventBus
 import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.model.discussion.detail.DiscussionDetail
 import com.on.dialog.ui.viewmodel.BaseViewModel
@@ -31,7 +29,6 @@ class DiscussionDetailViewModel(
     private val discussionRepository: DiscussionRepository,
     private val likeRepository: LikeRepository,
     private val scrapRepository: ScrapRepository,
-    private val scrapEventBus: ScrapEventBus,
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
@@ -103,14 +100,8 @@ class DiscussionDetailViewModel(
         viewModelScope.launch {
             if (isCurrentlyBookmarked) {
                 scrapRepository.deleteScrap(discussionId = discussionId)
-                    .onSuccess {
-                        scrapEventBus.emit(ScrapEvent.Removed(discussionId = discussionId))
-                    }
             } else {
                 scrapRepository.postScrap(discussionId = discussionId)
-                    .onSuccess {
-                        scrapEventBus.emit(ScrapEvent.Added(discussionId = discussionId))
-                    }
             }.onFailure { handleUpdateBookmarkFailure(isCurrentlyBookmarked, it) }
         }
     }

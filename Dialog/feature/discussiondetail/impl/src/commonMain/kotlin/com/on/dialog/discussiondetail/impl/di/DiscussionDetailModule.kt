@@ -16,7 +16,6 @@ val discussionDetailModule = module {
             discussionRepository = get(),
             likeRepository = get(),
             scrapRepository = get(),
-            scrapEventBus = get(),
             participantRepository = get(),
             sessionRepository = get(),
         )
