@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
@@ -45,29 +47,29 @@ fun DialogMarkdown(
         components = markdownComponents(
             heading1 = {
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
-                MarkdownHeader(it.content, it.node, style = typography.headlineLarge)
+                MarkdownHeader(it.content, it.node, style = typography.headlineMedium)
                 MarkdownDivider(modifier = Modifier.padding(vertical = DialogTheme.spacing.medium))
             },
             heading2 = {
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
-                MarkdownHeader(it.content, it.node, style = typography.headlineMedium)
+                MarkdownHeader(it.content, it.node, style = typography.headlineSmall)
                 MarkdownDivider(modifier = Modifier.padding(vertical = DialogTheme.spacing.medium))
             },
             heading3 = {
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
-                MarkdownHeader(it.content, it.node, style = typography.headlineSmall)
+                MarkdownHeader(it.content, it.node, style = typography.titleLarge)
             },
             heading4 = {
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
-                MarkdownHeader(it.content, it.node, style = typography.titleMedium)
+                MarkdownHeader(it.content, it.node, style = typography.titleLarge)
             },
             heading5 = {
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
-                MarkdownHeader(it.content, it.node, style = typography.titleSmall)
+                MarkdownHeader(it.content, it.node, style = typography.titleLarge)
             },
             heading6 = {
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
-                MarkdownHeader(it.content, it.node, style = it.typography.h3)
+                MarkdownHeader(it.content, it.node, style = typography.titleLarge)
             },
         ),
         typography = markdownTypography(
@@ -75,11 +77,11 @@ fun DialogMarkdown(
             text = typography.bodyLarge,
             paragraph = typography.bodyLarge,
             // 코드, 인라인 코드
-            code = typography.bodyMedium.copy(
+            code = typography.bodyLarge.copy(
                 fontFamily = FontFamily.Monospace,
                 letterSpacing = TextUnit.Unspecified,
             ),
-            inlineCode = typography.bodyMedium.copy(
+            inlineCode = typography.bodyLarge.copy(
                 fontFamily = FontFamily.Monospace,
                 letterSpacing = TextUnit.Unspecified,
             ),
@@ -118,9 +120,15 @@ fun DialogMarkdown(
 @ThemePreview
 private fun DialogMarkdownDarkPreview() {
     DialogTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = DialogTheme.colorScheme.surface) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            color = DialogTheme.colorScheme.surface,
+        ) {
             DialogMarkdown(
-                content = PREVIEW_MARKDOWN,
+                content = PREVIEW_MARKDOWN.trimIndent(),
+                modifier = Modifier.padding(DialogTheme.spacing.medium),
             )
         }
     }
@@ -134,7 +142,8 @@ private const val PREVIEW_MARKDOWN = """
     ##### H5 제목
     ###### H6 제목
     
-    일반 문단(Paragraph)입니다. **굵게**, *기울임*, ~~취소선~~, 그리고 [링크 예시](https://example.com) 입니다.
+    일반 문단(Paragraph)입니다.  
+    **굵게**, *기울임*, ~~취소선~~, 그리고 [링크 예시](https://example.com) 입니다.
     
     인라인 코드: `val a = 1`
     
