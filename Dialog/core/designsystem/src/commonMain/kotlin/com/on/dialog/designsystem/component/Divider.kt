@@ -1,6 +1,8 @@
 package com.on.dialog.designsystem.component
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -52,7 +54,7 @@ fun DialogHorizontalDivider(
 ) {
     DialogDivider(
         orientation = DividerOrientation.Horizontal,
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         thickness = thickness,
         color = color,
     )
@@ -66,7 +68,7 @@ fun DialogVerticalDivider(
 ) {
     DialogDivider(
         orientation = DividerOrientation.Vertical,
-        modifier = modifier,
+        modifier = modifier.fillMaxHeight(),
         thickness = thickness,
         color = color,
     )
