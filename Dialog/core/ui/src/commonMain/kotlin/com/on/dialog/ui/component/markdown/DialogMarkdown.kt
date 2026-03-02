@@ -1,6 +1,9 @@
 package com.on.dialog.ui.component.markdown
 
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
@@ -12,7 +15,10 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.TextUnit
-import com.mikepenz.markdown.compose.Markdown
+import com.mikepenz.markdown.compose.components.markdownComponents
+import com.mikepenz.markdown.compose.elements.MarkdownDivider
+import com.mikepenz.markdown.compose.elements.MarkdownHeader
+import com.mikepenz.markdown.m3.Markdown
 import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.preview.ThemePreview
@@ -35,14 +41,36 @@ fun DialogMarkdown(
             dividerColor = colors.outlineVariant,
             tableBackground = colors.surfaceContainerLow,
         ),
+        // 제목
+        components = markdownComponents(
+            heading1 = {
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
+                MarkdownHeader(it.content, it.node, style = typography.headlineLarge)
+                MarkdownDivider(modifier = Modifier.padding(vertical = DialogTheme.spacing.medium))
+            },
+            heading2 = {
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
+                MarkdownHeader(it.content, it.node, style = typography.headlineMedium)
+                MarkdownDivider(modifier = Modifier.padding(vertical = DialogTheme.spacing.medium))
+            },
+            heading3 = {
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
+                MarkdownHeader(it.content, it.node, style = typography.headlineSmall)
+            },
+            heading4 = {
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
+                MarkdownHeader(it.content, it.node, style = typography.titleMedium)
+            },
+            heading5 = {
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
+                MarkdownHeader(it.content, it.node, style = typography.titleSmall)
+            },
+            heading6 = {
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
+                MarkdownHeader(it.content, it.node, style = it.typography.h3)
+            },
+        ),
         typography = markdownTypography(
-            // 제목
-            h1 = typography.headlineLarge,
-            h2 = typography.headlineMedium,
-            h3 = typography.headlineSmall,
-            h4 = typography.titleLarge,
-            h5 = typography.titleMedium,
-            h6 = typography.titleSmall,
             // 일반 텍스트
             text = typography.bodyLarge,
             paragraph = typography.bodyLarge,
