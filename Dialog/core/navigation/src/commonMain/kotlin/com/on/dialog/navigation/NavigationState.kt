@@ -64,7 +64,8 @@ class NavigationState(
             subStacks[currentTopLevelKey]
                 ?: error("Sub stack for $currentTopLevelKey does not exist")
 
-    val isTopLevelKey: Boolean = topLevelKeys.contains(currentKey)
+    val isTopLevelKey
+        get() = topLevelKeys.contains(currentKey)
 }
 
 @Composable
