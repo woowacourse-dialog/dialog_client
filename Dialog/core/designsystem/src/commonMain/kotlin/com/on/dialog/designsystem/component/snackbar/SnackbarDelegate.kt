@@ -6,6 +6,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 val LocalSnackbarDelegate = compositionLocalOf<SnackbarDelegate> {
@@ -17,6 +18,8 @@ class SnackbarDelegate(
     val snackbarHostState: SnackbarHostState,
     val coroutineScope: CoroutineScope,
 ) {
+    private var snackbarJob: Job? = null
+
     fun showSnackbar(
         state: SnackbarState,
         message: String,
@@ -26,7 +29,8 @@ class SnackbarDelegate(
         onDismiss: () -> Unit = {},
         onAction: () -> Unit = {},
     ) {
-        coroutineScope.launch {
+        snackbarJob?.cancel()
+        snackbarJob = coroutineScope.launch {
             val visuals = DialogSnackbarVisuals(
                 message = message,
                 actionLabel = actionLabel,
@@ -42,6 +46,14 @@ class SnackbarDelegate(
                 SnackbarResult.Dismissed -> onDismiss()
                 SnackbarResult.ActionPerformed -> onAction()
             }
+
+            snackbarJob = null
         }
+    }
+
+    fun dismissCurrentSnackbar() {
+        snackbarJob?.cancel()
+        snackbarJob = null
+        snackbarHostState.currentSnackbarData?.dismiss()
     }
 }
