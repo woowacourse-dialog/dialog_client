@@ -112,7 +112,6 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
                         }.invoke(key)
                     },
                     onBack = {
-                        canExit = false
                         navigator.goBack()
                     },
                     modifier = Modifier
