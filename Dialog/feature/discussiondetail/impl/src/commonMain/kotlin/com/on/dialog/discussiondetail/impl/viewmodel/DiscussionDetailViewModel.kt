@@ -47,9 +47,19 @@ internal class DiscussionDetailViewModel(
     override fun onIntent(intent: DiscussionDetailIntent) {
         when (intent) {
             DiscussionDetailIntent.ToggleBookmark -> updateBookmark()
+
             DiscussionDetailIntent.ToggleLike -> updateLike()
+
             DiscussionDetailIntent.Participate -> participate()
+
             DiscussionDetailIntent.GenerateSummary -> generateSummary()
+
+            is DiscussionDetailIntent.OnSubmitComment -> submitComment(content = intent.content)
+
+            is DiscussionDetailIntent.OnSubmitReply -> submitReply(
+                commentId = intent.commentId,
+                content = intent.content,
+            )
         }
     }
 
@@ -216,6 +226,12 @@ internal class DiscussionDetailViewModel(
                     if (detail.summary != null) return
                 }
         }
+    }
+
+    private fun submitComment(content: String) {
+    }
+
+    private fun submitReply(commentId: Long, content: String) {
     }
 
     private fun showErrorSnackbar(throwable: Throwable) {

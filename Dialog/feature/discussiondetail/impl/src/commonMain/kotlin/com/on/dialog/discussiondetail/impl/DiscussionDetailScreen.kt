@@ -49,11 +49,9 @@ internal fun DiscussionDetailScreen(
     viewModel: DiscussionDetailViewModel = koinViewModel { parametersOf(discussionId) },
 ) {
     val snackbarDelegate = LocalSnackbarDelegate.current
-
-    var commentContent by rememberSaveable { mutableStateOf("") }
-    var showMarkdownEditor by rememberSaveable { mutableStateOf(false) }
-
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
+    var showMarkdownEditor by rememberSaveable { mutableStateOf(false) }
+    var targetCommentId by rememberSaveable { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -71,23 +69,32 @@ internal fun DiscussionDetailScreen(
     DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
-        onCommentInputClick = { showMarkdownEditor = true },
+        onCommentClick = {
+            showMarkdownEditor = true
+            targetCommentId = null
+        },
+        onReplyClick = { commentId ->
+            showMarkdownEditor = true
+            targetCommentId = commentId
+        },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
         onParticipateClick = { viewModel.onIntent(DiscussionDetailIntent.Participate) },
         onSummaryClick = { viewModel.onIntent(DiscussionDetailIntent.GenerateSummary) },
         onEditClick = { /* TODO: 수정 화면으로 이동 */ },
         onDeleteClick = { /* TODO: 삭제 확인 다이얼로그 표시 */ },
-        commentContent = commentContent,
         modifier = modifier,
     )
 
     if (showMarkdownEditor) {
         MarkdownEditor(
-            initialContent = commentContent,
+            initialContent = "",
             onConfirm = { newContent: String ->
-                commentContent = newContent
                 showMarkdownEditor = false
+                val intent = targetCommentId?.let { commentId ->
+                    DiscussionDetailIntent.OnSubmitReply(commentId, newContent)
+                } ?: DiscussionDetailIntent.OnSubmitComment(newContent)
+                viewModel.onIntent(intent)
             },
             onExit = { showMarkdownEditor = false },
         )
@@ -98,14 +105,14 @@ internal fun DiscussionDetailScreen(
 private fun DiscussionDetailScreen(
     state: DiscussionDetailState,
     goBack: () -> Unit,
-    onCommentInputClick: () -> Unit,
+    onCommentClick: () -> Unit,
+    onReplyClick: (commentId: Long) -> Unit,
     onBookmarkClick: () -> Unit,
     onLikeClick: () -> Unit,
     onParticipateClick: () -> Unit,
     onSummaryClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    commentContent: String,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
@@ -158,7 +165,8 @@ private fun DiscussionDetailScreen(
 
             CommentSection(
                 comments = state.comments,
-                onCommentInputClick = onCommentInputClick,
+                onCommentClick = onCommentClick,
+                onReplyClick = onReplyClick,
             )
         }
     }
@@ -197,14 +205,14 @@ private fun DiscussionDetailScreenOfflinePreview() {
                     isMyDiscussion = true,
                 ),
                 goBack = {},
-                onCommentInputClick = {},
+                onCommentClick = {},
+                onReplyClick = {},
                 onBookmarkClick = {},
                 onLikeClick = {},
                 onParticipateClick = {},
                 onSummaryClick = {},
                 onEditClick = {},
                 onDeleteClick = {},
-                commentContent = "",
             )
         }
     }
@@ -235,14 +243,14 @@ private fun DiscussionDetailScreenOnlinePreview() {
                 isMyDiscussion = false,
             ),
             goBack = {},
-            onCommentInputClick = {},
+            onCommentClick = {},
+            onReplyClick = {},
             onBookmarkClick = {},
             onLikeClick = {},
             onParticipateClick = {},
             onSummaryClick = {},
             onEditClick = {},
             onDeleteClick = {},
-            commentContent = "",
         )
     }
 }
