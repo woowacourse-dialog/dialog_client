@@ -229,9 +229,24 @@ internal class DiscussionDetailViewModel(
     }
 
     private fun submitComment(content: String) {
+        viewModelScope.launch {
+            commentRepository
+                .postComment(discussionId = discussionId, content = content)
+                .onSuccess { fetchComments() }
+                .onFailure(::showErrorSnackbar)
+        }
     }
 
     private fun submitReply(commentId: Long, content: String) {
+        viewModelScope.launch {
+            commentRepository
+                .postReply(
+                    discussionId = discussionId,
+                    parentCommentId = commentId,
+                    content = content,
+                ).onSuccess { fetchComments() }
+                .onFailure(::showErrorSnackbar)
+        }
     }
 
     private fun showErrorSnackbar(throwable: Throwable) {

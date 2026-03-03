@@ -161,7 +161,7 @@ private fun CommentItem(
             horizontalArrangement = Arrangement.End,
         ) {
             Text(
-                text = "답글 달기",
+                text = "답글 쓰기",
                 style = DialogTheme.typography.labelLarge,
                 color = DialogTheme.colorScheme.primary,
                 modifier = Modifier
