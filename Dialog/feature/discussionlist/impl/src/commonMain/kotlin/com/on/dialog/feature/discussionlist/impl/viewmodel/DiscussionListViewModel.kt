@@ -84,17 +84,25 @@ internal class DiscussionListViewModel(
     }
 
     private fun handleFetchDiscussionsSuccess(result: DiscussionCatalogCursorPage) {
+        val isFirstPage = nextCursor == null
+
         nextCursor = result.nextCursor
         hasNext = result.hasNext
 
         updateState {
             val newDiscussions = result.discussionCatalog.map { it.toUiModel() }
             val mergedDiscussions =
-                (discussions + newDiscussions)
-                    .distinctBy { discussion -> discussion.id }
-                    .toImmutableList()
+                if (isFirstPage) {
+                    newDiscussions.toImmutableList()
+                } else {
+                    (discussions + newDiscussions)
+                        .distinctBy { discussion -> discussion.id }
+                        .toImmutableList()
+                }
             copy(discussions = mergedDiscussions, isFetched = true)
         }
+
+        if (isFirstPage) emitEffect(DiscussionListEffect.ScrollToTop)
     }
 
     private fun handleFetchDiscussionsFailure(throwable: Throwable) {
