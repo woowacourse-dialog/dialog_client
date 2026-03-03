@@ -93,12 +93,10 @@ internal class DiscussionListViewModel(
             val newDiscussions = result.discussionCatalog.map { it.toUiModel() }
             val mergedDiscussions =
                 if (isFirstPage) {
-                    newDiscussions.toImmutableList()
+                    newDiscussions
                 } else {
-                    (discussions + newDiscussions)
-                        .distinctBy { discussion -> discussion.id }
-                        .toImmutableList()
-                }
+                    (discussions + newDiscussions).distinctBy { discussion -> discussion.id }
+                }.toImmutableList()
             copy(discussions = mergedDiscussions, isFetched = true)
         }
 
