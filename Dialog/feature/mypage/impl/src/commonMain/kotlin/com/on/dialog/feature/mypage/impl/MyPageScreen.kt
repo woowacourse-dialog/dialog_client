@@ -30,8 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogCard
+import com.on.dialog.designsystem.component.DialogDivider
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
+import com.on.dialog.designsystem.component.DividerOrientation
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -170,18 +172,72 @@ private fun MyPageScreenLoggedIn(
         onProfileImageClick = onProfileImageClick,
     )
     Spacer(Modifier.height(height = DialogTheme.spacing.extraLarge))
-    DialogCard(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Column {
+    DiscussionManagementSection(
+        onMyCreatedClick = onMyCreatedClick,
+        onMyFavoriteClick = {},
+    )
+    Spacer(Modifier.height(height = DialogTheme.spacing.large))
+    AccountManagementSection(
+        onLogoutClick = onLogoutClick,
+        onDeleteAccount = onDeleteAccount,
+    )
+
+    if (showProfileEditDialog) {
+        ProfileEditDialog(
+            nickname = uiState.userInfo.nickname,
+            selectedTrack = uiState.userInfo.track,
+            onDismissRequest = { showProfileEditDialog = false },
+            onUpdateProfile = onUpdateProfile,
+        )
+    }
+}
+
+@Composable
+private fun DiscussionManagementSection(
+    onMyCreatedClick: () -> Unit,
+    onMyFavoriteClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    DialogCard(modifier = modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.small)) {
+            Text(
+                text = "토론 관리",
+                style = DialogTheme.typography.titleSmall,
+                color = DialogTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            )
+            DialogDivider(
+                orientation = DividerOrientation.Horizontal,
+                modifier = Modifier.padding(vertical = DialogTheme.spacing.extraSmall),
+            )
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.my_discussions),
                 onClick = onMyCreatedClick,
             ) { Icon(imageVector = DialogIcons.Forum, contentDescription = "") }
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.my_scraps),
-                onClick = {},
+                onClick = onMyFavoriteClick,
             ) { Icon(imageVector = DialogIcons.Bookmark, contentDescription = "") }
+        }
+    }
+}
+
+@Composable
+private fun AccountManagementSection(
+    onLogoutClick: () -> Unit,
+    onDeleteAccount: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    DialogCard(modifier = modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.small)) {
+            Text(
+                text = "계정 관리",
+                style = DialogTheme.typography.titleSmall,
+                color = DialogTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            )
+            DialogDivider(
+                orientation = DividerOrientation.Horizontal,
+                modifier = Modifier.padding(vertical = DialogTheme.spacing.extraSmall),
+            )
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.logout),
                 onClick = onLogoutClick,
@@ -191,26 +247,10 @@ private fun MyPageScreenLoggedIn(
                     contentDescription = stringResource(resource = Res.string.logout),
                 )
             }
-            //  TODO 임시로 만든 회원 탈퇴 버튼, 위치 수정 고려
-            MyPageMenuButton(
-                text = "회원 탈퇴",
-                onClick = onDeleteAccount,
-            ) {
-                Icon(
-                    imageVector = DialogIcons.Logout,
-                    contentDescription = "회원 탈퇴",
-                )
+            MyPageMenuButton(text = "회원 탈퇴", onClick = onDeleteAccount) {
+                Icon(imageVector = DialogIcons.PersonOff, contentDescription = "회원 탈퇴")
             }
         }
-    }
-
-    if (showProfileEditDialog) {
-        ProfileEditDialog(
-            nickname = uiState.userInfo.nickname,
-            selectedTrack = uiState.userInfo.track,
-            onDismissRequest = { showProfileEditDialog = false },
-            onUpdateProfile = onUpdateProfile,
-        )
     }
 }
 
@@ -251,7 +291,6 @@ private fun MyPageMenuButton(
             .clickable { onClick() }
             .padding(
                 vertical = DialogTheme.spacing.medium,
-                horizontal = DialogTheme.spacing.small,
             ),
     ) {
         leadingIcon?.let {
