@@ -1,4 +1,4 @@
-package com.on.dialog.feature.mypage.impl
+package com.on.dialog.feature.mypage.impl.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

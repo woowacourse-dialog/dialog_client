@@ -21,20 +21,21 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogCard
-import com.on.dialog.designsystem.component.DialogDivider
 import com.on.dialog.designsystem.component.DialogTopAppBar
-import com.on.dialog.designsystem.component.DividerOrientation
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.feature.mypage.impl.component.MyPageMenuButton
+import com.on.dialog.feature.mypage.impl.component.AccountManagementSection
+import com.on.dialog.feature.mypage.impl.component.ConfirmDialog
+import com.on.dialog.feature.mypage.impl.component.DiscussionManagementSection
+import com.on.dialog.feature.mypage.impl.component.EmptyProfileSection
+import com.on.dialog.feature.mypage.impl.component.ProfileEditDialog
 import com.on.dialog.feature.mypage.impl.component.ProfileSection
 import com.on.dialog.feature.mypage.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.feature.mypage.impl.model.UserInfoUiModel
@@ -51,9 +52,6 @@ import dialog.feature.mypage.impl.generated.resources.error_imagepicker
 import dialog.feature.mypage.impl.generated.resources.login
 import dialog.feature.mypage.impl.generated.resources.logout
 import dialog.feature.mypage.impl.generated.resources.logout_confirm_message
-import dialog.feature.mypage.impl.generated.resources.my_discussions
-import dialog.feature.mypage.impl.generated.resources.my_favorites
-import dialog.feature.mypage.impl.generated.resources.privacy_policy
 import io.github.aakira.napier.Napier
 import io.github.ismoy.imagepickerkmp.domain.config.CameraCaptureConfig
 import io.github.ismoy.imagepickerkmp.domain.models.CompressionLevel
@@ -98,6 +96,9 @@ fun MyPageScreen(
         onMyFavoriteClick = {
             snackbarHostState.showSnackbar(message = "준비 중인 기능이에요.", state = SnackbarState.DEFAULT)
         },
+        onInteractionLoggedOut = {
+            snackbarHostState.showSnackbar(message = "먼저 로그인을 해주세요", state = SnackbarState.DEFAULT)
+        },
         modifier = modifier,
     )
 
@@ -136,6 +137,7 @@ private fun MyPageScreen(
     onDeleteAccount: () -> Unit,
     onMyCreatedClick: () -> Unit,
     onMyFavoriteClick: () -> Unit,
+    onInteractionLoggedOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -156,7 +158,10 @@ private fun MyPageScreen(
                     onMyFavoriteClick = onMyFavoriteClick,
                 )
             } else {
-                MyPageScreenLoggedOut(onLoginClick = onLoginClick)
+                MyPageScreenLoggedOut(
+                    onLoginClick = onLoginClick,
+                    onInteractionLoggedOut = onInteractionLoggedOut,
+                )
             }
         }
     }
@@ -230,84 +235,29 @@ private fun MyPageScreenLoggedIn(
 }
 
 @Composable
-private fun DiscussionManagementSection(
-    onMyCreatedClick: () -> Unit,
-    onMyFavoriteClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    DialogCard(modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.small)) {
-            Text(
-                text = "토론 관리",
-                style = DialogTheme.typography.titleSmall,
-                color = DialogTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-            )
-            DialogDivider(
-                orientation = DividerOrientation.Horizontal,
-                modifier = Modifier.padding(vertical = DialogTheme.spacing.extraSmall),
-            )
-            MyPageMenuButton(
-                text = stringResource(resource = Res.string.my_discussions),
-                onClick = onMyCreatedClick,
-            ) { Icon(imageVector = DialogIcons.Forum, contentDescription = "") }
-            MyPageMenuButton(
-                text = stringResource(resource = Res.string.my_favorites),
-                onClick = onMyFavoriteClick,
-            ) { Icon(imageVector = DialogIcons.Favorite, contentDescription = "") }
-        }
-    }
-}
-
-@Composable
-private fun AccountManagementSection(
-    onLogoutClick: () -> Unit,
-    onDeleteAccount: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val uriHandler = LocalUriHandler.current
-
-    DialogCard(modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.small)) {
-            Text(
-                text = "계정 관리",
-                style = DialogTheme.typography.titleSmall,
-                color = DialogTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-            )
-            DialogDivider(
-                orientation = DividerOrientation.Horizontal,
-                modifier = Modifier.padding(vertical = DialogTheme.spacing.extraSmall),
-            )
-            MyPageMenuButton(
-                text = stringResource(resource = Res.string.privacy_policy),
-                onClick = { uriHandler.openUri(uri = PRIVACY_POLICY_URL) },
-            ) {
-                Icon(
-                    imageVector = DialogIcons.Info,
-                    contentDescription = stringResource(resource = Res.string.privacy_policy),
-                )
-            }
-            MyPageMenuButton(
-                text = stringResource(resource = Res.string.logout),
-                onClick = onLogoutClick,
-            ) {
-                Icon(
-                    imageVector = DialogIcons.Logout,
-                    contentDescription = stringResource(resource = Res.string.logout),
-                )
-            }
-            MyPageMenuButton(text = "회원 탈퇴", onClick = onDeleteAccount) {
-                Icon(imageVector = DialogIcons.PersonOff, contentDescription = "회원 탈퇴")
-            }
-        }
-    }
-}
-
-@Composable
 private fun MyPageScreenLoggedOut(
     onLoginClick: () -> Unit,
+    onInteractionLoggedOut: () -> Unit,
+) {
+    EmptyProfileSection()
+    Spacer(modifier = Modifier.height(height = DialogTheme.spacing.extraLarge))
+    LoginButton(onLoginClick = onLoginClick)
+    Spacer(modifier = Modifier.height(height = DialogTheme.spacing.extraLarge))
+    DiscussionManagementSection(
+        onMyCreatedClick = { onInteractionLoggedOut() },
+        onMyFavoriteClick = { onInteractionLoggedOut() },
+    )
+    Spacer(modifier = Modifier.height(height = DialogTheme.spacing.large))
+    AccountManagementSection()
+}
+
+@Composable
+private fun LoginButton(
+    onLoginClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     DialogCard(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         onClick = onLoginClick,
     ) {
         Row {
@@ -347,6 +297,7 @@ private fun MyPageScreenLoggedInPreview() {
                 onDeleteAccount = {},
                 onMyCreatedClick = {},
                 onMyFavoriteClick = {},
+                onInteractionLoggedOut = {},
             )
         }
     }
@@ -359,7 +310,13 @@ private fun MyPageScreenLoggedOutPreview() {
         Surface {
             MyPageScreen(
                 uiState = MyPageState(
+                    imageUrl = "",
                     isLoggedIn = false,
+                    userInfo = UserInfoUiModel(
+                        nickname = "",
+                        track = Track.ANDROID.toUiModel(),
+                        githubId = "",
+                    ),
                 ),
                 onLoginClick = {},
                 onLogoutClick = {},
@@ -368,10 +325,8 @@ private fun MyPageScreenLoggedOutPreview() {
                 onDeleteAccount = {},
                 onMyCreatedClick = {},
                 onMyFavoriteClick = {},
+                onInteractionLoggedOut = {},
             )
         }
     }
 }
-
-private const val PRIVACY_POLICY_URL =
-    "https://mountain-operation-d79.notion.site/308d03f7be5280e0ac15c11af3fe9242"
