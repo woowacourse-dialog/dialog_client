@@ -21,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,6 +48,7 @@ import dialog.feature.mypage.impl.generated.resources.login
 import dialog.feature.mypage.impl.generated.resources.logout
 import dialog.feature.mypage.impl.generated.resources.my_discussions
 import dialog.feature.mypage.impl.generated.resources.my_favorites
+import dialog.feature.mypage.impl.generated.resources.privacy_policy
 import io.github.aakira.napier.Napier
 import io.github.ismoy.imagepickerkmp.domain.config.CameraCaptureConfig
 import io.github.ismoy.imagepickerkmp.domain.models.CompressionLevel
@@ -228,6 +230,8 @@ private fun AccountManagementSection(
     onDeleteAccount: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val uriHandler = LocalUriHandler.current
+
     DialogCard(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.small)) {
             Text(
@@ -239,6 +243,15 @@ private fun AccountManagementSection(
                 orientation = DividerOrientation.Horizontal,
                 modifier = Modifier.padding(vertical = DialogTheme.spacing.extraSmall),
             )
+            MyPageMenuButton(
+                text = stringResource(resource = Res.string.privacy_policy),
+                onClick = { uriHandler.openUri(uri = PRIVACY_POLICY_URL) },
+            ) {
+                Icon(
+                    imageVector = DialogIcons.Info,
+                    contentDescription = stringResource(resource = Res.string.privacy_policy),
+                )
+            }
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.logout),
                 onClick = onLogoutClick,
@@ -325,3 +338,6 @@ private fun MyPageScreenLoggedOutPreview() {
         }
     }
 }
+
+private const val PRIVACY_POLICY_URL =
+    "https://mountain-operation-d79.notion.site/308d03f7be5280e0ac15c11af3fe9242"
