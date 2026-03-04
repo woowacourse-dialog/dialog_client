@@ -51,7 +51,7 @@ import dialog.feature.mypage.impl.generated.resources.error_imagepicker
 import dialog.feature.mypage.impl.generated.resources.login
 import dialog.feature.mypage.impl.generated.resources.logout
 import dialog.feature.mypage.impl.generated.resources.my_discussions
-import dialog.feature.mypage.impl.generated.resources.my_scraps
+import dialog.feature.mypage.impl.generated.resources.my_favorites
 import io.github.aakira.napier.Napier
 import io.github.ismoy.imagepickerkmp.domain.config.CameraCaptureConfig
 import io.github.ismoy.imagepickerkmp.domain.models.CompressionLevel
@@ -93,6 +93,9 @@ fun MyPageScreen(
         onProfileImageClick = { showGallery = true },
         onDeleteAccount = { viewModel.onIntent(intent = MyPageIntent.DeleteAccount) },
         onMyCreatedClick = navigateToMyCreated,
+        onMyFavoriteClick = {
+            snackbarHostState.showSnackbar(message = "준비 중인 기능이에요.", state = SnackbarState.DEFAULT)
+        },
         modifier = modifier,
     )
 
@@ -130,6 +133,7 @@ private fun MyPageScreen(
     onProfileImageClick: () -> Unit,
     onDeleteAccount: () -> Unit,
     onMyCreatedClick: () -> Unit,
+    onMyFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -147,6 +151,7 @@ private fun MyPageScreen(
                     onProfileImageClick = onProfileImageClick,
                     onDeleteAccount = onDeleteAccount,
                     onMyCreatedClick = onMyCreatedClick,
+                    onMyFavoriteClick = onMyFavoriteClick,
                 )
             } else {
                 MyPageScreenLoggedOut(onLoginClick = onLoginClick)
@@ -163,6 +168,7 @@ private fun MyPageScreenLoggedIn(
     onProfileImageClick: () -> Unit,
     onDeleteAccount: () -> Unit,
     onMyCreatedClick: () -> Unit,
+    onMyFavoriteClick: () -> Unit,
 ) {
     var showProfileEditDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -174,7 +180,7 @@ private fun MyPageScreenLoggedIn(
     Spacer(Modifier.height(height = DialogTheme.spacing.extraLarge))
     DiscussionManagementSection(
         onMyCreatedClick = onMyCreatedClick,
-        onMyFavoriteClick = {},
+        onMyFavoriteClick = onMyFavoriteClick,
     )
     Spacer(Modifier.height(height = DialogTheme.spacing.large))
     AccountManagementSection(
@@ -214,9 +220,9 @@ private fun DiscussionManagementSection(
                 onClick = onMyCreatedClick,
             ) { Icon(imageVector = DialogIcons.Forum, contentDescription = "") }
             MyPageMenuButton(
-                text = stringResource(resource = Res.string.my_scraps),
+                text = stringResource(resource = Res.string.my_favorites),
                 onClick = onMyFavoriteClick,
-            ) { Icon(imageVector = DialogIcons.Bookmark, contentDescription = "") }
+            ) { Icon(imageVector = DialogIcons.Favorite, contentDescription = "") }
         }
     }
 }
@@ -404,6 +410,7 @@ private fun MyPageScreenLoggedInPreview() {
                 onProfileImageClick = {},
                 onDeleteAccount = {},
                 onMyCreatedClick = {},
+                onMyFavoriteClick = {},
             )
         }
     }
@@ -424,6 +431,7 @@ private fun MyPageScreenLoggedOutPreview() {
                 onProfileImageClick = {},
                 onDeleteAccount = {},
                 onMyCreatedClick = {},
+                onMyFavoriteClick = {},
             )
         }
     }

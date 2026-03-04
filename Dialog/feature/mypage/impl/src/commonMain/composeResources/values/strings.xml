@@ -1,6 +1,7 @@
 <resources>
     <string name="my_discussions">내가 개설한 토론 보기</string>
     <string name="my_scraps">내가 스크랩한 토론 보기</string>
+    <string name="my_favorites">내가 좋아요한 토론 보기</string>
 
     <string name="login">로그인</string>
     <string name="logout">로그아웃</string>
