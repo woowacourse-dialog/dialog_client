@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogIconButton
+import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -129,21 +130,25 @@ private fun MyPageScreen(
     onMyCreatedClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier.fillMaxSize().padding(all = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        if (uiState.isLoggedIn) {
-            MyPageScreenLoggedIn(
-                uiState = uiState,
-                onLogoutClick = onLogoutClick,
-                onUpdateProfile = onUpdateProfile,
-                onProfileImageClick = onProfileImageClick,
-                onDeleteAccount = onDeleteAccount,
-                onMyCreatedClick = onMyCreatedClick,
-            )
-        } else {
-            MyPageScreenLoggedOut(onLoginClick = onLoginClick)
+    Column(modifier = modifier.fillMaxSize()) {
+        DialogTopAppBar(title = "", centerAligned = false)
+
+        Column(
+            modifier = Modifier.padding(all = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            if (uiState.isLoggedIn) {
+                MyPageScreenLoggedIn(
+                    uiState = uiState,
+                    onLogoutClick = onLogoutClick,
+                    onUpdateProfile = onUpdateProfile,
+                    onProfileImageClick = onProfileImageClick,
+                    onDeleteAccount = onDeleteAccount,
+                    onMyCreatedClick = onMyCreatedClick,
+                )
+            } else {
+                MyPageScreenLoggedOut(onLoginClick = onLoginClick)
+            }
         }
     }
 }
