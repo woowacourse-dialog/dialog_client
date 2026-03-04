@@ -1,8 +1,5 @@
 package com.on.dialog.feature.mypage.impl
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ButtonDefaults
@@ -25,19 +21,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogDivider
-import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.component.DividerOrientation
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.mypage.impl.component.MyPageMenuButton
+import com.on.dialog.feature.mypage.impl.component.ProfileSection
 import com.on.dialog.feature.mypage.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.feature.mypage.impl.model.UserInfoUiModel
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageEffect
@@ -45,7 +41,6 @@ import com.on.dialog.feature.mypage.impl.viewmodel.MyPageIntent
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageState
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageViewModel
 import com.on.dialog.model.common.Track
-import com.on.dialog.ui.component.ProfileImage
 import dialog.feature.mypage.impl.generated.resources.Res
 import dialog.feature.mypage.impl.generated.resources.error_imagepicker
 import dialog.feature.mypage.impl.generated.resources.login
@@ -278,112 +273,6 @@ private fun MyPageScreenLoggedOut(
             Text(
                 text = stringResource(resource = Res.string.login),
                 style = DialogTheme.typography.labelLarge,
-            )
-        }
-    }
-}
-
-@Composable
-private fun MyPageMenuButton(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    leadingIcon: @Composable (() -> Unit)? = null,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(shape = DialogTheme.shapes.small)
-            .clickable { onClick() }
-            .padding(
-                vertical = DialogTheme.spacing.medium,
-            ),
-    ) {
-        leadingIcon?.let {
-            Box(modifier = Modifier.sizeIn(maxHeight = ButtonDefaults.IconSize)) {
-                leadingIcon()
-            }
-            Spacer(modifier = Modifier.width(width = ButtonDefaults.IconSpacing))
-        }
-        Text(text = text, style = DialogTheme.typography.labelLarge)
-    }
-}
-
-@Composable
-private fun ProfileSection(
-    uiState: MyPageState,
-    onEditClick: () -> Unit,
-    onProfileImageClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    DialogCard(modifier = modifier) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.medium),
-            ) {
-                ProfileImage(
-                    imageUrl = uiState.imageUrl,
-                    contentDescription = "",
-                    modifier = Modifier.size(size = 60.dp),
-                    onClick = onProfileImageClick,
-                )
-                ProfileInfo(userInfo = uiState.userInfo)
-            }
-            DialogIconButton(onClick = onEditClick) {
-                Icon(imageVector = DialogIcons.Edit, contentDescription = "")
-            }
-        }
-    }
-}
-
-@Composable
-private fun ProfileInfo(
-    userInfo: UserInfoUiModel,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.extraSmall),
-        modifier = modifier,
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.extraSmall),
-        ) {
-            Text(
-                text = userInfo.nickname,
-                style = DialogTheme.typography.titleMedium,
-            )
-            Text(
-                text = userInfo.track.initial,
-                style = DialogTheme.typography.labelLarge,
-            )
-        }
-        Text(text = userInfo.githubId, style = DialogTheme.typography.bodyMedium)
-    }
-}
-
-@Preview
-@Composable
-private fun ProfileSectionPreview() {
-    DialogTheme {
-        Surface {
-            ProfileSection(
-                uiState = MyPageState(
-                    imageUrl = "",
-                    isLoggedIn = true,
-                    userInfo = UserInfoUiModel(
-                        nickname = "크림",
-                        track = Track.ANDROID.toUiModel(),
-                        githubId = "ijh1298",
-                    ),
-                ),
-                onEditClick = {},
-                onProfileImageClick = {},
             )
         }
     }
