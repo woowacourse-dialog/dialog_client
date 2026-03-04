@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogDivider
 import com.on.dialog.designsystem.component.DialogTopAppBar
@@ -43,9 +44,13 @@ import com.on.dialog.feature.mypage.impl.viewmodel.MyPageState
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageViewModel
 import com.on.dialog.model.common.Track
 import dialog.feature.mypage.impl.generated.resources.Res
+import dialog.feature.mypage.impl.generated.resources.delete_account
+import dialog.feature.mypage.impl.generated.resources.delete_account_confirm
+import dialog.feature.mypage.impl.generated.resources.delete_account_confirm_message
 import dialog.feature.mypage.impl.generated.resources.error_imagepicker
 import dialog.feature.mypage.impl.generated.resources.login
 import dialog.feature.mypage.impl.generated.resources.logout
+import dialog.feature.mypage.impl.generated.resources.logout_confirm_message
 import dialog.feature.mypage.impl.generated.resources.my_discussions
 import dialog.feature.mypage.impl.generated.resources.my_favorites
 import dialog.feature.mypage.impl.generated.resources.privacy_policy
@@ -168,6 +173,8 @@ private fun MyPageScreenLoggedIn(
     onMyFavoriteClick: () -> Unit,
 ) {
     var showProfileEditDialog by rememberSaveable { mutableStateOf(false) }
+    var showLogoutDialog by rememberSaveable { mutableStateOf(false) }
+    var showDeleteAccountDialog by rememberSaveable { mutableStateOf(false) }
 
     ProfileSection(
         uiState = uiState,
@@ -181,8 +188,8 @@ private fun MyPageScreenLoggedIn(
     )
     Spacer(Modifier.height(height = DialogTheme.spacing.large))
     AccountManagementSection(
-        onLogoutClick = onLogoutClick,
-        onDeleteAccount = onDeleteAccount,
+        onLogoutClick = { showLogoutDialog = true },
+        onDeleteAccount = { showDeleteAccountDialog = true },
     )
 
     if (showProfileEditDialog) {
@@ -191,6 +198,33 @@ private fun MyPageScreenLoggedIn(
             selectedTrack = uiState.userInfo.track,
             onDismissRequest = { showProfileEditDialog = false },
             onUpdateProfile = onUpdateProfile,
+        )
+    }
+
+    if (showLogoutDialog) {
+        ConfirmDialog(
+            title = stringResource(resource = Res.string.logout),
+            message = stringResource(resource = Res.string.logout_confirm_message),
+            confirmText = stringResource(resource = Res.string.logout),
+            onDismissRequest = { showLogoutDialog = false },
+            onConfirm = {
+                showLogoutDialog = false
+                onLogoutClick()
+            },
+        )
+    }
+
+    if (showDeleteAccountDialog) {
+        ConfirmDialog(
+            title = stringResource(resource = Res.string.delete_account),
+            message = stringResource(resource = Res.string.delete_account_confirm_message),
+            confirmText = stringResource(resource = Res.string.delete_account_confirm),
+            onDismissRequest = { showDeleteAccountDialog = false },
+            onConfirm = {
+                showDeleteAccountDialog = false
+                onDeleteAccount()
+            },
+            confirmButtonStyle = DialogButtonStyle.Error,
         )
     }
 }
