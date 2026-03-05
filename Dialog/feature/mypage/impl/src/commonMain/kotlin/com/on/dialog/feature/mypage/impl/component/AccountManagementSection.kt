@@ -16,6 +16,8 @@ import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.feature.mypage.impl.generated.resources.Res
+import dialog.feature.mypage.impl.generated.resources.account_management
+import dialog.feature.mypage.impl.generated.resources.delete_account
 import dialog.feature.mypage.impl.generated.resources.logout
 import dialog.feature.mypage.impl.generated.resources.privacy_policy
 import org.jetbrains.compose.resources.stringResource
@@ -34,7 +36,7 @@ internal fun AccountManagementSection(
     DialogCard(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.small)) {
             Text(
-                text = "계정 관리",
+                text = stringResource(resource = Res.string.account_management),
                 style = DialogTheme.typography.titleSmall,
                 color = DialogTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             )
@@ -63,8 +65,14 @@ internal fun AccountManagementSection(
                 }
             }
             onDeleteAccount?.let {
-                MyPageMenuButton(text = "회원 탈퇴", onClick = onDeleteAccount) {
-                    Icon(imageVector = DialogIcons.PersonOff, contentDescription = "회원 탈퇴")
+                MyPageMenuButton(
+                    text = stringResource(resource = Res.string.delete_account),
+                    onClick = onDeleteAccount,
+                ) {
+                    Icon(
+                        imageVector = DialogIcons.PersonOff,
+                        contentDescription = stringResource(Res.string.delete_account),
+                    )
                 }
             }
         }

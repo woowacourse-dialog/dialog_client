@@ -15,6 +15,7 @@ import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.feature.mypage.impl.generated.resources.Res
+import dialog.feature.mypage.impl.generated.resources.discussion_management
 import dialog.feature.mypage.impl.generated.resources.my_discussions
 import dialog.feature.mypage.impl.generated.resources.my_favorites
 import org.jetbrains.compose.resources.stringResource
@@ -28,7 +29,7 @@ internal fun DiscussionManagementSection(
     DialogCard(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.small)) {
             Text(
-                text = "토론 관리",
+                text = stringResource(resource = Res.string.discussion_management),
                 style = DialogTheme.typography.titleSmall,
                 color = DialogTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             )
@@ -39,11 +40,21 @@ internal fun DiscussionManagementSection(
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.my_discussions),
                 onClick = onMyCreatedClick,
-            ) { Icon(imageVector = DialogIcons.Forum, contentDescription = "") }
+            ) {
+                Icon(
+                    imageVector = DialogIcons.Forum,
+                    contentDescription = stringResource(resource = Res.string.my_discussions),
+                )
+            }
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.my_favorites),
                 onClick = onMyFavoriteClick,
-            ) { Icon(imageVector = DialogIcons.Favorite, contentDescription = "") }
+            ) {
+                Icon(
+                    imageVector = DialogIcons.Favorite,
+                    contentDescription = stringResource(resource = Res.string.my_favorites),
+                )
+            }
         }
     }
 }
