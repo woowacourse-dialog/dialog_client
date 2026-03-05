@@ -25,9 +25,9 @@ import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.feature.discussiondetail.impl.generated.resources.Res
-import dialog.feature.discussiondetail.impl.generated.resources.action_more
 import dialog.feature.discussiondetail.impl.generated.resources.action_delete
 import dialog.feature.discussiondetail.impl.generated.resources.action_edit
+import dialog.feature.discussiondetail.impl.generated.resources.action_more
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

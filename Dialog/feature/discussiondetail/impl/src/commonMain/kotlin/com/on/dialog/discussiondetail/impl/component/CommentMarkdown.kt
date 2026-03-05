@@ -38,8 +38,8 @@ import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.component.markdown.DialogMarkdown
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.comment_close
-import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
+import kotlin.math.roundToInt
 
 @Composable
 fun CommentMarkdown(
