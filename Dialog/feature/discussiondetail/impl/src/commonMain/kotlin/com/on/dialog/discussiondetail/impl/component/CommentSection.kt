@@ -105,6 +105,7 @@ private fun CommentList(
                 comment = comment,
                 onReplyClick = { onReplyClick(comment.commentId) },
             )
+            DialogHorizontalDivider()
         }
     }
 }
@@ -129,7 +130,7 @@ private fun CommentHeader(
         }
 
         Text(
-            text = comment.formatedCreatedAt,
+            text = comment.formattedCreatedAt,
             style = DialogTheme.typography.labelSmall,
             color = DialogTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
             textAlign = TextAlign.End,
