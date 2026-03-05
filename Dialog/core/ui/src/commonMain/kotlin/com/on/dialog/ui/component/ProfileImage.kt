@@ -15,7 +15,6 @@ import dialog.core.ui.generated.resources.no_profile
 @Composable
 fun ProfileImage(
     imageUrl: String,
-    contentDescription: String,
     modifier: Modifier = Modifier,
     crossfade: Boolean = true,
     onSuccess: () -> Unit = {},
@@ -25,7 +24,7 @@ fun ProfileImage(
 ) {
     DialogAsyncImage(
         imageUrl = imageUrl,
-        contentDescription = contentDescription,
+        contentDescription = "Profile Image",
         placeholder = Res.drawable.no_profile,
         fallback = Res.drawable.no_profile,
         error = Res.drawable.no_profile,
@@ -45,7 +44,6 @@ private fun ProfileImagePreview() {
     DialogTheme {
         ProfileImage(
             imageUrl = "",
-            contentDescription = "",
             modifier = Modifier.size(32.dp),
         )
     }

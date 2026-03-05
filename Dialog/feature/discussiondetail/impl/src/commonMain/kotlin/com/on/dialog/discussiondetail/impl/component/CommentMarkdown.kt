@@ -36,7 +36,10 @@ import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.component.markdown.DialogMarkdown
+import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.comment_close
 import kotlin.math.roundToInt
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CommentMarkdown(
@@ -149,7 +152,7 @@ private fun CommentMarkdownDialog(
 
                 Box(modifier = Modifier.fillMaxWidth()) {
                     DialogButton(
-                        text = "닫기",
+                        text = stringResource(Res.string.comment_close),
                         onClick = onDismiss,
                         style = DialogButtonStyle.None,
                         modifier = Modifier.align(Alignment.CenterEnd),

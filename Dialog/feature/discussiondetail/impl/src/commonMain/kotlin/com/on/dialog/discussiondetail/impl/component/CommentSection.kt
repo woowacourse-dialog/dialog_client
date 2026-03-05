@@ -29,9 +29,14 @@ import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel
 import com.on.dialog.ui.component.ProfileImage
+import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.comment_add_opinion
+import dialog.feature.discussiondetail.impl.generated.resources.comment_count_format
+import dialog.feature.discussiondetail.impl.generated.resources.comment_reply_write
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.LocalDateTime
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun CommentSection(
@@ -49,14 +54,14 @@ internal fun CommentSection(
         )
 
         DialogButton(
-            text = "의견 남기기",
+            text = stringResource(Res.string.comment_add_opinion),
             onClick = onCommentClick,
             style = DialogButtonStyle.Secondary,
             modifier = Modifier.fillMaxWidth().padding(horizontal = DialogTheme.spacing.large),
         ) {
             Icon(
                 imageVector = DialogIcons.Add,
-                contentDescription = "",
+                contentDescription = null,
             )
         }
 
@@ -77,7 +82,7 @@ private fun CommentSectionHeader(
         Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
 
         Text(
-            text = "댓글 ${commentCount}개",
+            text = stringResource(Res.string.comment_count_format, commentCount),
             style = DialogTheme.typography.titleLarge,
             modifier = Modifier.padding(start = DialogTheme.spacing.large),
         )
@@ -119,7 +124,6 @@ private fun CommentHeader(
         Row(verticalAlignment = Alignment.CenterVertically) {
             ProfileImage(
                 imageUrl = comment.authorAvatar.orEmpty(),
-                contentDescription = "",
                 modifier = Modifier.size(14.dp),
             )
             Spacer(modifier = Modifier.width(DialogTheme.spacing.extraSmall))
@@ -162,7 +166,7 @@ private fun CommentItem(
             horizontalArrangement = Arrangement.End,
         ) {
             Text(
-                text = "답글 쓰기",
+                text = stringResource(Res.string.comment_reply_write),
                 style = DialogTheme.typography.labelLarge,
                 color = DialogTheme.colorScheme.primary,
                 modifier = Modifier
