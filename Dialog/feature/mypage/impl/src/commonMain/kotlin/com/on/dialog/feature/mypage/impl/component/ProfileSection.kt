@@ -69,7 +69,6 @@ internal fun EmptyProfileSection(modifier: Modifier = Modifier) {
     DialogCard(modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth(),
         ) {
             Row(
