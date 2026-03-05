@@ -7,7 +7,7 @@ import com.on.dialog.network.dto.comment.PostCommentRequest
 import com.on.dialog.network.service.CommentService
 
 internal class CommentRemoteDatasource(
-    val service: CommentService,
+    private val service: CommentService,
 ) : CommentDatasource {
     override suspend fun fetchComments(discussionId: Long): Result<FetchDiscussionCommentsResponse> =
         safeApiCall { service.fetchComments(discussionId) }

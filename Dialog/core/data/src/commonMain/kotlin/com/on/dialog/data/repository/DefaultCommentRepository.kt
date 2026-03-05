@@ -5,8 +5,8 @@ import com.on.dialog.model.discussion.comment.DiscussionComment
 import com.on.dialog.network.datasource.CommentDatasource
 import com.on.dialog.network.dto.comment.PostCommentRequest
 
-class DefaultCommentRepository(
-    val source: CommentDatasource,
+internal class DefaultCommentRepository(
+    private val source: CommentDatasource,
 ) : CommentRepository {
     override suspend fun fetchComments(discussionId: Long): Result<List<DiscussionComment>> =
         source
