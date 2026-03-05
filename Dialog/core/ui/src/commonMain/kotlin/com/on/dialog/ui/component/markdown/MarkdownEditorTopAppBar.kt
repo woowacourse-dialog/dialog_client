@@ -29,6 +29,7 @@ import org.jetbrains.compose.resources.stringResource
 fun MarkdownEditorTopAppBar(
     onBackPress: () -> Unit,
     onConfirm: () -> Unit,
+    isConfirmEnabled: Boolean,
     selectedTab: RendererTab,
     onSelectedTabChanged: (RendererTab) -> Unit,
     modifier: Modifier = Modifier,
@@ -73,7 +74,10 @@ fun MarkdownEditorTopAppBar(
             }
         },
         actions = {
-            DialogIconButton(onClick = onConfirm) {
+            DialogIconButton(
+                onClick = onConfirm,
+                enabled = isConfirmEnabled,
+            ) {
                 Icon(
                     imageVector = DialogIcons.Check,
                     contentDescription = stringResource(resource = Res.string.markdown_editor_confirm),
@@ -91,6 +95,7 @@ private fun MarkdownEditorTopAppBarPreview() {
         MarkdownEditorTopAppBar(
             onBackPress = {},
             onConfirm = {},
+            isConfirmEnabled = true,
             selectedTab = RendererTab.WRITE,
             onSelectedTabChanged = {},
         )
