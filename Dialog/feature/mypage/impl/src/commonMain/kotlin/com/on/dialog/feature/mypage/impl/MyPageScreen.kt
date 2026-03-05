@@ -96,8 +96,13 @@ fun MyPageScreen(
         onMyFavoriteClick = {
             snackbarHostState.showSnackbar(message = "준비 중인 기능이에요.", state = SnackbarState.DEFAULT)
         },
-        onInteractionLoggedOut = {
-            snackbarHostState.showSnackbar(message = "먼저 로그인을 해주세요", state = SnackbarState.DEFAULT)
+        onLoggedOutInteraction = {
+            snackbarHostState.showSnackbar(
+                message = "먼저 로그인을 해주세요",
+                state = SnackbarState.DEFAULT,
+                actionLabel = "로그인",
+                onAction = navigateToLogin,
+            )
         },
         modifier = modifier,
     )
@@ -137,7 +142,7 @@ private fun MyPageScreen(
     onDeleteAccount: () -> Unit,
     onMyCreatedClick: () -> Unit,
     onMyFavoriteClick: () -> Unit,
-    onInteractionLoggedOut: () -> Unit,
+    onLoggedOutInteraction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -160,7 +165,7 @@ private fun MyPageScreen(
             } else {
                 MyPageScreenLoggedOut(
                     onLoginClick = onLoginClick,
-                    onInteractionLoggedOut = onInteractionLoggedOut,
+                    onLoggedOutInteraction = onLoggedOutInteraction,
                 )
             }
         }
@@ -237,15 +242,15 @@ private fun MyPageScreenLoggedIn(
 @Composable
 private fun MyPageScreenLoggedOut(
     onLoginClick: () -> Unit,
-    onInteractionLoggedOut: () -> Unit,
+    onLoggedOutInteraction: () -> Unit,
 ) {
     EmptyProfileSection()
     Spacer(modifier = Modifier.height(height = DialogTheme.spacing.extraLarge))
     LoginButton(onLoginClick = onLoginClick)
     Spacer(modifier = Modifier.height(height = DialogTheme.spacing.extraLarge))
     DiscussionManagementSection(
-        onMyCreatedClick = { onInteractionLoggedOut() },
-        onMyFavoriteClick = { onInteractionLoggedOut() },
+        onMyCreatedClick = { onLoggedOutInteraction() },
+        onMyFavoriteClick = { onLoggedOutInteraction() },
     )
     Spacer(modifier = Modifier.height(height = DialogTheme.spacing.large))
     AccountManagementSection()
@@ -297,7 +302,7 @@ private fun MyPageScreenLoggedInPreview() {
                 onDeleteAccount = {},
                 onMyCreatedClick = {},
                 onMyFavoriteClick = {},
-                onInteractionLoggedOut = {},
+                onLoggedOutInteraction = {},
             )
         }
     }
@@ -325,7 +330,7 @@ private fun MyPageScreenLoggedOutPreview() {
                 onDeleteAccount = {},
                 onMyCreatedClick = {},
                 onMyFavoriteClick = {},
-                onInteractionLoggedOut = {},
+                onLoggedOutInteraction = {},
             )
         }
     }
