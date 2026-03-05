@@ -17,7 +17,7 @@ internal data class DiscussionCommentUiModel(
     val authorAvatar: String?,
     val childComments: ImmutableList<DiscussionCommentUiModel> = persistentListOf(),
 ) {
-    val formatedCreatedAt: String = createdAt.formatToString("yyyy년 M월 d일 HH:mm")
+    val formattedCreatedAt: String = createdAt.formatToString("yyyy년 M월 d일 HH:mm")
 
     companion object {
         fun DiscussionComment.toUiModel(): DiscussionCommentUiModel = DiscussionCommentUiModel(
