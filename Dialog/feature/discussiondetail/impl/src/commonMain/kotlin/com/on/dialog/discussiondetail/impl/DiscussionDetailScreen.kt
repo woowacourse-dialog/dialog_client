@@ -165,6 +165,7 @@ private fun DiscussionDetailScreen(
 
             CommentSection(
                 comments = state.comments,
+                totalCommentCount = state.totalCommentCount,
                 onCommentClick = onCommentClick,
                 onReplyClick = onReplyClick,
             )

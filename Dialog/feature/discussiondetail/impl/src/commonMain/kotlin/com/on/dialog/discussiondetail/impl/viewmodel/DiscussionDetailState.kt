@@ -25,4 +25,7 @@ internal data class DiscussionDetailState(
         discussion?.discussionType == DiscussionType.ONLINE && discussion.status == DiscussionStatusUiModel.DISCUSSION_COMPLETE
 
     val isShowParticipateButton: Boolean = discussion?.discussionType == DiscussionType.OFFLINE
+
+    val totalCommentCount: Int =
+        comments.size + comments.sumOf { comment -> comment.childComments.size }
 }

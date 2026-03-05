@@ -41,12 +41,13 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun CommentSection(
     comments: ImmutableList<DiscussionCommentUiModel>,
+    totalCommentCount: Int,
     onCommentClick: () -> Unit,
     onReplyClick: (commentId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        CommentSectionHeader(commentCount = comments.size)
+        CommentSectionHeader(commentCount = totalCommentCount)
 
         CommentList(
             comments = comments,
@@ -209,6 +210,7 @@ private fun CommentSectionPreview() {
     DialogTheme {
         Surface {
             CommentSection(
+                totalCommentCount = 6,
                 comments = listOf(
                     DiscussionCommentUiModel(
                         createdAt = LocalDateTime(2026, 3, 3, 2, 3),
