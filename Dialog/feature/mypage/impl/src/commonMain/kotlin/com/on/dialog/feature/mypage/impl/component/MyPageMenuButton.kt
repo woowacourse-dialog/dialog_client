@@ -31,9 +31,7 @@ internal fun MyPageMenuButton(
             .fillMaxWidth()
             .clip(shape = DialogTheme.shapes.small)
             .clickable { onClick() }
-            .padding(
-                vertical = DialogTheme.spacing.medium,
-            ),
+            .padding(all = DialogTheme.spacing.medium),
     ) {
         leadingIcon?.let {
             Box(modifier = Modifier.sizeIn(maxHeight = ButtonDefaults.IconSize)) {

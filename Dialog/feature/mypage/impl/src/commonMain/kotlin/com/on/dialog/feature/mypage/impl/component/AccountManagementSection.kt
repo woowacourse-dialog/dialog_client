@@ -32,15 +32,19 @@ internal fun AccountManagementSection(
     val uriHandler = LocalUriHandler.current
 
     DialogCard(modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.small)) {
+        Column {
             Text(
                 text = stringResource(resource = Res.string.account_management),
                 style = DialogTheme.typography.titleSmall,
                 color = DialogTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                modifier = Modifier.padding(horizontal = DialogTheme.spacing.medium),
             )
             DialogDivider(
                 orientation = DividerOrientation.Horizontal,
-                modifier = Modifier.padding(vertical = DialogTheme.spacing.extraSmall),
+                modifier = Modifier.padding(
+                    vertical = DialogTheme.spacing.extraSmall,
+                    horizontal = DialogTheme.spacing.medium,
+                ),
             )
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.privacy_policy),
