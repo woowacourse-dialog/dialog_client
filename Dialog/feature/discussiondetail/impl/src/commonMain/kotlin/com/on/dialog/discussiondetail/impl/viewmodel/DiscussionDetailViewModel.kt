@@ -32,8 +32,8 @@ class DiscussionDetailViewModel(
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
-    initialState = DiscussionDetailState(),
-) {
+        initialState = DiscussionDetailState(),
+    ) {
     init {
         fetchDiscussion()
     }

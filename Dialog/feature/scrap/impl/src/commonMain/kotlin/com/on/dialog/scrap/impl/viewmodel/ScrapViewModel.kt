@@ -105,9 +105,15 @@ internal class ScrapViewModel(
 
                 if (removedScraps.isNotEmpty()) {
                     updateState {
-                        if (previousScrapCatalogs.isEmpty()) ScrapState.Empty
-                        else ScrapState.Content(previousScrapCatalogs.map { it.toUiModel() }
-                            .toImmutableList())
+                        if (previousScrapCatalogs.isEmpty()) {
+                            ScrapState.Empty
+                        } else {
+                            ScrapState.Content(
+                                previousScrapCatalogs
+                                    .map { it.toUiModel() }
+                                    .toImmutableList(),
+                            )
+                        }
                     }
                 }
             }
@@ -116,8 +122,14 @@ internal class ScrapViewModel(
 
     private fun handleLoginStatusChanged(isLoggedIn: Boolean?) {
         when (isLoggedIn) {
-            null -> Unit
-            true -> refresh()
+            null -> {
+                Unit
+            }
+
+            true -> {
+                refresh()
+            }
+
             false -> {
                 nextCursorId = null
                 hasNext = true

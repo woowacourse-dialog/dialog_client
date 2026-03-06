@@ -57,7 +57,9 @@ internal fun DiscussionListScreen(
                     )
                 }
 
-                DiscussionListEffect.ScrollToTop -> listState.animateScrollToItem(0)
+                DiscussionListEffect.ScrollToTop -> {
+                    listState.animateScrollToItem(0)
+                }
             }
         }
     }

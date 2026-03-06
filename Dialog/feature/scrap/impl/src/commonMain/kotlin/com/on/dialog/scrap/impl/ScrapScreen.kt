@@ -114,7 +114,7 @@ private fun ScrapScreen(
 
                 is ScrapState.Loading,
                 is ScrapState.Content,
-                    -> {
+                -> {
                     DiscussionListSection(
                         listState = listState,
                         discussions = uiState.scraps,

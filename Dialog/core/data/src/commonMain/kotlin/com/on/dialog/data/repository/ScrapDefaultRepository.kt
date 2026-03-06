@@ -32,7 +32,8 @@ internal class ScrapDefaultRepository(
             }
 
     override suspend fun postScrap(discussionId: Long): Result<Unit> =
-        scrapDatasource.postScrap(id = discussionId)
+        scrapDatasource
+            .postScrap(id = discussionId)
             .mapCatching { contentDto: ScrapCursorPageResponse.ContentDto ->
                 val scrapCatalog: ScrapCatalog = when (contentDto) {
                     is ScrapCursorPageResponse.ContentDto.OnlineContentDto -> contentDto.toDomain()
