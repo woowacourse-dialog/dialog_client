@@ -15,15 +15,13 @@ import com.on.dialog.designsystem.component.DividerOrientation
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.mypage.impl.BuildKonfig
 import dialog.feature.mypage.impl.generated.resources.Res
 import dialog.feature.mypage.impl.generated.resources.account_management
 import dialog.feature.mypage.impl.generated.resources.delete_account
 import dialog.feature.mypage.impl.generated.resources.logout
 import dialog.feature.mypage.impl.generated.resources.privacy_policy
 import org.jetbrains.compose.resources.stringResource
-
-private const val PRIVACY_POLICY_URL =
-    "https://mountain-operation-d79.notion.site/308d03f7be5280e0ac15c11af3fe9242"
 
 @Composable
 internal fun AccountManagementSection(
@@ -46,7 +44,7 @@ internal fun AccountManagementSection(
             )
             MyPageMenuButton(
                 text = stringResource(resource = Res.string.privacy_policy),
-                onClick = { uriHandler.openUri(uri = PRIVACY_POLICY_URL) },
+                onClick = { uriHandler.openUri(uri = BuildKonfig.PRIVACY_POLICY_URL) },
             ) {
                 Icon(
                     imageVector = DialogIcons.Info,
