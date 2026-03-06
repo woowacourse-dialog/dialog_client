@@ -8,6 +8,7 @@ import androidx.compose.runtime.compositionLocalOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 val LocalSnackbarDelegate = compositionLocalOf<SnackbarDelegate> {
     error("No SnackbarDelegate provided")
@@ -30,24 +31,32 @@ class SnackbarDelegate(
         onAction: () -> Unit = {},
     ) {
         snackbarJob?.cancel()
-        snackbarJob = coroutineScope.launch {
-            val visuals = DialogSnackbarVisuals(
-                message = message,
-                actionLabel = actionLabel,
-                withDismissAction = withDismissAction,
-                duration = duration,
-                state = state,
-            )
-
-            snackbarHostState.currentSnackbarData?.dismiss()
-            val result = snackbarHostState.showSnackbar(visuals)
-
-            when (result) {
-                SnackbarResult.Dismissed -> onDismiss()
-                SnackbarResult.ActionPerformed -> onAction()
+        val currentJob: Job =
+            coroutineScope.launch {
+                val visuals = DialogSnackbarVisuals(
+                    message = message,
+                    actionLabel = actionLabel,
+                    withDismissAction = withDismissAction,
+                    duration = duration,
+                    state = state,
+                )
+                try {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                    val result = snackbarHostState.showSnackbar(visuals)
+                    when (result) {
+                        SnackbarResult.Dismissed -> onDismiss()
+                        SnackbarResult.ActionPerformed -> onAction()
+                    }
+                } catch (e: CancellationException) {
+                    onDismiss()
+                    throw e
+                }
             }
-
-            snackbarJob = null
+        snackbarJob = currentJob
+        currentJob.invokeOnCompletion {
+            if (snackbarJob === currentJob) {
+                snackbarJob = null
+            }
         }
     }
 
