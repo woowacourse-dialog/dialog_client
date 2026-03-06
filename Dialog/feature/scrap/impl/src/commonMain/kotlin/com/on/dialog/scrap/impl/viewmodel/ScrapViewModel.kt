@@ -12,6 +12,7 @@ import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.scrap.impl.generated.resources.Res
 import dialog.feature.scrap.impl.generated.resources.fetch_scrap_discussions_failure_message
 import io.github.aakira.napier.Napier
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
@@ -22,7 +23,7 @@ internal class ScrapViewModel(
 ) : BaseViewModel<ScrapIntent, ScrapState, ScrapEffect>(ScrapState.Loading()) {
     private var nextCursorId: Long? = null
     private var hasNext: Boolean = true
-    private var previousScrapCatalogIds: Set<Long> = emptySet()
+    private var previousScrapCatalogs: ImmutableList<ScrapCatalog> = persistentListOf()
 
     init {
         observeScrapCatalogs()
@@ -91,28 +92,22 @@ internal class ScrapViewModel(
 
     private fun observeScrapCatalogs() {
         viewModelScope.launch {
-            scrapRepository.scrapCatalogs.collect { currentCatalogs ->
-                val currentIds = currentCatalogs.keys
-                val addedIds = currentIds - previousScrapCatalogIds
-                val removedIds = previousScrapCatalogIds - currentIds
-                previousScrapCatalogIds = currentIds
+            scrapRepository.scrapCatalogs.collect { currentCatalogs: ImmutableList<ScrapCatalog> ->
+                val addedScraps = currentCatalogs - previousScrapCatalogs
+                val removedScraps = previousScrapCatalogs - currentCatalogs
+                previousScrapCatalogs = currentCatalogs
 
-                if (addedIds.isNotEmpty()) {
-                    val addedScraps =
-                        addedIds
-                            .mapNotNull { id -> currentCatalogs[id] }
-                            .map { catalog -> catalog.toUiModel() }
-                            .toImmutableList()
-                    updateState { update(addedScraps) }
+                if (addedScraps.isNotEmpty()) {
+                    updateState {
+                        update(previousScrapCatalogs.map { it.toUiModel() }.toImmutableList())
+                    }
                 }
 
-                if (removedIds.isNotEmpty()) {
+                if (removedScraps.isNotEmpty()) {
                     updateState {
-                        val filteredScraps =
-                            scraps.filterNot { scrap -> scrap.id in removedIds }
-                                .toImmutableList()
-                        if (filteredScraps.isEmpty()) ScrapState.Empty
-                        else ScrapState.Content(scraps = filteredScraps)
+                        if (removedScraps.isEmpty()) ScrapState.Empty
+                        else ScrapState.Content(previousScrapCatalogs.map { it.toUiModel() }
+                            .toImmutableList())
                     }
                 }
             }
