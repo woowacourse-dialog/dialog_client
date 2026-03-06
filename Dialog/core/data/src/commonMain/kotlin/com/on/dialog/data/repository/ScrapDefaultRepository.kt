@@ -5,6 +5,7 @@ import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
 import com.on.dialog.model.discussion.scrap.ScrapCatalog
 import com.on.dialog.model.scrap.ScrapStatus
 import com.on.dialog.network.datasource.ScrapDatasource
+import com.on.dialog.network.dto.scrap.ScrapCursorPageResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,14 +21,15 @@ internal class ScrapDefaultRepository(
         scrapDatasource
             .getScraps(lastCursorId, size)
             .mapCatching { it.toDomain() }
-            .onSuccess { page ->
-                _scrapCatalogs.update { current ->
-                    current + page.scrapCatalog.associateBy { catalog -> catalog.catalogContent.id }
-                }
-            }
 
     override suspend fun postScrap(discussionId: Long): Result<Unit> =
         scrapDatasource.postScrap(id = discussionId)
+            .mapCatching { contentDto: ScrapCursorPageResponse.ContentDto ->
+                when (contentDto) {
+                    is ScrapCursorPageResponse.ContentDto.OnlineContentDto -> contentDto.toDomain()
+                    is ScrapCursorPageResponse.ContentDto.OfflineContentDto -> contentDto.toDomain()
+                }
+            }
 
     override suspend fun deleteScrap(discussionId: Long): Result<Unit> =
         scrapDatasource.deleteScrap(id = discussionId).onSuccess {

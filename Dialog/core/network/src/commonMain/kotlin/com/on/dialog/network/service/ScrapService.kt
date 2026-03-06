@@ -19,7 +19,7 @@ interface ScrapService {
     @POST("api/discussions/{discussionId}/scraps")
     suspend fun postScrap(
         @Path("discussionId") id: Long,
-    ): DataResponse<Unit>
+    ): DataResponse<ScrapCursorPageResponse.ContentDto>
 
     @DELETE("api/discussions/{discussionId}/scraps")
     suspend fun deleteScrap(

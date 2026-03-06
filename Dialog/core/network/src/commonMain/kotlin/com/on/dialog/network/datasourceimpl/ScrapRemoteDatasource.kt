@@ -15,7 +15,7 @@ internal class ScrapRemoteDatasource(
     ): Result<ScrapCursorPageResponse> =
         safeApiCall { scrapService.getScraps(lastCursorId, size) }
 
-    override suspend fun postScrap(id: Long): Result<Unit> =
+    override suspend fun postScrap(id: Long): Result<ScrapCursorPageResponse.ContentDto> =
         safeApiCall { scrapService.postScrap(id = id) }
 
     override suspend fun deleteScrap(id: Long): Result<Unit> =
