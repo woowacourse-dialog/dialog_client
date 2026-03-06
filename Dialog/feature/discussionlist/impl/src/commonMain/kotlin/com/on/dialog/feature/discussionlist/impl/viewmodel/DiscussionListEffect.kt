@@ -6,4 +6,6 @@ sealed interface DiscussionListEffect : UiEffect {
     data class ShowSnackbar(
         val message: String,
     ) : DiscussionListEffect
+
+    data object ScrollToTop : DiscussionListEffect
 }

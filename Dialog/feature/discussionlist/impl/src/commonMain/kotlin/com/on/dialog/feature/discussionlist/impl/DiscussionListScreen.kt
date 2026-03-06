@@ -56,6 +56,8 @@ internal fun DiscussionListScreen(
                         message = effect.message,
                     )
                 }
+
+                DiscussionListEffect.ScrollToTop -> listState.animateScrollToItem(0)
             }
         }
     }

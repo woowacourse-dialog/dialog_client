@@ -9,10 +9,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import com.mikepenz.markdown.compose.Markdown
-import com.mikepenz.markdown.m3.markdownColor
-import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.ui.component.markdown.DialogMarkdown
 
 @Composable
 internal fun CommentInputPlaceholder(
@@ -34,10 +32,8 @@ internal fun CommentInputPlaceholder(
                 vertical = DialogTheme.spacing.large,
             ),
     ) {
-        Markdown(
+        DialogMarkdown(
             content = text.ifBlank { "댓글을 입력해 주세요" },
-            colors = markdownColor(),
-            typography = markdownTypography(),
             modifier = Modifier.wrapContentHeight(),
         )
     }
