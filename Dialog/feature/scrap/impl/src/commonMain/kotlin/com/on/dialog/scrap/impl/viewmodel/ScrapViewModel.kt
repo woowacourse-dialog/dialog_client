@@ -105,7 +105,7 @@ internal class ScrapViewModel(
 
                 if (removedScraps.isNotEmpty()) {
                     updateState {
-                        if (removedScraps.isEmpty()) ScrapState.Empty
+                        if (previousScrapCatalogs.isEmpty()) ScrapState.Empty
                         else ScrapState.Content(previousScrapCatalogs.map { it.toUiModel() }
                             .toImmutableList())
                     }
