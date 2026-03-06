@@ -60,7 +60,6 @@ internal sealed interface ScrapState : UiState {
             incoming: ImmutableList<ScrapUiModel>,
         ): ImmutableList<ScrapUiModel> =
             (current + incoming)
-                .sortedByDescending { discussion -> discussion.id }
                 .distinctBy { discussion -> discussion.id }
                 .toImmutableList()
     }
