@@ -40,7 +40,7 @@ internal fun ExitConfirmationHandler(
         )
     }
 
-    LaunchedEffect(appState.currentScreenKey) {
+    LaunchedEffect(appState.navigationState.currentTopLevelKey) {
         appState.snackbarDelegate.dismissCurrentSnackbar()
     }
 
