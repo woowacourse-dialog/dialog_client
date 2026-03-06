@@ -22,6 +22,7 @@ import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.discussionlist.api.DiscussionListNavKey
 import com.on.dialog.main.component.DialogNavigationBar
+import com.on.dialog.main.component.ExitConfirmationHandler
 import com.on.dialog.main.navigation.SavedStateConfigurationProvider
 import com.on.dialog.main.navigation.appScreens
 import com.on.dialog.navigation.Navigator
@@ -38,8 +39,10 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
         configuration = savedStateConfigurationProvider.savedStateConfiguration,
     )
 
-    val appState = rememberDialogAppState(navigationState = navigationState)
-    val navigator = remember { Navigator(appState.navigationState) }
+    val appState: DialogAppState = rememberDialogAppState(navigationState = navigationState)
+    val navigator: Navigator = remember { Navigator(appState.navigationState) }
+
+    ExitConfirmationHandler(appState = appState)
 
     DialogTheme {
         Scaffold(
@@ -72,7 +75,9 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
                             appScreens(navigator, savedStateConfigurationProvider.providers)
                         }.invoke(key)
                     },
-                    onBack = navigator::goBack,
+                    onBack = {
+                        navigator.goBack()
+                    },
                     modifier = Modifier
                         .padding(paddingValues)
                         .consumeWindowInsets(paddingValues)
