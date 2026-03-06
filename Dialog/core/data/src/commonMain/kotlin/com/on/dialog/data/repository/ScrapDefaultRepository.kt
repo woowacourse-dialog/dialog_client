@@ -27,7 +27,15 @@ internal class ScrapDefaultRepository(
             .mapCatching { it.toDomain() }
             .onSuccess { page: ScrapCatalogCursorPage ->
                 _scrapCatalogs.update { current: ImmutableList<ScrapCatalog> ->
-                    (current + page.scrapCatalog).toImmutableList()
+                    if (lastCursorId == null) {
+                        page.scrapCatalog
+                            .distinctBy { it.catalogContent.id }
+                            .toImmutableList()
+                    } else {
+                        (current + page.scrapCatalog)
+                            .distinctBy { it.catalogContent.id }
+                            .toImmutableList()
+                    }
                 }
             }
 
@@ -39,7 +47,11 @@ internal class ScrapDefaultRepository(
                     is ScrapCursorPageResponse.ContentDto.OnlineContentDto -> contentDto.toDomain()
                     is ScrapCursorPageResponse.ContentDto.OfflineContentDto -> contentDto.toDomain()
                 }
-                _scrapCatalogs.update { current -> (current + scrapCatalog).toImmutableList() }
+                _scrapCatalogs.update { current ->
+                    (persistentListOf(scrapCatalog) + current)
+                        .distinctBy { it.catalogContent.id }
+                        .toImmutableList()
+                }
             }
 
     override suspend fun deleteScrap(discussionId: Long): Result<Unit> =

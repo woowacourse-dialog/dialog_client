@@ -59,7 +59,7 @@ internal sealed interface ScrapState : UiState {
             current: ImmutableList<ScrapUiModel>,
             incoming: ImmutableList<ScrapUiModel>,
         ): ImmutableList<ScrapUiModel> =
-            (current + incoming)
+            (incoming + current)
                 .distinctBy { discussion -> discussion.id }
                 .toImmutableList()
     }
