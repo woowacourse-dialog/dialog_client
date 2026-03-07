@@ -15,20 +15,23 @@ internal data class DiscussionCommentUiModel(
     val content: String,
     val authorName: String,
     val authorAvatar: String?,
+    val isMine: Boolean,
     val childComments: ImmutableList<DiscussionCommentUiModel> = persistentListOf(),
 ) {
     val formattedCreatedAt: String = createdAt.formatToString("yyyy년 M월 d일 HH:mm")
 
     companion object {
-        fun DiscussionComment.toUiModel(): DiscussionCommentUiModel = DiscussionCommentUiModel(
-            createdAt = createdAt,
-            commentId = id,
-            content = content,
-            authorName = author.nickname,
-            authorAvatar = author.profileImage?.let { profileImage ->
-                profileImage.customImageUri ?: profileImage.basicImageUri
-            },
-            childComments = childComments.map { child -> child.toUiModel() }.toImmutableList(),
-        )
+        fun DiscussionComment.toUiModel(userId: Long): DiscussionCommentUiModel =
+            DiscussionCommentUiModel(
+                createdAt = createdAt,
+                commentId = id,
+                content = content,
+                authorName = author.nickname,
+                authorAvatar = author.profileImage?.let { profileImage ->
+                    profileImage.customImageUri ?: profileImage.basicImageUri
+                },
+                isMine = author.id == userId,
+                childComments = childComments.map { child -> child.toUiModel(userId = userId) }.toImmutableList(),
+            )
     }
 }

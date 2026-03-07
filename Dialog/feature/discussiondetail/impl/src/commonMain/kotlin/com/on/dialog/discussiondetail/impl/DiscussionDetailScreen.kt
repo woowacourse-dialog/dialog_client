@@ -24,6 +24,7 @@ import com.on.dialog.discussiondetail.impl.component.CommentSection
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailContent
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailHeader
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailTopAppBar
+import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel.AuthorUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
@@ -50,8 +51,7 @@ internal fun DiscussionDetailScreen(
 ) {
     val snackbarDelegate = LocalSnackbarDelegate.current
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showMarkdownEditor by rememberSaveable { mutableStateOf(false) }
-    var targetCommentId by rememberSaveable { mutableStateOf<Long?>(null) }
+    var commentType by rememberSaveable { mutableStateOf<CommentType?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -70,12 +70,16 @@ internal fun DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
         onCommentClick = {
-            showMarkdownEditor = true
-            targetCommentId = null
+            commentType = CommentType.Comment
         },
         onReplyClick = { commentId ->
-            showMarkdownEditor = true
-            targetCommentId = commentId
+            commentType = CommentType.Reply(commentId = commentId)
+        },
+        onCommentEditClick = { commentId, content ->
+            commentType = CommentType.Edit(commentId = commentId, originalContent = content)
+        },
+        onCommentDeleteClick = { commentId ->
+            viewModel.onIntent(DiscussionDetailIntent.OnDeleteComment(commentId = commentId))
         },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
@@ -86,17 +90,32 @@ internal fun DiscussionDetailScreen(
         modifier = modifier,
     )
 
-    if (showMarkdownEditor) {
+    if (commentType != null) {
         MarkdownEditor(
-            initialContent = "",
-            onConfirm = { newContent: String ->
-                showMarkdownEditor = false
-                val intent = targetCommentId?.let { commentId ->
-                    DiscussionDetailIntent.OnSubmitReply(commentId, newContent)
-                } ?: DiscussionDetailIntent.OnSubmitComment(newContent)
-                viewModel.onIntent(intent)
+            initialContent = when (commentType) {
+                is CommentType.Edit -> (commentType as CommentType.Edit).originalContent
+                else -> ""
             },
-            onExit = { showMarkdownEditor = false },
+            onConfirm = { newContent: String ->
+                val intent = when (commentType) {
+                    CommentType.Comment -> DiscussionDetailIntent.OnSubmitComment(content = newContent)
+
+                    is CommentType.Reply -> DiscussionDetailIntent.OnSubmitReply(
+                        commentId = (commentType as CommentType.Reply).commentId,
+                        content = newContent,
+                    )
+
+                    is CommentType.Edit -> DiscussionDetailIntent.OnEditComment(
+                        commentId = (commentType as CommentType.Edit).commentId,
+                        content = newContent,
+                    )
+
+                    null -> return@MarkdownEditor
+                }
+                viewModel.onIntent(intent)
+                commentType = null
+            },
+            onExit = { commentType = null },
         )
     }
 }
@@ -107,6 +126,8 @@ private fun DiscussionDetailScreen(
     goBack: () -> Unit,
     onCommentClick: () -> Unit,
     onReplyClick: (commentId: Long) -> Unit,
+    onCommentEditClick: (commentId: Long, content: String) -> Unit,
+    onCommentDeleteClick: (commentId: Long) -> Unit,
     onBookmarkClick: () -> Unit,
     onLikeClick: () -> Unit,
     onParticipateClick: () -> Unit,
@@ -168,6 +189,8 @@ private fun DiscussionDetailScreen(
                 totalCommentCount = state.totalCommentCount,
                 onCommentClick = onCommentClick,
                 onReplyClick = onReplyClick,
+                onEditClick = onCommentEditClick,
+                onDeleteClick = onCommentDeleteClick,
             )
         }
     }
@@ -208,6 +231,8 @@ private fun DiscussionDetailScreenOfflinePreview() {
                 goBack = {},
                 onCommentClick = {},
                 onReplyClick = {},
+                onCommentEditClick = { _, _ -> },
+                onCommentDeleteClick = {},
                 onBookmarkClick = {},
                 onLikeClick = {},
                 onParticipateClick = {},
@@ -246,6 +271,8 @@ private fun DiscussionDetailScreenOnlinePreview() {
             goBack = {},
             onCommentClick = {},
             onReplyClick = {},
+            onCommentEditClick = { _, _ -> },
+            onCommentDeleteClick = {},
             onBookmarkClick = {},
             onLikeClick = {},
             onParticipateClick = {},

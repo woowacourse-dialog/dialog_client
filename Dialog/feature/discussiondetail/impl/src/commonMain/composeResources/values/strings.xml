@@ -55,4 +55,7 @@
     <string name="error_not_my_discussion">토론 생성자만 가능합니다</string>
     <string name="error_already_started">이미 시작된 토론입니다</string>
     <string name="error_fetch_discussion_detail">토론 상세 정보를 가져오는데 실패했습니다</string>
+
+    <!-- Message -->
+    <string name="message_comment_delete_success">삭제했습니다</string>
 </resources>

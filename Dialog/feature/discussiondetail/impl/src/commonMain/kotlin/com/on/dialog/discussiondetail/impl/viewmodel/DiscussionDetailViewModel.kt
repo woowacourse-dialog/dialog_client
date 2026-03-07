@@ -21,6 +21,7 @@ import dialog.feature.discussiondetail.impl.generated.resources.error_common
 import dialog.feature.discussiondetail.impl.generated.resources.error_fetch_discussion_detail
 import dialog.feature.discussiondetail.impl.generated.resources.error_not_my_discussion
 import dialog.feature.discussiondetail.impl.generated.resources.error_should_login
+import dialog.feature.discussiondetail.impl.generated.resources.message_comment_delete_success
 import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.async
@@ -40,6 +41,8 @@ internal class DiscussionDetailViewModel(
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
         initialState = DiscussionDetailState(),
     ) {
+    private var cachedUserId: Long? = null
+
     init {
         fetchDiscussion()
     }
@@ -60,6 +63,13 @@ internal class DiscussionDetailViewModel(
                 commentId = intent.commentId,
                 content = intent.content,
             )
+
+            is DiscussionDetailIntent.OnEditComment -> editComment(
+                commentId = intent.commentId,
+                content = intent.content,
+            )
+
+            is DiscussionDetailIntent.OnDeleteComment -> deleteComment(commentId = intent.commentId)
         }
     }
 
@@ -138,7 +148,9 @@ internal class DiscussionDetailViewModel(
         commentRepository
             .fetchComments(discussionId = discussionId)
             .onSuccess { comments ->
-                val newComments = comments.map { comment -> comment.toUiModel() }.toImmutableList()
+                val userId = getUserId()
+                val newComments =
+                    comments.map { comment -> comment.toUiModel(userId = userId) }.toImmutableList()
                 updateState { copy(comments = newComments) }
             }.onFailure { throwable ->
                 Napier.e(message = throwable.message.orEmpty(), throwable = throwable)
@@ -171,11 +183,23 @@ internal class DiscussionDetailViewModel(
         val discussion = currentState.discussion ?: return
         val authorId = discussion.detailContent.author.id
 
-        sessionRepository
+        val isMyDiscussion = checkIsMine(authorId)
+        updateState { copy(isMyDiscussion = isMyDiscussion) }
+    }
+
+    private suspend fun getUserId(): Long {
+        cachedUserId?.let { userId -> return userId }
+
+        return sessionRepository
             .getUserId()
-            .onSuccess { userId ->
-                updateState { copy(isMyDiscussion = userId == authorId) }
-            }
+            .onSuccess { userId -> cachedUserId = userId }
+            .getOrNull() ?: -1
+    }
+
+    private suspend fun checkIsMine(targetId: Long): Boolean {
+        if (cachedUserId != null) return cachedUserId == targetId
+
+        return getUserId() == targetId
     }
 
     private suspend fun fetchParticipationStatus() {
@@ -246,6 +270,31 @@ internal class DiscussionDetailViewModel(
                     content = content,
                 ).onSuccess { fetchComments() }
                 .onFailure(::showErrorSnackbar)
+        }
+    }
+
+    private fun editComment(commentId: Long, content: String) {
+        viewModelScope.launch {
+            commentRepository
+                .patchComment(discussionCommentId = commentId, content = content)
+                .onSuccess { fetchComments() }
+                .onFailure(::showErrorSnackbar)
+        }
+    }
+
+    private fun deleteComment(commentId: Long) {
+        viewModelScope.launch {
+            commentRepository
+                .deleteComment(discussionCommentId = commentId)
+                .onSuccess {
+                    fetchComments()
+                    emitEffect(
+                        DiscussionDetailEffect.ShowSnackbar(
+                            message = Res.string.message_comment_delete_success,
+                            state = SnackbarState.POSITIVE,
+                        ),
+                    )
+                }.onFailure(::showErrorSnackbar)
         }
     }
 
