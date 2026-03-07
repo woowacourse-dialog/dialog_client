@@ -10,11 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.LoadingIndicator
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.preview.ThemePreview
@@ -36,6 +38,7 @@ import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailIntent
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailState
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailViewModel
 import com.on.dialog.model.common.Track
+import com.on.dialog.ui.component.DecisionDialog
 import com.on.dialog.ui.component.markdown.MarkdownEditor
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.getString
@@ -52,6 +55,7 @@ internal fun DiscussionDetailScreen(
     val snackbarDelegate = LocalSnackbarDelegate.current
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
     var commentType by rememberSaveable { mutableStateOf<CommentType?>(null) }
+    var deleteCommentId by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -64,6 +68,22 @@ internal fun DiscussionDetailScreen(
                 DiscussionDetailEffect.NavigateHome -> goBack()
             }
         }
+    }
+
+    if (deleteCommentId != null) {
+        DecisionDialog(
+            contentText = "정말 삭제하시겠습니까?",
+            confirmText = "삭제하기",
+            onConfirm = {
+                deleteCommentId?.let { commentId ->
+                    viewModel.onIntent(DiscussionDetailIntent.OnDeleteComment(commentId = commentId))
+                }
+                deleteCommentId = null
+            },
+            confirmButtonStyle = DialogButtonStyle.Error,
+            dismissText = "취소",
+            onDismiss = { deleteCommentId = null },
+        )
     }
 
     DiscussionDetailScreen(
@@ -79,7 +99,7 @@ internal fun DiscussionDetailScreen(
             commentType = CommentType.Edit(commentId = commentId, originalContent = content)
         },
         onCommentDeleteClick = { commentId ->
-            viewModel.onIntent(DiscussionDetailIntent.OnDeleteComment(commentId = commentId))
+            deleteCommentId = commentId
         },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
