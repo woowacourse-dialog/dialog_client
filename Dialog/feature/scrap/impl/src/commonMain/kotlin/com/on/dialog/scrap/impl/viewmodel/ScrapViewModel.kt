@@ -93,27 +93,17 @@ internal class ScrapViewModel(
     private fun observeScrapCatalogs() {
         viewModelScope.launch {
             scrapRepository.scrapCatalogs.collect { currentCatalogs: ImmutableList<ScrapCatalog> ->
-                val addedScraps = currentCatalogs - previousScrapCatalogs
-                val removedScraps = previousScrapCatalogs - currentCatalogs
                 previousScrapCatalogs = currentCatalogs
 
-                if (addedScraps.isNotEmpty()) {
-                    updateState {
-                        update(previousScrapCatalogs.map { it.toUiModel() }.toImmutableList())
-                    }
-                }
-
-                if (removedScraps.isNotEmpty()) {
-                    updateState {
-                        if (previousScrapCatalogs.isEmpty()) {
-                            ScrapState.Empty
-                        } else {
-                            ScrapState.Content(
-                                previousScrapCatalogs
-                                    .map { it.toUiModel() }
-                                    .toImmutableList(),
-                            )
-                        }
+                updateState {
+                    if (previousScrapCatalogs.isEmpty()) {
+                        ScrapState.Empty
+                    } else {
+                        ScrapState.Content(
+                            previousScrapCatalogs
+                                .map { it.toUiModel() }
+                                .toImmutableList(),
+                        )
                     }
                 }
             }
