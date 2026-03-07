@@ -33,6 +33,7 @@ import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogIconButtonTone
 import com.on.dialog.designsystem.component.DialogTextField
+import com.on.dialog.designsystem.component.DialogTimePicker
 import com.on.dialog.designsystem.component.DialogToggle
 import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -42,6 +43,7 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionSta
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -131,6 +133,8 @@ private fun OnlineDiscussion(
     onPlaceChange: (String) -> Unit,
     selectedDate: LocalDate?,
     onDateSelected: (LocalDate) -> Unit,
+    selectedTime: LocalTime?,
+    onTimeSelected: (LocalTime) -> Unit,
 ) {
     Column {
         TitleField(
@@ -145,10 +149,28 @@ private fun OnlineDiscussion(
             onParticipantCountChange = {},
         )
 
+        Spacer(modifier = Modifier.height(20.dp))
+
         DialogDatePicker(
             label = "날짜",
             selectedDate = selectedDate,
             onDateSelected = onDateSelected,
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        DialogTimePicker(
+            selectedTime = selectedTime,
+            onTimeSelected = onTimeSelected,
+            label = "시작 시간",
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        DialogTimePicker(
+            selectedTime = selectedTime,
+            onTimeSelected = onTimeSelected,
+            label = "종료 시간",
         )
     }
 }
@@ -248,7 +270,9 @@ private fun CreateDiscussionScreenPreview2() {
             place = "",
             onPlaceChange = {},
             selectedDate = LocalDate(2025, 3, 8),
-            onDateSelected = {}
+            onDateSelected = {},
+            selectedTime = LocalTime(12,25),
+            onTimeSelected = {}
         )
     }
 }
