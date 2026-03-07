@@ -9,7 +9,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogTopAppBar
@@ -55,6 +58,7 @@ internal fun ScrapScreen(
     val isLoggedIn by appLoginStateHolder.isLoggedIn.collectAsStateWithLifecycle()
     val snackbarState = LocalSnackbarDelegate.current
     val listState: LazyListState = rememberLazyListState()
+    var previousFirstScrapId: Long? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -77,6 +81,17 @@ internal fun ScrapScreen(
 
     LaunchedEffect(isLoggedIn) {
         viewModel.onIntent(ScrapIntent.LoginStatusChanged(isLoggedIn = isLoggedIn))
+    }
+
+    LaunchedEffect(uiState.scraps) {
+        val currentFirstScrapId = uiState.scraps.firstOrNull()?.id
+        if (previousFirstScrapId != null &&
+            currentFirstScrapId != null &&
+            currentFirstScrapId != previousFirstScrapId
+        ) {
+            listState.animateScrollToItem(index = 0)
+        }
+        previousFirstScrapId = currentFirstScrapId
     }
 
     ScrapScreen(
