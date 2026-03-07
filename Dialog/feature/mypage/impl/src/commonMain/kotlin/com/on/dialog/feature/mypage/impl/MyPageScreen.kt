@@ -1,8 +1,5 @@
 package com.on.dialog.feature.mypage.impl
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ButtonDefaults
@@ -25,16 +21,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogCard
-import com.on.dialog.designsystem.component.DialogIconButton
+import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.mypage.impl.component.AccountManagementSection
+import com.on.dialog.feature.mypage.impl.component.ConfirmDialog
+import com.on.dialog.feature.mypage.impl.component.DiscussionManagementSection
+import com.on.dialog.feature.mypage.impl.component.EmptyProfileSection
+import com.on.dialog.feature.mypage.impl.component.ProfileEditDialog
+import com.on.dialog.feature.mypage.impl.component.ProfileSection
 import com.on.dialog.feature.mypage.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.feature.mypage.impl.model.UserInfoUiModel
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageEffect
@@ -42,13 +44,14 @@ import com.on.dialog.feature.mypage.impl.viewmodel.MyPageIntent
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageState
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageViewModel
 import com.on.dialog.model.common.Track
-import com.on.dialog.ui.component.ProfileImage
 import dialog.feature.mypage.impl.generated.resources.Res
+import dialog.feature.mypage.impl.generated.resources.delete_account
+import dialog.feature.mypage.impl.generated.resources.delete_account_confirm
+import dialog.feature.mypage.impl.generated.resources.delete_account_confirm_message
 import dialog.feature.mypage.impl.generated.resources.error_imagepicker
 import dialog.feature.mypage.impl.generated.resources.login
 import dialog.feature.mypage.impl.generated.resources.logout
-import dialog.feature.mypage.impl.generated.resources.my_discussions
-import dialog.feature.mypage.impl.generated.resources.my_scraps
+import dialog.feature.mypage.impl.generated.resources.logout_confirm_message
 import io.github.aakira.napier.Napier
 import io.github.ismoy.imagepickerkmp.domain.config.CameraCaptureConfig
 import io.github.ismoy.imagepickerkmp.domain.models.CompressionLevel
@@ -90,6 +93,17 @@ fun MyPageScreen(
         onProfileImageClick = { showGallery = true },
         onDeleteAccount = { viewModel.onIntent(intent = MyPageIntent.DeleteAccount) },
         onMyCreatedClick = navigateToMyCreated,
+        onMyFavoriteClick = {
+            snackbarHostState.showSnackbar(message = "준비 중인 기능이에요.", state = SnackbarState.DEFAULT)
+        },
+        onLoggedOutInteraction = {
+            snackbarHostState.showSnackbar(
+                message = "먼저 로그인을 해주세요",
+                state = SnackbarState.DEFAULT,
+                actionLabel = "로그인",
+                onAction = navigateToLogin,
+            )
+        },
         modifier = modifier,
     )
 
@@ -127,23 +141,33 @@ private fun MyPageScreen(
     onProfileImageClick: () -> Unit,
     onDeleteAccount: () -> Unit,
     onMyCreatedClick: () -> Unit,
+    onMyFavoriteClick: () -> Unit,
+    onLoggedOutInteraction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier.fillMaxSize().padding(all = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        if (uiState.isLoggedIn) {
-            MyPageScreenLoggedIn(
-                uiState = uiState,
-                onLogoutClick = onLogoutClick,
-                onUpdateProfile = onUpdateProfile,
-                onProfileImageClick = onProfileImageClick,
-                onDeleteAccount = onDeleteAccount,
-                onMyCreatedClick = onMyCreatedClick,
-            )
-        } else {
-            MyPageScreenLoggedOut(onLoginClick = onLoginClick)
+    Column(modifier = modifier.fillMaxSize()) {
+        DialogTopAppBar(title = "", centerAligned = false)
+
+        Column(
+            modifier = Modifier.padding(all = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            if (uiState.isLoggedIn) {
+                MyPageScreenLoggedIn(
+                    uiState = uiState,
+                    onLogoutClick = onLogoutClick,
+                    onUpdateProfile = onUpdateProfile,
+                    onProfileImageClick = onProfileImageClick,
+                    onDeleteAccount = onDeleteAccount,
+                    onMyCreatedClick = onMyCreatedClick,
+                    onMyFavoriteClick = onMyFavoriteClick,
+                )
+            } else {
+                MyPageScreenLoggedOut(
+                    onLoginClick = onLoginClick,
+                    onLoggedOutInteraction = onLoggedOutInteraction,
+                )
+            }
         }
     }
 }
@@ -156,8 +180,11 @@ private fun MyPageScreenLoggedIn(
     onProfileImageClick: () -> Unit,
     onDeleteAccount: () -> Unit,
     onMyCreatedClick: () -> Unit,
+    onMyFavoriteClick: () -> Unit,
 ) {
     var showProfileEditDialog by rememberSaveable { mutableStateOf(false) }
+    var showLogoutDialog by rememberSaveable { mutableStateOf(false) }
+    var showDeleteAccountDialog by rememberSaveable { mutableStateOf(false) }
 
     ProfileSection(
         uiState = uiState,
@@ -165,39 +192,15 @@ private fun MyPageScreenLoggedIn(
         onProfileImageClick = onProfileImageClick,
     )
     Spacer(Modifier.height(height = DialogTheme.spacing.extraLarge))
-    DialogCard(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Column {
-            MyPageMenuButton(
-                text = stringResource(resource = Res.string.my_discussions),
-                onClick = onMyCreatedClick,
-            ) { Icon(imageVector = DialogIcons.Forum, contentDescription = "") }
-            MyPageMenuButton(
-                text = stringResource(resource = Res.string.my_scraps),
-                onClick = {},
-            ) { Icon(imageVector = DialogIcons.Bookmark, contentDescription = "") }
-            MyPageMenuButton(
-                text = stringResource(resource = Res.string.logout),
-                onClick = onLogoutClick,
-            ) {
-                Icon(
-                    imageVector = DialogIcons.Logout,
-                    contentDescription = stringResource(resource = Res.string.logout),
-                )
-            }
-            //  TODO 임시로 만든 회원 탈퇴 버튼, 위치 수정 고려
-            MyPageMenuButton(
-                text = "회원 탈퇴",
-                onClick = onDeleteAccount,
-            ) {
-                Icon(
-                    imageVector = DialogIcons.Logout,
-                    contentDescription = "회원 탈퇴",
-                )
-            }
-        }
-    }
+    DiscussionManagementSection(
+        onMyCreatedClick = onMyCreatedClick,
+        onMyFavoriteClick = onMyFavoriteClick,
+    )
+    Spacer(Modifier.height(height = DialogTheme.spacing.large))
+    AccountManagementSection(
+        onLogoutClick = { showLogoutDialog = true },
+        onDeleteAccount = { showDeleteAccountDialog = true },
+    )
 
     if (showProfileEditDialog) {
         ProfileEditDialog(
@@ -207,14 +210,59 @@ private fun MyPageScreenLoggedIn(
             onUpdateProfile = onUpdateProfile,
         )
     }
+
+    if (showLogoutDialog) {
+        ConfirmDialog(
+            title = stringResource(resource = Res.string.logout),
+            message = stringResource(resource = Res.string.logout_confirm_message),
+            confirmText = stringResource(resource = Res.string.logout),
+            onDismissRequest = { showLogoutDialog = false },
+            onConfirm = {
+                showLogoutDialog = false
+                onLogoutClick()
+            },
+        )
+    }
+
+    if (showDeleteAccountDialog) {
+        ConfirmDialog(
+            title = stringResource(resource = Res.string.delete_account),
+            message = stringResource(resource = Res.string.delete_account_confirm_message),
+            confirmText = stringResource(resource = Res.string.delete_account_confirm),
+            onDismissRequest = { showDeleteAccountDialog = false },
+            onConfirm = {
+                showDeleteAccountDialog = false
+                onDeleteAccount()
+            },
+            confirmButtonStyle = DialogButtonStyle.Error,
+        )
+    }
 }
 
 @Composable
 private fun MyPageScreenLoggedOut(
     onLoginClick: () -> Unit,
+    onLoggedOutInteraction: () -> Unit,
+) {
+    EmptyProfileSection()
+    Spacer(modifier = Modifier.height(height = DialogTheme.spacing.extraLarge))
+    LoginButton(onLoginClick = onLoginClick)
+    Spacer(modifier = Modifier.height(height = DialogTheme.spacing.extraLarge))
+    DiscussionManagementSection(
+        onMyCreatedClick = { onLoggedOutInteraction() },
+        onMyFavoriteClick = { onLoggedOutInteraction() },
+    )
+    Spacer(modifier = Modifier.height(height = DialogTheme.spacing.large))
+    AccountManagementSection()
+}
+
+@Composable
+private fun LoginButton(
+    onLoginClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     DialogCard(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         onClick = onLoginClick,
     ) {
         Row {
@@ -227,112 +275,6 @@ private fun MyPageScreenLoggedOut(
             Text(
                 text = stringResource(resource = Res.string.login),
                 style = DialogTheme.typography.labelLarge,
-            )
-        }
-    }
-}
-
-@Composable
-private fun MyPageMenuButton(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    leadingIcon: @Composable (() -> Unit)? = null,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(shape = DialogTheme.shapes.small)
-            .clickable { onClick() }
-            .padding(
-                vertical = DialogTheme.spacing.medium,
-                horizontal = DialogTheme.spacing.small,
-            ),
-    ) {
-        leadingIcon?.let {
-            Box(modifier = Modifier.sizeIn(maxHeight = ButtonDefaults.IconSize)) {
-                leadingIcon()
-            }
-            Spacer(modifier = Modifier.width(width = ButtonDefaults.IconSpacing))
-        }
-        Text(text = text, style = DialogTheme.typography.labelLarge)
-    }
-}
-
-@Composable
-private fun ProfileSection(
-    uiState: MyPageState,
-    onEditClick: () -> Unit,
-    onProfileImageClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    DialogCard(modifier = modifier) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.medium),
-            ) {
-                ProfileImage(
-                    imageUrl = uiState.imageUrl,
-                    modifier = Modifier.size(size = 60.dp),
-                    onClick = onProfileImageClick,
-                )
-                ProfileInfo(userInfo = uiState.userInfo)
-            }
-            DialogIconButton(onClick = onEditClick) {
-                Icon(imageVector = DialogIcons.Edit, contentDescription = "")
-            }
-        }
-    }
-}
-
-@Composable
-private fun ProfileInfo(
-    userInfo: UserInfoUiModel,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.extraSmall),
-        modifier = modifier,
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(space = DialogTheme.spacing.extraSmall),
-        ) {
-            Text(
-                text = userInfo.nickname,
-                style = DialogTheme.typography.titleMedium,
-            )
-            Text(
-                text = userInfo.track.initial,
-                style = DialogTheme.typography.labelLarge,
-            )
-        }
-        Text(text = userInfo.githubId, style = DialogTheme.typography.bodyMedium)
-    }
-}
-
-@Preview
-@Composable
-private fun ProfileSectionPreview() {
-    DialogTheme {
-        Surface {
-            ProfileSection(
-                uiState = MyPageState(
-                    imageUrl = "",
-                    isLoggedIn = true,
-                    userInfo = UserInfoUiModel(
-                        nickname = "크림",
-                        track = Track.ANDROID.toUiModel(),
-                        githubId = "ijh1298",
-                    ),
-                ),
-                onEditClick = {},
-                onProfileImageClick = {},
             )
         }
     }
@@ -359,6 +301,8 @@ private fun MyPageScreenLoggedInPreview() {
                 onProfileImageClick = {},
                 onDeleteAccount = {},
                 onMyCreatedClick = {},
+                onMyFavoriteClick = {},
+                onLoggedOutInteraction = {},
             )
         }
     }
@@ -371,7 +315,13 @@ private fun MyPageScreenLoggedOutPreview() {
         Surface {
             MyPageScreen(
                 uiState = MyPageState(
+                    imageUrl = "",
                     isLoggedIn = false,
+                    userInfo = UserInfoUiModel(
+                        nickname = "",
+                        track = Track.ANDROID.toUiModel(),
+                        githubId = "",
+                    ),
                 ),
                 onLoginClick = {},
                 onLogoutClick = {},
@@ -379,6 +329,8 @@ private fun MyPageScreenLoggedOutPreview() {
                 onProfileImageClick = {},
                 onDeleteAccount = {},
                 onMyCreatedClick = {},
+                onMyFavoriteClick = {},
+                onLoggedOutInteraction = {},
             )
         }
     }
