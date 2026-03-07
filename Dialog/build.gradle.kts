@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.kotlin.ktlint) apply false
     alias(libs.plugins.ksp.gradle.plugin) apply false
     alias(libs.plugins.ktrofit) apply false
+    alias(libs.plugins.android.kotlin.multiplatform.library) apply false
+    alias(libs.plugins.android.lint) apply false
 }
 
 subprojects {
