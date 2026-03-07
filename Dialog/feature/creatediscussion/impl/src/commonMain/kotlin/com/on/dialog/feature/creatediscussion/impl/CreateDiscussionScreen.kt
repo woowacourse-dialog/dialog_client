@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -101,6 +102,7 @@ private fun CreateDiscussionScreen(
         )
         Column(
             modifier = Modifier
+                .weight(1f)
                 .padding(horizontal = 20.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
@@ -174,23 +176,28 @@ private fun CreateDiscussionScreen(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            Row(horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraExtraLarge)) {
-                DialogButton(
-                    text = "취소",
-                    style = DialogButtonStyle.Secondary,
-                    onClick = { onIntent(CreateDiscussionIntent.OnCancelClick) },
-                    modifier = Modifier.weight(1f),
-                )
-                DialogButton(
-                    text = if (uiState.isSubmitting) "등록 중..." else "등록",
-                    onClick = { onIntent(CreateDiscussionIntent.OnSubmitClick) },
-                    modifier = Modifier.weight(1f),
-                    enabled = uiState.isSubmitEnabled && !uiState.isSubmitting,
-                )
-            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 20.dp)
+                .imePadding(),
+            horizontalArrangement = Arrangement.spacedBy(
+                DialogTheme.spacing.extraExtraLarge
+            )
+        ) {
+            DialogButton(
+                text = "취소",
+                style = DialogButtonStyle.Secondary,
+                onClick = { onIntent(CreateDiscussionIntent.OnCancelClick) },
+                modifier = Modifier.weight(1f),
+            )
+            DialogButton(
+                text = if (uiState.isSubmitting) "등록 중..." else "등록",
+                onClick = { onIntent(CreateDiscussionIntent.OnSubmitClick) },
+                modifier = Modifier.weight(1f),
+                enabled = uiState.isSubmitEnabled && !uiState.isSubmitting,
+            )
         }
     }
 }
