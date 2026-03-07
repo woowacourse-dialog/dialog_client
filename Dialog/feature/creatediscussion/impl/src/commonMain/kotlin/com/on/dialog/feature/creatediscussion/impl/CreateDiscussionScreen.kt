@@ -32,6 +32,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.on.dialog.designsystem.component.DialogButton
+import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogDatePicker
 import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogIconButton
@@ -45,9 +47,12 @@ import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionIntent
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
+import com.on.dialog.model.common.Track
+import com.on.dialog.model.user.NicknameState
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -156,6 +161,22 @@ private fun CreateDiscussionScreen(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Row(horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraExtraLarge)) {
+                DialogButton(
+                    text = "취소",
+                    style = DialogButtonStyle.Secondary,
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                )
+                DialogButton(
+                    text = "등록",
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                )
+            }
         }
     }
 }
@@ -170,8 +191,6 @@ private fun OnlineDiscussion(
     onTimeSelected: (LocalTime) -> Unit,
 ) {
     Column {
-        Spacer(modifier = Modifier.height(20.dp))
-
         TitleField(
             title = place,
             onTitleChange = onPlaceChange,
