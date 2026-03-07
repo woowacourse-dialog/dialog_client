@@ -12,6 +12,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.feature.discussionlist.api)
             implementation(projects.feature.discussiondetail.api)
+            implementation(projects.feature.creatediscussion.api)
         }
     }
 }
