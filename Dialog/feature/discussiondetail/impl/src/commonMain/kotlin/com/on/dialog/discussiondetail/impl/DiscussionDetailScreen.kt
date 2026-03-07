@@ -92,21 +92,21 @@ internal fun DiscussionDetailScreen(
 
     if (commentType != null) {
         MarkdownEditor(
-            initialContent = when (commentType) {
-                is CommentType.Edit -> (commentType as CommentType.Edit).originalContent
+            initialContent = when (val type = commentType) {
+                is CommentType.Edit -> type.originalContent
                 else -> ""
             },
             onConfirm = { newContent: String ->
-                val intent = when (commentType) {
+                val intent = when (val type = commentType) {
                     CommentType.Comment -> DiscussionDetailIntent.OnSubmitComment(content = newContent)
 
                     is CommentType.Reply -> DiscussionDetailIntent.OnSubmitReply(
-                        commentId = (commentType as CommentType.Reply).commentId,
+                        commentId = type.commentId,
                         content = newContent,
                     )
 
                     is CommentType.Edit -> DiscussionDetailIntent.OnEditComment(
-                        commentId = (commentType as CommentType.Edit).commentId,
+                        commentId = type.commentId,
                         content = newContent,
                     )
 
