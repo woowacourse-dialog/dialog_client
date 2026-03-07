@@ -7,6 +7,13 @@ internal class CreateDiscussionViewModel :
         initialState = CreateDiscussionState(),
     ) {
     override fun onIntent(intent: CreateDiscussionIntent) {
-
+        when (intent) {
+            is CreateDiscussionIntent.OnContentChange -> TODO()
+            is CreateDiscussionIntent.OnDiscussionTypeChange -> TODO()
+            is CreateDiscussionIntent.OnEndDateChange -> TODO()
+            CreateDiscussionIntent.OnSubmitClick -> TODO()
+            is CreateDiscussionIntent.OnTitleChange -> TODO()
+            is CreateDiscussionIntent.OnTrackChange -> TODO()
+        }
     }
 }
