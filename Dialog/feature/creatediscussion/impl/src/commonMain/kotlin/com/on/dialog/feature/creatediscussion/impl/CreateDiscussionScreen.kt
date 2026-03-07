@@ -1,5 +1,10 @@
 package com.on.dialog.feature.creatediscussion.impl
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.RangeSliderState.Companion.Saver
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -70,7 +74,11 @@ private fun CreateDiscussionScreen(
     modifier: Modifier = Modifier,
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    var isMeetupEnabled by remember { mutableStateOf(true) }
+    var isMeetupEnabled by remember { mutableStateOf(false) }
+
+    var place by remember { mutableStateOf("") }
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    var selectedTime by remember { mutableStateOf<LocalTime?>(null) }
 
     Column(modifier = modifier.fillMaxSize()) {
         DialogTopAppBar(
@@ -115,14 +123,39 @@ private fun CreateDiscussionScreen(
                 modifier = Modifier.padding(start = DialogTheme.spacing.small)
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            AnimatedVisibility(
+                visible = isMeetupEnabled,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                Column {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    OnlineDiscussion(
+                        place = place,
+                        onPlaceChange = { place = it },
+                        selectedDate = selectedDate,
+                        onDateSelected = { selectedDate = it },
+                        selectedTime = selectedTime,
+                        onTimeSelected = { selectedTime = it },
+                    )
+                }
+            }
 
-            DialogDropdownMenu(
-                options = persistentListOf("1일 후", "2일 후", "3일 후"),
-                onSelectedIndexChange = { selectedIndex = it },
-                label = "토론 종료 날짜",
-                placeholder = "날짜를 선택해주세요",
-            )
+            AnimatedVisibility(
+                visible = !isMeetupEnabled,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
+                Column {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    DialogDropdownMenu(
+                        options = persistentListOf("1일 후", "2일 후", "3일 후"),
+                        onSelectedIndexChange = { selectedIndex = it },
+                        label = "토론 종료 날짜",
+                        placeholder = "날짜를 선택해주세요",
+                    )
+                }
+            }
         }
     }
 }
@@ -137,6 +170,8 @@ private fun OnlineDiscussion(
     onTimeSelected: (LocalTime) -> Unit,
 ) {
     Column {
+        Spacer(modifier = Modifier.height(20.dp))
+
         TitleField(
             title = place,
             onTitleChange = onPlaceChange,
@@ -271,7 +306,7 @@ private fun CreateDiscussionScreenPreview2() {
             onPlaceChange = {},
             selectedDate = LocalDate(2025, 3, 8),
             onDateSelected = {},
-            selectedTime = LocalTime(12,25),
+            selectedTime = LocalTime(12, 25),
             onTimeSelected = {}
         )
     }
