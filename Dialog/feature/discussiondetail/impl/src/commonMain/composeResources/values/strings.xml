@@ -60,4 +60,5 @@
 
     <!-- Message -->
     <string name="message_comment_delete_success">삭제했습니다</string>
+    <string name="message_comment_edit_success">수정했습니다</string>
 </resources>

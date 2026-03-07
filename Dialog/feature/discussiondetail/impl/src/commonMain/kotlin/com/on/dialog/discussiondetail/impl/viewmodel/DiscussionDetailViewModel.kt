@@ -22,6 +22,7 @@ import dialog.feature.discussiondetail.impl.generated.resources.error_fetch_disc
 import dialog.feature.discussiondetail.impl.generated.resources.error_not_my_discussion
 import dialog.feature.discussiondetail.impl.generated.resources.error_should_login
 import dialog.feature.discussiondetail.impl.generated.resources.message_comment_delete_success
+import dialog.feature.discussiondetail.impl.generated.resources.message_comment_edit_success
 import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.async
@@ -271,8 +272,15 @@ internal class DiscussionDetailViewModel(
         viewModelScope.launch {
             commentRepository
                 .patchComment(discussionCommentId = commentId, content = content)
-                .onSuccess { fetchComments() }
-                .onFailure(::showErrorSnackbar)
+                .onSuccess {
+                    fetchComments()
+                    emitEffect(
+                        DiscussionDetailEffect.ShowSnackbar(
+                            message = Res.string.message_comment_edit_success,
+                            state = SnackbarState.POSITIVE,
+                        ),
+                    )
+                }.onFailure(::showErrorSnackbar)
         }
     }
 
