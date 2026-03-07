@@ -40,8 +40,13 @@ import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailViewModel
 import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.DecisionDialog
 import com.on.dialog.ui.component.markdown.MarkdownEditor
+import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.action_cancel
+import dialog.feature.discussiondetail.impl.generated.resources.comment_delete_write
+import dialog.feature.discussiondetail.impl.generated.resources.discussion_delete_confirm
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -72,8 +77,8 @@ internal fun DiscussionDetailScreen(
 
     if (deleteCommentId != null) {
         DecisionDialog(
-            contentText = "정말 삭제하시겠습니까?",
-            confirmText = "삭제하기",
+            contentText = stringResource(Res.string.discussion_delete_confirm),
+            confirmText = stringResource(Res.string.comment_delete_write),
             onConfirm = {
                 deleteCommentId?.let { commentId ->
                     viewModel.onIntent(DiscussionDetailIntent.OnDeleteComment(commentId = commentId))
@@ -81,7 +86,7 @@ internal fun DiscussionDetailScreen(
                 deleteCommentId = null
             },
             confirmButtonStyle = DialogButtonStyle.Error,
-            dismissText = "취소",
+            dismissText = stringResource(Res.string.action_cancel),
             onDismiss = { deleteCommentId = null },
         )
     }
