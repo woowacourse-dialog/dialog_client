@@ -1,5 +1,9 @@
 package com.on.dialog.feature.discussionlist.impl
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -110,6 +114,8 @@ private fun DiscussionListScreen(
     modifier: Modifier = Modifier,
 ) {
     var shouldShowFilterSection by rememberSaveable { mutableStateOf(false) }
+    var isFabVisible by rememberSaveable { mutableStateOf(true) }
+    var previousScrollOffset by rememberSaveable { mutableStateOf(0) }
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.isScrollInProgress }
@@ -118,6 +124,16 @@ private fun DiscussionListScreen(
                 if (isScrolling && shouldShowFilterSection) {
                     shouldShowFilterSection = false
                 }
+            }
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemScrollOffset to listState.firstVisibleItemIndex }
+            .distinctUntilChanged()
+            .collect { (offset, index) ->
+                val currentOffset = index * 10000 + offset
+                isFabVisible = currentOffset <= previousScrollOffset
+                previousScrollOffset = currentOffset
             }
     }
 
@@ -135,32 +151,62 @@ private fun DiscussionListScreen(
             onClickTypeFilter = onClickTypeFilter,
         )
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (uiState.shouldShowEmptyView) {
-                DiscussionListEmptyView(onClickCreateDiscussion = onClickCreateDiscussion)
-            } else {
-                DiscussionListSection(
-                    listState = listState,
-                    discussions = uiState.filteredDiscussions,
-                    onClickDiscussion = onClickDiscussion,
-                    isRefreshing = isRefreshing,
-                    onRefresh = onRefresh,
-                )
-            }
+        DiscussionListContent(
+            uiState = uiState,
+            listState = listState,
+            isFabVisible = isFabVisible,
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            onClickDiscussion = onClickDiscussion,
+            onClickCreateDiscussion = onClickCreateDiscussion,
+        )
+    }
+}
 
+@Composable
+private fun DiscussionListContent(
+    uiState: DiscussionListState,
+    listState: LazyListState,
+    isFabVisible: Boolean,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    onClickDiscussion: (discussionId: Long) -> Unit,
+    onClickCreateDiscussion: () -> Unit,
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (uiState.shouldShowEmptyView) {
+            DiscussionListEmptyView(onClickCreateDiscussion = onClickCreateDiscussion)
+        } else {
+            DiscussionListSection(
+                listState = listState,
+                discussions = uiState.filteredDiscussions,
+                onClickDiscussion = onClickDiscussion,
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh,
+            )
+        }
+
+        AnimatedVisibility(
+            visible = isFabVisible,
+            enter = slideInVertically(
+                initialOffsetY = { it },
+                animationSpec = tween(durationMillis = 300)
+            ),
+            exit = slideOutVertically(
+                targetOffsetY = { it },
+                animationSpec = tween(durationMillis = 300)
+            ),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+        ) {
             FloatingActionButton(
                 onClick = onClickCreateDiscussion,
                 shape = CircleShape,
                 containerColor = DialogTheme.colorScheme.primary,
                 contentColor = DialogTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(DialogTheme.spacing.extraLarge),
+                modifier = Modifier.padding(DialogTheme.spacing.extraLarge),
             ) {
-                Icon(
-                    imageVector = DialogIcons.Add,
-                    contentDescription = null,
-                )
+                Icon(imageVector = DialogIcons.Add, contentDescription = null)
             }
         }
     }
