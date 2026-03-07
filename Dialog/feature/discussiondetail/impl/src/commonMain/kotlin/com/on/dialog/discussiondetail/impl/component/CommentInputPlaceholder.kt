@@ -11,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.ui.component.markdown.DialogMarkdown
+import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.comment_placeholder
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun CommentInputPlaceholder(
@@ -33,7 +36,7 @@ internal fun CommentInputPlaceholder(
             ),
     ) {
         DialogMarkdown(
-            content = text.ifBlank { "댓글을 입력해 주세요" },
+            content = text.ifBlank { stringResource(Res.string.comment_placeholder) },
             modifier = Modifier.wrapContentHeight(),
         )
     }

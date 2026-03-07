@@ -4,6 +4,7 @@ import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -66,6 +67,7 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
         ) { paddingValues ->
             CompositionLocalProvider(
                 LocalSnackbarDelegate provides appState.snackbarDelegate,
+                LocalOverscrollFactory provides null,
             ) {
                 NavDisplay(
                     entries = appState.navigationState.toEntries { key ->

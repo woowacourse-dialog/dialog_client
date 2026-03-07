@@ -1,9 +1,10 @@
 package com.on.dialog.discussiondetail.impl.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -14,7 +15,6 @@ import com.on.dialog.designsystem.component.DialogHorizontalDivider
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.ui.component.markdown.DialogMarkdown
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.participate_button
@@ -23,10 +23,11 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionDetailContent(
-    discussionType: DiscussionType,
     content: String,
     summary: String?,
     isMyDiscussion: Boolean,
+    isShowParticipateButton: Boolean,
+    isShowSummary: Boolean,
     isGeneratingSummary: Boolean,
     isParticipating: Boolean,
     onSummaryClick: () -> Unit,
@@ -43,29 +44,32 @@ internal fun DiscussionDetailContent(
                 .fillMaxWidth()
                 .padding(horizontal = DialogTheme.spacing.large),
         )
-        DialogHorizontalDivider()
-        Box(
-            modifier = Modifier
-                .padding(horizontal = DialogTheme.spacing.large)
-                .padding(bottom = DialogTheme.spacing.large),
-        ) {
-            when (discussionType) {
-                DiscussionType.ONLINE -> {
-                    DiscussionSummary(
-                        summary = summary,
-                        isMyDiscussion = isMyDiscussion,
-                        isGeneratingSummary = isGeneratingSummary,
-                        onSummaryClick = onSummaryClick,
-                    )
-                }
 
-                DiscussionType.OFFLINE -> {
-                    ParticipateButton(
-                        isParticipating = isParticipating,
-                        onParticipateClick = onParticipateClick,
-                    )
-                }
+        Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.large)) {
+            val includeSpacing = isShowSummary || isShowParticipateButton
+
+            if (includeSpacing) {
+                DialogHorizontalDivider()
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
             }
+
+            if (isShowSummary) {
+                DiscussionSummary(
+                    summary = summary,
+                    isMyDiscussion = isMyDiscussion,
+                    isGeneratingSummary = isGeneratingSummary,
+                    onSummaryClick = onSummaryClick,
+                )
+            }
+
+            if (isShowParticipateButton) {
+                ParticipateButton(
+                    isParticipating = isParticipating,
+                    onParticipateClick = onParticipateClick,
+                )
+            }
+
+            if (includeSpacing) Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
         }
     }
 }
@@ -92,10 +96,11 @@ private fun OnlineDiscussionDetailContentPreview() {
     DialogTheme {
         Surface {
             DiscussionDetailContent(
-                discussionType = DiscussionType.ONLINE,
                 content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
                 summary = "요약된 내용",
                 isMyDiscussion = true,
+                isShowParticipateButton = false,
+                isShowSummary = true,
                 isGeneratingSummary = false,
                 isParticipating = false,
                 onSummaryClick = {},
@@ -111,10 +116,11 @@ private fun OfflineDiscussionDetailContentPreview() {
     DialogTheme {
         Surface {
             DiscussionDetailContent(
-                discussionType = DiscussionType.OFFLINE,
                 content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
                 summary = "요약된 내용",
                 isMyDiscussion = true,
+                isShowParticipateButton = true,
+                isShowSummary = false,
                 isGeneratingSummary = false,
                 isParticipating = false,
                 onSummaryClick = {},
