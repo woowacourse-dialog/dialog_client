@@ -183,7 +183,7 @@ internal class DiscussionDetailViewModel(
         val discussion = currentState.discussion ?: return
         val authorId = discussion.detailContent.author.id
 
-        val isMyDiscussion = checkIsMine(authorId)
+        val isMyDiscussion = getUserId() == authorId
         updateState { copy(isMyDiscussion = isMyDiscussion) }
     }
 
@@ -194,12 +194,6 @@ internal class DiscussionDetailViewModel(
             .getUserId()
             .onSuccess { userId -> cachedUserId = userId }
             .getOrNull() ?: -1
-    }
-
-    private suspend fun checkIsMine(targetId: Long): Boolean {
-        if (cachedUserId != null) return cachedUserId == targetId
-
-        return getUserId() == targetId
     }
 
     private suspend fun fetchParticipationStatus() {
