@@ -4,6 +4,7 @@ package com.on.dialog.core.common.extension
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.format
@@ -44,6 +45,14 @@ fun String.toIsoLocalDateTime(): LocalDateTime =
  */
 fun LocalDate.formatToString(pattern: String = "yyyy-MM-dd"): String =
     format(LocalDate.Format { byUnicodePattern(pattern) })
+
+/**
+ * [LocalDate]를 주어진 유니코드 패턴으로 문자열로 변환합니다.
+ *
+ * @param pattern 기본값은 `yyyy-MM-dd`
+ */
+fun LocalTime.formatToString(pattern: String = "HH:mm"): String =
+    format(LocalTime.Format { byUnicodePattern(pattern) })
 
 /**
  * [LocalDateTime]를 주어진 유니코드 패턴으로 문자열로 변환합니다.
