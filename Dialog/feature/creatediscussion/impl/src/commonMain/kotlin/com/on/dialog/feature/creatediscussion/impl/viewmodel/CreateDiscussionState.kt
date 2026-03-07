@@ -12,7 +12,7 @@ internal data class CreateDiscussionState(
     val selectedTrackIndex: Int = -1,
     val isMeetupEnabled: Boolean = false,
     val place: String = "",
-    val participantCount: Int = 0,
+    val participantCount: Int = 2,
     val selectedDate: LocalDate? = null,
     val selectedStartTime: LocalTime? = null,
     val selectedEndTime: LocalTime? = null,
@@ -27,9 +27,9 @@ internal data class CreateDiscussionState(
 
             if (isMeetupEnabled) {
                 return place.isNotBlank() &&
-                    selectedDate != null &&
-                    selectedStartTime != null &&
-                    selectedEndTime != null
+                        selectedDate != null &&
+                        selectedStartTime != null &&
+                        selectedEndTime != null
             }
 
             return selectedEndDateIndex in endDateOptions.indices

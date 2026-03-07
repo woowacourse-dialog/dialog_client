@@ -42,7 +42,7 @@ internal class CreateDiscussionViewModel(
             }
 
             is CreateDiscussionIntent.OnParticipantCountChange -> {
-                updateState { copy(participantCount = intent.participantCount.coerceAtLeast(0)) }
+                updateState { copy(participantCount = intent.participantCount.coerceAtLeast(2)) }
             }
 
             is CreateDiscussionIntent.OnDateChange -> {

@@ -225,6 +225,7 @@ private fun OfflineDiscussion(
 
         DialogDatePicker(
             label = "날짜",
+            placeholder = "날짜를 선택해주세요",
             selectedDate = selectedDate,
             onDateSelected = onDateSelected,
         )
@@ -234,6 +235,7 @@ private fun OfflineDiscussion(
         DialogTimePicker(
             selectedTime = selectedStartTime,
             onTimeSelected = onStartTimeSelected,
+            placeholder = "시작 시간을 선택해주세요",
             label = "시작 시간",
         )
 
@@ -242,6 +244,7 @@ private fun OfflineDiscussion(
         DialogTimePicker(
             selectedTime = selectedEndTime,
             onTimeSelected = onEndTimeSelected,
+            placeholder = "종료 시간을 선택해주세요",
             label = "종료 시간",
         )
     }
