@@ -34,6 +34,8 @@ import com.on.dialog.ui.component.ProfileImage
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.comment_add_opinion
 import dialog.feature.discussiondetail.impl.generated.resources.comment_count_format
+import dialog.feature.discussiondetail.impl.generated.resources.comment_delete_write
+import dialog.feature.discussiondetail.impl.generated.resources.comment_edit_write
 import dialog.feature.discussiondetail.impl.generated.resources.comment_reply_write
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -180,12 +182,12 @@ private fun CommentItem(
         ) {
             if (comment.isMine) {
                 CommentSubButton(
-                    text = "수정하기",
+                    text = stringResource(Res.string.comment_edit_write),
                     onClick = { onEditClick(comment.commentId, comment.content) },
                 )
 
                 CommentSubButton(
-                    text = "삭제하기",
+                    text = stringResource(Res.string.comment_delete_write),
                     textColor = DialogTheme.colorScheme.error,
                     onClick = { onDeleteClick(comment.commentId) },
                 )
