@@ -13,6 +13,10 @@ internal sealed interface CreateDiscussionIntent : UiIntent {
         val selectedIndex: Int,
     ) : CreateDiscussionIntent
 
+    data class OnMeetupEnabledChange(
+        val enabled: Boolean,
+    ) : CreateDiscussionIntent
+
     data class OnPlaceChange(
         val place: String,
     ) : CreateDiscussionIntent
@@ -38,4 +42,6 @@ internal sealed interface CreateDiscussionIntent : UiIntent {
     ) : CreateDiscussionIntent
 
     data object OnCancelClick : CreateDiscussionIntent
+
+    data object OnSubmitClick : CreateDiscussionIntent
 }

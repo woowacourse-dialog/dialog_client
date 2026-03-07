@@ -19,10 +19,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -40,8 +38,10 @@ import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.component.DialogTimePicker
 import com.on.dialog.designsystem.component.DialogToggle
 import com.on.dialog.designsystem.component.DialogTopAppBar
+import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionEffect
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionIntent
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
@@ -57,13 +57,23 @@ internal fun CreateDiscussionScreen(
     viewModel: CreateDiscussionViewModel = koinViewModel(),
 ) {
     val uiState: CreateDiscussionState by viewModel.uiState.collectAsStateWithLifecycle()
-    var isMeetable by rememberSaveable { mutableStateOf(false) }
+    val snackbarState = LocalSnackbarDelegate.current
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                CreateDiscussionEffect.GoBack -> goBack()
+                is CreateDiscussionEffect.ShowSnackbar -> snackbarState.showSnackbar(
+                    message = effect.message,
+                    state = effect.state,
+                )
+            }
+        }
+    }
 
     CreateDiscussionScreen(
         uiState = uiState,
         onBackClick = goBack,
-        isMeetable = isMeetable,
-        isMeetableChanged = { isMeetable = it },
         onIntent = viewModel::onIntent,
         modifier = modifier,
     )
@@ -73,8 +83,6 @@ internal fun CreateDiscussionScreen(
 private fun CreateDiscussionScreen(
     uiState: CreateDiscussionState,
     onBackClick: () -> Unit,
-    isMeetable: Boolean,
-    isMeetableChanged: (Boolean) -> Unit,
     onIntent: (CreateDiscussionIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -116,14 +124,14 @@ private fun CreateDiscussionScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             DialogToggle(
-                checked = isMeetable,
-                onCheckedChange = isMeetableChanged,
+                checked = uiState.isMeetupEnabled,
+                onCheckedChange = { onIntent(CreateDiscussionIntent.OnMeetupEnabledChange(it)) },
                 label = "만나서 토론하기",
                 modifier = Modifier.padding(start = DialogTheme.spacing.small),
             )
 
             AnimatedVisibility(
-                visible = isMeetable,
+                visible = uiState.isMeetupEnabled,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
             ) {
@@ -149,7 +157,7 @@ private fun CreateDiscussionScreen(
             }
 
             AnimatedVisibility(
-                visible = !isMeetable,
+                visible = !uiState.isMeetupEnabled,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
             ) {
@@ -177,9 +185,10 @@ private fun CreateDiscussionScreen(
                     modifier = Modifier.weight(1f),
                 )
                 DialogButton(
-                    text = "등록",
-                    onClick = {},
+                    text = if (uiState.isSubmitting) "등록 중..." else "등록",
+                    onClick = { onIntent(CreateDiscussionIntent.OnSubmitClick) },
                     modifier = Modifier.weight(1f),
+                    enabled = uiState.isSubmitEnabled && !uiState.isSubmitting,
                 )
             }
         }
@@ -319,8 +328,6 @@ private fun CreateDiscussionScreenPreview() {
     DialogTheme {
         CreateDiscussionScreen(
             uiState = CreateDiscussionState(),
-            isMeetable = false,
-            isMeetableChanged = {},
             onBackClick = {},
             onIntent = {},
         )
@@ -333,11 +340,8 @@ private fun CreateDiscussionScreenPreview2() {
     DialogTheme {
         CreateDiscussionScreen(
             uiState = CreateDiscussionState(),
-            isMeetable = true,
-            isMeetableChanged = {},
             onBackClick = {},
             onIntent = {},
         )
     }
 }
-
