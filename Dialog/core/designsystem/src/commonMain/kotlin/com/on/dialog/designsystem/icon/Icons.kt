@@ -29,6 +29,7 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.NotificationsOff
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.PersonOff
 import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material.icons.rounded.Settings
@@ -65,6 +66,7 @@ object DialogIcons {
     val Menu = Icons.Rounded.Menu
     val MoreVert = Icons.Rounded.MoreVert
     val Person = Icons.Rounded.Person
+    val PersonOff = Icons.Rounded.PersonOff
     val Place = Icons.Rounded.Place
 
     val Group = Icons.Rounded.Group

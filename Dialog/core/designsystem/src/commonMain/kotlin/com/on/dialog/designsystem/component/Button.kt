@@ -18,7 +18,7 @@ import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.Gray400
 
-enum class DialogButtonStyle { Primary, Secondary, None }
+enum class DialogButtonStyle { Primary, Secondary, Error, None }
 
 @Composable
 fun DialogButton(
@@ -84,6 +84,15 @@ private fun buttonColorsByStyle(style: DialogButtonStyle) =
             )
         }
 
+        DialogButtonStyle.Error -> {
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.error,
+                contentColor = MaterialTheme.colorScheme.onError,
+                disabledContainerColor = MaterialTheme.colorScheme.onError.copy(alpha = 0.12f),
+                disabledContentColor = MaterialTheme.colorScheme.onError.copy(alpha = 0.38f),
+            )
+        }
+
         DialogButtonStyle.None -> {
             ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
@@ -104,6 +113,11 @@ private fun DialogButtonPreview() {
                 onClick = {},
                 text = "Secondary",
                 style = DialogButtonStyle.Secondary,
+            )
+            DialogButton(
+                onClick = {},
+                text = "Error",
+                style = DialogButtonStyle.Error,
             )
             DialogButton(onClick = {}, text = "None", style = DialogButtonStyle.None)
             DialogButton(
