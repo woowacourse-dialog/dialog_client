@@ -31,9 +31,6 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.NavigationEventState
 import androidx.navigationevent.compose.rememberNavigationEventState
-import com.mikepenz.markdown.compose.Markdown
-import com.mikepenz.markdown.m3.markdownColor
-import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogIconButtonTone
 import com.on.dialog.designsystem.component.DialogTextField
@@ -106,6 +103,7 @@ fun MarkdownEditor(
         focusRequester = focusRequester,
         content = content,
         onContentChanged = { content = it },
+        isConfirmEnabled = content.text.isNotBlank() && content.text != initialContent,
         selectedTab = selectedTab,
         onSelectedTabChanged = { selectedTab = it },
         modifier = modifier,
@@ -121,6 +119,7 @@ private fun MarkdownEditor(
     onShowExitDialog: (Boolean) -> Unit,
     focusRequester: FocusRequester,
     content: TextFieldValue,
+    isConfirmEnabled: Boolean,
     onContentChanged: (TextFieldValue) -> Unit,
     selectedTab: RendererTab,
     onSelectedTabChanged: (RendererTab) -> Unit,
@@ -144,6 +143,7 @@ private fun MarkdownEditor(
         MarkdownEditorTopAppBar(
             onBackPress = onBackPress,
             onConfirm = { onConfirm(content.text) },
+            isConfirmEnabled = isConfirmEnabled,
             selectedTab = selectedTab,
             onSelectedTabChanged = onSelectedTabChanged,
         )
@@ -161,10 +161,8 @@ private fun MarkdownEditor(
 
 @Composable
 private fun RendererView(content: String, modifier: Modifier) {
-    Markdown(
+    DialogMarkdown(
         content = content,
-        colors = markdownColor(),
-        typography = markdownTypography(),
         modifier = modifier
             .fillMaxWidth()
             .background(color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F))
@@ -310,8 +308,9 @@ private fun MarkdownEditorPreviewContent(
         onConfirm = {},
         onExit = {},
         focusRequester = focusRequester,
-        content = TextFieldValue("#### Hello World\n\nThis is a **bold** statement."),
+        content = TextFieldValue("# Hello World\n\nThis is a **bold** statement."),
         onContentChanged = {},
+        isConfirmEnabled = true,
         selectedTab = selectedTab,
         onSelectedTabChanged = {},
     )

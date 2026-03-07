@@ -51,7 +51,6 @@ internal fun ProfileSection(
             ) {
                 ProfileImage(
                     imageUrl = uiState.imageUrl,
-                    contentDescription = "",
                     modifier = Modifier.size(size = 60.dp),
                     onClick = onProfileImageClick,
                 )

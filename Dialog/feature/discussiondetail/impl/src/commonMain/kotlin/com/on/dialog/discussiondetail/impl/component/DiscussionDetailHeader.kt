@@ -35,6 +35,11 @@ import com.on.dialog.ui.component.InteractionIndicator
 import com.on.dialog.ui.component.ProfileImage
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.end_date_format
+import dialog.feature.discussiondetail.impl.generated.resources.header_bookmark_content_description
+import dialog.feature.discussiondetail.impl.generated.resources.header_created_at
+import dialog.feature.discussiondetail.impl.generated.resources.header_info
+import dialog.feature.discussiondetail.impl.generated.resources.header_like_content_description
+import dialog.feature.discussiondetail.impl.generated.resources.header_participants_format
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
@@ -103,14 +108,14 @@ private fun DiscussionActionBar(
         )
         InteractionIndicator(
             icon = if (isLiked) DialogIcons.Favorite else DialogIcons.FavoriteBorder,
-            contentDescription = "좋아요",
+            contentDescription = stringResource(Res.string.header_like_content_description),
             count = likeCount,
             onClick = onLikeClick,
         )
         DialogIconButton(onClick = onBookmarkClick) {
             Icon(
                 imageVector = if (isBookmarked) DialogIcons.Bookmark else DialogIcons.BookmarkBorder,
-                contentDescription = "북마크",
+                contentDescription = stringResource(Res.string.header_bookmark_content_description),
             )
         }
     }
@@ -135,7 +140,6 @@ private fun ProfileSection(
         ) {
             ProfileImage(
                 imageUrl = author.imageUrl,
-                contentDescription = "프로필 이미지",
                 modifier = Modifier.size(28.dp),
             )
             Spacer(Modifier.width(DialogTheme.spacing.small))
@@ -150,7 +154,7 @@ private fun ProfileSection(
             horizontalAlignment = Alignment.End,
         ) {
             Text(
-                text = "작성일",
+                text = stringResource(Res.string.header_created_at),
                 style = DialogTheme.typography.titleSmall,
             )
             Text(
@@ -208,7 +212,7 @@ private fun InfoSection(
     Column(modifier = modifier.fillMaxWidth().padding(horizontal = DialogTheme.spacing.large)) {
         IconTextRow(
             iconImage = DialogIcons.Info,
-            text = "정보",
+            text = stringResource(Res.string.header_info),
             textStyle = DialogTheme.typography.titleSmall,
         )
 
@@ -247,7 +251,7 @@ private fun ParticipantList(
     ) {
         IconTextRow(
             iconImage = DialogIcons.Group,
-            text = "참여자 ($capacity)",
+            text = stringResource(Res.string.header_participants_format, capacity),
             textStyle = DialogTheme.typography.titleSmall,
         )
 

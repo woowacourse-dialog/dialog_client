@@ -98,10 +98,13 @@ internal val surfaceContainerHighestDark = Color(0xFF343536)
 internal val Gray200 = Color(0xFFEEEEEE)
 internal val Gray400 = Color(0xFFBDBDBD)
 
+internal val blue = Color(0xFF007AFF)
+
 @Immutable
 data class DialogColors(
     val gray200: Color,
     val gray400: Color,
+    val blue: Color,
 )
 
 val LocalColors =
@@ -109,6 +112,7 @@ val LocalColors =
         DialogColors(
             gray200 = Gray200,
             gray400 = Gray400,
+            blue = blue,
         )
     }
 
