@@ -1,10 +1,14 @@
 package com.on.dialog.feature.discussionlist.impl
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,11 +17,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
+import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.discussionlist.impl.component.DiscussionListEmptyView
 import com.on.dialog.feature.discussionlist.impl.component.DiscussionListFilterSection
@@ -129,16 +135,33 @@ private fun DiscussionListScreen(
             onClickTypeFilter = onClickTypeFilter,
         )
 
-        if (uiState.shouldShowEmptyView) {
-            DiscussionListEmptyView(onClickCreateDiscussion = onClickCreateDiscussion)
-        } else {
-            DiscussionListSection(
-                listState = listState,
-                discussions = uiState.filteredDiscussions,
-                onClickDiscussion = onClickDiscussion,
-                isRefreshing = isRefreshing,
-                onRefresh = onRefresh,
-            )
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (uiState.shouldShowEmptyView) {
+                DiscussionListEmptyView(onClickCreateDiscussion = onClickCreateDiscussion)
+            } else {
+                DiscussionListSection(
+                    listState = listState,
+                    discussions = uiState.filteredDiscussions,
+                    onClickDiscussion = onClickDiscussion,
+                    isRefreshing = isRefreshing,
+                    onRefresh = onRefresh,
+                )
+            }
+
+            FloatingActionButton(
+                onClick = onClickCreateDiscussion,
+                shape = CircleShape,
+                containerColor = DialogTheme.colorScheme.primary,
+                contentColor = DialogTheme.colorScheme.onPrimary,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(DialogTheme.spacing.extraLarge),
+            ) {
+                Icon(
+                    imageVector = DialogIcons.Add,
+                    contentDescription = null,
+                )
+            }
         }
     }
 }
