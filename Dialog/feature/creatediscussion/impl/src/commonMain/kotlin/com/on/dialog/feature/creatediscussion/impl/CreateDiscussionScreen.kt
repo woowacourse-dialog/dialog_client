@@ -20,9 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,12 +45,9 @@ import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionIntent
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
-import com.on.dialog.model.common.Track
-import com.on.dialog.model.user.NicknameState
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -62,10 +57,13 @@ internal fun CreateDiscussionScreen(
     viewModel: CreateDiscussionViewModel = koinViewModel(),
 ) {
     val uiState: CreateDiscussionState by viewModel.uiState.collectAsStateWithLifecycle()
+    var isMeetable by rememberSaveable { mutableStateOf(false) }
 
     CreateDiscussionScreen(
         uiState = uiState,
         onBackClick = goBack,
+        isMeetable = isMeetable,
+        isMeetableChanged = { isMeetable = it },
         onIntent = viewModel::onIntent,
         modifier = modifier,
     )
@@ -75,16 +73,11 @@ internal fun CreateDiscussionScreen(
 private fun CreateDiscussionScreen(
     uiState: CreateDiscussionState,
     onBackClick: () -> Unit,
+    isMeetable: Boolean,
+    isMeetableChanged: (Boolean) -> Unit,
     onIntent: (CreateDiscussionIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    var isMeetupEnabled by remember { mutableStateOf(false) }
-
-    var place by remember { mutableStateOf("") }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-    var selectedTime by remember { mutableStateOf<LocalTime?>(null) }
-
     Column(modifier = modifier.fillMaxSize()) {
         DialogTopAppBar(
             title = "토론 작성",
@@ -113,8 +106,9 @@ private fun CreateDiscussionScreen(
             )
 
             DialogDropdownMenu(
-                options = persistentListOf("안드로이드", "백엔드", "프론트엔드"),
-                onSelectedIndexChange = { selectedIndex = it },
+                options = uiState.trackOptions.toImmutableList(),
+                selectedIndex = uiState.selectedTrackIndex.takeIf { it >= 0 },
+                onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnTrackIndexChange(it)) },
                 label = "트랙",
                 placeholder = "트랙을 선택해주세요",
             )
@@ -122,40 +116,51 @@ private fun CreateDiscussionScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             DialogToggle(
-                checked = isMeetupEnabled,
-                onCheckedChange = { isMeetupEnabled = it },
+                checked = isMeetable,
+                onCheckedChange = isMeetableChanged,
                 label = "만나서 토론하기",
-                modifier = Modifier.padding(start = DialogTheme.spacing.small)
+                modifier = Modifier.padding(start = DialogTheme.spacing.small),
             )
 
             AnimatedVisibility(
-                visible = isMeetupEnabled,
+                visible = isMeetable,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
             ) {
                 Column {
                     Spacer(modifier = Modifier.height(20.dp))
-                    OnlineDiscussion(
-                        place = place,
-                        onPlaceChange = { place = it },
-                        selectedDate = selectedDate,
-                        onDateSelected = { selectedDate = it },
-                        selectedTime = selectedTime,
-                        onTimeSelected = { selectedTime = it },
+                    OfflineDiscussion(
+                        place = uiState.place,
+                        onPlaceChange = { onIntent(CreateDiscussionIntent.OnPlaceChange(it)) },
+                        participantCount = uiState.participantCount,
+                        onParticipantCountChange = {
+                            onIntent(CreateDiscussionIntent.OnParticipantCountChange(it))
+                        },
+                        selectedDate = uiState.selectedDate,
+                        onDateSelected = { onIntent(CreateDiscussionIntent.OnDateChange(it)) },
+                        selectedStartTime = uiState.selectedStartTime,
+                        onStartTimeSelected = {
+                            onIntent(CreateDiscussionIntent.OnStartTimeChange(it))
+                        },
+                        selectedEndTime = uiState.selectedEndTime,
+                        onEndTimeSelected = { onIntent(CreateDiscussionIntent.OnEndTimeChange(it)) },
                     )
                 }
             }
 
             AnimatedVisibility(
-                visible = !isMeetupEnabled,
+                visible = !isMeetable,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
             ) {
                 Column {
                     Spacer(modifier = Modifier.height(20.dp))
                     DialogDropdownMenu(
-                        options = persistentListOf("1일 후", "2일 후", "3일 후"),
-                        onSelectedIndexChange = { selectedIndex = it },
+                        options = uiState.endDateOptions.toImmutableList(),
+                        selectedIndex = uiState.selectedEndDateIndex.takeIf { it >= 0 },
+                        onSelectedIndexChange = {
+                            onIntent(CreateDiscussionIntent.OnEndDateIndexChange(it))
+                        },
                         label = "토론 종료 날짜",
                         placeholder = "날짜를 선택해주세요",
                     )
@@ -168,7 +173,7 @@ private fun CreateDiscussionScreen(
                 DialogButton(
                     text = "취소",
                     style = DialogButtonStyle.Secondary,
-                    onClick = {},
+                    onClick = { onIntent(CreateDiscussionIntent.OnCancelClick) },
                     modifier = Modifier.weight(1f),
                 )
                 DialogButton(
@@ -182,13 +187,17 @@ private fun CreateDiscussionScreen(
 }
 
 @Composable
-private fun OnlineDiscussion(
+private fun OfflineDiscussion(
     place: String,
     onPlaceChange: (String) -> Unit,
+    participantCount: Int,
+    onParticipantCountChange: (Int) -> Unit,
     selectedDate: LocalDate?,
     onDateSelected: (LocalDate) -> Unit,
-    selectedTime: LocalTime?,
-    onTimeSelected: (LocalTime) -> Unit,
+    selectedStartTime: LocalTime?,
+    onStartTimeSelected: (LocalTime) -> Unit,
+    selectedEndTime: LocalTime?,
+    onEndTimeSelected: (LocalTime) -> Unit,
 ) {
     Column {
         TitleField(
@@ -199,8 +208,8 @@ private fun OnlineDiscussion(
         )
 
         ParticipantContent(
-            participantCount = 0,
-            onParticipantCountChange = {},
+            participantCount = participantCount,
+            onParticipantCountChange = onParticipantCountChange,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -214,16 +223,16 @@ private fun OnlineDiscussion(
         Spacer(modifier = Modifier.height(20.dp))
 
         DialogTimePicker(
-            selectedTime = selectedTime,
-            onTimeSelected = onTimeSelected,
+            selectedTime = selectedStartTime,
+            onTimeSelected = onStartTimeSelected,
             label = "시작 시간",
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         DialogTimePicker(
-            selectedTime = selectedTime,
-            onTimeSelected = onTimeSelected,
+            selectedTime = selectedEndTime,
+            onTimeSelected = onEndTimeSelected,
             label = "종료 시간",
         )
     }
@@ -310,6 +319,8 @@ private fun CreateDiscussionScreenPreview() {
     DialogTheme {
         CreateDiscussionScreen(
             uiState = CreateDiscussionState(),
+            isMeetable = false,
+            isMeetableChanged = {},
             onBackClick = {},
             onIntent = {},
         )
@@ -320,13 +331,13 @@ private fun CreateDiscussionScreenPreview() {
 @Composable
 private fun CreateDiscussionScreenPreview2() {
     DialogTheme {
-        OnlineDiscussion(
-            place = "",
-            onPlaceChange = {},
-            selectedDate = LocalDate(2025, 3, 8),
-            onDateSelected = {},
-            selectedTime = LocalTime(12, 25),
-            onTimeSelected = {}
+        CreateDiscussionScreen(
+            uiState = CreateDiscussionState(),
+            isMeetable = true,
+            isMeetableChanged = {},
+            onBackClick = {},
+            onIntent = {},
         )
     }
 }
+

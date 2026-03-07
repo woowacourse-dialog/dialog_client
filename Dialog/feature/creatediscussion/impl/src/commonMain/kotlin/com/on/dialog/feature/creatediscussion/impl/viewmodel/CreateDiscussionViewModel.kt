@@ -8,12 +8,41 @@ internal class CreateDiscussionViewModel :
     ) {
     override fun onIntent(intent: CreateDiscussionIntent) {
         when (intent) {
-            is CreateDiscussionIntent.OnContentChange -> TODO()
-            is CreateDiscussionIntent.OnDiscussionTypeChange -> TODO()
-            is CreateDiscussionIntent.OnEndDateChange -> TODO()
-            CreateDiscussionIntent.OnSubmitClick -> TODO()
-            is CreateDiscussionIntent.OnTitleChange -> TODO()
-            is CreateDiscussionIntent.OnTrackChange -> TODO()
+            is CreateDiscussionIntent.OnTitleChange -> {
+                updateState { copy(title = intent.title) }
+            }
+
+            is CreateDiscussionIntent.OnTrackIndexChange -> {
+                updateState { copy(selectedTrackIndex = intent.selectedIndex) }
+            }
+
+            is CreateDiscussionIntent.OnPlaceChange -> {
+                updateState { copy(place = intent.place) }
+            }
+
+            is CreateDiscussionIntent.OnParticipantCountChange -> {
+                updateState { copy(participantCount = intent.participantCount.coerceAtLeast(0)) }
+            }
+
+            is CreateDiscussionIntent.OnDateChange -> {
+                updateState { copy(selectedDate = intent.date) }
+            }
+
+            is CreateDiscussionIntent.OnStartTimeChange -> {
+                updateState { copy(selectedStartTime = intent.time) }
+            }
+
+            is CreateDiscussionIntent.OnEndTimeChange -> {
+                updateState { copy(selectedEndTime = intent.time) }
+            }
+
+            is CreateDiscussionIntent.OnEndDateIndexChange -> {
+                updateState { copy(selectedEndDateIndex = intent.selectedIndex) }
+            }
+
+            CreateDiscussionIntent.OnCancelClick -> {
+                updateState { CreateDiscussionState() }
+            }
         }
     }
 }
