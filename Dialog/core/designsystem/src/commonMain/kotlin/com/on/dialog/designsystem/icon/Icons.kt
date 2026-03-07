@@ -31,9 +31,11 @@ import androidx.compose.material.icons.rounded.NotificationsOff
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PersonOff
 import androidx.compose.material.icons.rounded.Place
+import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material3.Icon
 import com.on.dialog.designsystem.icon.myiconpack.Bold
 import com.on.dialog.designsystem.icon.myiconpack.Bullet
 import com.on.dialog.designsystem.icon.myiconpack.Code
@@ -74,6 +76,8 @@ object DialogIcons {
     val Share = Icons.Rounded.Share
     val Notifications = Icons.Rounded.Notifications
     val NotificationsOff = Icons.Rounded.NotificationsOff
+    val Minus = Icons.Rounded.Remove
+    val Plus = Icons.Rounded.Add
     val Filter = Icons.Rounded.FilterAlt
     val FilterOff = Icons.Rounded.FilterAltOff
     val Empty = Icons.Rounded.SearchOff

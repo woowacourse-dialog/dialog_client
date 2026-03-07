@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.RangeSliderState.Companion.Saver
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,13 +21,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.on.dialog.designsystem.component.DialogDatePicker
 import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogIconButton
+import com.on.dialog.designsystem.component.DialogIconButtonTone
 import com.on.dialog.designsystem.component.DialogTextField
 import com.on.dialog.designsystem.component.DialogToggle
 import com.on.dialog.designsystem.component.DialogTopAppBar
@@ -36,6 +41,7 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionInt
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.datetime.LocalDate
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -87,6 +93,8 @@ private fun CreateDiscussionScreen(
             TitleField(
                 title = uiState.title,
                 onTitleChange = { onIntent(CreateDiscussionIntent.OnTitleChange(it)) },
+                label = "제목",
+                placeHolder = "제목에 핵심 내용을 요약합니다.",
             )
 
             DialogDropdownMenu(
@@ -118,9 +126,80 @@ private fun CreateDiscussionScreen(
 }
 
 @Composable
+private fun OnlineDiscussion(
+    place: String,
+    onPlaceChange: (String) -> Unit,
+    selectedDate: LocalDate?,
+    onDateSelected: (LocalDate) -> Unit,
+) {
+    Column {
+        TitleField(
+            title = place,
+            onTitleChange = onPlaceChange,
+            label = "토론 장소",
+            placeHolder = "예: 굿샷, 나이스샷, 온라인 줌 미팅, 강남역",
+        )
+
+        ParticipantContent(
+            participantCount = 0,
+            onParticipantCountChange = {},
+        )
+
+        DialogDatePicker(
+            label = "날짜",
+            selectedDate = selectedDate,
+            onDateSelected = onDateSelected,
+        )
+    }
+}
+
+@Composable
+private fun ParticipantContent(
+    participantCount: Int,
+    onParticipantCountChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = "참여자 수",
+            color = DialogTheme.colorScheme.primary,
+            style = DialogTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(DialogTheme.spacing.small),
+        )
+
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            DialogIconButton(
+                onClick = { onParticipantCountChange(participantCount - 1) },
+                tone = DialogIconButtonTone.Primary,
+            ) {
+                Icon(DialogIcons.Minus, null)
+            }
+
+            Text(
+                text = participantCount.toString(),
+                modifier = Modifier.padding(horizontal = DialogTheme.spacing.medium)
+            )
+
+            DialogIconButton(
+                onClick = { onParticipantCountChange(participantCount + 1) },
+                tone = DialogIconButtonTone.Primary,
+            ) {
+                Icon(DialogIcons.Plus, null)
+            }
+        }
+    }
+}
+
+@Composable
 private fun TitleField(
     title: String,
     onTitleChange: (String) -> Unit,
+    label: String,
+    placeHolder: String,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -128,9 +207,9 @@ private fun TitleField(
             DialogTextField(
                 value = title,
                 onValueChange = { if (it.length <= 50) onTitleChange(it) },
-                label = "제목",
+                label = label,
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = "제목에 핵심 내용을 요약합니다.",
+                placeholder = placeHolder,
                 singleLine = true,
             )
         }
@@ -157,6 +236,19 @@ private fun CreateDiscussionScreenPreview() {
             uiState = CreateDiscussionState(),
             onBackClick = {},
             onIntent = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CreateDiscussionScreenPreview2() {
+    DialogTheme {
+        OnlineDiscussion(
+            place = "",
+            onPlaceChange = {},
+            selectedDate = LocalDate(2025, 3, 8),
+            onDateSelected = {}
         )
     }
 }
