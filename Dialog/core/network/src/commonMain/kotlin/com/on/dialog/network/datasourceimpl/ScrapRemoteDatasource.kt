@@ -4,6 +4,7 @@ import com.on.dialog.network.common.safeApiCall
 import com.on.dialog.network.datasource.ScrapDatasource
 import com.on.dialog.network.dto.scrap.ScrapCursorPageResponse
 import com.on.dialog.network.dto.scrap.ScrapStatusResponse
+import com.on.dialog.network.dto.scrap.ScrapSuccessResponse
 import com.on.dialog.network.service.ScrapService
 
 internal class ScrapRemoteDatasource(
@@ -15,7 +16,7 @@ internal class ScrapRemoteDatasource(
     ): Result<ScrapCursorPageResponse> =
         safeApiCall { scrapService.getScraps(lastCursorId, size) }
 
-    override suspend fun postScrap(id: Long): Result<ScrapCursorPageResponse.ContentDto> =
+    override suspend fun postScrap(id: Long): Result<ScrapSuccessResponse> =
         safeApiCall { scrapService.postScrap(id = id) }
 
     override suspend fun deleteScrap(id: Long): Result<Unit> =

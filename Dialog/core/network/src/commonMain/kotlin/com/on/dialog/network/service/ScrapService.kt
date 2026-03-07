@@ -2,6 +2,7 @@ package com.on.dialog.network.service
 
 import com.on.dialog.network.dto.common.DataResponse
 import com.on.dialog.network.dto.scrap.ScrapCursorPageResponse
+import com.on.dialog.network.dto.scrap.ScrapSuccessResponse
 import com.on.dialog.network.dto.scrap.ScrapStatusResponse
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
@@ -19,7 +20,7 @@ interface ScrapService {
     @POST("api/discussions/{discussionId}/scraps")
     suspend fun postScrap(
         @Path("discussionId") id: Long,
-    ): DataResponse<ScrapCursorPageResponse.ContentDto>
+    ): DataResponse<ScrapSuccessResponse>
 
     @DELETE("api/discussions/{discussionId}/scraps")
     suspend fun deleteScrap(

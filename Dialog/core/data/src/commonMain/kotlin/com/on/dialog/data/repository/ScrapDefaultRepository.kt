@@ -5,7 +5,7 @@ import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
 import com.on.dialog.model.discussion.scrap.ScrapCatalog
 import com.on.dialog.model.scrap.ScrapStatus
 import com.on.dialog.network.datasource.ScrapDatasource
-import com.on.dialog.network.dto.scrap.ScrapCursorPageResponse
+import com.on.dialog.network.dto.scrap.ScrapSuccessResponse
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -48,11 +48,8 @@ internal class ScrapDefaultRepository(
     override suspend fun postScrap(discussionId: Long): Result<Unit> =
         scrapDatasource
             .postScrap(id = discussionId)
-            .mapCatching { contentDto: ScrapCursorPageResponse.ContentDto ->
-                val scrapCatalog: ScrapCatalog = when (contentDto) {
-                    is ScrapCursorPageResponse.ContentDto.OnlineContentDto -> contentDto.toDomain()
-                    is ScrapCursorPageResponse.ContentDto.OfflineContentDto -> contentDto.toDomain()
-                }
+            .mapCatching { response: ScrapSuccessResponse ->
+                val scrapCatalog: ScrapCatalog = response.toDomain()
                 _scrapCatalogs.update { current ->
                     (persistentListOf(scrapCatalog) + current)
                         .distinctBy { it.catalogContent.id }
