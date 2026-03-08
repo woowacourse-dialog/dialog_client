@@ -7,30 +7,29 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.TimePickerDialog
+import androidx.compose.material3.TimePickerDialogDefaults
+import androidx.compose.material3.TimePickerDisplayMode
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import com.on.dialog.core.common.extension.formatToString
 import com.on.dialog.designsystem.theme.DialogTheme
 import kotlinx.datetime.LocalTime
@@ -79,7 +78,6 @@ fun DialogTimePicker(
             enabled = enabled,
         )
 
-        // readOnly TextField의 클릭을 가로채기 위한 투명 오버레이
         if (enabled) {
             Box(
                 modifier = Modifier
@@ -118,72 +116,72 @@ private fun DialogTimePickerDialog(
         initialMinute = selectedTime?.minute ?: 0,
         is24Hour = is24Hour,
     )
+    var displayMode by remember { mutableStateOf(TimePickerDisplayMode.Picker) }
 
-    BasicAlertDialog(
+    val timePickerColors = TimePickerDefaults.colors(
+        clockDialColor = DialogTheme.colorScheme.surfaceContainerHighest,
+        clockDialSelectedContentColor = DialogTheme.colorScheme.onPrimary,
+        clockDialUnselectedContentColor = DialogTheme.colorScheme.onSurface,
+        selectorColor = DialogTheme.colorScheme.primary,
+        containerColor = DialogTheme.colorScheme.surfaceContainerHigh,
+        periodSelectorBorderColor = DialogTheme.colorScheme.outline,
+        periodSelectorSelectedContainerColor = DialogTheme.colorScheme.primaryContainer,
+        periodSelectorUnselectedContainerColor = DialogTheme.colorScheme.surfaceContainerHigh,
+        periodSelectorSelectedContentColor = DialogTheme.colorScheme.onPrimaryContainer,
+        periodSelectorUnselectedContentColor = DialogTheme.colorScheme.onSurfaceVariant,
+        timeSelectorSelectedContainerColor = DialogTheme.colorScheme.primaryContainer,
+        timeSelectorUnselectedContainerColor = DialogTheme.colorScheme.surfaceContainerHighest,
+        timeSelectorSelectedContentColor = DialogTheme.colorScheme.onPrimaryContainer,
+        timeSelectorUnselectedContentColor = DialogTheme.colorScheme.onSurface,
+    )
+
+    TimePickerDialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-    ) {
-        Surface(
-            shape = DialogTheme.shapes.medium,
-            color = DialogTheme.colorScheme.surfaceContainerHigh,
-            tonalElevation = 6.dp,
-        ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = Modifier.padding(horizontal = 16.dp),
+        title = { TimePickerDialogDefaults.Title(displayMode = displayMode) },
+        modeToggleButton = {
+            TimePickerDialogDefaults.DisplayModeToggle(
+                displayMode = displayMode,
+                onDisplayModeChange = {
+                    displayMode = when (displayMode) {
+                        TimePickerDisplayMode.Picker -> TimePickerDisplayMode.Input
+                        else -> TimePickerDisplayMode.Picker
+                    }
+                },
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(timePickerState.hour, timePickerState.minute) },
             ) {
                 Text(
-                    text = "시간 선택",
-                    style = DialogTheme.typography.labelMedium,
-                    color = DialogTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.fillMaxWidth(),
+                    text = "확인",
+                    color = DialogTheme.colorScheme.primary,
+                    style = DialogTheme.typography.bodyMedium,
                 )
-
-                TimePicker(
-                    state = timePickerState,
-                    colors = TimePickerDefaults.colors(
-                        clockDialColor = DialogTheme.colorScheme.surfaceContainerHighest,
-                        clockDialSelectedContentColor = DialogTheme.colorScheme.onPrimary,
-                        clockDialUnselectedContentColor = DialogTheme.colorScheme.onSurface,
-                        selectorColor = DialogTheme.colorScheme.primary,
-                        containerColor = DialogTheme.colorScheme.surfaceContainerHigh,
-                        periodSelectorBorderColor = DialogTheme.colorScheme.outline,
-                        periodSelectorSelectedContainerColor = DialogTheme.colorScheme.primaryContainer,
-                        periodSelectorUnselectedContainerColor = DialogTheme.colorScheme.surfaceContainerHigh,
-                        periodSelectorSelectedContentColor = DialogTheme.colorScheme.onPrimaryContainer,
-                        periodSelectorUnselectedContentColor = DialogTheme.colorScheme.onSurfaceVariant,
-                        timeSelectorSelectedContainerColor = DialogTheme.colorScheme.primaryContainer,
-                        timeSelectorUnselectedContainerColor = DialogTheme.colorScheme.surfaceContainerHighest,
-                        timeSelectorSelectedContentColor = DialogTheme.colorScheme.onPrimaryContainer,
-                        timeSelectorUnselectedContentColor = DialogTheme.colorScheme.onSurface,
-                    ),
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(
-                            text = "취소",
-                            color = DialogTheme.colorScheme.onSurfaceVariant,
-                            style = DialogTheme.typography.bodyMedium,
-                        )
-                    }
-                    TextButton(
-                        onClick = {
-                            onConfirm(timePickerState.hour, timePickerState.minute)
-                        },
-                    ) {
-                        Text(
-                            text = "확인",
-                            color = DialogTheme.colorScheme.primary,
-                            style = DialogTheme.typography.bodyMedium,
-                        )
-                    }
-                }
             }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = "취소",
+                    color = DialogTheme.colorScheme.onSurfaceVariant,
+                    style = DialogTheme.typography.bodyMedium,
+                )
+            }
+        },
+        containerColor = DialogTheme.colorScheme.surfaceContainerHigh,
+    ) {
+        if (displayMode == TimePickerDisplayMode.Picker) {
+            TimePicker(
+                state = timePickerState,
+                colors = timePickerColors,
+            )
+        } else {
+            TimeInput(
+                state = timePickerState,
+                colors = timePickerColors,
+            )
         }
     }
 }
