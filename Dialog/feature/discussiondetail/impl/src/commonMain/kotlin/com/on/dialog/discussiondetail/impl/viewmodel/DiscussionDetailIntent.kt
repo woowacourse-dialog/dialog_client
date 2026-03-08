@@ -19,4 +19,13 @@ sealed interface DiscussionDetailIntent : UiIntent {
         val commentId: Long,
         val content: String,
     ) : DiscussionDetailIntent
+
+    data class OnEditComment(
+        val commentId: Long,
+        val content: String,
+    ) : DiscussionDetailIntent
+
+    data class OnDeleteComment(
+        val commentId: Long,
+    ) : DiscussionDetailIntent
 }

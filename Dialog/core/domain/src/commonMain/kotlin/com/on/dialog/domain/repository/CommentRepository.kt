@@ -8,4 +8,8 @@ interface CommentRepository {
     suspend fun postComment(discussionId: Long, content: String): Result<Unit>
 
     suspend fun postReply(discussionId: Long, parentCommentId: Long, content: String): Result<Unit>
+
+    suspend fun patchComment(discussionCommentId: Long, content: String): Result<Unit>
+
+    suspend fun deleteComment(discussionCommentId: Long): Result<Unit>
 }

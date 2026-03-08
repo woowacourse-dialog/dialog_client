@@ -10,11 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.LoadingIndicator
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.preview.ThemePreview
@@ -24,6 +26,7 @@ import com.on.dialog.discussiondetail.impl.component.CommentSection
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailContent
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailHeader
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailTopAppBar
+import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel.AuthorUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
@@ -35,9 +38,15 @@ import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailIntent
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailState
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailViewModel
 import com.on.dialog.model.common.Track
+import com.on.dialog.ui.component.DecisionDialog
 import com.on.dialog.ui.component.markdown.MarkdownEditor
+import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.action_cancel
+import dialog.feature.discussiondetail.impl.generated.resources.comment_delete_write
+import dialog.feature.discussiondetail.impl.generated.resources.discussion_delete_confirm
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -50,8 +59,8 @@ internal fun DiscussionDetailScreen(
 ) {
     val snackbarDelegate = LocalSnackbarDelegate.current
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showMarkdownEditor by rememberSaveable { mutableStateOf(false) }
-    var targetCommentId by rememberSaveable { mutableStateOf<Long?>(null) }
+    var commentType by rememberSaveable { mutableStateOf<CommentType?>(null) }
+    var deleteCommentId by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -66,16 +75,36 @@ internal fun DiscussionDetailScreen(
         }
     }
 
+    if (deleteCommentId != null) {
+        DecisionDialog(
+            contentText = stringResource(Res.string.discussion_delete_confirm),
+            confirmText = stringResource(Res.string.comment_delete_write),
+            onConfirm = {
+                deleteCommentId?.let { commentId ->
+                    viewModel.onIntent(DiscussionDetailIntent.OnDeleteComment(commentId = commentId))
+                }
+                deleteCommentId = null
+            },
+            confirmButtonStyle = DialogButtonStyle.Error,
+            dismissText = stringResource(Res.string.action_cancel),
+            onDismiss = { deleteCommentId = null },
+        )
+    }
+
     DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
         onCommentClick = {
-            showMarkdownEditor = true
-            targetCommentId = null
+            commentType = CommentType.Comment
         },
         onReplyClick = { commentId ->
-            showMarkdownEditor = true
-            targetCommentId = commentId
+            commentType = CommentType.Reply(commentId = commentId)
+        },
+        onCommentEditClick = { commentId, content ->
+            commentType = CommentType.Edit(commentId = commentId, originalContent = content)
+        },
+        onCommentDeleteClick = { commentId ->
+            deleteCommentId = commentId
         },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
@@ -86,17 +115,32 @@ internal fun DiscussionDetailScreen(
         modifier = modifier,
     )
 
-    if (showMarkdownEditor) {
+    if (commentType != null) {
         MarkdownEditor(
-            initialContent = "",
-            onConfirm = { newContent: String ->
-                showMarkdownEditor = false
-                val intent = targetCommentId?.let { commentId ->
-                    DiscussionDetailIntent.OnSubmitReply(commentId, newContent)
-                } ?: DiscussionDetailIntent.OnSubmitComment(newContent)
-                viewModel.onIntent(intent)
+            initialContent = when (val type = commentType) {
+                is CommentType.Edit -> type.originalContent
+                else -> ""
             },
-            onExit = { showMarkdownEditor = false },
+            onConfirm = { newContent: String ->
+                val intent = when (val type = commentType) {
+                    CommentType.Comment -> DiscussionDetailIntent.OnSubmitComment(content = newContent)
+
+                    is CommentType.Reply -> DiscussionDetailIntent.OnSubmitReply(
+                        commentId = type.commentId,
+                        content = newContent,
+                    )
+
+                    is CommentType.Edit -> DiscussionDetailIntent.OnEditComment(
+                        commentId = type.commentId,
+                        content = newContent,
+                    )
+
+                    null -> return@MarkdownEditor
+                }
+                viewModel.onIntent(intent)
+                commentType = null
+            },
+            onExit = { commentType = null },
         )
     }
 }
@@ -107,6 +151,8 @@ private fun DiscussionDetailScreen(
     goBack: () -> Unit,
     onCommentClick: () -> Unit,
     onReplyClick: (commentId: Long) -> Unit,
+    onCommentEditClick: (commentId: Long, content: String) -> Unit,
+    onCommentDeleteClick: (commentId: Long) -> Unit,
     onBookmarkClick: () -> Unit,
     onLikeClick: () -> Unit,
     onParticipateClick: () -> Unit,
@@ -168,6 +214,8 @@ private fun DiscussionDetailScreen(
                 totalCommentCount = state.totalCommentCount,
                 onCommentClick = onCommentClick,
                 onReplyClick = onReplyClick,
+                onEditClick = onCommentEditClick,
+                onDeleteClick = onCommentDeleteClick,
             )
         }
     }
@@ -208,6 +256,8 @@ private fun DiscussionDetailScreenOfflinePreview() {
                 goBack = {},
                 onCommentClick = {},
                 onReplyClick = {},
+                onCommentEditClick = { _, _ -> },
+                onCommentDeleteClick = {},
                 onBookmarkClick = {},
                 onLikeClick = {},
                 onParticipateClick = {},
@@ -246,6 +296,8 @@ private fun DiscussionDetailScreenOnlinePreview() {
             goBack = {},
             onCommentClick = {},
             onReplyClick = {},
+            onCommentEditClick = { _, _ -> },
+            onCommentDeleteClick = {},
             onBookmarkClick = {},
             onLikeClick = {},
             onParticipateClick = {},
