@@ -59,8 +59,11 @@ internal sealed interface DiscussionMode {
         val place: String = "",
         val participantCount: Int = 2,
         val selectedDate: LocalDate? = null,
+        val selectedDateErrorMessage: String = "",
         val selectedStartTime: LocalTime? = null,
+        val selectedStartTimeErrorMessage: String = "",
         val selectedEndTime: LocalTime? = null,
+        val selectedEndTimeErrorMessage: String = "",
     ) : DiscussionMode {
         override val isValid: Boolean
             get() = place.isNotBlank() &&

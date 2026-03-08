@@ -156,6 +156,9 @@ private fun CreateDiscussionScreen(
                         },
                         selectedEndTime = offlineMode.selectedEndTime,
                         onEndTimeSelected = { onIntent(CreateDiscussionIntent.OnEndTimeChange(it)) },
+                        selectedDateErrorMessage = uiState.mode.selectedDateErrorMessage,
+                        selectedStartTimeErrorMessage = uiState.mode.selectedStartTimeErrorMessage,
+                        selectedEndTimeErrorMessage = uiState.mode.selectedEndTimeErrorMessage,
                     )
                 }
             }
@@ -212,10 +215,13 @@ private fun OfflineDiscussion(
     participantCount: Int,
     onParticipantCountChange: (Int) -> Unit,
     selectedDate: LocalDate?,
+    selectedDateErrorMessage: String,
     onDateSelected: (LocalDate) -> Unit,
     selectedStartTime: LocalTime?,
+    selectedStartTimeErrorMessage: String,
     onStartTimeSelected: (LocalTime) -> Unit,
     selectedEndTime: LocalTime?,
+    selectedEndTimeErrorMessage: String,
     onEndTimeSelected: (LocalTime) -> Unit,
 ) {
     Column {
@@ -238,24 +244,26 @@ private fun OfflineDiscussion(
             placeholder = "날짜를 선택해주세요",
             selectedDate = selectedDate,
             onDateSelected = onDateSelected,
+            isError = true,
+            supportingText = selectedDateErrorMessage,
         )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
+        
         DialogTimePicker(
             selectedTime = selectedStartTime,
             onTimeSelected = onStartTimeSelected,
             placeholder = "시작 시간을 선택해주세요",
             label = "시작 시간",
+            isError = true,
+            supportingText = selectedStartTimeErrorMessage,
         )
-
-        Spacer(modifier = Modifier.height(20.dp))
 
         DialogTimePicker(
             selectedTime = selectedEndTime,
             onTimeSelected = onEndTimeSelected,
             placeholder = "종료 시간을 선택해주세요",
             label = "종료 시간",
+            isError = true,
+            supportingText = selectedEndTimeErrorMessage,
         )
     }
 }
