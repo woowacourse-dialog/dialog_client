@@ -1,6 +1,8 @@
 package com.on.dialog.feature.creatediscussion.impl.viewmodel
 
 import androidx.compose.runtime.Immutable
+import com.on.dialog.feature.creatediscussion.impl.mapper.toFullNameRes
+import com.on.dialog.model.common.Track
 import com.on.dialog.ui.viewmodel.UiState
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -8,7 +10,7 @@ import kotlinx.datetime.LocalTime
 @Immutable
 internal data class CreateDiscussionState(
     val title: String = "",
-    val trackOptions: List<String> = listOf("안드로이드", "백엔드", "프론트엔드"),
+    val trackOptions: List<String> = tracks,
     val selectedTrackIndex: Int = -1,
     val mode: DiscussionMode = DiscussionMode.Online(),
     val isSubmitting: Boolean = false,
@@ -20,6 +22,11 @@ internal data class CreateDiscussionState(
                 selectedTrackIndex !in trackOptions.indices -> false
                 else -> mode.isValid
             }
+
+    companion object {
+        private val tracks = Track.entries.filter { it != Track.COMMON }
+            .map { it.toFullNameRes() }
+    }
 }
 
 @Immutable
@@ -45,8 +52,8 @@ internal sealed interface DiscussionMode {
     ) : DiscussionMode {
         override val isValid: Boolean
             get() = place.isNotBlank() &&
-                selectedDate != null &&
-                selectedStartTime != null &&
-                selectedEndTime != null
+                    selectedDate != null &&
+                    selectedStartTime != null &&
+                    selectedEndTime != null
     }
 }
