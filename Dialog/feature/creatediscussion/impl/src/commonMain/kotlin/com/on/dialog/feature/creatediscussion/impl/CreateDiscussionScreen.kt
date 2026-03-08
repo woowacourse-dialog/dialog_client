@@ -90,7 +90,7 @@ private fun CreateDiscussionScreen(
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         DialogTopAppBar(
-            title = "토론 작성",
+            title = "토론 생성",
             navigationIcon = {
                 DialogIconButton(onClick = onBackClick) {
                     Icon(
@@ -247,7 +247,7 @@ private fun OfflineDiscussion(
             isError = true,
             supportingText = selectedDateErrorMessage,
         )
-        
+
         DialogTimePicker(
             selectedTime = selectedStartTime,
             onTimeSelected = onStartTimeSelected,
