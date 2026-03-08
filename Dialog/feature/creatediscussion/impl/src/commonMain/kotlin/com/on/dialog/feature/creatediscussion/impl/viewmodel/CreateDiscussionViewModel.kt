@@ -3,21 +3,10 @@ package com.on.dialog.feature.creatediscussion.impl.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.DiscussionRepository
-import com.on.dialog.model.common.Track
-import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
-import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atTime
-import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 internal class CreateDiscussionViewModel(
     private val discussionRepository: DiscussionRepository,
 ) : BaseViewModel<CreateDiscussionIntent, CreateDiscussionState, CreateDiscussionEffect>(
@@ -129,13 +118,13 @@ internal class CreateDiscussionViewModel(
             val result = when (val currentMode = currentState.mode) {
                 is DiscussionMode.Offline -> {
                     discussionRepository.createOfflineDiscussion(
-                        request = currentState.toOfflineDraft(currentMode),
+                        request = currentState.toDomain(currentMode),
                     )
                 }
 
                 is DiscussionMode.Online -> {
                     discussionRepository.createOnlineDiscussion(
-                        request = currentState.toOnlineDraft(currentMode),
+                        request = currentState.toDomain(currentMode),
                     )
                 }
             }
@@ -161,42 +150,5 @@ internal class CreateDiscussionViewModel(
 
             updateState { copy(isSubmitting = false) }
         }
-    }
-
-    private fun CreateDiscussionState.toOfflineDraft(mode: DiscussionMode.Offline): OfflineDiscussionDraft =
-        OfflineDiscussionDraft(
-            title = title.trim(),
-            content = title.trim(),
-            startAt = mode.selectedDate!!.atTime(
-                mode.selectedStartTime!!.hour,
-                mode.selectedStartTime.minute,
-            ),
-            endAt = mode.selectedDate.atTime(mode.selectedEndTime!!.hour, mode.selectedEndTime.minute),
-            place = mode.place.trim(),
-            maxParticipantCount = mode.participantCount.coerceAtLeast(2),
-            category = selectedTrackIndex.toTrackCategory(),
-        )
-
-    private fun CreateDiscussionState.toOnlineDraft(mode: DiscussionMode.Online): OnlineDiscussionDraft {
-        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        val endDate = today.plus(DatePeriod(days = mode.selectedEndDateIndex.toEndDateOffsetDays()))
-        return OnlineDiscussionDraft(
-            title = title.trim(),
-            content = title.trim(),
-            endDate = endDate,
-            category = selectedTrackIndex.toTrackCategory(),
-        )
-    }
-
-    private fun Int.toTrackCategory(): String = when (this) {
-        0 -> Track.ANDROID.name
-        1 -> Track.BACKEND.name
-        else -> Track.FRONTEND.name
-    }
-
-    private fun Int.toEndDateOffsetDays(): Int = when (this) {
-        0 -> 1
-        1 -> 2
-        else -> 3
     }
 }
