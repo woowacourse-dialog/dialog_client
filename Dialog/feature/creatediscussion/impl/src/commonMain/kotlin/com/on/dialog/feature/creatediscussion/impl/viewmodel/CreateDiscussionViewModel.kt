@@ -34,31 +34,81 @@ internal class CreateDiscussionViewModel(
             }
 
             is CreateDiscussionIntent.OnMeetupEnabledChange -> {
-                updateState { copy(isMeetupEnabled = intent.enabled) }
+                updateState {
+                    copy(
+                        mode = if (intent.enabled) DiscussionMode.Offline() else DiscussionMode.Online(),
+                    )
+                }
             }
 
             is CreateDiscussionIntent.OnPlaceChange -> {
-                updateState { copy(place = intent.place) }
+                updateState {
+                    val currentMode = mode
+                    if (currentMode is DiscussionMode.Offline) {
+                        copy(mode = currentMode.copy(place = intent.place))
+                    } else {
+                        this
+                    }
+                }
             }
 
             is CreateDiscussionIntent.OnParticipantCountChange -> {
-                updateState { copy(participantCount = intent.participantCount.coerceAtLeast(2)) }
+                updateState {
+                    val currentMode = mode
+                    if (currentMode is DiscussionMode.Offline) {
+                        copy(
+                            mode = currentMode.copy(
+                                participantCount = intent.participantCount.coerceAtLeast(2),
+                            ),
+                        )
+                    } else {
+                        this
+                    }
+                }
             }
 
             is CreateDiscussionIntent.OnDateChange -> {
-                updateState { copy(selectedDate = intent.date) }
+                updateState {
+                    val currentMode = mode
+                    if (currentMode is DiscussionMode.Offline) {
+                        copy(mode = currentMode.copy(selectedDate = intent.date))
+                    } else {
+                        this
+                    }
+                }
             }
 
             is CreateDiscussionIntent.OnStartTimeChange -> {
-                updateState { copy(selectedStartTime = intent.time) }
+                updateState {
+                    val currentMode = mode
+                    if (currentMode is DiscussionMode.Offline) {
+                        copy(mode = currentMode.copy(selectedStartTime = intent.time))
+                    } else {
+                        this
+                    }
+                }
             }
 
             is CreateDiscussionIntent.OnEndTimeChange -> {
-                updateState { copy(selectedEndTime = intent.time) }
+                updateState {
+                    val currentMode = mode
+                    if (currentMode is DiscussionMode.Offline) {
+                        copy(mode = currentMode.copy(selectedEndTime = intent.time))
+                    } else {
+                        this
+                    }
+                }
             }
 
             is CreateDiscussionIntent.OnEndDateIndexChange -> {
-                updateState { copy(selectedEndDateIndex = intent.selectedIndex) }
+                updateState {
+                    val currentMode = mode
+                    if (currentMode is DiscussionMode.Online) {
+                        copy(mode = currentMode.copy(selectedEndDateIndex = intent.selectedIndex))
+                    } else {
+                        this
+                    }
+                }
             }
 
             CreateDiscussionIntent.OnCancelClick -> {
@@ -76,10 +126,18 @@ internal class CreateDiscussionViewModel(
     private fun submitDiscussion() {
         updateState { copy(isSubmitting = true) }
         viewModelScope.launch {
-            val result = if (currentState.isMeetupEnabled) {
-                discussionRepository.createOfflineDiscussion(currentState.toOfflineDraft())
-            } else {
-                discussionRepository.createOnlineDiscussion(currentState.toOnlineDraft())
+            val result = when (val currentMode = currentState.mode) {
+                is DiscussionMode.Offline -> {
+                    discussionRepository.createOfflineDiscussion(
+                        request = currentState.toOfflineDraft(currentMode),
+                    )
+                }
+
+                is DiscussionMode.Online -> {
+                    discussionRepository.createOnlineDiscussion(
+                        request = currentState.toOnlineDraft(currentMode),
+                    )
+                }
             }
 
             result
@@ -105,20 +163,23 @@ internal class CreateDiscussionViewModel(
         }
     }
 
-    private fun CreateDiscussionState.toOfflineDraft(): OfflineDiscussionDraft =
+    private fun CreateDiscussionState.toOfflineDraft(mode: DiscussionMode.Offline): OfflineDiscussionDraft =
         OfflineDiscussionDraft(
             title = title.trim(),
             content = title.trim(),
-            startAt = selectedDate!!.atTime(selectedStartTime!!.hour, selectedStartTime.minute),
-            endAt = selectedDate!!.atTime(selectedEndTime!!.hour, selectedEndTime.minute),
-            place = place.trim(),
-            maxParticipantCount = participantCount.coerceAtLeast(2),
+            startAt = mode.selectedDate!!.atTime(
+                mode.selectedStartTime!!.hour,
+                mode.selectedStartTime.minute,
+            ),
+            endAt = mode.selectedDate.atTime(mode.selectedEndTime!!.hour, mode.selectedEndTime.minute),
+            place = mode.place.trim(),
+            maxParticipantCount = mode.participantCount.coerceAtLeast(2),
             category = selectedTrackIndex.toTrackCategory(),
         )
 
-    private fun CreateDiscussionState.toOnlineDraft(): OnlineDiscussionDraft {
+    private fun CreateDiscussionState.toOnlineDraft(mode: DiscussionMode.Online): OnlineDiscussionDraft {
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        val endDate = today.plus(DatePeriod(days = selectedEndDateIndex.toEndDateOffsetDays()))
+        val endDate = today.plus(DatePeriod(days = mode.selectedEndDateIndex.toEndDateOffsetDays()))
         return OnlineDiscussionDraft(
             title = title.trim(),
             content = title.trim(),

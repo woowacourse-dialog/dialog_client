@@ -46,6 +46,7 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionEff
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionIntent
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
+import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -126,48 +127,50 @@ private fun CreateDiscussionScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             DialogToggle(
-                checked = uiState.isMeetupEnabled,
+                checked = uiState.mode is DiscussionMode.Offline,
                 onCheckedChange = { onIntent(CreateDiscussionIntent.OnMeetupEnabledChange(it)) },
                 label = "만나서 토론하기",
                 modifier = Modifier.padding(start = DialogTheme.spacing.small),
             )
 
             AnimatedVisibility(
-                visible = uiState.isMeetupEnabled,
+                visible = uiState.mode is DiscussionMode.Offline,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
             ) {
-                Column {
+                val offlineMode = uiState.mode as? DiscussionMode.Offline
+                if (offlineMode != null) Column {
                     Spacer(modifier = Modifier.height(20.dp))
                     OfflineDiscussion(
-                        place = uiState.place,
+                        place = offlineMode.place,
                         onPlaceChange = { onIntent(CreateDiscussionIntent.OnPlaceChange(it)) },
-                        participantCount = uiState.participantCount,
+                        participantCount = offlineMode.participantCount,
                         onParticipantCountChange = {
                             onIntent(CreateDiscussionIntent.OnParticipantCountChange(it))
                         },
-                        selectedDate = uiState.selectedDate,
+                        selectedDate = offlineMode.selectedDate,
                         onDateSelected = { onIntent(CreateDiscussionIntent.OnDateChange(it)) },
-                        selectedStartTime = uiState.selectedStartTime,
+                        selectedStartTime = offlineMode.selectedStartTime,
                         onStartTimeSelected = {
                             onIntent(CreateDiscussionIntent.OnStartTimeChange(it))
                         },
-                        selectedEndTime = uiState.selectedEndTime,
+                        selectedEndTime = offlineMode.selectedEndTime,
                         onEndTimeSelected = { onIntent(CreateDiscussionIntent.OnEndTimeChange(it)) },
                     )
                 }
             }
 
             AnimatedVisibility(
-                visible = !uiState.isMeetupEnabled,
+                visible = uiState.mode is DiscussionMode.Online,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
             ) {
-                Column {
+                val onlineMode = uiState.mode as? DiscussionMode.Online
+                if (onlineMode != null) Column {
                     Spacer(modifier = Modifier.height(20.dp))
                     DialogDropdownMenu(
-                        options = uiState.endDateOptions.toImmutableList(),
-                        selectedIndex = uiState.selectedEndDateIndex.takeIf { it >= 0 },
+                        options = onlineMode.endDateOptions.toImmutableList(),
+                        selectedIndex = onlineMode.selectedEndDateIndex.takeIf { it >= 0 },
                         onSelectedIndexChange = {
                             onIntent(CreateDiscussionIntent.OnEndDateIndexChange(it))
                         },
@@ -349,7 +352,7 @@ private fun CreateDiscussionScreenPreview() {
 private fun CreateDiscussionScreenPreview2() {
     DialogTheme {
         CreateDiscussionScreen(
-            uiState = CreateDiscussionState(),
+            uiState = CreateDiscussionState(mode = DiscussionMode.Offline()),
             onBackClick = {},
             onIntent = {},
         )
