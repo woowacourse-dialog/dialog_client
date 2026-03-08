@@ -12,6 +12,8 @@ data class OnlineDiscussionDetail(
 ) : DiscussionDetail {
     override fun status(now: LocalDateTime): DiscussionStatus =
         when {
+            now < detailContent.createdAt -> DiscussionStatus.RECRUITING
+
             endDate.isInPeriod(
                 startAt = detailContent.createdAt,
                 dateTime = now,
@@ -19,6 +21,6 @@ data class OnlineDiscussionDetail(
 
             endDate.isAfterEnd(dateTime = now) -> DiscussionStatus.DISCUSSION_COMPLETE
 
-            else -> throw IllegalStateException("Unknown DiscussionStatus")
+            else -> DiscussionStatus.DISCUSSION_COMPLETE
         }
 }

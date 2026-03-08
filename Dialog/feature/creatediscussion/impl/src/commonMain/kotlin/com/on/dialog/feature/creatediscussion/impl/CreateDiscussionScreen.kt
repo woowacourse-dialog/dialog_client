@@ -55,6 +55,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun CreateDiscussionScreen(
     goBack: () -> Unit,
+    navigateToDetail: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreateDiscussionViewModel = koinViewModel(),
 ) {
@@ -64,11 +65,12 @@ internal fun CreateDiscussionScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                CreateDiscussionEffect.GoBack -> goBack()
                 is CreateDiscussionEffect.ShowSnackbar -> snackbarState.showSnackbar(
                     message = effect.message,
                     state = effect.state,
                 )
+
+                is CreateDiscussionEffect.NavigateToDetail -> navigateToDetail(effect.discussionId)
             }
         }
     }
@@ -195,7 +197,7 @@ private fun CreateDiscussionScreen(
             DialogButton(
                 text = "취소",
                 style = DialogButtonStyle.Secondary,
-                onClick = { onIntent(CreateDiscussionIntent.OnCancelClick) },
+                onClick = onBackClick,
                 modifier = Modifier.weight(1f),
             )
             DialogButton(

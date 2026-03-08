@@ -100,10 +100,6 @@ internal class CreateDiscussionViewModel(
                 }
             }
 
-            CreateDiscussionIntent.OnCancelClick -> {
-                emitEffect(CreateDiscussionEffect.GoBack)
-            }
-
             CreateDiscussionIntent.OnSubmitClick -> {
                 if (currentState.isSubmitting) return
                 if (!currentState.isSubmitEnabled) return
@@ -122,14 +118,14 @@ internal class CreateDiscussionViewModel(
             }
 
             result
-                .onSuccess {
+                .onSuccess { discussionId: Long ->
                     emitEffect(
                         CreateDiscussionEffect.ShowSnackbar(
                             message = "토론이 등록되었어요.",
                             state = SnackbarState.POSITIVE,
                         ),
                     )
-                    emitEffect(CreateDiscussionEffect.GoBack)
+                    emitEffect(CreateDiscussionEffect.NavigateToDetail(discussionId = discussionId))
                 }.onFailure { throwable ->
                     Napier.e(throwable.message.orEmpty(), throwable)
                     emitEffect(
