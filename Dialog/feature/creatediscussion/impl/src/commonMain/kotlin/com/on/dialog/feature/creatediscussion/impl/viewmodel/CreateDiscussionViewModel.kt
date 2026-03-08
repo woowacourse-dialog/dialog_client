@@ -3,6 +3,7 @@ package com.on.dialog.feature.creatediscussion.impl.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.DiscussionRepository
+import com.on.dialog.feature.creatediscussion.impl.mapper.DiscussionValidator
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.ui.viewmodel.BaseViewModel
@@ -62,10 +63,9 @@ internal class CreateDiscussionViewModel(
                 updateState {
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
-                        copy(mode = currentMode.copy(selectedDate = intent.date))
-                    } else {
-                        this
-                    }
+                        val updated = currentMode.copy(selectedDate = intent.date)
+                        copy(mode = DiscussionValidator.validateOffline(updated)) // validate
+                    } else this
                 }
             }
 
@@ -73,10 +73,9 @@ internal class CreateDiscussionViewModel(
                 updateState {
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
-                        copy(mode = currentMode.copy(selectedStartTime = intent.time))
-                    } else {
-                        this
-                    }
+                        val updated = currentMode.copy(selectedStartTime = intent.time)
+                        copy(mode = DiscussionValidator.validateOffline(updated))
+                    } else this
                 }
             }
 
@@ -84,10 +83,9 @@ internal class CreateDiscussionViewModel(
                 updateState {
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
-                        copy(mode = currentMode.copy(selectedEndTime = intent.time))
-                    } else {
-                        this
-                    }
+                        val updated = currentMode.copy(selectedEndTime = intent.time)
+                        copy(mode = DiscussionValidator.validateOffline(updated))
+                    } else this
                 }
             }
 
