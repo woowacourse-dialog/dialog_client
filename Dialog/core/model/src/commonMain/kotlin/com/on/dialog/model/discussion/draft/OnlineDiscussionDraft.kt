@@ -3,8 +3,8 @@ package com.on.dialog.model.discussion.draft
 import kotlinx.datetime.LocalDate
 
 data class OnlineDiscussionDraft(
-    val title: String,
-    val content: String,
+    override val title: String,
+    override val content: String,
+    override val category: String,
     val endDate: LocalDate,
-    val category: String,
-)
+) : DiscussionDraft

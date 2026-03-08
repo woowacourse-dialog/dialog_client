@@ -5,6 +5,7 @@ import com.on.dialog.feature.creatediscussion.impl.mapper.toEndDateOffsetDays
 import com.on.dialog.feature.creatediscussion.impl.mapper.toFullNameRes
 import com.on.dialog.feature.creatediscussion.impl.mapper.toTrackCategory
 import com.on.dialog.model.common.Track
+import com.on.dialog.model.discussion.draft.DiscussionDraft
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.ui.viewmodel.UiState
@@ -69,10 +70,11 @@ internal sealed interface DiscussionMode {
     }
 }
 
-internal fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): OfflineDiscussionDraft =
-    OfflineDiscussionDraft(
-        title = title.trim(),
-        content = title.trim(),
+private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): OfflineDiscussionDraft {
+    val trimmedTitle = title.trim()
+    return OfflineDiscussionDraft(
+        title = trimmedTitle,
+        content = trimmedTitle,
         startAt = mode.selectedDate!!.atTime(
             mode.selectedStartTime!!.hour,
             mode.selectedStartTime.minute,
@@ -82,15 +84,23 @@ internal fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): Offli
         maxParticipantCount = mode.participantCount.coerceAtLeast(2),
         category = selectedTrackIndex.toTrackCategory(),
     )
+}
 
 @OptIn(ExperimentalTime::class)
-internal fun CreateDiscussionState.toDomain(mode: DiscussionMode.Online): OnlineDiscussionDraft {
+private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Online): OnlineDiscussionDraft {
     val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
     val endDate = today.plus(DatePeriod(days = mode.selectedEndDateIndex.toEndDateOffsetDays()))
+    val trimmedTitle = title.trim()
     return OnlineDiscussionDraft(
-        title = title.trim(),
-        content = title.trim(),
+        title = trimmedTitle,
+        content = trimmedTitle,
         endDate = endDate,
         category = selectedTrackIndex.toTrackCategory(),
     )
 }
+
+internal fun CreateDiscussionState.toDomain(): DiscussionDraft =
+    when (val currentMode = mode) {
+        is DiscussionMode.Offline -> toDomain(currentMode)
+        is DiscussionMode.Online -> toDomain(currentMode)
+    }

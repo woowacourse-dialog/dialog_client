@@ -3,6 +3,8 @@ package com.on.dialog.feature.creatediscussion.impl.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.DiscussionRepository
+import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
+import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
@@ -115,18 +117,10 @@ internal class CreateDiscussionViewModel(
     private fun submitDiscussion() {
         updateState { copy(isSubmitting = true) }
         viewModelScope.launch {
-            val result = when (val currentMode = currentState.mode) {
-                is DiscussionMode.Offline -> {
-                    discussionRepository.createOfflineDiscussion(
-                        request = currentState.toDomain(currentMode),
-                    )
-                }
-
-                is DiscussionMode.Online -> {
-                    discussionRepository.createOnlineDiscussion(
-                        request = currentState.toDomain(currentMode),
-                    )
-                }
+            val draft = currentState.toDomain()
+            val result = when (draft) {
+                is OfflineDiscussionDraft -> discussionRepository.createOfflineDiscussion(draft)
+                is OnlineDiscussionDraft -> discussionRepository.createOnlineDiscussion(draft)
             }
 
             result
