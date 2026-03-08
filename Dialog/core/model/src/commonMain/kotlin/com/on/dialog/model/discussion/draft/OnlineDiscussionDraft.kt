@@ -1,6 +1,7 @@
 package com.on.dialog.model.discussion.draft
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 data class OnlineDiscussionDraft(
     override val title: String,
@@ -9,8 +10,8 @@ data class OnlineDiscussionDraft(
     val endDate: LocalDate,
 ) : DiscussionDraft {
 
-    override fun validate(today: LocalDate): List<DraftValidationError> = buildList {
-        if (endDate <= today)
+    override fun validate(today: LocalDateTime): List<DraftValidationError> = buildList {
+        if (endDate <= today.date)
             add(DraftValidationError.Online.EndDateNotAfterToday)
     }
 }

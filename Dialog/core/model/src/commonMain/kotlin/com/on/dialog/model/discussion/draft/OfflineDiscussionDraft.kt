@@ -1,6 +1,5 @@
 package com.on.dialog.model.discussion.draft
 
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 data class OfflineDiscussionDraft(
@@ -13,16 +12,16 @@ data class OfflineDiscussionDraft(
     val maxParticipantCount: Int,
 ) : DiscussionDraft {
 
-    override fun validate(today: LocalDate): List<DraftValidationError> = buildList {
-        if (startAt.date <= today)
+    override fun validate(today: LocalDateTime): List<DraftValidationError> = buildList {
+        if (startAt <= today)
             add(DraftValidationError.Offline.StartDateNotAfterToday)
-        if (endAt.date <= today)
+        if (endAt <= today)
             add(DraftValidationError.Offline.EndDateNotAfterToday)
         if (startAt >= endAt)
             add(DraftValidationError.Offline.StartNotBeforeEnd)
-        if (startAt.hour < 8 || startAt.hour >= 23)
+        if (startAt.hour !in 8..<23)
             add(DraftValidationError.Offline.StartTimeOutOfRange)
-        if (endAt.hour < 8 || endAt.hour >= 23)
+        if (endAt.hour !in 8..<23)
             add(DraftValidationError.Offline.EndTimeOutOfRange)
         if (maxParticipantCount < 2)
             add(DraftValidationError.Offline.ParticipantCountTooLow)

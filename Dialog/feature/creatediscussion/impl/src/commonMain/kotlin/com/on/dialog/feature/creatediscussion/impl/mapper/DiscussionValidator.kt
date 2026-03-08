@@ -14,30 +14,17 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 internal object DiscussionValidator {
     val today = Clock.System.now()
-        .toLocalDateTime(TimeZone.currentSystemDefault()).date
+        .toLocalDateTime(TimeZone.currentSystemDefault())
 
     fun validateOffline(mode: DiscussionMode.Offline): DiscussionMode.Offline {
         val date = mode.selectedDate
         val startTime = mode.selectedStartTime
         val endTime = mode.selectedEndTime
 
+        // Domain에서 Date를 따로 저장하지 않아 dateError는 따로 처리
         val dateError = if (date != null) {
-            val draft = OfflineDiscussionDraft(
-                title = "",
-                content = "",
-                category = "",
-                startAt = LocalDateTime(date, LocalTime(0, 0)),
-                endAt = LocalDateTime(date, LocalTime(0, 0)),
-                place = mode.place,
-                maxParticipantCount = mode.participantCount,
-            )
-            draft
-                .validate(today)
-                .firstOrNull { it is DraftValidationError.Offline.StartDateNotAfterToday }
-                ?.toMessage() ?: ""
-        } else {
-            ""
-        }
+            if (date < today.date) "이미 지난 날짜 입니다." else ""
+        } else ""
 
         val startTimeError = if (startTime != null) {
             val draft = OfflineDiscussionDraft(
