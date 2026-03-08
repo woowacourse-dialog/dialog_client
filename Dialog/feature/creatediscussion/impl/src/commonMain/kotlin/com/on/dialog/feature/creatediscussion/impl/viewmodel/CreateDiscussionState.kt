@@ -21,17 +21,15 @@ internal data class CreateDiscussionState(
     val isSubmitting: Boolean = false,
 ) : UiState {
     val isSubmitEnabled: Boolean
-        get() {
-            if (title.isBlank()) return false
-            if (selectedTrackIndex !in trackOptions.indices) return false
-
-            if (isMeetupEnabled) {
-                return place.isNotBlank() &&
+        get() =
+            when {
+                title.isBlank() -> false
+                selectedTrackIndex !in trackOptions.indices -> false
+                isMeetupEnabled -> place.isNotBlank() &&
                         selectedDate != null &&
                         selectedStartTime != null &&
                         selectedEndTime != null
-            }
 
-            return selectedEndDateIndex in endDateOptions.indices
-        }
+                else -> selectedEndDateIndex in endDateOptions.indices
+            }
 }
