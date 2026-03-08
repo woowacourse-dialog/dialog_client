@@ -18,8 +18,6 @@ import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,12 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.core.common.extension.formatToString
 import com.on.dialog.designsystem.theme.DialogTheme
-import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * Dialog 디자인 시스템의 날짜 선택 컴포넌트.
@@ -126,26 +124,20 @@ private fun DialogDatePickerDialog(
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(
+            DialogButton(
+                text = "확인",
                 onClick = {
                     datePickerState.selectedDateMillis?.let { onConfirm(it) }
                 },
-            ) {
-                Text(
-                    text = "확인",
-                    color = DialogTheme.colorScheme.primary,
-                    style = DialogTheme.typography.bodyMedium,
-                )
-            }
+                style = DialogButtonStyle.None,
+            )
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    text = "취소",
-                    color = DialogTheme.colorScheme.onSurfaceVariant,
-                    style = DialogTheme.typography.bodyMedium,
-                )
-            }
+            DialogButton(
+                text = "취소",
+                onClick = onDismiss,
+                style = DialogButtonStyle.None,
+            )
         },
         colors = DatePickerDefaults.colors(
             containerColor = DialogTheme.colorScheme.surfaceContainerHigh,

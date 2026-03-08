@@ -137,7 +137,7 @@ private fun DialogTimePickerDialog(
 
     TimePickerDialog(
         onDismissRequest = onDismiss,
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = DialogTheme.spacing.medium),
         title = { TimePickerDialogDefaults.Title(displayMode = displayMode) },
         modeToggleButton = {
             TimePickerDialogDefaults.DisplayModeToggle(
@@ -151,24 +151,18 @@ private fun DialogTimePickerDialog(
             )
         },
         confirmButton = {
-            TextButton(
+            DialogButton(
+                text = "확인",
                 onClick = { onConfirm(timePickerState.hour, timePickerState.minute) },
-            ) {
-                Text(
-                    text = "확인",
-                    color = DialogTheme.colorScheme.primary,
-                    style = DialogTheme.typography.bodyMedium,
-                )
-            }
+                style = DialogButtonStyle.None,
+            )
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    text = "취소",
-                    color = DialogTheme.colorScheme.onSurfaceVariant,
-                    style = DialogTheme.typography.bodyMedium,
-                )
-            }
+            DialogButton(
+                text = "취소",
+                onClick = onDismiss,
+                style = DialogButtonStyle.None,
+            )
         },
         containerColor = DialogTheme.colorScheme.surfaceContainerHigh,
     ) {
