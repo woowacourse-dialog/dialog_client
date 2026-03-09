@@ -21,6 +21,14 @@ class Navigator(
         log(action = "goBack")
     }
 
+    fun replace(key: NavKey) {
+        when (key) {
+            in state.topLevelKeys -> goToTopLevel(key)
+            else -> replaceToKey(key)
+        }
+        log(action = "replace to $key")
+    }
+
     private fun goToKey(key: NavKey) {
         state.currentSubStack.apply {
             remove(key)
@@ -38,6 +46,14 @@ class Navigator(
     private fun clearSubStack() {
         state.currentSubStack.run {
             if (size > 1) subList(1, size).clear()
+        }
+    }
+
+    private fun replaceToKey(key: NavKey) {
+        state.currentSubStack.apply {
+            if (size > 1) removeLastOrNull()
+            remove(key)
+            add(key)
         }
     }
 
