@@ -18,7 +18,8 @@ internal fun Track.toFullNameRes(): StringResource = when (this) {
 internal fun Int.toTrackCategory(): String = when (this) {
     0 -> Track.ANDROID.name
     1 -> Track.BACKEND.name
-    else -> Track.FRONTEND.name
+    2 -> Track.FRONTEND.name
+    else -> Track.COMMON.name
 }
 
 internal fun Int.toEndDateOffsetDays(): Int = when (this) {
