@@ -63,7 +63,7 @@ internal class CreateDiscussionViewModel(
             is CreateDiscussionIntent.OnParticipantCountChange -> {
                 updateState {
                     val currentMode = mode
-                    if (currentMode is DiscussionMode.Offline) {
+                    if (currentMode is Offline) {
                         val updatedMode = currentMode.copy(
                             participantCount = intent.participantCount.coerceIn(
                                 OfflineDiscussionDraft.MIN_PARTICIPANT_COUNT,
@@ -83,7 +83,7 @@ internal class CreateDiscussionViewModel(
             is CreateDiscussionIntent.OnDateChange -> {
                 updateState {
                     val currentMode = mode
-                    if (currentMode is DiscussionMode.Offline) {
+                    if (currentMode is Offline) {
                         val updated = currentMode.copy(selectedDate = intent.date)
                         val validated = DiscussionValidator.validateOffline(updated)
                         offlineModeCache = validated
@@ -97,7 +97,7 @@ internal class CreateDiscussionViewModel(
             is CreateDiscussionIntent.OnStartTimeChange -> {
                 updateState {
                     val currentMode = mode
-                    if (currentMode is DiscussionMode.Offline) {
+                    if (currentMode is Offline) {
                         val updated = currentMode.copy(selectedStartTime = intent.time)
                         val validated = DiscussionValidator.validateOffline(updated)
                         offlineModeCache = validated
@@ -111,7 +111,7 @@ internal class CreateDiscussionViewModel(
             is CreateDiscussionIntent.OnEndTimeChange -> {
                 updateState {
                     val currentMode = mode
-                    if (currentMode is DiscussionMode.Offline) {
+                    if (currentMode is Offline) {
                         val updated = currentMode.copy(selectedEndTime = intent.time)
                         val validated = DiscussionValidator.validateOffline(updated)
                         offlineModeCache = validated
@@ -125,7 +125,7 @@ internal class CreateDiscussionViewModel(
             is CreateDiscussionIntent.OnEndDateIndexChange -> {
                 updateState {
                     val currentMode = mode
-                    if (currentMode is DiscussionMode.Online) {
+                    if (currentMode is Online) {
                         val updatedMode =
                             currentMode.copy(selectedEndDateIndex = intent.selectedIndex)
                         onlineModeCache = updatedMode
