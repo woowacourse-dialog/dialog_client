@@ -197,8 +197,6 @@ android-test = { id = "com.android.test", version.ref = "android-gradle-plugin" 
 
 # Network
 ktrofit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
-android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle-plugin" }
-android-lint = { id = "com.android.lint", version.ref = "android-gradle-plugin" }
 
 [bundles]
 plugins = [
