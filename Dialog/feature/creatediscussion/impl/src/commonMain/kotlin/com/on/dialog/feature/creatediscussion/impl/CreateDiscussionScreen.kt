@@ -188,7 +188,7 @@ private fun CreateDiscussionScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            DiscussionContent()
+            DiscussionContent(content = uiState.content)
 
         }
         Row(
@@ -217,7 +217,10 @@ private fun CreateDiscussionScreen(
 }
 
 @Composable
-fun DiscussionContent(modifier: Modifier = Modifier) {
+fun DiscussionContent(
+    content: String,
+    modifier: Modifier = Modifier,
+) {
     Text(
         text = "토론 내용",
         color = DialogTheme.colorScheme.primary,
@@ -235,8 +238,17 @@ fun DiscussionContent(modifier: Modifier = Modifier) {
                 shape = DialogTheme.shapes.small
             )
             .padding(all = DialogTheme.spacing.large)
+            .verticalScroll(rememberScrollState())
     ) {
-
+        Text(
+            text = content.ifEmpty { "마크다운 형식으로 내용을 작성해주세요." },
+            style = DialogTheme.typography.bodyLarge,
+            color = if (content.isEmpty())
+                DialogTheme.colorScheme.onSurfaceVariant
+            else
+                DialogTheme.colorScheme.onSurface,
+            fontWeight = FontWeight.SemiBold,
+        )
     }
 }
 
