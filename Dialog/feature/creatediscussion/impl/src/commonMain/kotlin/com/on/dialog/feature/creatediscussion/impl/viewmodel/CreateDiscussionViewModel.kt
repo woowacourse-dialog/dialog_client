@@ -20,6 +20,9 @@ internal class CreateDiscussionViewModel(
 ) : BaseViewModel<CreateDiscussionIntent, CreateDiscussionState, CreateDiscussionEffect>(
     initialState = CreateDiscussionState(),
 ) {
+    private var offlineModeCache: Offline = Offline()
+    private var onlineModeCache: Online = Online()
+
     override fun onIntent(intent: CreateDiscussionIntent) {
         when (intent) {
             is CreateDiscussionIntent.OnTitleChange -> {
@@ -38,7 +41,7 @@ internal class CreateDiscussionViewModel(
             is CreateDiscussionIntent.OnMeetupEnabledChange -> {
                 updateState {
                     copy(
-                        mode = if (intent.enabled) Offline() else Online(),
+                        mode = if (intent.enabled) offlineModeCache else onlineModeCache,
                     )
                 }
             }
@@ -48,7 +51,9 @@ internal class CreateDiscussionViewModel(
                 updateState {
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
-                        copy(mode = currentMode.copy(place = intent.place))
+                        val updatedMode = currentMode.copy(place = intent.place)
+                        offlineModeCache = updatedMode
+                        copy(mode = updatedMode)
                     } else {
                         this
                     }
@@ -59,10 +64,12 @@ internal class CreateDiscussionViewModel(
                 updateState {
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
+                        val updatedMode = currentMode.copy(
+                            participantCount = intent.participantCount.coerceIn(2, 10),
+                        )
+                        offlineModeCache = updatedMode
                         copy(
-                            mode = currentMode.copy(
-                                participantCount = intent.participantCount.coerceIn(2, 10),
-                            ),
+                            mode = updatedMode,
                         )
                     } else {
                         this
@@ -75,7 +82,9 @@ internal class CreateDiscussionViewModel(
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
                         val updated = currentMode.copy(selectedDate = intent.date)
-                        copy(mode = DiscussionValidator.validateOffline(updated))
+                        val validated = DiscussionValidator.validateOffline(updated)
+                        offlineModeCache = validated
+                        copy(mode = validated)
                     } else this
                 }
             }
@@ -85,7 +94,9 @@ internal class CreateDiscussionViewModel(
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
                         val updated = currentMode.copy(selectedStartTime = intent.time)
-                        copy(mode = DiscussionValidator.validateOffline(updated))
+                        val validated = DiscussionValidator.validateOffline(updated)
+                        offlineModeCache = validated
+                        copy(mode = validated)
                     } else this
                 }
             }
@@ -95,7 +106,9 @@ internal class CreateDiscussionViewModel(
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
                         val updated = currentMode.copy(selectedEndTime = intent.time)
-                        copy(mode = DiscussionValidator.validateOffline(updated))
+                        val validated = DiscussionValidator.validateOffline(updated)
+                        offlineModeCache = validated
+                        copy(mode = validated)
                     } else this
                 }
             }
@@ -104,7 +117,9 @@ internal class CreateDiscussionViewModel(
                 updateState {
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Online) {
-                        copy(mode = currentMode.copy(selectedEndDateIndex = intent.selectedIndex))
+                        val updatedMode = currentMode.copy(selectedEndDateIndex = intent.selectedIndex)
+                        onlineModeCache = updatedMode
+                        copy(mode = updatedMode)
                     } else {
                         this
                     }
