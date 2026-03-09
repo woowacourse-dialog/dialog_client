@@ -23,7 +23,7 @@ data class OfflineDiscussionDraft(
             add(DraftValidationError.Offline.StartTimeOutOfRange)
         if (endAt.hour !in 8..<23)
             add(DraftValidationError.Offline.EndTimeOutOfRange)
-        if (maxParticipantCount < 2)
+        if (maxParticipantCount in 11 downTo 2)
             add(DraftValidationError.Offline.ParticipantCountTooLow)
     }
 }

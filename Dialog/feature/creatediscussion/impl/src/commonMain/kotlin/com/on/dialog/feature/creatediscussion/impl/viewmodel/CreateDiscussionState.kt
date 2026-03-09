@@ -97,7 +97,7 @@ private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): Offlin
         ),
         endAt = mode.selectedDate.atTime(mode.selectedEndTime!!.hour, mode.selectedEndTime.minute),
         place = mode.place.trim(),
-        maxParticipantCount = mode.participantCount.coerceAtLeast(2),
+        maxParticipantCount = mode.participantCount.coerceIn(2, 10),
         category = selectedTrackIndex.toTrackCategory(),
     )
 }

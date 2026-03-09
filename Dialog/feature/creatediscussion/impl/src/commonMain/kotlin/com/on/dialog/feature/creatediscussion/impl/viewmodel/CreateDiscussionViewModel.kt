@@ -59,7 +59,7 @@ internal class CreateDiscussionViewModel(
                     if (currentMode is DiscussionMode.Offline) {
                         copy(
                             mode = currentMode.copy(
-                                participantCount = intent.participantCount.coerceAtLeast(2),
+                                participantCount = intent.participantCount.coerceIn(2, 10),
                             ),
                         )
                     } else {
