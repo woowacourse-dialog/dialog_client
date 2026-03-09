@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -108,9 +109,19 @@ internal fun CreateDiscussionScreen(
     var showMarkdownEditor by rememberSaveable { mutableStateOf(false) }
     var showExitDialog by rememberSaveable { mutableStateOf(false) }
 
+    val handleBackPress: () -> Unit = remember {
+        {
+            if (uiState == CreateDiscussionState()) {
+                goBack()
+            } else {
+                showExitDialog = true
+            }
+        }
+    }
+
     NavigationBackHandler(
         state = rememberNavigationEventState(currentInfo = NavigationEventInfo.None),
-        onBackCompleted = { showExitDialog = true },
+        onBackCompleted = handleBackPress,
     )
 
     LaunchedEffect(Unit) {
