@@ -15,7 +15,7 @@ fun EntryProviderScope<NavKey>.createDiscussionScreen(
             goBack = navigator::goBack,
             navigateToDetail = { discussionId: Long ->
                 navigator.replace(DiscussionDetailNavKey(discussionId = discussionId))
-            }
+            },
         )
     }
 }

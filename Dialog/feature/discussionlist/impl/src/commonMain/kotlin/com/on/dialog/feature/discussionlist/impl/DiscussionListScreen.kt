@@ -67,7 +67,9 @@ internal fun DiscussionListScreen(
                     )
                 }
 
-                DiscussionListEffect.ScrollToTop -> listState.animateScrollToItem(0)
+                DiscussionListEffect.ScrollToTop -> {
+                    listState.animateScrollToItem(0)
+                }
             }
         }
     }
@@ -190,14 +192,14 @@ private fun DiscussionListContent(
             visible = isFabVisible,
             enter = slideInVertically(
                 initialOffsetY = { it },
-                animationSpec = tween(durationMillis = 300)
+                animationSpec = tween(durationMillis = 300),
             ),
             exit = slideOutVertically(
                 targetOffsetY = { it },
-                animationSpec = tween(durationMillis = 300)
+                animationSpec = tween(durationMillis = 300),
             ),
             modifier = Modifier
-                .align(Alignment.BottomEnd)
+                .align(Alignment.BottomEnd),
         ) {
             FloatingActionButton(
                 onClick = onClickCreateDiscussion,

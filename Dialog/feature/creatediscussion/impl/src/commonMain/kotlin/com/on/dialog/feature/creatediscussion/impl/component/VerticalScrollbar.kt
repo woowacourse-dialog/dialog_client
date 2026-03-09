@@ -25,9 +25,9 @@ fun Modifier.verticalScrollbar(
         targetValue = if (showAlways || scrollState.isScrollInProgress) 1f else 0f,
         animationSpec = tween(
             durationMillis = 150,
-            delayMillis = if (scrollState.isScrollInProgress) 0 else 500
+            delayMillis = if (scrollState.isScrollInProgress) 0 else 500,
         ),
-        label = "scrollbar"
+        label = "scrollbar",
     )
 
     drawWithContent {

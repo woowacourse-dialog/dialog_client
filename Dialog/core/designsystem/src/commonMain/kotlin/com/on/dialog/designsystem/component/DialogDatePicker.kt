@@ -103,7 +103,8 @@ fun DialogDatePicker(
             selectedDate = selectedDate,
             onDismiss = { showDialog = false },
             onConfirm = { millis ->
-                val date = Instant.fromEpochMilliseconds(millis)
+                val date = Instant
+                    .fromEpochMilliseconds(millis)
                     .toLocalDateTime(TimeZone.currentSystemDefault())
                     .date
                 onDateSelected(date)

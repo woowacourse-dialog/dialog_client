@@ -11,19 +11,24 @@ data class OfflineDiscussionDraft(
     val place: String,
     val maxParticipantCount: Int,
 ) : DiscussionDraft {
-
     override fun validate(today: LocalDateTime): List<DraftValidationError> = buildList {
-        if (startAt <= today)
+        if (startAt <= today) {
             add(DraftValidationError.Offline.StartDateNotAfterToday)
-        if (endAt <= today)
+        }
+        if (endAt <= today) {
             add(DraftValidationError.Offline.EndDateNotAfterToday)
-        if (startAt >= endAt)
+        }
+        if (startAt >= endAt) {
             add(DraftValidationError.Offline.StartNotBeforeEnd)
-        if (startAt.hour !in 8..23)
+        }
+        if (startAt.hour !in 8..23) {
             add(DraftValidationError.Offline.StartTimeOutOfRange)
-        if (endAt.hour !in 8..23)
+        }
+        if (endAt.hour !in 8..23) {
             add(DraftValidationError.Offline.EndTimeOutOfRange)
-        if (maxParticipantCount in 11 downTo 2)
+        }
+        if (maxParticipantCount in 11 downTo 2) {
             add(DraftValidationError.Offline.ParticipantCountTooLow)
+        }
     }
 }

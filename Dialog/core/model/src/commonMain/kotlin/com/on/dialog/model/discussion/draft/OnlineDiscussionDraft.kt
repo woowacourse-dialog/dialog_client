@@ -9,9 +9,9 @@ data class OnlineDiscussionDraft(
     override val category: String,
     val endDate: LocalDate,
 ) : DiscussionDraft {
-
     override fun validate(today: LocalDateTime): List<DraftValidationError> = buildList {
-        if (endDate <= today.date)
+        if (endDate <= today.date) {
             add(DraftValidationError.Online.EndDateNotAfterToday)
+        }
     }
 }

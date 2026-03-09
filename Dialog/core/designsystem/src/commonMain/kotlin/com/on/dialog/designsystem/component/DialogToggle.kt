@@ -52,16 +52,22 @@ fun DialogToggle(
         ) {
             Text(
                 text = label,
-                color = if (enabled) DialogTheme.colorScheme.onSurface
-                else DialogTheme.colorScheme.onSurfaceVariant,
+                color = if (enabled) {
+                    DialogTheme.colorScheme.onSurface
+                } else {
+                    DialogTheme.colorScheme.onSurfaceVariant
+                },
                 style = DialogTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
             )
             supportingText?.let {
                 Text(
                     text = it,
-                    color = if (enabled) DialogTheme.colorScheme.onSurfaceVariant
-                    else DialogTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    color = if (enabled) {
+                        DialogTheme.colorScheme.onSurfaceVariant
+                    } else {
+                        DialogTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    },
                     style = DialogTheme.typography.labelSmall,
                     modifier = Modifier.padding(top = 2.dp),
                 )

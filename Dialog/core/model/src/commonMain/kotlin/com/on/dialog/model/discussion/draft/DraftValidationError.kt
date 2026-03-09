@@ -7,10 +7,15 @@ sealed interface DraftValidationError {
 
     sealed interface Offline : DraftValidationError {
         data object StartDateNotAfterToday : Offline
+
         data object EndDateNotAfterToday : Offline
+
         data object StartNotBeforeEnd : Offline
+
         data object StartTimeOutOfRange : Offline
+
         data object EndTimeOutOfRange : Offline
+
         data object ParticipantCountTooLow : Offline
     }
 }

@@ -44,7 +44,8 @@ internal data class CreateDiscussionState(
             }
 
     companion object {
-        private val tracks = Track.entries.filter { it != Track.COMMON }
+        private val tracks = Track.entries
+            .filter { it != Track.COMMON }
             .map { it.toFullNameRes() }
             .toPersistentList()
     }
@@ -80,26 +81,24 @@ internal sealed interface DiscussionMode {
     ) : DiscussionMode {
         override val isValid: Boolean
             get() = place.isNotBlank() &&
-                    selectedDate != null &&
-                    selectedStartTime != null &&
-                    selectedEndTime != null
+                selectedDate != null &&
+                selectedStartTime != null &&
+                selectedEndTime != null
     }
 }
 
-private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): OfflineDiscussionDraft {
-    return OfflineDiscussionDraft(
-        title = title.trim(),
-        content = content.trim(),
-        startAt = mode.selectedDate!!.atTime(
-            mode.selectedStartTime!!.hour,
-            mode.selectedStartTime.minute,
-        ),
-        endAt = mode.selectedDate.atTime(mode.selectedEndTime!!.hour, mode.selectedEndTime.minute),
-        place = mode.place.trim(),
-        maxParticipantCount = mode.participantCount.coerceIn(2, 10),
-        category = selectedTrackIndex.toTrackCategory(),
-    )
-}
+private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): OfflineDiscussionDraft = OfflineDiscussionDraft(
+    title = title.trim(),
+    content = content.trim(),
+    startAt = mode.selectedDate!!.atTime(
+        mode.selectedStartTime!!.hour,
+        mode.selectedStartTime.minute,
+    ),
+    endAt = mode.selectedDate.atTime(mode.selectedEndTime!!.hour, mode.selectedEndTime.minute),
+    place = mode.place.trim(),
+    maxParticipantCount = mode.participantCount.coerceIn(2, 10),
+    category = selectedTrackIndex.toTrackCategory(),
+)
 
 @OptIn(ExperimentalTime::class)
 private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Online): OnlineDiscussionDraft {

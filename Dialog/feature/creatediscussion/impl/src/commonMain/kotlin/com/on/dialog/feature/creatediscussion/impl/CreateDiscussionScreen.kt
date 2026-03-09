@@ -335,7 +335,7 @@ private fun SubmitButtonRow(
             .fillMaxWidth()
             .padding(all = DialogTheme.spacing.mediumLarge)
             .imePadding(),
-        horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraExtraLarge)
+        horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraExtraLarge),
     ) {
         DialogButton(
             text = stringResource(Res.string.create_discussion_button_cancel),
@@ -344,8 +344,11 @@ private fun SubmitButtonRow(
             modifier = Modifier.weight(1f),
         )
         DialogButton(
-            text = if (isSubmitting) stringResource(Res.string.create_discussion_button_submit_loading)
-            else stringResource(Res.string.create_discussion_button_submit),
+            text = if (isSubmitting) {
+                stringResource(Res.string.create_discussion_button_submit_loading)
+            } else {
+                stringResource(Res.string.create_discussion_button_submit)
+            },
             onClick = onSubmitClick,
             modifier = Modifier.weight(1f),
             enabled = isSubmitEnabled && !isSubmitting,
@@ -377,7 +380,7 @@ private fun DiscussionContent(
             .background(color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F))
             .clickable(onClick = { onContentChange() })
             .padding(all = DialogTheme.spacing.mediumLarge)
-            .verticalScrollbar(scrollState)
+            .verticalScrollbar(scrollState),
     ) {
         if (content.isEmpty()) {
             Text(
@@ -485,7 +488,7 @@ private fun ParticipantContent(
 
             Text(
                 text = participantCount.toString(),
-                modifier = Modifier.padding(horizontal = DialogTheme.spacing.medium)
+                modifier = Modifier.padding(horizontal = DialogTheme.spacing.medium),
             )
 
             DialogIconButton(

@@ -18,8 +18,8 @@ import kotlinx.coroutines.launch
 internal class CreateDiscussionViewModel(
     private val discussionRepository: DiscussionRepository,
 ) : BaseViewModel<CreateDiscussionIntent, CreateDiscussionState, CreateDiscussionEffect>(
-    initialState = CreateDiscussionState(),
-) {
+        initialState = CreateDiscussionState(),
+    ) {
     private var offlineModeCache: Offline = Offline()
     private var onlineModeCache: Online = Online()
 
@@ -85,7 +85,9 @@ internal class CreateDiscussionViewModel(
                         val validated = DiscussionValidator.validateOffline(updated)
                         offlineModeCache = validated
                         copy(mode = validated)
-                    } else this
+                    } else {
+                        this
+                    }
                 }
             }
 
@@ -97,7 +99,9 @@ internal class CreateDiscussionViewModel(
                         val validated = DiscussionValidator.validateOffline(updated)
                         offlineModeCache = validated
                         copy(mode = validated)
-                    } else this
+                    } else {
+                        this
+                    }
                 }
             }
 
@@ -109,7 +113,9 @@ internal class CreateDiscussionViewModel(
                         val validated = DiscussionValidator.validateOffline(updated)
                         offlineModeCache = validated
                         copy(mode = validated)
-                    } else this
+                    } else {
+                        this
+                    }
                 }
             }
 
