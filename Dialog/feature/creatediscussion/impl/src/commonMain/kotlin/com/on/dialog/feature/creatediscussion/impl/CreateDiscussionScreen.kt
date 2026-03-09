@@ -56,7 +56,6 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionVie
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode
 import com.on.dialog.ui.component.markdown.DialogMarkdown
 import com.on.dialog.ui.component.markdown.MarkdownEditor
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import org.koin.compose.viewmodel.koinViewModel
@@ -142,7 +141,7 @@ private fun CreateDiscussionScreen(
             )
 
             DialogDropdownMenu(
-                options = uiState.trackOptions.toImmutableList(),
+                options = uiState.trackOptions,
                 selectedIndex = uiState.selectedTrackIndex.takeIf { it >= 0 },
                 onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnTrackIndexChange(it)) },
                 label = "트랙",
@@ -197,7 +196,7 @@ private fun CreateDiscussionScreen(
                 if (onlineMode != null) Column {
                     Spacer(modifier = Modifier.height(20.dp))
                     DialogDropdownMenu(
-                        options = onlineMode.endDateOptions.toImmutableList(),
+                        options = onlineMode.endDateOptions,
                         selectedIndex = onlineMode.selectedEndDateIndex.takeIf { it >= 0 },
                         onSelectedIndexChange = {
                             onIntent(CreateDiscussionIntent.OnEndDateIndexChange(it))

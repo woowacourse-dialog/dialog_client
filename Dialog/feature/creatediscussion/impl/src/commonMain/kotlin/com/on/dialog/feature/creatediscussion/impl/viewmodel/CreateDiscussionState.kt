@@ -9,6 +9,9 @@ import com.on.dialog.model.discussion.draft.DiscussionDraft
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.ui.viewmodel.UiState
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -22,7 +25,7 @@ import kotlin.time.ExperimentalTime
 @Immutable
 internal data class CreateDiscussionState(
     val title: String = "",
-    val trackOptions: List<String> = tracks,
+    val trackOptions: ImmutableList<String> = tracks,
     val selectedTrackIndex: Int = -1,
     val mode: DiscussionMode = DiscussionMode.Online(),
     val content: String = "",
@@ -39,6 +42,7 @@ internal data class CreateDiscussionState(
     companion object {
         private val tracks = Track.entries.filter { it != Track.COMMON }
             .map { it.toFullNameRes() }
+            .toPersistentList()
     }
 }
 
@@ -48,7 +52,7 @@ internal sealed interface DiscussionMode {
 
     @Immutable
     data class Online(
-        val endDateOptions: List<String> = listOf("1일 후", "2일 후", "3일 후"),
+        val endDateOptions: ImmutableList<String> = persistentListOf("1일 후", "2일 후", "3일 후"),
         val selectedEndDateIndex: Int = -1,
     ) : DiscussionMode {
         override val isValid: Boolean
