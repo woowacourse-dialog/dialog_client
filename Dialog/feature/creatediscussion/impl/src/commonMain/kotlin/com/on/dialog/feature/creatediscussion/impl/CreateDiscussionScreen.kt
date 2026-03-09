@@ -47,6 +47,7 @@ import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.creatediscussion.impl.component.verticalScrollbar
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionEffect
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionIntent
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
@@ -244,6 +245,8 @@ fun DiscussionContent(
     onContentChange: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scrollState = rememberScrollState()
+
     Text(
         text = "토론 내용",
         color = DialogTheme.colorScheme.primary,
@@ -260,9 +263,9 @@ fun DiscussionContent(
                 color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F),
                 shape = DialogTheme.shapes.small
             )
-            .padding(all = DialogTheme.spacing.large)
-            .verticalScroll(rememberScrollState())
             .clickable(onClick = { onContentChange() })
+            .padding(all = DialogTheme.spacing.large)
+            .verticalScrollbar(scrollState)
     ) {
         Text(
             text = content.ifEmpty { "마크다운 형식으로 내용을 작성해주세요." },
@@ -272,6 +275,7 @@ fun DiscussionContent(
             else
                 DialogTheme.colorScheme.onSurface,
             fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.verticalScroll(scrollState),
         )
     }
 }
