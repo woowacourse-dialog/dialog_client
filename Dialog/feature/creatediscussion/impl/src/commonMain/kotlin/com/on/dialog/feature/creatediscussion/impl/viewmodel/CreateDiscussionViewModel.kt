@@ -24,7 +24,7 @@ internal class CreateDiscussionViewModel(
             }
 
             is CreateDiscussionIntent.OnContentChange -> {
-                updateState { copy(content = content) }
+                updateState { copy(content = intent.content) }
             }
 
             is CreateDiscussionIntent.OnTrackIndexChange -> {
@@ -70,7 +70,7 @@ internal class CreateDiscussionViewModel(
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
                         val updated = currentMode.copy(selectedDate = intent.date)
-                        copy(mode = DiscussionValidator.validateOffline(updated)) // validate
+                        copy(mode = DiscussionValidator.validateOffline(updated))
                     } else this
                 }
             }

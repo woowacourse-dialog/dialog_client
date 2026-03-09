@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +52,7 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionInt
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode
+import com.on.dialog.ui.component.markdown.MarkdownEditor
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -62,6 +67,7 @@ internal fun CreateDiscussionScreen(
 ) {
     val uiState: CreateDiscussionState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarState = LocalSnackbarDelegate.current
+    var showMarkdownEditor by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -79,15 +85,28 @@ internal fun CreateDiscussionScreen(
     CreateDiscussionScreen(
         uiState = uiState,
         onBackClick = goBack,
+        onContentClick = { showMarkdownEditor = true },
         onIntent = viewModel::onIntent,
         modifier = modifier,
     )
+
+    if (showMarkdownEditor) {
+        MarkdownEditor(
+            initialContent = "",
+            onConfirm = { newContent: String ->
+                showMarkdownEditor = false
+                viewModel.onIntent(CreateDiscussionIntent.OnContentChange(newContent))
+            },
+            onExit = { showMarkdownEditor = false },
+        )
+    }
 }
 
 @Composable
 private fun CreateDiscussionScreen(
     uiState: CreateDiscussionState,
     onBackClick: () -> Unit,
+    onContentClick: () -> Unit,
     onIntent: (CreateDiscussionIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -190,7 +209,7 @@ private fun CreateDiscussionScreen(
 
             DiscussionContent(
                 content = uiState.content,
-                onContentChange = { onIntent(CreateDiscussionIntent.OnContentChange(it)) },
+                onContentChange = onContentClick,
             )
 
         }
@@ -222,7 +241,7 @@ private fun CreateDiscussionScreen(
 @Composable
 fun DiscussionContent(
     content: String,
-    onContentChange: (String) -> Unit,
+    onContentChange: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Text(
@@ -237,6 +256,7 @@ fun DiscussionContent(
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
+            .clickable(onClick = { onContentChange() })
             .background(
                 color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F),
                 shape = DialogTheme.shapes.small
@@ -398,6 +418,7 @@ private fun CreateDiscussionScreenPreview() {
         CreateDiscussionScreen(
             uiState = CreateDiscussionState(),
             onBackClick = {},
+            onContentClick = {},
             onIntent = {},
         )
     }
@@ -410,6 +431,7 @@ private fun CreateDiscussionScreenPreview2() {
         CreateDiscussionScreen(
             uiState = CreateDiscussionState(mode = DiscussionMode.Offline()),
             onBackClick = {},
+            onContentClick = {},
             onIntent = {},
         )
     }
