@@ -5,6 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -184,6 +185,11 @@ private fun CreateDiscussionScreen(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            DiscussionContent()
+
         }
         Row(
             modifier = Modifier
@@ -207,6 +213,30 @@ private fun CreateDiscussionScreen(
                 enabled = uiState.isSubmitEnabled && !uiState.isSubmitting,
             )
         }
+    }
+}
+
+@Composable
+fun DiscussionContent(modifier: Modifier = Modifier) {
+    Text(
+        text = "토론 내용",
+        color = DialogTheme.colorScheme.primary,
+        style = DialogTheme.typography.bodyMedium,
+        fontWeight = FontWeight.SemiBold,
+        modifier = Modifier.padding(DialogTheme.spacing.small),
+    )
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .background(
+                color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F),
+                shape = DialogTheme.shapes.small
+            )
+            .padding(all = DialogTheme.spacing.large)
+    ) {
+
     }
 }
 

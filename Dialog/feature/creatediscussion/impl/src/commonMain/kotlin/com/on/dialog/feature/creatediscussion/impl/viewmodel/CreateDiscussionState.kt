@@ -25,6 +25,7 @@ internal data class CreateDiscussionState(
     val trackOptions: List<String> = tracks,
     val selectedTrackIndex: Int = -1,
     val mode: DiscussionMode = DiscussionMode.Online(),
+    val content: String = "",
     val isSubmitting: Boolean = false,
 ) : UiState {
     val isSubmitEnabled: Boolean
