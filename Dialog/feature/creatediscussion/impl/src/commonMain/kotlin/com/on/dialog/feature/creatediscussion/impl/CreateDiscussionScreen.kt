@@ -154,107 +154,136 @@ private fun CreateDiscussionScreen(
             },
             centerAligned = false,
         )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 20.dp)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            Spacer(modifier = Modifier.height(20.dp))
-
-            TitleField(
-                title = uiState.title,
-                onTitleChange = { onIntent(CreateDiscussionIntent.OnTitleChange(it)) },
-                label = stringResource(Res.string.create_discussion_label_title),
-                placeHolder = stringResource(Res.string.create_discussion_placeholder_title),
-            )
-
-            DialogDropdownMenu(
-                options = uiState.trackOptions.map { stringResource(it) }.toImmutableList(),
-                selectedIndex = uiState.selectedTrackIndex.takeIf { it >= 0 },
-                onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnTrackIndexChange(it)) },
-                label = stringResource(Res.string.create_discussion_label_track),
-                placeholder = stringResource(Res.string.create_discussion_placeholder_track),
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            DialogToggle(
-                checked = uiState.mode is DiscussionMode.Offline,
-                onCheckedChange = { onIntent(CreateDiscussionIntent.OnMeetupEnabledChange(it)) },
-                label = stringResource(Res.string.create_discussion_label_meetup),
-                modifier = Modifier.padding(start = DialogTheme.spacing.small),
-            )
-
-            AnimatedVisibility(
-                visible = uiState.mode is DiscussionMode.Offline,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                val offlineMode = uiState.mode as? DiscussionMode.Offline
-                if (offlineMode != null) Column {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    OfflineDiscussion(
-                        place = offlineMode.place,
-                        onPlaceChange = { onIntent(CreateDiscussionIntent.OnPlaceChange(it)) },
-                        participantCount = offlineMode.participantCount,
-                        onParticipantCountChange = {
-                            onIntent(CreateDiscussionIntent.OnParticipantCountChange(it))
-                        },
-                        selectedDate = offlineMode.selectedDate,
-                        onDateSelected = { onIntent(CreateDiscussionIntent.OnDateChange(it)) },
-                        selectedStartTime = offlineMode.selectedStartTime,
-                        onStartTimeSelected = {
-                            onIntent(CreateDiscussionIntent.OnStartTimeChange(it))
-                        },
-                        selectedEndTime = offlineMode.selectedEndTime,
-                        onEndTimeSelected = { onIntent(CreateDiscussionIntent.OnEndTimeChange(it)) },
-                        selectedDateErrorMessage = offlineMode.selectedDateErrorMessage
-                            ?.let { stringResource(it) },
-                        selectedStartTimeErrorMessage = offlineMode.selectedStartTimeErrorMessage
-                            ?.let { stringResource(it) },
-                        selectedEndTimeErrorMessage = offlineMode.selectedEndTimeErrorMessage
-                            ?.let { stringResource(it) },
-                    )
-                }
-            }
-
-            AnimatedVisibility(
-                visible = uiState.mode is DiscussionMode.Online,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                val onlineMode = uiState.mode as? DiscussionMode.Online
-                if (onlineMode != null) Column {
-                    val endDateOptions =
-                        onlineMode.endDateOptions.map { stringResource(it) }.toImmutableList()
-                    Spacer(modifier = Modifier.height(20.dp))
-                    DialogDropdownMenu(
-                        options = endDateOptions,
-                        selectedIndex = onlineMode.selectedEndDateIndex.takeIf { it >= 0 },
-                        onSelectedIndexChange = {
-                            onIntent(CreateDiscussionIntent.OnEndDateIndexChange(it))
-                        },
-                        label = stringResource(Res.string.create_discussion_label_end_date),
-                        placeholder = stringResource(Res.string.create_discussion_placeholder_date),
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            DiscussionContent(
-                content = uiState.content,
-                onContentChange = onContentClick,
-            )
-
-        }
+        CreateDiscussionForm(
+            uiState = uiState,
+            onContentClick = onContentClick,
+            onIntent = onIntent,
+            modifier = Modifier.weight(1f),
+        )
         SubmitButtonRow(
             isSubmitting = uiState.isSubmitting,
             isSubmitEnabled = uiState.isSubmitEnabled,
             onBackClick = onBackClick,
             onSubmitClick = { onIntent(CreateDiscussionIntent.OnSubmitClick) },
         )
+    }
+}
+
+@Composable
+private fun CreateDiscussionForm(
+    uiState: CreateDiscussionState,
+    onContentClick: () -> Unit,
+    onIntent: (CreateDiscussionIntent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 20.dp)
+            .verticalScroll(rememberScrollState()),
+    ) {
+        Spacer(modifier = Modifier.height(20.dp))
+
+        TitleField(
+            title = uiState.title,
+            onTitleChange = { onIntent(CreateDiscussionIntent.OnTitleChange(it)) },
+            label = stringResource(Res.string.create_discussion_label_title),
+            placeHolder = stringResource(Res.string.create_discussion_placeholder_title),
+        )
+
+        DialogDropdownMenu(
+            options = uiState.trackOptions.map { stringResource(it) }.toImmutableList(),
+            selectedIndex = uiState.selectedTrackIndex.takeIf { it >= 0 },
+            onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnTrackIndexChange(it)) },
+            label = stringResource(Res.string.create_discussion_label_track),
+            placeholder = stringResource(Res.string.create_discussion_placeholder_track),
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        DialogToggle(
+            checked = uiState.mode is DiscussionMode.Offline,
+            onCheckedChange = { onIntent(CreateDiscussionIntent.OnMeetupEnabledChange(it)) },
+            label = stringResource(Res.string.create_discussion_label_meetup),
+            modifier = Modifier.padding(start = DialogTheme.spacing.small),
+        )
+
+        OfflineModeSection(
+            uiState = uiState,
+            onIntent = onIntent,
+        )
+
+        OnlineModeSection(
+            uiState = uiState,
+            onIntent = onIntent,
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        DiscussionContent(
+            content = uiState.content,
+            onContentChange = onContentClick,
+        )
+    }
+}
+
+@Composable
+private fun OfflineModeSection(
+    uiState: CreateDiscussionState,
+    onIntent: (CreateDiscussionIntent) -> Unit,
+) {
+    AnimatedVisibility(
+        visible = uiState.mode is DiscussionMode.Offline,
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut(),
+    ) {
+        val offlineMode = uiState.mode as? DiscussionMode.Offline ?: return@AnimatedVisibility
+        Column {
+            Spacer(modifier = Modifier.height(20.dp))
+            OfflineDiscussion(
+                place = offlineMode.place,
+                onPlaceChange = { onIntent(CreateDiscussionIntent.OnPlaceChange(it)) },
+                participantCount = offlineMode.participantCount,
+                onParticipantCountChange = {
+                    onIntent(CreateDiscussionIntent.OnParticipantCountChange(it))
+                },
+                selectedDate = offlineMode.selectedDate,
+                onDateSelected = { onIntent(CreateDiscussionIntent.OnDateChange(it)) },
+                selectedStartTime = offlineMode.selectedStartTime,
+                onStartTimeSelected = { onIntent(CreateDiscussionIntent.OnStartTimeChange(it)) },
+                selectedEndTime = offlineMode.selectedEndTime,
+                onEndTimeSelected = { onIntent(CreateDiscussionIntent.OnEndTimeChange(it)) },
+                selectedDateErrorMessage = offlineMode.selectedDateErrorMessage
+                    ?.let { stringResource(it) },
+                selectedStartTimeErrorMessage = offlineMode.selectedStartTimeErrorMessage
+                    ?.let { stringResource(it) },
+                selectedEndTimeErrorMessage = offlineMode.selectedEndTimeErrorMessage
+                    ?.let { stringResource(it) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun OnlineModeSection(
+    uiState: CreateDiscussionState,
+    onIntent: (CreateDiscussionIntent) -> Unit,
+) {
+    AnimatedVisibility(
+        visible = uiState.mode is DiscussionMode.Online,
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut(),
+    ) {
+        val onlineMode = uiState.mode as? DiscussionMode.Online ?: return@AnimatedVisibility
+        Column {
+            Spacer(modifier = Modifier.height(20.dp))
+            DialogDropdownMenu(
+                options = onlineMode.endDateOptions.map { stringResource(it) }.toImmutableList(),
+                selectedIndex = onlineMode.selectedEndDateIndex.takeIf { it >= 0 },
+                onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnEndDateIndexChange(it)) },
+                label = stringResource(Res.string.create_discussion_label_end_date),
+                placeholder = stringResource(Res.string.create_discussion_placeholder_date),
+            )
+        }
     }
 }
 
