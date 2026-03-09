@@ -397,8 +397,8 @@ private fun OfflineDiscussion(
             placeholder = stringResource(Res.string.create_discussion_placeholder_date),
             selectedDate = selectedDate,
             onDateSelected = onDateSelected,
-            isError = true,
-            supportingText = selectedDateErrorMessage,
+            isError = selectedDateErrorMessage != null,
+            supportingText = selectedDateErrorMessage ?: " ",
         )
 
         DialogTimePicker(
@@ -406,8 +406,8 @@ private fun OfflineDiscussion(
             onTimeSelected = onStartTimeSelected,
             placeholder = stringResource(Res.string.create_discussion_placeholder_start_time),
             label = stringResource(Res.string.create_discussion_label_start_time),
-            isError = true,
-            supportingText = selectedStartTimeErrorMessage,
+            isError = selectedStartTimeErrorMessage != null,
+            supportingText = selectedStartTimeErrorMessage ?: " ",
         )
 
         DialogTimePicker(
@@ -415,8 +415,8 @@ private fun OfflineDiscussion(
             onTimeSelected = onEndTimeSelected,
             placeholder = stringResource(Res.string.create_discussion_placeholder_end_time),
             label = stringResource(Res.string.create_discussion_label_end_time),
-            isError = true,
-            supportingText = selectedEndTimeErrorMessage,
+            isError = selectedEndTimeErrorMessage != null,
+            supportingText = selectedEndTimeErrorMessage ?: " ",
         )
     }
 }
