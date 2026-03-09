@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.theme.DialogTheme
 
 /**
@@ -40,6 +39,17 @@ fun DialogToggle(
     supportingText: String? = null,
     enabled: Boolean = true,
 ) {
+    val labelColor = if (enabled) {
+        DialogTheme.colorScheme.onSurface
+    } else {
+        DialogTheme.colorScheme.onSurfaceVariant
+    }
+    val supportingColor = if (enabled) {
+        DialogTheme.colorScheme.onSurfaceVariant
+    } else {
+        DialogTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+    }
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -48,28 +58,20 @@ fun DialogToggle(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(end = 16.dp),
+                .padding(end = DialogTheme.spacing.large),
         ) {
             Text(
                 text = label,
-                color = if (enabled) {
-                    DialogTheme.colorScheme.onSurface
-                } else {
-                    DialogTheme.colorScheme.onSurfaceVariant
-                },
+                color = labelColor,
                 style = DialogTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
             )
             supportingText?.let {
                 Text(
                     text = it,
-                    color = if (enabled) {
-                        DialogTheme.colorScheme.onSurfaceVariant
-                    } else {
-                        DialogTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                    },
+                    color = supportingColor,
                     style = DialogTheme.typography.labelSmall,
-                    modifier = Modifier.padding(top = 2.dp),
+                    modifier = Modifier.padding(top = DialogTheme.spacing.extraSmall),
                 )
             }
         }
@@ -116,8 +118,8 @@ private fun DialogTogglePreviewContent() {
     var checked2 by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.padding(DialogTheme.spacing.large),
+        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
     ) {
         DialogToggle(
             checked = checked1,

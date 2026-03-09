@@ -2,15 +2,8 @@
 
 package com.on.dialog.designsystem.component
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
@@ -27,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.on.dialog.core.common.extension.formatToString
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.core.designsystem.generated.resources.Res
@@ -72,31 +64,17 @@ fun DialogDatePicker(
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
-    Box(modifier = modifier) {
-        DialogTextField(
-            label = label,
-            readOnly = true,
-            supportingText = supportingText,
-            value = selectedDate?.let { dateFormatter(it) } ?: "",
-            placeholder = placeholder,
-            onValueChange = {},
-            trailingIcon = { DialogDatePickerIcon() },
-            isError = isError,
-            enabled = enabled,
-        )
-
-        if (enabled) {
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { showDialog = true },
-                    ),
-            )
-        }
-    }
+    DialogPickerTextField(
+        value = selectedDate?.let { dateFormatter(it) } ?: "",
+        onClick = { showDialog = true },
+        enabled = enabled,
+        label = label,
+        placeholder = placeholder,
+        supportingText = supportingText,
+        isError = isError,
+        trailingIcon = { DialogDatePickerIcon() },
+        modifier = modifier,
+    )
 
     if (showDialog) {
         DialogDatePickerDialog(
@@ -205,32 +183,9 @@ private fun DialogDatePickerPreviewDark() {
 private fun DialogDatePickerPreviewContent() {
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        DialogDatePicker(
-            selectedDate = selectedDate,
-            onDateSelected = { selectedDate = it },
-            label = "날짜",
-            placeholder = "날짜를 선택해주세요",
-            supportingText = "토론 시작일",
-        )
-        DialogDatePicker(
-            selectedDate = LocalDate(2025, 3, 8),
-            onDateSelected = {},
-            label = "날짜",
-            isError = true,
-            supportingText = "올바른 날짜를 선택해주세요",
-        )
-        DialogDatePicker(
-            selectedDate = null,
-            onDateSelected = {},
-            label = "날짜",
-            placeholder = "날짜를 선택해주세요",
-            enabled = false,
-        )
-    }
+    DialogDatePickerDialog(
+        selectedDate = selectedDate,
+        onDismiss = { selectedDate = null },
+        onConfirm = {}
+    )
 }

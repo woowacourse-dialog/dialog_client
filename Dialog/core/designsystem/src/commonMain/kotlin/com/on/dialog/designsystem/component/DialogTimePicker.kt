@@ -2,10 +2,7 @@
 
 package com.on.dialog.designsystem.component
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -68,31 +65,17 @@ fun DialogTimePicker(
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
-    Box(modifier = modifier) {
-        DialogTextField(
-            label = label,
-            readOnly = true,
-            supportingText = supportingText,
-            value = selectedTime?.let { timeFormatter(it) } ?: "",
-            placeholder = placeholder,
-            onValueChange = {},
-            trailingIcon = { DialogTimePickerIcon() },
-            isError = isError,
-            enabled = enabled,
-        )
-
-        if (enabled) {
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { showDialog = true },
-                    ),
-            )
-        }
-    }
+    DialogPickerTextField(
+        value = selectedTime?.let { timeFormatter(it) } ?: "",
+        onClick = { showDialog = true },
+        enabled = enabled,
+        label = label,
+        placeholder = placeholder,
+        supportingText = supportingText,
+        isError = isError,
+        trailingIcon = { DialogTimePickerIcon() },
+        modifier = modifier,
+    )
 
     if (showDialog) {
         DialogTimePickerDialog(
@@ -212,32 +195,10 @@ private fun DialogTimePickerPreviewDark() {
 private fun DialogTimePickerPreviewContent() {
     var selectedTime by remember { mutableStateOf<LocalTime?>(null) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        DialogTimePicker(
-            selectedTime = selectedTime,
-            onTimeSelected = { selectedTime = it },
-            label = "시간",
-            placeholder = "시간을 선택해주세요",
-            supportingText = "토론 시작 시간",
-        )
-        DialogTimePicker(
-            selectedTime = LocalTime(14, 30),
-            onTimeSelected = {},
-            label = "시간",
-            isError = true,
-            supportingText = "올바른 시간을 선택해주세요",
-        )
-        DialogTimePicker(
-            selectedTime = null,
-            onTimeSelected = {},
-            label = "시간",
-            placeholder = "시간을 선택해주세요",
-            enabled = false,
-        )
-    }
+    DialogTimePickerDialog(
+        selectedTime = selectedTime,
+        is24Hour = true,
+        onDismiss = { },
+        onConfirm = {_,_ ->},
+    )
 }
