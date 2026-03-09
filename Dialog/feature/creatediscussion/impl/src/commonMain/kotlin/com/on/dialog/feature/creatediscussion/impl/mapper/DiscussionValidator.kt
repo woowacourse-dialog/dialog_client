@@ -24,33 +24,33 @@ internal object DiscussionValidator {
         val startTime = mode.selectedStartTime
         val endTime = mode.selectedEndTime
 
-        // Date 단독 검증은 명시적으로 처리하고, 시각 관련은 Domain validation 결과를 사용한다.
-        val dateError =
-            date?.let {
-                when {
-                    it < now.date -> Res.string.create_discussion_error_past_date
-                    else -> null
-                }
-            }
         val offlineErrors = mode.collectOfflineValidationErrors(now)
 
-        val startTimeError = if (startTime != null) {
+        // Date 단독 검증은 명시적으로 처리하고, 시각 관련은 Domain validation 결과를 사용한다.
+        val dateError = date?.let {
+            when {
+                it < now.date -> Res.string.create_discussion_error_past_date
+                else -> null
+            }
+        }
+
+        val startTimeError = startTime?.let {
             offlineErrors
                 .firstOrNull {
                     it is DraftValidationError.Offline.StartTimeOutOfRange ||
                             it is DraftValidationError.Offline.StartDateNotAfterToday ||
                             (endTime != null && it is DraftValidationError.Offline.StartNotBeforeEnd)
                 }?.toMessage()
-        } else null
+        }
 
-        val endTimeError = if (endTime != null) {
+        val endTimeError = endTime?.let {
             offlineErrors
                 .firstOrNull {
                     it is DraftValidationError.Offline.EndTimeOutOfRange ||
                             it is DraftValidationError.Offline.EndDateNotAfterToday ||
                             (startTime != null && it is DraftValidationError.Offline.StartNotBeforeEnd)
                 }?.toMessage()
-        } else null
+        }
 
         return mode.copy(
             selectedDateErrorMessage = dateError,
