@@ -18,15 +18,15 @@ import kotlinx.coroutines.launch
 internal class CreateDiscussionViewModel(
     private val discussionRepository: DiscussionRepository,
 ) : BaseViewModel<CreateDiscussionIntent, CreateDiscussionState, CreateDiscussionEffect>(
-        initialState = CreateDiscussionState(),
-    ) {
+    initialState = CreateDiscussionState(),
+) {
     private var offlineModeCache: Offline = Offline()
     private var onlineModeCache: Online = Online()
 
     override fun onIntent(intent: CreateDiscussionIntent) {
         when (intent) {
             is CreateDiscussionIntent.OnTitleChange -> {
-                if (intent.title.length > 50) return
+                if (intent.title.length > OfflineDiscussionDraft.MAX_TITLE_LENGTH) return
                 updateState { copy(title = intent.title) }
             }
 
@@ -47,7 +47,7 @@ internal class CreateDiscussionViewModel(
             }
 
             is CreateDiscussionIntent.OnPlaceChange -> {
-                if (intent.place.length > 50) return
+                if (intent.place.length > OfflineDiscussionDraft.MAX_PLACE_LENGTH) return
                 updateState {
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
@@ -65,7 +65,10 @@ internal class CreateDiscussionViewModel(
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
                         val updatedMode = currentMode.copy(
-                            participantCount = intent.participantCount.coerceIn(2, 10),
+                            participantCount = intent.participantCount.coerceIn(
+                                OfflineDiscussionDraft.MIN_PARTICIPANT_COUNT,
+                                OfflineDiscussionDraft.MAX_PARTICIPANT_COUNT
+                            ),
                         )
                         offlineModeCache = updatedMode
                         copy(
@@ -123,7 +126,8 @@ internal class CreateDiscussionViewModel(
                 updateState {
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Online) {
-                        val updatedMode = currentMode.copy(selectedEndDateIndex = intent.selectedIndex)
+                        val updatedMode =
+                            currentMode.copy(selectedEndDateIndex = intent.selectedIndex)
                         onlineModeCache = updatedMode
                         copy(mode = updatedMode)
                     } else {

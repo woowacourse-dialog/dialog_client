@@ -21,14 +21,24 @@ data class OfflineDiscussionDraft(
         if (startAt >= endAt) {
             add(DraftValidationError.Offline.StartNotBeforeEnd)
         }
-        if (startAt.hour !in 8..23) {
+        if (startAt.hour !in MIN_START_HOUR..MAX_END_HOUR) {
             add(DraftValidationError.Offline.StartTimeOutOfRange)
         }
-        if (endAt.hour !in 8..23) {
+        if (endAt.hour !in MIN_START_HOUR..MAX_END_HOUR) {
             add(DraftValidationError.Offline.EndTimeOutOfRange)
         }
-        if (maxParticipantCount in 11 downTo 2) {
+        if (maxParticipantCount in MAX_PARTICIPANT_COUNT + 1 downTo MIN_PARTICIPANT_COUNT) {
             add(DraftValidationError.Offline.ParticipantCountTooLow)
         }
+    }
+
+    companion object {
+        const val MIN_PARTICIPANT_COUNT = 2
+        const val MAX_PARTICIPANT_COUNT = 10
+        private const val MIN_START_HOUR = 8
+        private const val MAX_END_HOUR = 23
+
+        const val MAX_TITLE_LENGTH = 50
+        const val MAX_PLACE_LENGTH = 50
     }
 }
