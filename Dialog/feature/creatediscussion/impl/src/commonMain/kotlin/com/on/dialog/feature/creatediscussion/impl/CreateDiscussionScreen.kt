@@ -34,7 +34,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
@@ -215,10 +214,10 @@ private fun CreateDiscussionForm(
 ) {
     Column(
         modifier = modifier
-            .padding(horizontal = DialogTheme.spacing.large)
+            .padding(horizontal = DialogTheme.spacing.mediumLarge)
             .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
+        Spacer(modifier = Modifier.height(DialogTheme.spacing.mediumLarge))
 
         LabeledTextField(
             title = uiState.title,
@@ -235,7 +234,7 @@ private fun CreateDiscussionForm(
             placeholder = stringResource(Res.string.create_discussion_placeholder_track),
         )
 
-        Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
+        Spacer(modifier = Modifier.height(DialogTheme.spacing.mediumLarge))
 
         DialogToggle(
             checked = uiState.mode is DiscussionMode.Offline,
@@ -253,8 +252,6 @@ private fun CreateDiscussionForm(
             uiState = uiState,
             onIntent = onIntent,
         )
-
-        Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
 
         DiscussionContent(
             content = uiState.content,
@@ -283,6 +280,7 @@ private fun OnlineModeSection(
                 label = stringResource(Res.string.create_discussion_label_end_date),
                 placeholder = stringResource(Res.string.create_discussion_placeholder_date),
             )
+            Spacer(modifier = Modifier.height(DialogTheme.spacing.mediumLarge))
         }
     }
 }
@@ -335,7 +333,7 @@ private fun SubmitButtonRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(all = DialogTheme.spacing.large)
+            .padding(all = DialogTheme.spacing.mediumLarge)
             .imePadding(),
         horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraExtraLarge)
     ) {
@@ -378,7 +376,7 @@ private fun DiscussionContent(
             .clip(DialogTheme.shapes.small)
             .background(color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F))
             .clickable(onClick = { onContentChange() })
-            .padding(all = DialogTheme.spacing.large)
+            .padding(all = DialogTheme.spacing.mediumLarge)
             .verticalScrollbar(scrollState)
     ) {
         if (content.isEmpty()) {
@@ -427,7 +425,7 @@ private fun OfflineDiscussion(
             onParticipantCountChange = onParticipantCountChange,
         )
 
-        Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
+        Spacer(modifier = Modifier.height(DialogTheme.spacing.mediumLarge))
 
         DialogDatePicker(
             label = stringResource(Res.string.create_discussion_label_date),
