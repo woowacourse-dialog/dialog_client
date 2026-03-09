@@ -433,7 +433,7 @@ private fun TitleField(
         Box {
             DialogTextField(
                 value = title,
-                onValueChange = { if (it.length <= 50) onTitleChange(it) },
+                onValueChange = onTitleChange,
                 label = label,
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = placeHolder,

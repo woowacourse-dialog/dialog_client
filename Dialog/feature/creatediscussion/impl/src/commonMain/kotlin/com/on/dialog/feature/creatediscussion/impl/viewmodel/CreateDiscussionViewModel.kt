@@ -23,6 +23,7 @@ internal class CreateDiscussionViewModel(
     override fun onIntent(intent: CreateDiscussionIntent) {
         when (intent) {
             is CreateDiscussionIntent.OnTitleChange -> {
+                if (intent.title.length > 50) return
                 updateState { copy(title = intent.title) }
             }
 
@@ -43,6 +44,7 @@ internal class CreateDiscussionViewModel(
             }
 
             is CreateDiscussionIntent.OnPlaceChange -> {
+                if (intent.place.length > 50) return
                 updateState {
                     val currentMode = mode
                     if (currentMode is DiscussionMode.Offline) {
