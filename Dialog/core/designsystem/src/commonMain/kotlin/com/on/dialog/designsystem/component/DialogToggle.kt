@@ -39,17 +39,6 @@ fun DialogToggle(
     supportingText: String? = null,
     enabled: Boolean = true,
 ) {
-    val labelColor = if (enabled) {
-        DialogTheme.colorScheme.onSurface
-    } else {
-        DialogTheme.colorScheme.onSurfaceVariant
-    }
-    val supportingColor = if (enabled) {
-        DialogTheme.colorScheme.onSurfaceVariant
-    } else {
-        DialogTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-    }
-
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -62,14 +51,22 @@ fun DialogToggle(
         ) {
             Text(
                 text = label,
-                color = labelColor,
+                color = if (enabled) {
+                    DialogTheme.colorScheme.onSurface
+                } else {
+                    DialogTheme.colorScheme.onSurfaceVariant
+                },
                 style = DialogTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
             )
             supportingText?.let {
                 Text(
                     text = it,
-                    color = supportingColor,
+                    color = if (enabled) {
+                        DialogTheme.colorScheme.onSurfaceVariant
+                    } else {
+                        DialogTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    },
                     style = DialogTheme.typography.labelSmall,
                     modifier = Modifier.padding(top = DialogTheme.spacing.extraSmall),
                 )
