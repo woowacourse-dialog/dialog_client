@@ -29,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -259,10 +260,8 @@ fun DiscussionContent(
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
-            .background(
-                color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F),
-                shape = DialogTheme.shapes.small
-            )
+            .clip(DialogTheme.shapes.small)
+            .background(color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F),)
             .clickable(onClick = { onContentChange() })
             .padding(all = DialogTheme.spacing.large)
             .verticalScrollbar(scrollState)
