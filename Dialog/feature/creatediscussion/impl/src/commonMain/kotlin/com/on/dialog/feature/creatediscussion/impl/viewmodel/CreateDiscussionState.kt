@@ -75,10 +75,9 @@ internal sealed interface DiscussionMode {
 }
 
 private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): OfflineDiscussionDraft {
-    val trimmedTitle = title.trim()
     return OfflineDiscussionDraft(
-        title = trimmedTitle,
-        content = trimmedTitle,
+        title = title.trim(),
+        content = content.trim(),
         startAt = mode.selectedDate!!.atTime(
             mode.selectedStartTime!!.hour,
             mode.selectedStartTime.minute,
@@ -94,10 +93,9 @@ private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): Offlin
 private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Online): OnlineDiscussionDraft {
     val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
     val endDate = today.plus(DatePeriod(days = mode.selectedEndDateIndex.toEndDateOffsetDays()))
-    val trimmedTitle = title.trim()
     return OnlineDiscussionDraft(
-        title = trimmedTitle,
-        content = trimmedTitle,
+        title = title.trim(),
+        content = content.trim(),
         endDate = endDate,
         category = selectedTrackIndex.toTrackCategory(),
     )

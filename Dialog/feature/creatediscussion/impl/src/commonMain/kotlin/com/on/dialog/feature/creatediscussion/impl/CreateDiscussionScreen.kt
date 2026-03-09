@@ -92,7 +92,7 @@ internal fun CreateDiscussionScreen(
 
     if (showMarkdownEditor) {
         MarkdownEditor(
-            initialContent = "",
+            initialContent = uiState.content,
             onConfirm = { newContent: String ->
                 showMarkdownEditor = false
                 viewModel.onIntent(CreateDiscussionIntent.OnContentChange(newContent))
@@ -256,13 +256,13 @@ fun DiscussionContent(
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
-            .clickable(onClick = { onContentChange() })
             .background(
                 color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F),
                 shape = DialogTheme.shapes.small
             )
             .padding(all = DialogTheme.spacing.large)
             .verticalScroll(rememberScrollState())
+            .clickable(onClick = { onContentChange() })
     ) {
         Text(
             text = content.ifEmpty { "마크다운 형식으로 내용을 작성해주세요." },
