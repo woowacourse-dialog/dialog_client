@@ -188,7 +188,10 @@ private fun CreateDiscussionScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            DiscussionContent(content = uiState.content)
+            DiscussionContent(
+                content = uiState.content,
+                onContentChange = { onIntent(CreateDiscussionIntent.OnContentChange(it)) },
+            )
 
         }
         Row(
@@ -219,6 +222,7 @@ private fun CreateDiscussionScreen(
 @Composable
 fun DiscussionContent(
     content: String,
+    onContentChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Text(

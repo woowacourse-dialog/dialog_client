@@ -9,6 +9,10 @@ internal sealed interface CreateDiscussionIntent : UiIntent {
         val title: String,
     ) : CreateDiscussionIntent
 
+    data class OnContentChange(
+        val content: String,
+    ) : CreateDiscussionIntent
+
     data class OnTrackIndexChange(
         val selectedIndex: Int,
     ) : CreateDiscussionIntent

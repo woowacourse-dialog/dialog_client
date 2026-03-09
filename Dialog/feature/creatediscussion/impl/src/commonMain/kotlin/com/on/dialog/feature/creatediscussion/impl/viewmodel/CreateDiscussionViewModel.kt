@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.feature.creatediscussion.impl.mapper.DiscussionValidator
+import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode.Offline
+import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode.Online
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.ui.viewmodel.BaseViewModel
@@ -21,6 +23,10 @@ internal class CreateDiscussionViewModel(
                 updateState { copy(title = intent.title) }
             }
 
+            is CreateDiscussionIntent.OnContentChange -> {
+                updateState { copy(content = content) }
+            }
+
             is CreateDiscussionIntent.OnTrackIndexChange -> {
                 updateState { copy(selectedTrackIndex = intent.selectedIndex) }
             }
@@ -28,7 +34,7 @@ internal class CreateDiscussionViewModel(
             is CreateDiscussionIntent.OnMeetupEnabledChange -> {
                 updateState {
                     copy(
-                        mode = if (intent.enabled) DiscussionMode.Offline() else DiscussionMode.Online(),
+                        mode = if (intent.enabled) Offline() else Online(),
                     )
                 }
             }
