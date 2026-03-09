@@ -1,3 +1,43 @@
 <resources>
+    <string name="create_discussion_title">토론 생성</string>
+    <string name="create_discussion_label_title">제목</string>
+    <string name="create_discussion_placeholder_title">제목에 핵심 내용을 요약합니다.</string>
+    <string name="create_discussion_label_track">트랙</string>
+    <string name="create_discussion_placeholder_track">트랙을 선택해주세요</string>
+    <string name="create_discussion_label_meetup">만나서 토론하기</string>
+    <string name="create_discussion_label_end_date">토론 종료 날짜</string>
+    <string name="create_discussion_placeholder_date">날짜를 선택해주세요</string>
+    <string name="create_discussion_button_cancel">취소</string>
+    <string name="create_discussion_button_submit_loading">등록 중...</string>
+    <string name="create_discussion_button_submit">등록</string>
+    <string name="create_discussion_label_content">토론 내용</string>
+    <string name="create_discussion_placeholder_content">마크다운 형식으로 내용을 작성해주세요.</string>
+    <string name="create_discussion_label_place">토론 장소</string>
+    <string name="create_discussion_placeholder_place">예: 굿샷, 나이스샷, 온라인 줌 미팅, 강남역</string>
+    <string name="create_discussion_label_date">날짜</string>
+    <string name="create_discussion_placeholder_start_time">시작 시간을 선택해주세요</string>
+    <string name="create_discussion_label_start_time">시작 시간</string>
+    <string name="create_discussion_placeholder_end_time">종료 시간을 선택해주세요</string>
+    <string name="create_discussion_label_end_time">종료 시간</string>
+    <string name="create_discussion_label_participant_count">참여자 수</string>
+    <string name="create_discussion_title_count_format">%1$d / %2$d</string>
 
+    <string name="create_discussion_track_android">안드로이드</string>
+    <string name="create_discussion_track_backend">백엔드</string>
+    <string name="create_discussion_track_frontend">프론트엔드</string>
+    <string name="create_discussion_track_common">공통</string>
+
+    <string name="create_discussion_end_date_option_1">1일 후</string>
+    <string name="create_discussion_end_date_option_2">2일 후</string>
+    <string name="create_discussion_end_date_option_3">3일 후</string>
+
+    <string name="create_discussion_snackbar_success">토론이 등록되었어요.</string>
+    <string name="create_discussion_snackbar_failure">토론 등록에 실패했어요. 잠시 후 다시 시도해주세요.</string>
+
+    <string name="create_discussion_error_past_date">이미 지난 날짜 입니다.</string>
+    <string name="create_discussion_error_end_after_start">종료 시간은 시작 시간보다 늦어야 해요.</string>
+    <string name="create_discussion_error_start_time_range">시작 시간은 오전 8시 ~ 오후 11시 사이여야 해요.</string>
+    <string name="create_discussion_error_end_time_range">종료 시간은 오전 8시 ~ 오후 11시 사이여야 해요.</string>
+    <string name="create_discussion_error_participant_min">최소 2명 이상이어야 해요.</string>
+    <string name="create_discussion_error_date_after_today">오늘 이후 날짜를 선택해주세요.</string>
 </resources>

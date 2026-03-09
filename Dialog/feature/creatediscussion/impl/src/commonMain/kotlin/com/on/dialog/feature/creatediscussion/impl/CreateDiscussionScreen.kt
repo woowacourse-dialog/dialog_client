@@ -56,8 +56,37 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionVie
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode
 import com.on.dialog.ui.component.markdown.DialogMarkdown
 import com.on.dialog.ui.component.markdown.MarkdownEditor
+import dialog.feature.creatediscussion.impl.generated.resources.Res
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_button_cancel
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_button_submit
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_button_submit_loading
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_end_time_range
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_past_date
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_start_time_range
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_label_content
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_label_date
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_label_end_date
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_label_end_time
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_label_meetup
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_label_participant_count
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_label_place
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_label_start_time
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_label_title
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_label_track
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_placeholder_content
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_placeholder_date
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_placeholder_end_time
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_placeholder_place
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_placeholder_start_time
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_placeholder_title
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_placeholder_track
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_title
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_title_count_format
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -75,7 +104,7 @@ internal fun CreateDiscussionScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CreateDiscussionEffect.ShowSnackbar -> snackbarState.showSnackbar(
-                    message = effect.message,
+                    message = getString(effect.message),
                     state = effect.state,
                 )
 
@@ -114,7 +143,7 @@ private fun CreateDiscussionScreen(
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         DialogTopAppBar(
-            title = "토론 생성",
+            title = stringResource(Res.string.create_discussion_title),
             navigationIcon = {
                 DialogIconButton(onClick = onBackClick) {
                     Icon(
@@ -136,16 +165,16 @@ private fun CreateDiscussionScreen(
             TitleField(
                 title = uiState.title,
                 onTitleChange = { onIntent(CreateDiscussionIntent.OnTitleChange(it)) },
-                label = "제목",
-                placeHolder = "제목에 핵심 내용을 요약합니다.",
+                label = stringResource(Res.string.create_discussion_label_title),
+                placeHolder = stringResource(Res.string.create_discussion_placeholder_title),
             )
 
             DialogDropdownMenu(
-                options = uiState.trackOptions,
+                options = uiState.trackOptions.map { stringResource(it) }.toImmutableList(),
                 selectedIndex = uiState.selectedTrackIndex.takeIf { it >= 0 },
                 onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnTrackIndexChange(it)) },
-                label = "트랙",
-                placeholder = "트랙을 선택해주세요",
+                label = stringResource(Res.string.create_discussion_label_track),
+                placeholder = stringResource(Res.string.create_discussion_placeholder_track),
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -153,7 +182,7 @@ private fun CreateDiscussionScreen(
             DialogToggle(
                 checked = uiState.mode is DiscussionMode.Offline,
                 onCheckedChange = { onIntent(CreateDiscussionIntent.OnMeetupEnabledChange(it)) },
-                label = "만나서 토론하기",
+                label = stringResource(Res.string.create_discussion_label_meetup),
                 modifier = Modifier.padding(start = DialogTheme.spacing.small),
             )
 
@@ -180,9 +209,12 @@ private fun CreateDiscussionScreen(
                         },
                         selectedEndTime = offlineMode.selectedEndTime,
                         onEndTimeSelected = { onIntent(CreateDiscussionIntent.OnEndTimeChange(it)) },
-                        selectedDateErrorMessage = uiState.mode.selectedDateErrorMessage,
-                        selectedStartTimeErrorMessage = uiState.mode.selectedStartTimeErrorMessage,
-                        selectedEndTimeErrorMessage = uiState.mode.selectedEndTimeErrorMessage,
+                        selectedDateErrorMessage = offlineMode.selectedDateErrorMessage
+                            ?.let { stringResource(it) },
+                        selectedStartTimeErrorMessage = offlineMode.selectedStartTimeErrorMessage
+                            ?.let { stringResource(it) },
+                        selectedEndTimeErrorMessage = offlineMode.selectedEndTimeErrorMessage
+                            ?.let { stringResource(it) },
                     )
                 }
             }
@@ -194,15 +226,17 @@ private fun CreateDiscussionScreen(
             ) {
                 val onlineMode = uiState.mode as? DiscussionMode.Online
                 if (onlineMode != null) Column {
+                    val endDateOptions =
+                        onlineMode.endDateOptions.map { stringResource(it) }.toImmutableList()
                     Spacer(modifier = Modifier.height(20.dp))
                     DialogDropdownMenu(
-                        options = onlineMode.endDateOptions,
+                        options = endDateOptions,
                         selectedIndex = onlineMode.selectedEndDateIndex.takeIf { it >= 0 },
                         onSelectedIndexChange = {
                             onIntent(CreateDiscussionIntent.OnEndDateIndexChange(it))
                         },
-                        label = "토론 종료 날짜",
-                        placeholder = "날짜를 선택해주세요",
+                        label = stringResource(Res.string.create_discussion_label_end_date),
+                        placeholder = stringResource(Res.string.create_discussion_placeholder_date),
                     )
                 }
             }
@@ -225,13 +259,15 @@ private fun CreateDiscussionScreen(
             )
         ) {
             DialogButton(
-                text = "취소",
+                text = stringResource(Res.string.create_discussion_button_cancel),
                 style = DialogButtonStyle.Secondary,
                 onClick = onBackClick,
                 modifier = Modifier.weight(1f),
             )
             DialogButton(
-                text = if (uiState.isSubmitting) "등록 중..." else "등록",
+                text = if (uiState.isSubmitting) stringResource(Res.string.create_discussion_button_submit_loading) else stringResource(
+                    Res.string.create_discussion_button_submit
+                ),
                 onClick = { onIntent(CreateDiscussionIntent.OnSubmitClick) },
                 modifier = Modifier.weight(1f),
                 enabled = uiState.isSubmitEnabled && !uiState.isSubmitting,
@@ -249,7 +285,7 @@ fun DiscussionContent(
     val scrollState = rememberScrollState()
 
     Text(
-        text = "토론 내용",
+        text = stringResource(Res.string.create_discussion_label_content),
         color = DialogTheme.colorScheme.primary,
         style = DialogTheme.typography.bodyMedium,
         fontWeight = FontWeight.SemiBold,
@@ -268,7 +304,7 @@ fun DiscussionContent(
     ) {
         if (content.isEmpty()) {
             Text(
-                text = "마크다운 형식으로 내용을 작성해주세요.",
+                text = stringResource(Res.string.create_discussion_placeholder_content),
                 style = DialogTheme.typography.bodyLarge,
                 color = DialogTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.SemiBold,
@@ -289,24 +325,25 @@ private fun OfflineDiscussion(
     participantCount: Int,
     onParticipantCountChange: (Int) -> Unit,
     selectedDate: LocalDate?,
-    selectedDateErrorMessage: String,
+    selectedDateErrorMessage: String?,
     onDateSelected: (LocalDate) -> Unit,
     selectedStartTime: LocalTime?,
-    selectedStartTimeErrorMessage: String,
+    selectedStartTimeErrorMessage: String?,
     onStartTimeSelected: (LocalTime) -> Unit,
     selectedEndTime: LocalTime?,
-    selectedEndTimeErrorMessage: String,
+    selectedEndTimeErrorMessage: String?,
     onEndTimeSelected: (LocalTime) -> Unit,
 ) {
     Column {
         TitleField(
             title = place,
             onTitleChange = onPlaceChange,
-            label = "토론 장소",
-            placeHolder = "예: 굿샷, 나이스샷, 온라인 줌 미팅, 강남역",
+            label = stringResource(Res.string.create_discussion_label_place),
+            placeHolder = stringResource(Res.string.create_discussion_placeholder_place),
         )
 
         ParticipantContent(
+            label = stringResource(Res.string.create_discussion_label_participant_count),
             participantCount = participantCount,
             onParticipantCountChange = onParticipantCountChange,
         )
@@ -314,8 +351,8 @@ private fun OfflineDiscussion(
         Spacer(modifier = Modifier.height(20.dp))
 
         DialogDatePicker(
-            label = "날짜",
-            placeholder = "날짜를 선택해주세요",
+            label = stringResource(Res.string.create_discussion_label_date),
+            placeholder = stringResource(Res.string.create_discussion_placeholder_date),
             selectedDate = selectedDate,
             onDateSelected = onDateSelected,
             isError = true,
@@ -325,8 +362,8 @@ private fun OfflineDiscussion(
         DialogTimePicker(
             selectedTime = selectedStartTime,
             onTimeSelected = onStartTimeSelected,
-            placeholder = "시작 시간을 선택해주세요",
-            label = "시작 시간",
+            placeholder = stringResource(Res.string.create_discussion_placeholder_start_time),
+            label = stringResource(Res.string.create_discussion_label_start_time),
             isError = true,
             supportingText = selectedStartTimeErrorMessage,
         )
@@ -334,8 +371,8 @@ private fun OfflineDiscussion(
         DialogTimePicker(
             selectedTime = selectedEndTime,
             onTimeSelected = onEndTimeSelected,
-            placeholder = "종료 시간을 선택해주세요",
-            label = "종료 시간",
+            placeholder = stringResource(Res.string.create_discussion_placeholder_end_time),
+            label = stringResource(Res.string.create_discussion_label_end_time),
             isError = true,
             supportingText = selectedEndTimeErrorMessage,
         )
@@ -344,13 +381,14 @@ private fun OfflineDiscussion(
 
 @Composable
 private fun ParticipantContent(
+    label: String,
     participantCount: Int,
     onParticipantCountChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         Text(
-            text = "참여자 수",
+            text = label,
             color = DialogTheme.colorScheme.primary,
             style = DialogTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold,
@@ -409,7 +447,11 @@ private fun TitleField(
             horizontalArrangement = Arrangement.End,
         ) {
             Text(
-                text = "${title.length} / 50",
+                text = stringResource(
+                    Res.string.create_discussion_title_count_format,
+                    title.length,
+                    50,
+                ),
                 color = DialogTheme.colorScheme.primary,
                 fontSize = 12.sp,
             )
@@ -435,7 +477,13 @@ private fun CreateDiscussionScreenPreview() {
 private fun CreateDiscussionScreenPreview2() {
     DialogTheme {
         CreateDiscussionScreen(
-            uiState = CreateDiscussionState(mode = DiscussionMode.Offline()),
+            uiState = CreateDiscussionState(
+                mode = DiscussionMode.Offline(
+                    selectedDateErrorMessage = Res.string.create_discussion_error_past_date,
+                    selectedStartTimeErrorMessage = Res.string.create_discussion_error_start_time_range,
+                    selectedEndTimeErrorMessage = Res.string.create_discussion_error_end_time_range,
+                ),
+            ),
             onBackClick = {},
             onContentClick = {},
             onIntent = {},

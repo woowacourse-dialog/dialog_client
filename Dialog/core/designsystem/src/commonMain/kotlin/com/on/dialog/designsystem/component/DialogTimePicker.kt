@@ -13,8 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
@@ -32,7 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.core.common.extension.formatToString
 import com.on.dialog.designsystem.theme.DialogTheme
+import dialog.core.designsystem.generated.resources.Res
+import dialog.core.designsystem.generated.resources.dialog_time_picker_cancel
+import dialog.core.designsystem.generated.resources.dialog_time_picker_confirm
+import dialog.core.designsystem.generated.resources.dialog_time_picker_content_description
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Dialog 디자인 시스템의 시간 선택 컴포넌트.
@@ -152,14 +155,14 @@ private fun DialogTimePickerDialog(
         },
         confirmButton = {
             DialogButton(
-                text = "확인",
+                text = stringResource(Res.string.dialog_time_picker_confirm),
                 onClick = { onConfirm(timePickerState.hour, timePickerState.minute) },
                 style = DialogButtonStyle.None,
             )
         },
         dismissButton = {
             DialogButton(
-                text = "취소",
+                text = stringResource(Res.string.dialog_time_picker_cancel),
                 onClick = onDismiss,
                 style = DialogButtonStyle.None,
             )
@@ -184,7 +187,7 @@ private fun DialogTimePickerDialog(
 private fun DialogTimePickerIcon() {
     Icon(
         imageVector = Icons.Default.Schedule,
-        contentDescription = "시간 선택",
+        contentDescription = stringResource(Res.string.dialog_time_picker_content_description),
         tint = DialogTheme.colorScheme.onSurfaceVariant,
     )
 }

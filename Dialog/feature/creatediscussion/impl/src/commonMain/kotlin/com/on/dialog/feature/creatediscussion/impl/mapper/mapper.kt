@@ -1,12 +1,18 @@
 package com.on.dialog.feature.creatediscussion.impl.mapper
 
 import com.on.dialog.model.common.Track
+import dialog.feature.creatediscussion.impl.generated.resources.Res
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_track_android
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_track_backend
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_track_common
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_track_frontend
+import org.jetbrains.compose.resources.StringResource
 
-internal fun Track.toFullNameRes(): String = when (this) {
-    Track.ANDROID -> "안드로이드"
-    Track.BACKEND -> "백엔드"
-    Track.FRONTEND -> "프론트엔드"
-    Track.COMMON -> "공통"
+internal fun Track.toFullNameRes(): StringResource = when (this) {
+    Track.ANDROID -> Res.string.create_discussion_track_android
+    Track.BACKEND -> Res.string.create_discussion_track_backend
+    Track.FRONTEND -> Res.string.create_discussion_track_frontend
+    Track.COMMON -> Res.string.create_discussion_track_common
 }
 
 internal fun Int.toTrackCategory(): String = when (this) {

@@ -9,6 +9,9 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode.Onli
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.ui.viewmodel.BaseViewModel
+import dialog.feature.creatediscussion.impl.generated.resources.Res
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_snackbar_failure
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_snackbar_success
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
@@ -127,7 +130,7 @@ internal class CreateDiscussionViewModel(
                 .onSuccess { discussionId: Long ->
                     emitEffect(
                         CreateDiscussionEffect.ShowSnackbar(
-                            message = "토론이 등록되었어요.",
+                            message = Res.string.create_discussion_snackbar_success,
                             state = SnackbarState.POSITIVE,
                         ),
                     )
@@ -136,7 +139,7 @@ internal class CreateDiscussionViewModel(
                     Napier.e(throwable.message.orEmpty(), throwable)
                     emitEffect(
                         CreateDiscussionEffect.ShowSnackbar(
-                            message = "토론 등록에 실패했어요. 잠시 후 다시 시도해주세요.",
+                            message = Res.string.create_discussion_snackbar_failure,
                             state = SnackbarState.NEGATIVE,
                         ),
                     )

@@ -30,10 +30,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.on.dialog.core.common.extension.formatToString
 import com.on.dialog.designsystem.theme.DialogTheme
+import dialog.core.designsystem.generated.resources.Res
+import dialog.core.designsystem.generated.resources.dialog_date_picker_cancel
+import dialog.core.designsystem.generated.resources.dialog_date_picker_confirm
+import dialog.core.designsystem.generated.resources.dialog_date_picker_content_description
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -125,7 +130,7 @@ private fun DialogDatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             DialogButton(
-                text = "확인",
+                text = stringResource(Res.string.dialog_date_picker_confirm),
                 onClick = {
                     datePickerState.selectedDateMillis?.let { onConfirm(it) }
                 },
@@ -134,7 +139,7 @@ private fun DialogDatePickerDialog(
         },
         dismissButton = {
             DialogButton(
-                text = "취소",
+                text = stringResource(Res.string.dialog_date_picker_cancel),
                 onClick = onDismiss,
                 style = DialogButtonStyle.None,
             )
@@ -174,7 +179,7 @@ private fun DialogDatePickerDialog(
 private fun DialogDatePickerIcon() {
     Icon(
         imageVector = Icons.Default.DateRange,
-        contentDescription = "날짜 선택",
+        contentDescription = stringResource(Res.string.dialog_date_picker_content_description),
         tint = DialogTheme.colorScheme.onSurfaceVariant,
     )
 }

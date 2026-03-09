@@ -9,6 +9,10 @@ import com.on.dialog.model.discussion.draft.DiscussionDraft
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.ui.viewmodel.UiState
+import dialog.feature.creatediscussion.impl.generated.resources.Res
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_end_date_option_1
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_end_date_option_2
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_end_date_option_3
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -19,13 +23,14 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.StringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @Immutable
 internal data class CreateDiscussionState(
     val title: String = "",
-    val trackOptions: ImmutableList<String> = tracks,
+    val trackOptions: ImmutableList<StringResource> = tracks,
     val selectedTrackIndex: Int = -1,
     val mode: DiscussionMode = DiscussionMode.Online(),
     val content: String = "",
@@ -52,7 +57,11 @@ internal sealed interface DiscussionMode {
 
     @Immutable
     data class Online(
-        val endDateOptions: ImmutableList<String> = persistentListOf("1일 후", "2일 후", "3일 후"),
+        val endDateOptions: ImmutableList<StringResource> = persistentListOf(
+            Res.string.create_discussion_end_date_option_1,
+            Res.string.create_discussion_end_date_option_2,
+            Res.string.create_discussion_end_date_option_3,
+        ),
         val selectedEndDateIndex: Int = -1,
     ) : DiscussionMode {
         override val isValid: Boolean
@@ -64,11 +73,11 @@ internal sealed interface DiscussionMode {
         val place: String = "",
         val participantCount: Int = 2,
         val selectedDate: LocalDate? = null,
-        val selectedDateErrorMessage: String = "",
+        val selectedDateErrorMessage: StringResource? = null,
         val selectedStartTime: LocalTime? = null,
-        val selectedStartTimeErrorMessage: String = "",
+        val selectedStartTimeErrorMessage: StringResource? = null,
         val selectedEndTime: LocalTime? = null,
-        val selectedEndTimeErrorMessage: String = "",
+        val selectedEndTimeErrorMessage: StringResource? = null,
     ) : DiscussionMode {
         override val isValid: Boolean
             get() = place.isNotBlank() &&

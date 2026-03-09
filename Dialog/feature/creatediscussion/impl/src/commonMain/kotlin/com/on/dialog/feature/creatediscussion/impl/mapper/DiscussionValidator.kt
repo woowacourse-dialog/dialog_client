@@ -3,11 +3,19 @@ package com.on.dialog.feature.creatediscussion.impl.mapper
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode
 import com.on.dialog.model.discussion.draft.DraftValidationError
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
+import dialog.feature.creatediscussion.impl.generated.resources.Res
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_date_after_today
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_end_after_start
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_end_time_range
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_participant_min
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_past_date
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_start_time_range
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.StringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -22,8 +30,8 @@ internal object DiscussionValidator {
 
         // Domain에서 Date를 따로 저장하지 않아 dateError는 따로 처리
         val dateError = if (date != null) {
-            if (date < now.date) "이미 지난 날짜 입니다." else ""
-        } else ""
+            if (date < now.date) Res.string.create_discussion_error_past_date else null
+        } else null
 
         val startTimeError = if (startTime != null) {
             val draft = OfflineDiscussionDraft(
@@ -40,9 +48,9 @@ internal object DiscussionValidator {
                 .firstOrNull {
                     it is DraftValidationError.Offline.StartTimeOutOfRange ||
                             it is DraftValidationError.Offline.StartNotBeforeEnd
-                }?.toMessage() ?: ""
+                }?.toMessage()
         } else {
-            ""
+            null
         }
 
         val endTimeError = if (endTime != null) {
@@ -63,9 +71,9 @@ internal object DiscussionValidator {
                 .firstOrNull {
                     it is DraftValidationError.Offline.EndTimeOutOfRange ||
                             it is DraftValidationError.Offline.StartNotBeforeEnd
-                }?.toMessage() ?: ""
+                }?.toMessage()
         } else {
-            ""
+            null
         }
 
         return mode.copy(
@@ -76,12 +84,12 @@ internal object DiscussionValidator {
     }
 }
 
-private fun DraftValidationError.toMessage(): String = when (this) {
-    DraftValidationError.Offline.StartNotBeforeEnd -> "종료 시간은 시작 시간보다 늦어야 해요."
-    DraftValidationError.Offline.StartTimeOutOfRange -> "시작 시간은 오전 8시 ~ 오후 11시 사이여야 해요."
-    DraftValidationError.Offline.EndTimeOutOfRange -> "종료 시간은 오전 8시 ~ 오후 11시 사이여야 해요."
-    DraftValidationError.Offline.ParticipantCountTooLow -> "최소 2명 이상이어야 해요."
-    DraftValidationError.Offline.StartDateNotAfterToday -> "오늘 이후 날짜를 선택해주세요."
-    DraftValidationError.Offline.EndDateNotAfterToday -> "오늘 이후 날짜를 선택해주세요."
-    DraftValidationError.Online.EndDateNotAfterToday -> "오늘 이후 날짜를 선택해주세요."
+private fun DraftValidationError.toMessage(): StringResource = when (this) {
+    DraftValidationError.Offline.StartNotBeforeEnd -> Res.string.create_discussion_error_end_after_start
+    DraftValidationError.Offline.StartTimeOutOfRange -> Res.string.create_discussion_error_start_time_range
+    DraftValidationError.Offline.EndTimeOutOfRange -> Res.string.create_discussion_error_end_time_range
+    DraftValidationError.Offline.ParticipantCountTooLow -> Res.string.create_discussion_error_participant_min
+    DraftValidationError.Offline.StartDateNotAfterToday -> Res.string.create_discussion_error_date_after_today
+    DraftValidationError.Offline.EndDateNotAfterToday -> Res.string.create_discussion_error_date_after_today
+    DraftValidationError.Online.EndDateNotAfterToday -> Res.string.create_discussion_error_date_after_today
 }
