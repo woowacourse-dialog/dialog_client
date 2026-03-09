@@ -18,26 +18,35 @@ import kotlinx.coroutines.launch
 internal class CreateDiscussionViewModel(
     private val discussionRepository: DiscussionRepository,
 ) : BaseViewModel<CreateDiscussionIntent, CreateDiscussionState, CreateDiscussionEffect>(
-    initialState = CreateDiscussionState(),
-) {
+        initialState = CreateDiscussionState(),
+    ) {
     private var offlineModeCache: Offline = Offline()
     private var onlineModeCache: Online = Online()
 
     override fun onIntent(intent: CreateDiscussionIntent) {
         when (intent) {
             is CreateDiscussionIntent.OnTitleChange -> handleTitleChange(intent)
+
             is CreateDiscussionIntent.OnContentChange -> handleContentChange(intent)
+
             is CreateDiscussionIntent.OnTrackIndexChange -> handleTrackIndexChange(intent)
+
             is CreateDiscussionIntent.OnMeetupEnabledChange -> handleMeetupEnabledChange(intent)
+
             is CreateDiscussionIntent.OnPlaceChange -> handlePlaceChange(intent)
+
             is CreateDiscussionIntent.OnParticipantCountChange -> handleParticipantCountChange(
-                intent
+                intent,
             )
 
             is CreateDiscussionIntent.OnDateChange -> handleDateChange(intent)
+
             is CreateDiscussionIntent.OnStartTimeChange -> handleStartTimeChange(intent)
+
             is CreateDiscussionIntent.OnEndTimeChange -> handleEndTimeChange(intent)
+
             is CreateDiscussionIntent.OnEndDateIndexChange -> handleEndDateIndexChange(intent)
+
             CreateDiscussionIntent.OnSubmitClick -> handleSubmitClick()
         }
     }
