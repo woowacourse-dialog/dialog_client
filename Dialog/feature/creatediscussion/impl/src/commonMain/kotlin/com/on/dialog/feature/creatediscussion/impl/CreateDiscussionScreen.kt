@@ -207,22 +207,46 @@ private fun CreateDiscussionForm(
             modifier = Modifier.padding(start = DialogTheme.spacing.small),
         )
 
-        OfflineModeSection(
-            uiState = uiState,
-            onIntent = onIntent,
-        )
-
         OnlineModeSection(
             uiState = uiState,
             onIntent = onIntent,
         )
 
+        OfflineModeSection(
+            uiState = uiState,
+            onIntent = onIntent,
+        )
+        
         Spacer(modifier = Modifier.height(20.dp))
 
         DiscussionContent(
             content = uiState.content,
             onContentChange = onContentClick,
         )
+    }
+}
+
+@Composable
+private fun OnlineModeSection(
+    uiState: CreateDiscussionState,
+    onIntent: (CreateDiscussionIntent) -> Unit,
+) {
+    AnimatedVisibility(
+        visible = uiState.mode is DiscussionMode.Online,
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut(),
+    ) {
+        val onlineMode = uiState.mode as? DiscussionMode.Online ?: return@AnimatedVisibility
+        Column {
+            Spacer(modifier = Modifier.height(20.dp))
+            DialogDropdownMenu(
+                options = onlineMode.endDateOptions.map { stringResource(it) }.toImmutableList(),
+                selectedIndex = onlineMode.selectedEndDateIndex.takeIf { it >= 0 },
+                onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnEndDateIndexChange(it)) },
+                label = stringResource(Res.string.create_discussion_label_end_date),
+                placeholder = stringResource(Res.string.create_discussion_placeholder_date),
+            )
+        }
     }
 }
 
@@ -258,30 +282,6 @@ private fun OfflineModeSection(
                     ?.let { stringResource(it) },
                 selectedEndTimeErrorMessage = offlineMode.selectedEndTimeErrorMessage
                     ?.let { stringResource(it) },
-            )
-        }
-    }
-}
-
-@Composable
-private fun OnlineModeSection(
-    uiState: CreateDiscussionState,
-    onIntent: (CreateDiscussionIntent) -> Unit,
-) {
-    AnimatedVisibility(
-        visible = uiState.mode is DiscussionMode.Online,
-        enter = expandVertically() + fadeIn(),
-        exit = shrinkVertically() + fadeOut(),
-    ) {
-        val onlineMode = uiState.mode as? DiscussionMode.Online ?: return@AnimatedVisibility
-        Column {
-            Spacer(modifier = Modifier.height(20.dp))
-            DialogDropdownMenu(
-                options = onlineMode.endDateOptions.map { stringResource(it) }.toImmutableList(),
-                selectedIndex = onlineMode.selectedEndDateIndex.takeIf { it >= 0 },
-                onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnEndDateIndexChange(it)) },
-                label = stringResource(Res.string.create_discussion_label_end_date),
-                placeholder = stringResource(Res.string.create_discussion_placeholder_date),
             )
         }
     }
