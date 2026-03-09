@@ -38,6 +38,7 @@
     <string name="create_discussion_error_end_after_start">종료 시간은 시작 시간보다 늦어야 해요.</string>
     <string name="create_discussion_error_start_time_range">시작 시간은 오전 8시 ~ 오후 11시 사이여야 해요.</string>
     <string name="create_discussion_error_end_time_range">종료 시간은 오전 8시 ~ 오후 11시 사이여야 해요.</string>
+    <string name="create_discussion_error_time_after_now">현재 시간 이후로 선택해주세요.</string>
     <string name="create_discussion_error_participant_min">최소 2명 이상이어야 해요.</string>
     <string name="create_discussion_error_date_after_today">오늘 이후 날짜를 선택해주세요.</string>
 

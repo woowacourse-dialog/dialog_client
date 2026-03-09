@@ -1,6 +1,7 @@
 package com.on.dialog.feature.creatediscussion.impl.viewmodel
 
 import androidx.compose.runtime.Immutable
+import com.on.dialog.core.common.extension.now
 import com.on.dialog.feature.creatediscussion.impl.mapper.toEndDateOffsetDays
 import com.on.dialog.feature.creatediscussion.impl.mapper.toFullNameRes
 import com.on.dialog.feature.creatediscussion.impl.mapper.toTrackCategory
@@ -18,13 +19,11 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.StringResource
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @Immutable
@@ -104,7 +103,7 @@ private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): Offlin
 
 @OptIn(ExperimentalTime::class)
 private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Online): OnlineDiscussionDraft {
-    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    val today = LocalDateTime.now().date
     val endDate = today.plus(DatePeriod(days = mode.selectedEndDateIndex.toEndDateOffsetDays()))
     return OnlineDiscussionDraft(
         title = title.trim(),

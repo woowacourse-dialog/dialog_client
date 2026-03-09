@@ -1,80 +1,56 @@
 package com.on.dialog.feature.creatediscussion.impl.mapper
 
+import com.on.dialog.core.common.extension.now
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode
 import com.on.dialog.model.discussion.draft.DraftValidationError
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import dialog.feature.creatediscussion.impl.generated.resources.Res
-import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_date_after_today
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_end_after_start
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_end_time_range
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_participant_min
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_past_date
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_start_time_range
-import kotlinx.datetime.LocalDate
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_time_after_now
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.StringResource
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 internal object DiscussionValidator {
     fun validateOffline(mode: DiscussionMode.Offline): DiscussionMode.Offline {
-        val now = Clock.System.now()
-            .toLocalDateTime(TimeZone.currentSystemDefault())
+        val now = LocalDateTime.now()
         val date = mode.selectedDate
         val startTime = mode.selectedStartTime
         val endTime = mode.selectedEndTime
 
-        // Domain에서 Date를 따로 저장하지 않아 dateError는 따로 처리
-        val dateError = if (date != null) {
-            if (date < now.date) Res.string.create_discussion_error_past_date else null
-        } else null
+        // Date 단독 검증은 명시적으로 처리하고, 시각 관련은 Domain validation 결과를 사용한다.
+        val dateError =
+            date?.let {
+                when {
+                    it < now.date -> Res.string.create_discussion_error_past_date
+                    else -> null
+                }
+            }
+        val offlineErrors = mode.collectOfflineValidationErrors(now)
 
         val startTimeError = if (startTime != null) {
-            val draft = OfflineDiscussionDraft(
-                title = "",
-                content = "",
-                category = "",
-                startAt = LocalDateTime(date ?: LocalDate(9999, 1, 1), startTime),
-                endAt = LocalDateTime(date ?: LocalDate(9999, 1, 1), endTime ?: LocalTime(23, 59)),
-                place = mode.place,
-                maxParticipantCount = mode.participantCount,
-            )
-            draft
-                .validate(now)
+            offlineErrors
                 .firstOrNull {
                     it is DraftValidationError.Offline.StartTimeOutOfRange ||
-                            it is DraftValidationError.Offline.StartNotBeforeEnd
+                            it is DraftValidationError.Offline.StartDateNotAfterToday ||
+                            (endTime != null && it is DraftValidationError.Offline.StartNotBeforeEnd)
                 }?.toMessage()
-        } else {
-            null
-        }
+        } else null
 
         val endTimeError = if (endTime != null) {
-            val draft = OfflineDiscussionDraft(
-                title = "",
-                content = "",
-                category = "",
-                startAt = LocalDateTime(
-                    date ?: LocalDate(9999, 1, 1),
-                    startTime ?: LocalTime(0, 0),
-                ),
-                endAt = LocalDateTime(date ?: LocalDate(9999, 1, 1), endTime),
-                place = mode.place,
-                maxParticipantCount = mode.participantCount,
-            )
-            draft
-                .validate(now)
+            offlineErrors
                 .firstOrNull {
                     it is DraftValidationError.Offline.EndTimeOutOfRange ||
-                            it is DraftValidationError.Offline.StartNotBeforeEnd
+                            it is DraftValidationError.Offline.EndDateNotAfterToday ||
+                            (startTime != null && it is DraftValidationError.Offline.StartNotBeforeEnd)
                 }?.toMessage()
-        } else {
-            null
-        }
+        } else null
 
         return mode.copy(
             selectedDateErrorMessage = dateError,
@@ -84,12 +60,55 @@ internal object DiscussionValidator {
     }
 }
 
-private fun DraftValidationError.toMessage(): StringResource = when (this) {
+private fun DiscussionMode.Offline.collectOfflineValidationErrors(
+    now: LocalDateTime,
+): List<DraftValidationError.Offline> {
+    val date = selectedDate ?: now.date
+    val start = selectedStartTime
+    val end = selectedEndTime
+
+    val draft = when {
+        start != null && end != null -> OfflineDiscussionDraft(
+            title = "",
+            content = "",
+            category = "",
+            startAt = LocalDateTime(date, start),
+            endAt = LocalDateTime(date, end),
+            place = place,
+            maxParticipantCount = participantCount,
+        )
+
+        start != null -> OfflineDiscussionDraft(
+            title = "",
+            content = "",
+            category = "",
+            startAt = LocalDateTime(date, start),
+            endAt = LocalDateTime(date, LocalTime(23, 59)),
+            place = place,
+            maxParticipantCount = participantCount,
+        )
+
+        end != null -> OfflineDiscussionDraft(
+            title = "",
+            content = "",
+            category = "",
+            startAt = LocalDateTime(date, LocalTime(0, 0)),
+            endAt = LocalDateTime(date, end),
+            place = place,
+            maxParticipantCount = participantCount,
+        )
+
+        else -> return emptyList()
+    }
+
+    return draft.validate(now).filterIsInstance<DraftValidationError.Offline>()
+}
+
+private fun DraftValidationError.Offline.toMessage(): StringResource = when (this) {
     DraftValidationError.Offline.StartNotBeforeEnd -> Res.string.create_discussion_error_end_after_start
     DraftValidationError.Offline.StartTimeOutOfRange -> Res.string.create_discussion_error_start_time_range
     DraftValidationError.Offline.EndTimeOutOfRange -> Res.string.create_discussion_error_end_time_range
     DraftValidationError.Offline.ParticipantCountTooLow -> Res.string.create_discussion_error_participant_min
-    DraftValidationError.Offline.StartDateNotAfterToday -> Res.string.create_discussion_error_date_after_today
-    DraftValidationError.Offline.EndDateNotAfterToday -> Res.string.create_discussion_error_date_after_today
-    DraftValidationError.Online.EndDateNotAfterToday -> Res.string.create_discussion_error_date_after_today
+    DraftValidationError.Offline.StartDateNotAfterToday -> Res.string.create_discussion_error_time_after_now
+    DraftValidationError.Offline.EndDateNotAfterToday -> Res.string.create_discussion_error_time_after_now
 }
