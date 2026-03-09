@@ -215,10 +215,10 @@ private fun CreateDiscussionForm(
 ) {
     Column(
         modifier = modifier
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = DialogTheme.spacing.large)
             .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
 
         LabeledTextField(
             title = uiState.title,
@@ -235,7 +235,7 @@ private fun CreateDiscussionForm(
             placeholder = stringResource(Res.string.create_discussion_placeholder_track),
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
 
         DialogToggle(
             checked = uiState.mode is DiscussionMode.Offline,
@@ -254,7 +254,7 @@ private fun CreateDiscussionForm(
             onIntent = onIntent,
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
 
         DiscussionContent(
             content = uiState.content,
@@ -275,7 +275,7 @@ private fun OnlineModeSection(
     ) {
         val onlineMode = uiState.mode as? DiscussionMode.Online ?: return@AnimatedVisibility
         Column {
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
             DialogDropdownMenu(
                 options = onlineMode.endDateOptions.map { stringResource(it) }.toImmutableList(),
                 selectedIndex = onlineMode.selectedEndDateIndex.takeIf { it >= 0 },
@@ -299,7 +299,7 @@ private fun OfflineModeSection(
     ) {
         val offlineMode = uiState.mode as? DiscussionMode.Offline ?: return@AnimatedVisibility
         Column {
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
             OfflineDiscussion(
                 place = offlineMode.place,
                 onPlaceChange = { onIntent(CreateDiscussionIntent.OnPlaceChange(it)) },
@@ -335,7 +335,7 @@ private fun SubmitButtonRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(all = 20.dp)
+            .padding(all = DialogTheme.spacing.large)
             .imePadding(),
         horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraExtraLarge)
     ) {
@@ -427,7 +427,7 @@ private fun OfflineDiscussion(
             onParticipantCountChange = onParticipantCountChange,
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
 
         DialogDatePicker(
             label = stringResource(Res.string.create_discussion_label_date),
