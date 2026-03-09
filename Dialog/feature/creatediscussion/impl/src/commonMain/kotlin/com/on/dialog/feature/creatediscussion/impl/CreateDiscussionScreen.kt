@@ -275,7 +275,7 @@ private fun OnlineModeSection(
     ) {
         val onlineMode = uiState.mode as? DiscussionMode.Online ?: return@AnimatedVisibility
         Column {
-            Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
+            Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
             DialogDropdownMenu(
                 options = onlineMode.endDateOptions.map { stringResource(it) }.toImmutableList(),
                 selectedIndex = onlineMode.selectedEndDateIndex.takeIf { it >= 0 },
@@ -299,7 +299,7 @@ private fun OfflineModeSection(
     ) {
         val offlineMode = uiState.mode as? DiscussionMode.Offline ?: return@AnimatedVisibility
         Column {
-            Spacer(modifier = Modifier.height(DialogTheme.spacing.large))
+            Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
             OfflineDiscussion(
                 place = offlineMode.place,
                 onPlaceChange = { onIntent(CreateDiscussionIntent.OnPlaceChange(it)) },
