@@ -35,6 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogDatePicker
@@ -54,12 +57,16 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionInt
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode
+import com.on.dialog.ui.component.DecisionDialog
 import com.on.dialog.ui.component.markdown.DialogMarkdown
 import com.on.dialog.ui.component.markdown.MarkdownEditor
 import dialog.feature.creatediscussion.impl.generated.resources.Res
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_button_cancel
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_button_submit
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_button_submit_loading
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_dialog_confirm
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_dialog_content
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_dialog_exit
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_end_time_range
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_past_date
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_start_time_range
@@ -99,6 +106,12 @@ internal fun CreateDiscussionScreen(
     val uiState: CreateDiscussionState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarState = LocalSnackbarDelegate.current
     var showMarkdownEditor by rememberSaveable { mutableStateOf(false) }
+    var showExitDialog by rememberSaveable { mutableStateOf(false) }
+
+    NavigationBackHandler(
+        state = rememberNavigationEventState(currentInfo = NavigationEventInfo.None),
+        onBackCompleted = { showExitDialog = true },
+    )
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -115,7 +128,7 @@ internal fun CreateDiscussionScreen(
 
     CreateDiscussionScreen(
         uiState = uiState,
-        onBackClick = goBack,
+        onBackClick = { showExitDialog = true },
         onContentClick = { showMarkdownEditor = true },
         onIntent = viewModel::onIntent,
         modifier = modifier,
@@ -129,6 +142,19 @@ internal fun CreateDiscussionScreen(
                 viewModel.onIntent(CreateDiscussionIntent.OnContentChange(newContent))
             },
             onExit = { showMarkdownEditor = false },
+        )
+    }
+
+    if (showExitDialog) {
+        DecisionDialog(
+            contentText = stringResource(Res.string.create_discussion_dialog_content),
+            confirmText = stringResource(Res.string.create_discussion_dialog_confirm),
+            onConfirm = {
+                showExitDialog = false
+                goBack()
+            },
+            dismissText = stringResource(Res.string.create_discussion_dialog_exit),
+            onDismiss = { showExitDialog = false },
         )
     }
 }

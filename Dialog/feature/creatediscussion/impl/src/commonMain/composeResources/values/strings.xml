@@ -40,4 +40,10 @@
     <string name="create_discussion_error_end_time_range">종료 시간은 오전 8시 ~ 오후 11시 사이여야 해요.</string>
     <string name="create_discussion_error_participant_min">최소 2명 이상이어야 해요.</string>
     <string name="create_discussion_error_date_after_today">오늘 이후 날짜를 선택해주세요.</string>
+
+    <string name="create_discussion_dialog_content">뒤로 가시면 변경사항이 저장되지 않습니다.\n정말 나가시겠습니까?</string>
+    <string name="create_discussion_dialog_confirm">뒤로가기</string>
+    <string name="create_discussion_dialog_exit">취소</string>
+    <string name="create_discussion_back">뒤로가기</string>
+    <string name="create_discussion_confirm">확인</string>
 </resources>
