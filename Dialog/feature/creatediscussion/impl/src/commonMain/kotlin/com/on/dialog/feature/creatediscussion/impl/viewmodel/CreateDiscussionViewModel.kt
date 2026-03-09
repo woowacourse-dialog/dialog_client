@@ -25,123 +25,135 @@ internal class CreateDiscussionViewModel(
 
     override fun onIntent(intent: CreateDiscussionIntent) {
         when (intent) {
-            is CreateDiscussionIntent.OnTitleChange -> {
-                if (intent.title.length > OfflineDiscussionDraft.MAX_TITLE_LENGTH) return
-                updateState { copy(title = intent.title) }
-            }
+            is CreateDiscussionIntent.OnTitleChange -> handleTitleChange(intent)
+            is CreateDiscussionIntent.OnContentChange -> handleContentChange(intent)
+            is CreateDiscussionIntent.OnTrackIndexChange -> handleTrackIndexChange(intent)
+            is CreateDiscussionIntent.OnMeetupEnabledChange -> handleMeetupEnabledChange(intent)
+            is CreateDiscussionIntent.OnPlaceChange -> handlePlaceChange(intent)
+            is CreateDiscussionIntent.OnParticipantCountChange -> handleParticipantCountChange(
+                intent
+            )
 
-            is CreateDiscussionIntent.OnContentChange -> {
-                updateState { copy(content = intent.content) }
-            }
+            is CreateDiscussionIntent.OnDateChange -> handleDateChange(intent)
+            is CreateDiscussionIntent.OnStartTimeChange -> handleStartTimeChange(intent)
+            is CreateDiscussionIntent.OnEndTimeChange -> handleEndTimeChange(intent)
+            is CreateDiscussionIntent.OnEndDateIndexChange -> handleEndDateIndexChange(intent)
+            CreateDiscussionIntent.OnSubmitClick -> handleSubmitClick()
+        }
+    }
 
-            is CreateDiscussionIntent.OnTrackIndexChange -> {
-                updateState { copy(selectedTrackIndex = intent.selectedIndex) }
-            }
+    private fun handleTitleChange(intent: CreateDiscussionIntent.OnTitleChange) {
+        if (intent.title.length > OfflineDiscussionDraft.MAX_TITLE_LENGTH) return
+        updateState { copy(title = intent.title) }
+    }
 
-            is CreateDiscussionIntent.OnMeetupEnabledChange -> {
-                updateState {
-                    copy(
-                        mode = if (intent.enabled) offlineModeCache else onlineModeCache,
-                    )
-                }
-            }
+    private fun handleContentChange(intent: CreateDiscussionIntent.OnContentChange) {
+        updateState { copy(content = intent.content) }
+    }
 
-            is CreateDiscussionIntent.OnPlaceChange -> {
-                if (intent.place.length > OfflineDiscussionDraft.MAX_PLACE_LENGTH) return
-                updateState {
-                    val currentMode = mode
-                    if (currentMode is DiscussionMode.Offline) {
-                        val updatedMode = currentMode.copy(place = intent.place)
-                        offlineModeCache = updatedMode
-                        copy(mode = updatedMode)
-                    } else {
-                        this
-                    }
-                }
-            }
+    private fun handleTrackIndexChange(intent: CreateDiscussionIntent.OnTrackIndexChange) {
+        updateState { copy(selectedTrackIndex = intent.selectedIndex) }
+    }
 
-            is CreateDiscussionIntent.OnParticipantCountChange -> {
-                updateState {
-                    val currentMode = mode
-                    if (currentMode is Offline) {
-                        val updatedMode = currentMode.copy(
-                            participantCount = intent.participantCount.coerceIn(
-                                OfflineDiscussionDraft.MIN_PARTICIPANT_COUNT,
-                                OfflineDiscussionDraft.MAX_PARTICIPANT_COUNT
-                            ),
-                        )
-                        offlineModeCache = updatedMode
-                        copy(
-                            mode = updatedMode,
-                        )
-                    } else {
-                        this
-                    }
-                }
-            }
+    private fun handleMeetupEnabledChange(intent: CreateDiscussionIntent.OnMeetupEnabledChange) {
+        updateState {
+            copy(
+                mode = if (intent.enabled) offlineModeCache else onlineModeCache,
+            )
+        }
+    }
 
-            is CreateDiscussionIntent.OnDateChange -> {
-                updateState {
-                    val currentMode = mode
-                    if (currentMode is Offline) {
-                        val updated = currentMode.copy(selectedDate = intent.date)
-                        val validated = DiscussionValidator.validateOffline(updated)
-                        offlineModeCache = validated
-                        copy(mode = validated)
-                    } else {
-                        this
-                    }
-                }
-            }
-
-            is CreateDiscussionIntent.OnStartTimeChange -> {
-                updateState {
-                    val currentMode = mode
-                    if (currentMode is Offline) {
-                        val updated = currentMode.copy(selectedStartTime = intent.time)
-                        val validated = DiscussionValidator.validateOffline(updated)
-                        offlineModeCache = validated
-                        copy(mode = validated)
-                    } else {
-                        this
-                    }
-                }
-            }
-
-            is CreateDiscussionIntent.OnEndTimeChange -> {
-                updateState {
-                    val currentMode = mode
-                    if (currentMode is Offline) {
-                        val updated = currentMode.copy(selectedEndTime = intent.time)
-                        val validated = DiscussionValidator.validateOffline(updated)
-                        offlineModeCache = validated
-                        copy(mode = validated)
-                    } else {
-                        this
-                    }
-                }
-            }
-
-            is CreateDiscussionIntent.OnEndDateIndexChange -> {
-                updateState {
-                    val currentMode = mode
-                    if (currentMode is Online) {
-                        val updatedMode =
-                            currentMode.copy(selectedEndDateIndex = intent.selectedIndex)
-                        onlineModeCache = updatedMode
-                        copy(mode = updatedMode)
-                    } else {
-                        this
-                    }
-                }
-            }
-
-            CreateDiscussionIntent.OnSubmitClick -> {
-                if (currentState.isSubmitting) return
-                if (!currentState.isSubmitEnabled) return
-                submitDiscussion()
+    private fun handlePlaceChange(intent: CreateDiscussionIntent.OnPlaceChange) {
+        if (intent.place.length > OfflineDiscussionDraft.MAX_PLACE_LENGTH) return
+        updateState {
+            val currentMode = mode
+            if (currentMode is Offline) {
+                val updatedMode = currentMode.copy(place = intent.place)
+                offlineModeCache = updatedMode
+                copy(mode = updatedMode)
+            } else {
+                this
             }
         }
+    }
+
+    private fun handleParticipantCountChange(intent: CreateDiscussionIntent.OnParticipantCountChange) {
+        updateState {
+            val currentMode = mode
+            if (currentMode is Offline) {
+                val updatedMode = currentMode.copy(
+                    participantCount = intent.participantCount.coerceIn(
+                        OfflineDiscussionDraft.MIN_PARTICIPANT_COUNT,
+                        OfflineDiscussionDraft.MAX_PARTICIPANT_COUNT,
+                    ),
+                )
+                offlineModeCache = updatedMode
+                copy(mode = updatedMode)
+            } else {
+                this
+            }
+        }
+    }
+
+    private fun handleDateChange(intent: CreateDiscussionIntent.OnDateChange) {
+        updateState {
+            val currentMode = mode
+            if (currentMode is Offline) {
+                val updated = currentMode.copy(selectedDate = intent.date)
+                val validated = DiscussionValidator.validateOffline(updated)
+                offlineModeCache = validated
+                copy(mode = validated)
+            } else {
+                this
+            }
+        }
+    }
+
+    private fun handleStartTimeChange(intent: CreateDiscussionIntent.OnStartTimeChange) {
+        updateState {
+            val currentMode = mode
+            if (currentMode is Offline) {
+                val updated = currentMode.copy(selectedStartTime = intent.time)
+                val validated = DiscussionValidator.validateOffline(updated)
+                offlineModeCache = validated
+                copy(mode = validated)
+            } else {
+                this
+            }
+        }
+    }
+
+    private fun handleEndTimeChange(intent: CreateDiscussionIntent.OnEndTimeChange) {
+        updateState {
+            val currentMode = mode
+            if (currentMode is Offline) {
+                val updated = currentMode.copy(selectedEndTime = intent.time)
+                val validated = DiscussionValidator.validateOffline(updated)
+                offlineModeCache = validated
+                copy(mode = validated)
+            } else {
+                this
+            }
+        }
+    }
+
+    private fun handleEndDateIndexChange(intent: CreateDiscussionIntent.OnEndDateIndexChange) {
+        updateState {
+            val currentMode = mode
+            if (currentMode is Online) {
+                val updatedMode = currentMode.copy(selectedEndDateIndex = intent.selectedIndex)
+                onlineModeCache = updatedMode
+                copy(mode = updatedMode)
+            } else {
+                this
+            }
+        }
+    }
+
+    private fun handleSubmitClick() {
+        if (currentState.isSubmitting) return
+        if (!currentState.isSubmitEnabled) return
+        submitDiscussion()
     }
 
     private fun submitDiscussion() {
