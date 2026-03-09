@@ -249,30 +249,43 @@ private fun CreateDiscussionScreen(
             )
 
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 20.dp)
-                .imePadding(),
-            horizontalArrangement = Arrangement.spacedBy(
-                DialogTheme.spacing.extraExtraLarge
-            )
-        ) {
-            DialogButton(
-                text = stringResource(Res.string.create_discussion_button_cancel),
-                style = DialogButtonStyle.Secondary,
-                onClick = onBackClick,
-                modifier = Modifier.weight(1f),
-            )
-            DialogButton(
-                text = if (uiState.isSubmitting) stringResource(Res.string.create_discussion_button_submit_loading) else stringResource(
-                    Res.string.create_discussion_button_submit
-                ),
-                onClick = { onIntent(CreateDiscussionIntent.OnSubmitClick) },
-                modifier = Modifier.weight(1f),
-                enabled = uiState.isSubmitEnabled && !uiState.isSubmitting,
-            )
-        }
+        SubmitButtonRow(
+            isSubmitting = uiState.isSubmitting,
+            isSubmitEnabled = uiState.isSubmitEnabled,
+            onBackClick = onBackClick,
+            onSubmitClick = { onIntent(CreateDiscussionIntent.OnSubmitClick) },
+        )
+    }
+}
+
+@Composable
+private fun SubmitButtonRow(
+    isSubmitting: Boolean,
+    isSubmitEnabled: Boolean,
+    onBackClick: () -> Unit,
+    onSubmitClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(all = 20.dp)
+            .imePadding(),
+        horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.extraExtraLarge)
+    ) {
+        DialogButton(
+            text = stringResource(Res.string.create_discussion_button_cancel),
+            style = DialogButtonStyle.Secondary,
+            onClick = onBackClick,
+            modifier = Modifier.weight(1f),
+        )
+        DialogButton(
+            text = if (isSubmitting) stringResource(Res.string.create_discussion_button_submit_loading)
+            else stringResource(Res.string.create_discussion_button_submit),
+            onClick = onSubmitClick,
+            modifier = Modifier.weight(1f),
+            enabled = isSubmitEnabled && !isSubmitting,
+        )
     }
 }
 
