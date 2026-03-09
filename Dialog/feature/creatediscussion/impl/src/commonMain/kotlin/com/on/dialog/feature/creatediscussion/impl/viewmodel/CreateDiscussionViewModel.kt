@@ -159,8 +159,7 @@ internal class CreateDiscussionViewModel(
     private fun submitDiscussion() {
         updateState { copy(isSubmitting = true) }
         viewModelScope.launch {
-            val draft = currentState.toDomain()
-            val result = when (draft) {
+            val result = when (val draft = currentState.toDomain()) {
                 is OfflineDiscussionDraft -> discussionRepository.createOfflineDiscussion(draft)
                 is OnlineDiscussionDraft -> discussionRepository.createOnlineDiscussion(draft)
             }
