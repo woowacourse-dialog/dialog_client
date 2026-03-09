@@ -80,9 +80,9 @@ internal sealed interface DiscussionMode {
     ) : DiscussionMode {
         override val isValid: Boolean
             get() = place.isNotBlank() &&
-                    selectedDate != null &&
-                    selectedStartTime != null &&
-                    selectedEndTime != null
+                selectedDate != null &&
+                selectedStartTime != null &&
+                selectedEndTime != null
     }
 }
 

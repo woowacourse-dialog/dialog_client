@@ -199,6 +199,6 @@ private fun DialogTimePickerPreviewContent() {
         selectedTime = selectedTime,
         is24Hour = true,
         onDismiss = { },
-        onConfirm = {_,_ ->},
+        onConfirm = { _, _ -> },
     )
 }

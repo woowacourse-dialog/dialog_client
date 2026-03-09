@@ -186,6 +186,6 @@ private fun DialogDatePickerPreviewContent() {
     DialogDatePickerDialog(
         selectedDate = selectedDate,
         onDismiss = { selectedDate = null },
-        onConfirm = {}
+        onConfirm = {},
     )
 }
