@@ -183,7 +183,7 @@ private fun CreateDiscussionForm(
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
-        TitleField(
+        LabeledTextField(
             title = uiState.title,
             onTitleChange = { onIntent(CreateDiscussionIntent.OnTitleChange(it)) },
             label = stringResource(Res.string.create_discussion_label_title),
@@ -216,7 +216,7 @@ private fun CreateDiscussionForm(
             uiState = uiState,
             onIntent = onIntent,
         )
-        
+
         Spacer(modifier = Modifier.height(20.dp))
 
         DiscussionContent(
@@ -319,7 +319,7 @@ private fun SubmitButtonRow(
 }
 
 @Composable
-fun DiscussionContent(
+private fun DiscussionContent(
     content: String,
     onContentChange: () -> Unit,
     modifier: Modifier = Modifier,
@@ -377,7 +377,7 @@ private fun OfflineDiscussion(
     onEndTimeSelected: (LocalTime) -> Unit,
 ) {
     Column {
-        TitleField(
+        LabeledTextField(
             title = place,
             onTitleChange = onPlaceChange,
             label = stringResource(Res.string.create_discussion_label_place),
@@ -464,7 +464,7 @@ private fun ParticipantContent(
 }
 
 @Composable
-private fun TitleField(
+private fun LabeledTextField(
     title: String,
     onTitleChange: (String) -> Unit,
     label: String,
