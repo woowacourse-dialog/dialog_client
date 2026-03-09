@@ -522,7 +522,7 @@ private fun LabeledTextField(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 4.dp),
+                .padding(top = DialogTheme.spacing.extraSmall),
             horizontalArrangement = Arrangement.End,
         ) {
             Text(
@@ -532,7 +532,7 @@ private fun LabeledTextField(
                     50,
                 ),
                 color = DialogTheme.colorScheme.primary,
-                fontSize = 12.sp,
+                style = DialogTheme.typography.bodySmall,
             )
         }
     }
