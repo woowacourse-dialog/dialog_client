@@ -54,6 +54,7 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionInt
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode
+import com.on.dialog.ui.component.markdown.DialogMarkdown
 import com.on.dialog.ui.component.markdown.MarkdownEditor
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.LocalDate
@@ -261,21 +262,24 @@ fun DiscussionContent(
             .fillMaxWidth()
             .height(200.dp)
             .clip(DialogTheme.shapes.small)
-            .background(color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F),)
+            .background(color = DialogTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3F))
             .clickable(onClick = { onContentChange() })
             .padding(all = DialogTheme.spacing.large)
             .verticalScrollbar(scrollState)
     ) {
-        Text(
-            text = content.ifEmpty { "마크다운 형식으로 내용을 작성해주세요." },
-            style = DialogTheme.typography.bodyLarge,
-            color = if (content.isEmpty())
-                DialogTheme.colorScheme.onSurfaceVariant
-            else
-                DialogTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.verticalScroll(scrollState),
-        )
+        if (content.isEmpty()) {
+            Text(
+                text = "마크다운 형식으로 내용을 작성해주세요.",
+                style = DialogTheme.typography.bodyLarge,
+                color = DialogTheme.colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.SemiBold,
+            )
+        } else {
+            DialogMarkdown(
+                content = content,
+                modifier = Modifier.verticalScroll(scrollState),
+            )
+        }
     }
 }
 
