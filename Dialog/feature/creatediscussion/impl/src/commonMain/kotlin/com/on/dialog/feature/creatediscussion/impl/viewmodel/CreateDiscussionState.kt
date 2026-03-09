@@ -80,25 +80,31 @@ internal sealed interface DiscussionMode {
     ) : DiscussionMode {
         override val isValid: Boolean
             get() = place.isNotBlank() &&
-                selectedDate != null &&
-                selectedStartTime != null &&
-                selectedEndTime != null
+                    selectedDate != null &&
+                    selectedStartTime != null &&
+                    selectedEndTime != null
     }
 }
 
-private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): OfflineDiscussionDraft =
-    OfflineDiscussionDraft(
+private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): OfflineDiscussionDraft {
+    val selectedDate = requireNotNull(mode.selectedDate) { "selectedDate가 null입니다." }
+    val selectedStartTime =
+        requireNotNull(mode.selectedStartTime) { "selectedStartTime가 null입니다." }
+    val selectedEndTime = requireNotNull(mode.selectedEndTime) { "selectedEndTime가 null입니다." }
+
+    return OfflineDiscussionDraft(
         title = title.trim(),
         content = content.trim(),
-        startAt = mode.selectedDate!!.atTime(
-            mode.selectedStartTime!!.hour,
-            mode.selectedStartTime.minute,
-        ),
-        endAt = mode.selectedDate.atTime(mode.selectedEndTime!!.hour, mode.selectedEndTime.minute),
+        startAt = selectedDate.atTime(selectedStartTime.hour, selectedStartTime.minute),
+        endAt = selectedDate.atTime(selectedEndTime.hour, selectedEndTime.minute),
         place = mode.place.trim(),
-        maxParticipantCount = mode.participantCount.coerceIn(2, 10),
+        maxParticipantCount = mode.participantCount.coerceIn(
+            OfflineDiscussionDraft.MIN_PARTICIPANT_COUNT,
+            OfflineDiscussionDraft.MAX_PARTICIPANT_COUNT,
+        ),
         category = selectedTrackIndex.toTrackCategory(),
     )
+}
 
 @OptIn(ExperimentalTime::class)
 private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Online): OnlineDiscussionDraft {
