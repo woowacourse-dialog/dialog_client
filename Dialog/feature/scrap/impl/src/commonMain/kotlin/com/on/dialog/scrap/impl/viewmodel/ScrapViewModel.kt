@@ -13,6 +13,7 @@ import dialog.feature.scrap.impl.generated.resources.Res
 import dialog.feature.scrap.impl.generated.resources.fetch_scrap_discussions_failure_message
 import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 
@@ -22,6 +23,7 @@ internal class ScrapViewModel(
 ) : BaseViewModel<ScrapIntent, ScrapState, ScrapEffect>(ScrapState.Loading()) {
     private var nextCursorId: Long? = null
     private var hasNext: Boolean = true
+    private var previousScrapCatalogs: ImmutableList<ScrapCatalog> = persistentListOf()
 
     init {
         observeScrapCatalogs()
@@ -61,13 +63,7 @@ internal class ScrapViewModel(
 
     private fun handleFetchScrapFailure(throwable: Throwable) {
         Napier.e(throwable.message.orEmpty(), throwable)
-        updateState {
-            if (currentState.scraps.isEmpty()) {
-                ScrapState.Empty
-            } else {
-                ScrapState.Content(scraps = currentState.scraps)
-            }
-        }
+        updateState { update(persistentListOf()) }
         emitEffect(
             ScrapEffect.ShowSnackbar(
                 message = Res.string.fetch_scrap_discussions_failure_message,
@@ -91,12 +87,14 @@ internal class ScrapViewModel(
     private fun observeScrapCatalogs() {
         viewModelScope.launch {
             scrapRepository.scrapCatalogs.collect { currentCatalogs: ImmutableList<ScrapCatalog> ->
+                previousScrapCatalogs = currentCatalogs
+
                 updateState {
-                    if (scraps.isEmpty()) {
+                    if (previousScrapCatalogs.isEmpty()) {
                         ScrapState.Empty
                     } else {
                         ScrapState.Content(
-                            scraps = currentCatalogs
+                            previousScrapCatalogs
                                 .map { it.toUiModel() }
                                 .toImmutableList(),
                         )
@@ -107,17 +105,19 @@ internal class ScrapViewModel(
     }
 
     private fun handleLoginStatusChanged(isLoggedIn: Boolean?) {
-        isLoggedIn?.let {
-            when (it) {
-                true -> {
-                    refresh()
-                }
+        when (isLoggedIn) {
+            null -> {
+                Unit
+            }
 
-                false -> {
-                    nextCursorId = null
-                    hasNext = true
-                    updateState { ScrapState.UnAuthorized }
-                }
+            true -> {
+                refresh()
+            }
+
+            false -> {
+                nextCursorId = null
+                hasNext = true
+                updateState { ScrapState.UnAuthorized }
             }
         }
     }
