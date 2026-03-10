@@ -1,12 +1,14 @@
 package com.on.dialog.network.di
 
 import com.on.dialog.network.service.AuthService
+import com.on.dialog.network.service.CommentService
 import com.on.dialog.network.service.DiscussionService
 import com.on.dialog.network.service.LikeService
 import com.on.dialog.network.service.ParticipantService
 import com.on.dialog.network.service.ScrapService
 import com.on.dialog.network.service.UserService
 import com.on.dialog.network.service.createAuthService
+import com.on.dialog.network.service.createCommentService
 import com.on.dialog.network.service.createDiscussionService
 import com.on.dialog.network.service.createLikeService
 import com.on.dialog.network.service.createParticipantService
@@ -36,5 +38,8 @@ val serviceModule = module {
     }
     single<ParticipantService> {
         get<Ktorfit>().createParticipantService()
+    }
+    single<CommentService> {
+        get<Ktorfit>().createCommentService()
     }
 }

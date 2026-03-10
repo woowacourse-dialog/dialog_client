@@ -1,12 +1,14 @@
 package com.on.dialog.network.di
 
 import com.on.dialog.network.datasource.AuthDatasource
+import com.on.dialog.network.datasource.CommentDatasource
 import com.on.dialog.network.datasource.DiscussionDatasource
 import com.on.dialog.network.datasource.LikeDatasource
 import com.on.dialog.network.datasource.ParticipantDatasource
 import com.on.dialog.network.datasource.ScrapDatasource
 import com.on.dialog.network.datasource.UserDatasource
 import com.on.dialog.network.datasourceimpl.AuthRemoteDatasource
+import com.on.dialog.network.datasourceimpl.CommentRemoteDatasource
 import com.on.dialog.network.datasourceimpl.DiscussionRemoteDatasource
 import com.on.dialog.network.datasourceimpl.LikeRemoteDatasource
 import com.on.dialog.network.datasourceimpl.ParticipantRemoteDatasource
@@ -35,5 +37,8 @@ val datasourceModule = module {
     }
     single<ParticipantDatasource> {
         ParticipantRemoteDatasource(participantService = get())
+    }
+    single<CommentDatasource> {
+        CommentRemoteDatasource(service = get())
     }
 }

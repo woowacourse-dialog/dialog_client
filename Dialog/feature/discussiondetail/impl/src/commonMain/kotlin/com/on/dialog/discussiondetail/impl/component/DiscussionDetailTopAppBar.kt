@@ -27,6 +27,7 @@ import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.action_delete
 import dialog.feature.discussiondetail.impl.generated.resources.action_edit
+import dialog.feature.discussiondetail.impl.generated.resources.action_more
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -65,7 +66,10 @@ private fun DiscussionDetailActions(
 
     Box {
         DialogIconButton(onClick = { showMenu = true }) {
-            Icon(imageVector = DialogIcons.MoreVert, contentDescription = "더보기")
+            Icon(
+                imageVector = DialogIcons.MoreVert,
+                contentDescription = stringResource(Res.string.action_more),
+            )
         }
 
         DetailDropDownMenu(

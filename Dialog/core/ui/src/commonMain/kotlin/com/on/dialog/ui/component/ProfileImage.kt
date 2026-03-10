@@ -1,6 +1,5 @@
 package com.on.dialog.ui.component
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -16,7 +15,6 @@ import dialog.core.ui.generated.resources.no_profile
 @Composable
 fun ProfileImage(
     imageUrl: String,
-    contentDescription: String,
     modifier: Modifier = Modifier,
     crossfade: Boolean = true,
     onSuccess: () -> Unit = {},
@@ -26,7 +24,7 @@ fun ProfileImage(
 ) {
     DialogAsyncImage(
         imageUrl = imageUrl,
-        contentDescription = contentDescription,
+        contentDescription = "Profile Image",
         placeholder = Res.drawable.no_profile,
         fallback = Res.drawable.no_profile,
         error = Res.drawable.no_profile,
@@ -35,7 +33,6 @@ fun ProfileImage(
         onLoading = onLoading,
         onError = onError,
         modifier = modifier
-            .border(width = 0.5.dp, color = DialogTheme.colorScheme.onSurface, shape = CircleShape)
             .clip(CircleShape)
             .clickable(enabled = onClick != null, onClick = { onClick?.invoke() }),
     )
@@ -47,7 +44,6 @@ private fun ProfileImagePreview() {
     DialogTheme {
         ProfileImage(
             imageUrl = "",
-            contentDescription = "",
             modifier = Modifier.size(32.dp),
         )
     }

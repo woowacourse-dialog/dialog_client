@@ -103,6 +103,7 @@ fun MarkdownEditor(
         focusRequester = focusRequester,
         content = content,
         onContentChanged = { content = it },
+        isConfirmEnabled = content.text.isNotBlank() && content.text != initialContent,
         selectedTab = selectedTab,
         onSelectedTabChanged = { selectedTab = it },
         modifier = modifier,
@@ -118,6 +119,7 @@ private fun MarkdownEditor(
     onShowExitDialog: (Boolean) -> Unit,
     focusRequester: FocusRequester,
     content: TextFieldValue,
+    isConfirmEnabled: Boolean,
     onContentChanged: (TextFieldValue) -> Unit,
     selectedTab: RendererTab,
     onSelectedTabChanged: (RendererTab) -> Unit,
@@ -141,6 +143,7 @@ private fun MarkdownEditor(
         MarkdownEditorTopAppBar(
             onBackPress = onBackPress,
             onConfirm = { onConfirm(content.text) },
+            isConfirmEnabled = isConfirmEnabled,
             selectedTab = selectedTab,
             onSelectedTabChanged = onSelectedTabChanged,
         )
@@ -307,6 +310,7 @@ private fun MarkdownEditorPreviewContent(
         focusRequester = focusRequester,
         content = TextFieldValue("# Hello World\n\nThis is a **bold** statement."),
         onContentChanged = {},
+        isConfirmEnabled = true,
         selectedTab = selectedTab,
         onSelectedTabChanged = {},
     )

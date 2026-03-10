@@ -10,4 +10,22 @@ sealed interface DiscussionDetailIntent : UiIntent {
     data object Participate : DiscussionDetailIntent
 
     data object GenerateSummary : DiscussionDetailIntent
+
+    data class OnSubmitComment(
+        val content: String,
+    ) : DiscussionDetailIntent
+
+    data class OnSubmitReply(
+        val commentId: Long,
+        val content: String,
+    ) : DiscussionDetailIntent
+
+    data class OnEditComment(
+        val commentId: Long,
+        val content: String,
+    ) : DiscussionDetailIntent
+
+    data class OnDeleteComment(
+        val commentId: Long,
+    ) : DiscussionDetailIntent
 }

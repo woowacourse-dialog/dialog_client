@@ -27,6 +27,31 @@
     <!-- Actions -->
     <string name="action_edit">수정</string>
     <string name="action_delete">삭제</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_more">더보기</string>
+    <string name="discussion_delete_confirm">정말 삭제하시겠습니까?</string>
+
+    <!-- Header -->
+    <string name="header_like_content_description">좋아요</string>
+    <string name="header_bookmark_content_description">북마크</string>
+    <string name="header_created_at">작성일</string>
+    <string name="header_info">정보</string>
+    <string name="header_participants_format">참여자 (%1$s)</string>
+
+    <!-- Comment -->
+    <string name="comment_add_opinion">의견 남기기</string>
+    <string name="comment_count_format">댓글 %1$d개</string>
+    <string name="comment_reply_write">답글 쓰기</string>
+    <string name="comment_edit_write">수정하기</string>
+    <string name="comment_delete_write">삭제하기</string>
+    <string name="comment_placeholder">댓글을 입력해 주세요</string>
+    <string name="comment_close">닫기</string>
+
+    <!-- Track -->
+    <string name="track_common">공통</string>
+    <string name="track_android">안드로이드</string>
+    <string name="track_backend">백엔드</string>
+    <string name="track_frontend">프론트엔드</string>
 
     <!-- Error Message -->
     <string name="error_common">오류가 발생했습니다</string>
@@ -34,4 +59,8 @@
     <string name="error_not_my_discussion">토론 생성자만 가능합니다</string>
     <string name="error_already_started">이미 시작된 토론입니다</string>
     <string name="error_fetch_discussion_detail">토론 상세 정보를 가져오는데 실패했습니다</string>
+
+    <!-- Message -->
+    <string name="message_comment_delete_success">삭제했습니다</string>
+    <string name="message_comment_edit_success">수정했습니다</string>
 </resources>
