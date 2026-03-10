@@ -59,12 +59,6 @@ internal class ScrapViewModel(
     private fun handleFetchScrapSuccess(result: ScrapCatalogCursorPage) {
         nextCursorId = result.nextCursorId
         hasNext = result.hasNext
-
-        updateState {
-            val newDiscussions =
-                result.scrapCatalog.map { catalog: ScrapCatalog -> catalog.toUiModel() }
-            update(newDiscussions.toImmutableList())
-        }
     }
 
     private fun handleFetchScrapFailure(throwable: Throwable) {
