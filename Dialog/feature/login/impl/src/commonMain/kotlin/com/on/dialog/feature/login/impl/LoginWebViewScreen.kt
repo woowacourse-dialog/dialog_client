@@ -51,13 +51,15 @@ fun LoginWebViewScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                LoginEffect.GoBack -> {
+                LoginEffect.OnLoginSuccess -> {
                     appLoginState.setLoggedIn(isLoggedIn = true)
+                }
+
+                LoginEffect.GoBack -> {
                     goBack()
                 }
 
                 LoginEffect.NavigateToSignUp -> {
-                    appLoginState.setLoggedIn(isLoggedIn = true)
                     navigateToSignUp()
                 }
 

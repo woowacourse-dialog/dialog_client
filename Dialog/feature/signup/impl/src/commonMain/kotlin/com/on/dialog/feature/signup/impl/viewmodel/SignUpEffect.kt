@@ -5,6 +5,7 @@ import com.on.dialog.ui.viewmodel.UiEffect
 import org.jetbrains.compose.resources.StringResource
 
 interface SignUpEffect : UiEffect {
+    data object OnLoginSuccess : SignUpEffect
     data object NavigateHome : SignUpEffect
 
     data class ShowSnackbar(

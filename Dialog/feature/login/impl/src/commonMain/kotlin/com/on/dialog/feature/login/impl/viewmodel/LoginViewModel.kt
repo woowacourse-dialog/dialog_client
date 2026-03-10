@@ -54,7 +54,12 @@ class LoginViewModel(
 
     private fun handleSaveUserSessionSuccess(isNewUser: Boolean) {
         updateState { copy(isLoginComplete = true, isNewUser = isNewUser) }
-        emitEffect(if (isNewUser) LoginEffect.NavigateToSignUp else LoginEffect.GoBack)
+        if (isNewUser) {
+            emitEffect(LoginEffect.NavigateToSignUp)
+        } else {
+            emitEffect(LoginEffect.GoBack)
+            emitEffect(LoginEffect.OnLoginSuccess)
+        }
     }
 
     private fun handleSaveUserSessionFailure() {

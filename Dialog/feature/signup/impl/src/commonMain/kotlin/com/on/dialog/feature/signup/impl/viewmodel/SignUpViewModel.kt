@@ -59,6 +59,7 @@ class SignUpViewModel(
                         state = SnackbarState.POSITIVE,
                     ),
                 )
+                emitEffect(SignUpEffect.OnLoginSuccess)
                 emitEffect(SignUpEffect.NavigateHome)
             }.onFailure {
                 authRepository.logout()
