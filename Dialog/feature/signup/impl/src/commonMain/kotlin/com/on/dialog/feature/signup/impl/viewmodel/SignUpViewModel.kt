@@ -18,6 +18,7 @@ class SignUpViewModel(
 ) : BaseViewModel<SignUpIntent, SignUpState, SignUpEffect>(initialState = SignUpState()) {
     override fun onIntent(intent: SignUpIntent) {
         when (intent) {
+            SignUpIntent.CancelSignUp -> cancelSignUp()
             is SignUpIntent.SelectTrack -> updateState { copy(selectedTrack = intent.track) }
             is SignUpIntent.ToggleNotification -> updateState { copy(isNotificationEnabled = intent.enabled) }
             SignUpIntent.ValidateAndSignUp -> handleSignup()
@@ -46,6 +47,14 @@ class SignUpViewModel(
                         ),
                     )
                 }
+        }
+    }
+
+    private fun cancelSignUp() {
+        viewModelScope.launch {
+            sessionRepository.clearSession()
+            sessionRepository.clearUserId()
+            emitEffect(SignUpEffect.ExitSignUp)
         }
     }
 

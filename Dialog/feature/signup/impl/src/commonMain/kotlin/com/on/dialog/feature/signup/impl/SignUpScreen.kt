@@ -16,6 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogTopAppBar
@@ -45,6 +48,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SignUpScreen(
+    exitSignUp: () -> Unit,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = koinViewModel(),
@@ -58,15 +62,27 @@ fun SignUpScreen(
         .map { stringResource(it.toFullNameRes()) }
         .toImmutableList()
 
+    NavigationBackHandler(
+        state = rememberNavigationEventState(currentInfo = NavigationEventInfo.None),
+        isBackEnabled = true,
+        onBackCompleted = { viewModel.onIntent(SignUpIntent.CancelSignUp) },
+    )
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect: SignUpEffect ->
             when (effect) {
+                SignUpEffect.ExitSignUp -> {
+                    appLoginState.setLoggedIn(isLoggedIn = false)
+                    exitSignUp()
+                }
+
                 SignUpEffect.NavigateHome -> navigateToHome()
 
                 is SignUpEffect.ShowSnackbar -> snackbarHostState.showSnackbar(
                     message = getString(effect.stringResource),
                     state = effect.state,
                 )
+
                 SignUpEffect.OnLoginSuccess -> {
                     appLoginState.setLoggedIn(isLoggedIn = true)
                 }

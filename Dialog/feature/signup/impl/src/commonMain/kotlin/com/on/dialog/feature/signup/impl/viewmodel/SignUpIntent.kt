@@ -4,6 +4,8 @@ import com.on.dialog.model.common.Track
 import com.on.dialog.ui.viewmodel.UiIntent
 
 sealed interface SignUpIntent : UiIntent {
+    data object CancelSignUp : SignUpIntent
+
     data class SelectTrack(
         val track: Track,
     ) : SignUpIntent
