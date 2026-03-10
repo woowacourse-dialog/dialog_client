@@ -4,11 +4,12 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @Stable
 class AppLoginState {
     private val _isLoggedIn = MutableStateFlow<Boolean?>(null)
-    val isLoggedIn: StateFlow<Boolean?> = _isLoggedIn
+    val isLoggedIn: StateFlow<Boolean?> = _isLoggedIn.asStateFlow()
 
     fun setLoggedIn(isLoggedIn: Boolean) {
         _isLoggedIn.value = isLoggedIn
