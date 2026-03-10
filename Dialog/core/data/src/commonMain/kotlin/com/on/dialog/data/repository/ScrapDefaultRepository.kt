@@ -28,15 +28,9 @@ internal class ScrapDefaultRepository(
             .onSuccess { page: ScrapCatalogCursorPage ->
                 _scrapCatalogs.update { current: ImmutableList<ScrapCatalog> ->
                     if (lastCursorId == null) {
-                        if (current.isEmpty()) {
-                            page.scrapCatalog
-                                .distinctBy { it.catalogContent.id }
-                                .toImmutableList()
-                        } else {
-                            (current + page.scrapCatalog)
-                                .distinctBy { it.catalogContent.id }
-                                .toImmutableList()
-                        }
+                        page.scrapCatalog
+                            .distinctBy { it.catalogContent.id }
+                            .toImmutableList()
                     } else {
                         (current + page.scrapCatalog)
                             .distinctBy { it.catalogContent.id }
