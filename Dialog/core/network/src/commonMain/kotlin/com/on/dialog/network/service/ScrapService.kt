@@ -2,8 +2,8 @@ package com.on.dialog.network.service
 
 import com.on.dialog.network.dto.common.DataResponse
 import com.on.dialog.network.dto.scrap.ScrapCursorPageResponse
-import com.on.dialog.network.dto.scrap.ScrapSuccessResponse
 import com.on.dialog.network.dto.scrap.ScrapStatusResponse
+import com.on.dialog.network.dto.scrap.ScrapSuccessResponse
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST

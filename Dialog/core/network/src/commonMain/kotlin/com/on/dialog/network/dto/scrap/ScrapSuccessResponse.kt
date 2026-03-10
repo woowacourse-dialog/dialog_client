@@ -64,7 +64,9 @@ data class ScrapSuccessResponse(
                 )
             }
 
-            else -> error("Unsupported discussionType: $discussionType")
+            else -> {
+                error("Unsupported discussionType: $discussionType")
+            }
         }
     }
 
