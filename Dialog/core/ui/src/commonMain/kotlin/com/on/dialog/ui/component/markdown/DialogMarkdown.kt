@@ -71,6 +71,9 @@ fun DialogMarkdown(
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
                 MarkdownHeader(it.content, it.node, style = typography.titleLarge)
             },
+            eol = {
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
+            },
         ),
         typography = markdownTypography(
             // 일반 텍스트
