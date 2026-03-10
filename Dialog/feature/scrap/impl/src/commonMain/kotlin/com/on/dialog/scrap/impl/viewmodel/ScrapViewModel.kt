@@ -104,19 +104,17 @@ internal class ScrapViewModel(
     }
 
     private fun handleLoginStatusChanged(isLoggedIn: Boolean?) {
-        when (isLoggedIn) {
-            null -> {
-                Unit
-            }
+        isLoggedIn?.let {
+            when (it) {
+                true -> {
+                    refresh()
+                }
 
-            true -> {
-                refresh()
-            }
-
-            false -> {
-                nextCursorId = null
-                hasNext = true
-                updateState { ScrapState.UnAuthorized }
+                false -> {
+                    nextCursorId = null
+                    hasNext = true
+                    updateState { ScrapState.UnAuthorized }
+                }
             }
         }
     }
