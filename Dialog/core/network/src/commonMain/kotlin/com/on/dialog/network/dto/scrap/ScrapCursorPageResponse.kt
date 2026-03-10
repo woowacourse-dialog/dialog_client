@@ -72,6 +72,7 @@ data class ScrapCursorPageResponse(
         @Serializable
         @SerialName("OFFLINE")
         data class OfflineContentDto(
+            @SerialName("id")
             val id: Long,
             @SerialName("discussionType")
             val discussionType: String,
