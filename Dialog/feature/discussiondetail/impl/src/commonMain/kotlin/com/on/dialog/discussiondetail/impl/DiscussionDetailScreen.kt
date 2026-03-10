@@ -249,7 +249,7 @@ private fun DiscussionDetailScreenOfflinePreview() {
                             ParticipantUiModel(id = 1L, name = "제리"),
                             ParticipantUiModel(id = 2L, name = "크림"),
                         ),
-                        dateTimePeriod = "2023년 3월 1일 13시 ~ 15시",
+                        dateTimePeriod = "2023년 3월 1일 13시 15분 ~ 15시 15분",
                     ),
                     isMyDiscussion = true,
                 ),
