@@ -17,13 +17,13 @@ import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.feature.mypage.impl.generated.resources.Res
 import dialog.feature.mypage.impl.generated.resources.discussion_management
 import dialog.feature.mypage.impl.generated.resources.my_discussions
-import dialog.feature.mypage.impl.generated.resources.my_favorites
+import dialog.feature.mypage.impl.generated.resources.my_scraps
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionManagementSection(
     onMyCreatedClick: () -> Unit,
-    onMyFavoriteClick: () -> Unit,
+    onScrapClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DialogCard(modifier = modifier.fillMaxWidth()) {
@@ -51,12 +51,12 @@ internal fun DiscussionManagementSection(
                 )
             }
             MyPageMenuButton(
-                text = stringResource(resource = Res.string.my_favorites),
-                onClick = onMyFavoriteClick,
+                text = stringResource(resource = Res.string.my_scraps),
+                onClick = onScrapClick,
             ) {
                 Icon(
-                    imageVector = DialogIcons.Favorite,
-                    contentDescription = stringResource(resource = Res.string.my_favorites),
+                    imageVector = DialogIcons.Bookmark,
+                    contentDescription = stringResource(resource = Res.string.my_scraps),
                 )
             }
         }
@@ -70,7 +70,7 @@ private fun DiscussionManagementSectionPreview() {
         Surface {
             DiscussionManagementSection(
                 onMyCreatedClick = {},
-                onMyFavoriteClick = {},
+                onScrapClick = {},
             )
         }
     }
