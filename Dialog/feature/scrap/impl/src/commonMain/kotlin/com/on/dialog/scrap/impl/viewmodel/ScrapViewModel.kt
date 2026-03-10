@@ -95,8 +95,11 @@ internal class ScrapViewModel(
                     if (scraps.isEmpty()) {
                         ScrapState.Empty
                     } else {
-                        ScrapState.Content(scraps = currentCatalogs.map { it.toUiModel() }
-                            .toImmutableList())
+                        ScrapState.Content(
+                            scraps = currentCatalogs
+                                .map { it.toUiModel() }
+                                .toImmutableList(),
+                        )
                     }
                 }
             }
