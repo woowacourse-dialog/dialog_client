@@ -29,7 +29,7 @@ import com.on.dialog.main.navigation.appScreens
 import com.on.dialog.navigation.Navigator
 import com.on.dialog.navigation.rememberNavigationState
 import com.on.dialog.navigation.toEntries
-import com.on.dialog.ui.state.LocalAppLoginStateHolder
+import com.on.dialog.ui.state.LocalAppLoginState
 import org.koin.compose.koinInject
 
 @Composable
@@ -68,7 +68,7 @@ fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = k
         ) { paddingValues ->
             CompositionLocalProvider(
                 LocalSnackbarDelegate provides appState.snackbarDelegate,
-                LocalAppLoginStateHolder provides appState.loginStateHolder,
+                LocalAppLoginState provides appState.loginStateHolder,
                 LocalOverscrollFactory provides null,
             ) {
                 NavDisplay(

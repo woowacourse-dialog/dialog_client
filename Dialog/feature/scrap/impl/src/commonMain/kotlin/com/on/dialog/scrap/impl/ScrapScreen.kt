@@ -32,7 +32,7 @@ import com.on.dialog.scrap.impl.viewmodel.ScrapViewModel
 import com.on.dialog.ui.component.CommonStateAction
 import com.on.dialog.ui.component.CommonStateView
 import com.on.dialog.ui.extensions.shouldLoadNextPage
-import com.on.dialog.ui.state.LocalAppLoginStateHolder
+import com.on.dialog.ui.state.LocalAppLoginState
 import dialog.feature.scrap.impl.generated.resources.Res
 import dialog.feature.scrap.impl.generated.resources.empty_description
 import dialog.feature.scrap.impl.generated.resources.empty_title
@@ -54,8 +54,8 @@ internal fun ScrapScreen(
     viewModel: ScrapViewModel = koinViewModel(),
 ) {
     val uiState: ScrapState by viewModel.uiState.collectAsStateWithLifecycle()
-    val appLoginStateHolder = LocalAppLoginStateHolder.current
-    val isLoggedIn by appLoginStateHolder.isLoggedIn.collectAsStateWithLifecycle()
+    val appLoginState = LocalAppLoginState.current
+    val isLoggedIn by appLoginState.isLoggedIn.collectAsStateWithLifecycle()
     val snackbarState = LocalSnackbarDelegate.current
     val listState: LazyListState = rememberLazyListState()
     var previousFirstScrapId: Long? by remember { mutableStateOf(null) }
@@ -129,7 +129,7 @@ private fun ScrapScreen(
 
                 is ScrapState.Loading,
                 is ScrapState.Content,
-                -> {
+                    -> {
                     DiscussionListSection(
                         listState = listState,
                         discussions = uiState.scraps,

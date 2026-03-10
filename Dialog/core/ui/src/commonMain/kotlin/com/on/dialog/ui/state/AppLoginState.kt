@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Stable
-class AppLoginStateHolder {
+class AppLoginState {
     private val _isLoggedIn = MutableStateFlow<Boolean?>(null)
     val isLoggedIn: StateFlow<Boolean?> = _isLoggedIn
 
@@ -15,6 +15,6 @@ class AppLoginStateHolder {
     }
 }
 
-val LocalAppLoginStateHolder = staticCompositionLocalOf<AppLoginStateHolder> {
-    error("LocalAppLoginStateHolder is not provided")
+val LocalAppLoginState = staticCompositionLocalOf<AppLoginState> {
+    error("LocalAppLoginState is not provided")
 }

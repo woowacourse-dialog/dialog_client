@@ -43,7 +43,7 @@ import com.on.dialog.feature.mypage.impl.viewmodel.MyPageIntent
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageState
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageViewModel
 import com.on.dialog.model.common.Track
-import com.on.dialog.ui.state.LocalAppLoginStateHolder
+import com.on.dialog.ui.state.LocalAppLoginState
 import dialog.feature.mypage.impl.generated.resources.Res
 import dialog.feature.mypage.impl.generated.resources.delete_account
 import dialog.feature.mypage.impl.generated.resources.delete_account_confirm
@@ -69,7 +69,7 @@ fun MyPageScreen(
     viewModel: MyPageViewModel = koinViewModel(),
 ) {
     val snackbarHostState = LocalSnackbarDelegate.current
-    val appLoginStateHolder = LocalAppLoginStateHolder.current
+    val appLoginState = LocalAppLoginState.current
     val uiState: MyPageState by viewModel.uiState.collectAsStateWithLifecycle()
     var showGallery by rememberSaveable { mutableStateOf(false) }
 
@@ -85,7 +85,7 @@ fun MyPageScreen(
 
     LaunchedEffect(uiState.isLoading, uiState.isLoggedIn) {
         if (!uiState.isLoading) {
-            appLoginStateHolder.setLoggedIn(isLoggedIn = uiState.isLoggedIn)
+            appLoginState.setLoggedIn(isLoggedIn = uiState.isLoggedIn)
         }
     }
 
