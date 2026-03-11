@@ -48,6 +48,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SignUpScreen(
+    jsessionId: String,
     exitSignUp: () -> Unit,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
@@ -95,7 +96,7 @@ fun SignUpScreen(
         tracks = tracks,
         onSelectTrack = { viewModel.onIntent(SignUpIntent.SelectTrack(track = trackEntries[it])) },
         onToggleNotification = { viewModel.onIntent(SignUpIntent.ToggleNotification(enabled = it)) },
-        onSignUpClick = { viewModel.onIntent(SignUpIntent.ValidateAndSignUp) },
+        onSignUpClick = { viewModel.onIntent(SignUpIntent.ValidateAndSignUp(jsessionId = jsessionId)) },
         modifier = modifier,
     )
 }

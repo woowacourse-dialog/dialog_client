@@ -21,16 +21,29 @@ class SignUpViewModel(
             SignUpIntent.CancelSignUp -> cancelSignUp()
             is SignUpIntent.SelectTrack -> updateState { copy(selectedTrack = intent.track) }
             is SignUpIntent.ToggleNotification -> updateState { copy(isNotificationEnabled = intent.enabled) }
-            SignUpIntent.ValidateAndSignUp -> handleSignup()
+            is SignUpIntent.ValidateAndSignUp -> handleSignup(jsessionId = intent.jsessionId)
         }
     }
 
-    private fun handleSignup() {
+    private fun handleSignup(jsessionId: String) {
         val selectedTrack = currentState.selectedTrack ?: return
-        signup(
-            track = selectedTrack,
-            isNotificationEnabled = currentState.isNotificationEnabled,
-        )
+        viewModelScope.launch {
+            sessionRepository
+                .saveSession(jsessionId = jsessionId)
+                .onSuccess {
+                    signup(
+                        track = selectedTrack,
+                        isNotificationEnabled = currentState.isNotificationEnabled,
+                    )
+                }.onFailure {
+                    emitEffect(
+                        SignUpEffect.ShowSnackbar(
+                            stringResource = Res.string.signup_failure,
+                            state = SnackbarState.NEGATIVE,
+                        ),
+                    )
+                }
+        }
     }
 
     private fun signup(track: Track, isNotificationEnabled: Boolean) {
@@ -40,6 +53,8 @@ class SignUpViewModel(
                 .onSuccess { userId ->
                     saveUserId(userId)
                 }.onFailure {
+                    sessionRepository.clearSession()
+                    sessionRepository.clearUserId()
                     emitEffect(
                         SignUpEffect.ShowSnackbar(
                             stringResource = Res.string.signup_failure,
@@ -72,6 +87,8 @@ class SignUpViewModel(
                 emitEffect(SignUpEffect.NavigateHome)
             }.onFailure {
                 authRepository.logout()
+                sessionRepository.clearSession()
+                sessionRepository.clearUserId()
                 emitEffect(
                     SignUpEffect.ShowSnackbar(
                         stringResource = Res.string.save_user_id_fail,

@@ -41,7 +41,7 @@ expect fun LoginWebView(
 fun LoginWebViewScreen(
     loginType: LoginType,
     goBack: () -> Unit,
-    navigateToSignUp: () -> Unit,
+    navigateToSignUp: (String) -> Unit,
     viewModel: LoginViewModel = koinViewModel(),
 ) {
     val snackbarHostState = LocalSnackbarDelegate.current
@@ -59,8 +59,8 @@ fun LoginWebViewScreen(
                     goBack()
                 }
 
-                LoginEffect.NavigateToSignUp -> {
-                    navigateToSignUp()
+                is LoginEffect.NavigateToSignUp -> {
+                    navigateToSignUp(effect.jsessionId)
                 }
 
                 is LoginEffect.ShowSnackbar -> {

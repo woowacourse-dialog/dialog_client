@@ -9,7 +9,9 @@ sealed interface LoginEffect : UiEffect {
 
     data object GoBack : LoginEffect
 
-    data object NavigateToSignUp : LoginEffect
+    data class NavigateToSignUp(
+        val jsessionId: String,
+    ) : LoginEffect
 
     data class ShowSnackbar(
         val stringResource: StringResource,

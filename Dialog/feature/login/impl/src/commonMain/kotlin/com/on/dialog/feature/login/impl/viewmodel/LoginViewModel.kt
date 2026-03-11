@@ -16,14 +16,23 @@ class LoginViewModel(
 ) : BaseViewModel<LoginIntent, LoginState, LoginEffect>(initialState = LoginState()) {
     override fun onIntent(intent: LoginIntent) {
         when (intent) {
-            is LoginIntent.LoginSuccess -> saveUserSession(
+            is LoginIntent.LoginSuccess -> handleLoginSuccess(
                 jsessionId = intent.jsessionId,
                 isNewUser = intent.isNewUser,
             )
         }
     }
 
-    private fun saveUserSession(jsessionId: String, isNewUser: Boolean) {
+    private fun handleLoginSuccess(jsessionId: String, isNewUser: Boolean) {
+        if (isNewUser) {
+            updateState { copy(isLoginComplete = true, isNewUser = true) }
+            emitEffect(LoginEffect.NavigateToSignUp(jsessionId = jsessionId))
+            return
+        }
+        saveUserSession(jsessionId = jsessionId)
+    }
+
+    private fun saveUserSession(jsessionId: String) {
         if (currentState.isLoginComplete) return
         updateState { copy(isLoading = true) }
 
@@ -31,13 +40,8 @@ class LoginViewModel(
             .launch {
                 sessionRepository
                     .saveSession(jsessionId = jsessionId)
-                    .onSuccess {
-                        if (isNewUser) {
-                            handleSaveUserSessionSuccess(isNewUser = true)
-                        } else {
-                            saveUserId()
-                        }
-                    }.onFailure { handleSaveUserSessionFailure() }
+                    .onSuccess { saveUserId() }
+                    .onFailure { handleSaveUserSessionFailure() }
             }.invokeOnCompletion { updateState { LoginState() } }
     }
 
@@ -47,19 +51,15 @@ class LoginViewModel(
             .onSuccess { userInfo ->
                 sessionRepository
                     .saveUserId(userId = userInfo.id)
-                    .onSuccess { handleSaveUserSessionSuccess(isNewUser = false) }
+                    .onSuccess { handleSaveUserSessionSuccess() }
                     .onFailure { handleSaveUserSessionFailure() }
             }.onFailure { handleSaveUserSessionFailure() }
     }
 
-    private fun handleSaveUserSessionSuccess(isNewUser: Boolean) {
-        updateState { copy(isLoginComplete = true, isNewUser = isNewUser) }
-        if (isNewUser) {
-            emitEffect(LoginEffect.NavigateToSignUp)
-        } else {
-            emitEffect(LoginEffect.GoBack)
-            emitEffect(LoginEffect.OnLoginSuccess)
-        }
+    private fun handleSaveUserSessionSuccess() {
+        updateState { copy(isLoginComplete = true, isNewUser = false) }
+        emitEffect(LoginEffect.GoBack)
+        emitEffect(LoginEffect.OnLoginSuccess)
     }
 
     private fun handleSaveUserSessionFailure() {

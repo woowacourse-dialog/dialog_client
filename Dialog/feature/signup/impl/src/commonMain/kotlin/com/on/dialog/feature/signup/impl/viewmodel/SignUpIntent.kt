@@ -14,5 +14,7 @@ sealed interface SignUpIntent : UiIntent {
         val enabled: Boolean,
     ) : SignUpIntent
 
-    data object ValidateAndSignUp : SignUpIntent
+    data class ValidateAndSignUp(
+        val jsessionId: String,
+    ) : SignUpIntent
 }
