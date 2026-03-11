@@ -77,15 +77,14 @@ fun MyPageScreen(
         viewModel.onIntent(intent = MyPageIntent.CheckLoginStatus)
 
         viewModel.effect.collect { effect: MyPageEffect ->
-            if (effect is MyPageEffect.ShowSnackbar) {
-                snackbarHostState.showSnackbar(message = effect.message, state = effect.state)
+            when(effect) {
+                is MyPageEffect.ObserveLoginStatus -> {
+                    appLoginState.setLoggedIn(isLoggedIn = effect.isLoggedIn)
+                }
+                is MyPageEffect.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(message = effect.message, state = effect.state)
+                }
             }
-        }
-    }
-
-    LaunchedEffect(uiState.isLoading, uiState.isLoggedIn) {
-        if (!uiState.isLoading) {
-            appLoginState.setLoggedIn(isLoggedIn = uiState.isLoggedIn)
         }
     }
 

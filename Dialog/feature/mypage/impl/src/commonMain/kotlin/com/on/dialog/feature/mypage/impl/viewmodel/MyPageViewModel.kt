@@ -51,6 +51,7 @@ class MyPageViewModel(
     }
 
     private fun handleGetLoginStatus(isLoggedIn: Boolean) {
+        emitEffect(MyPageEffect.ObserveLoginStatus(isLoggedIn = isLoggedIn))
         if (isLoggedIn) {
             loadMyPage()
             loadMyProfileImage()

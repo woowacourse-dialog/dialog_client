@@ -23,7 +23,6 @@ internal class ScrapViewModel(
 ) : BaseViewModel<ScrapIntent, ScrapState, ScrapEffect>(ScrapState.Loading()) {
     private var nextCursorId: Long? = null
     private var hasNext: Boolean = true
-    private var previousScrapCatalogs: ImmutableList<ScrapCatalog> = persistentListOf()
 
     init {
         observeScrapCatalogs()
@@ -87,14 +86,12 @@ internal class ScrapViewModel(
     private fun observeScrapCatalogs() {
         viewModelScope.launch {
             scrapRepository.scrapCatalogs.collect { currentCatalogs: ImmutableList<ScrapCatalog> ->
-                previousScrapCatalogs = currentCatalogs
-
                 updateState {
-                    if (previousScrapCatalogs.isEmpty()) {
+                    if (currentCatalogs.isEmpty()) {
                         ScrapState.Empty
                     } else {
                         ScrapState.Content(
-                            previousScrapCatalogs
+                            currentCatalogs
                                 .map { it.toUiModel() }
                                 .toImmutableList(),
                         )
