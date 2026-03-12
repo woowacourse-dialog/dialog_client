@@ -68,6 +68,11 @@ internal class DiscussionDetailViewModel(
 
             is DiscussionDetailIntent.OnReportDiscussion -> reportDiscussion(reason = intent.reason)
 
+            is DiscussionDetailIntent.OnReportComment -> reportComment(
+                commentId = intent.commentId,
+                reason = intent.reason,
+            )
+
             is DiscussionDetailIntent.OnSubmitComment -> submitComment(content = intent.content)
 
             is DiscussionDetailIntent.OnSubmitReply -> submitReply(
@@ -93,11 +98,22 @@ internal class DiscussionDetailViewModel(
             DiscussionDetailIntent.OpenReportDiscussionDialog -> openReportDiscussionDialog()
 
             DiscussionDetailIntent.CloseReportDiscussionDialog -> closeReportDiscussionDialog()
+
+            is DiscussionDetailIntent.OpenReportCommentDialog -> openReportCommentDialog(commentId = intent.commentId)
+
+            DiscussionDetailIntent.CloseReportCommentDialog -> closeReportCommentDialog()
         }
     }
 
     private fun openCommentEditor(type: CommentType) {
-        updateState { copy(commentType = type, deleteCommentId = null) }
+        updateState {
+            copy(
+                commentType = type,
+                deleteCommentId = null,
+                isShowReportDiscussionDialog = false,
+                reportCommentId = null,
+            )
+        }
     }
 
     private fun closeCommentEditor() {
@@ -105,7 +121,14 @@ internal class DiscussionDetailViewModel(
     }
 
     private fun openDeleteCommentDialog(commentId: Long) {
-        updateState { copy(deleteCommentId = commentId, commentType = null) }
+        updateState {
+            copy(
+                deleteCommentId = commentId,
+                commentType = null,
+                isShowReportDiscussionDialog = false,
+                reportCommentId = null,
+            )
+        }
     }
 
     private fun closeDeleteCommentDialog() {
@@ -113,11 +136,33 @@ internal class DiscussionDetailViewModel(
     }
 
     private fun openReportDiscussionDialog() {
-        updateState { copy(isShowReportDiscussionDialog = true) }
+        updateState {
+            copy(
+                isShowReportDiscussionDialog = true,
+                reportCommentId = null,
+                commentType = null,
+                deleteCommentId = null,
+            )
+        }
     }
 
     private fun closeReportDiscussionDialog() {
         updateState { copy(isShowReportDiscussionDialog = false) }
+    }
+
+    private fun openReportCommentDialog(commentId: Long) {
+        updateState {
+            copy(
+                reportCommentId = commentId,
+                isShowReportDiscussionDialog = false,
+                commentType = null,
+                deleteCommentId = null,
+            )
+        }
+    }
+
+    private fun closeReportCommentDialog() {
+        updateState { copy(reportCommentId = null) }
     }
 
     private fun fetchInitialData() {
@@ -318,6 +363,23 @@ internal class DiscussionDetailViewModel(
             reportRepository
                 .reportDiscussion(
                     discussionId = discussionId,
+                    reason = reason.name,
+                ).onSuccess {
+                    showSnackbar(
+                        message = Res.string.message_discussion_report_success,
+                        state = SnackbarState.POSITIVE,
+                    )
+                }.onFailure(::showErrorSnackbar)
+        }
+    }
+
+    private fun reportComment(commentId: Long, reason: ReportReasonUiModel) {
+        closeReportCommentDialog()
+        viewModelScope.launch {
+            reportRepository
+                .reportComment(
+                    discussionId = discussionId,
+                    commentId = commentId,
                     reason = reason.name,
                 ).onSuccess {
                     showSnackbar(

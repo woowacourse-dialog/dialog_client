@@ -32,6 +32,7 @@ import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel
 import com.on.dialog.ui.component.ProfileImage
 import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.action_report
 import dialog.feature.discussiondetail.impl.generated.resources.comment_add_opinion
 import dialog.feature.discussiondetail.impl.generated.resources.comment_count_format
 import dialog.feature.discussiondetail.impl.generated.resources.comment_delete_write
@@ -50,6 +51,7 @@ internal fun CommentSection(
     onReplyClick: (commentId: Long) -> Unit,
     onEditClick: (commentId: Long, content: String) -> Unit,
     onDeleteClick: (commentId: Long) -> Unit,
+    onReportClick: (commentId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -60,6 +62,7 @@ internal fun CommentSection(
             onReplyClick = onReplyClick,
             onEditClick = onEditClick,
             onDeleteClick = onDeleteClick,
+            onReportClick = onReportClick,
         )
 
         DialogButton(
@@ -108,6 +111,7 @@ private fun CommentList(
     onReplyClick: (commentId: Long) -> Unit,
     onEditClick: (commentId: Long, content: String) -> Unit,
     onDeleteClick: (commentId: Long) -> Unit,
+    onReportClick: (commentId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -122,6 +126,7 @@ private fun CommentList(
                 onReplyClick = { onReplyClick(comment.commentId) },
                 onEditClick = onEditClick,
                 onDeleteClick = onDeleteClick,
+                onReportClick = onReportClick,
             )
             DialogHorizontalDivider()
         }
@@ -162,6 +167,7 @@ private fun CommentItem(
     onReplyClick: (() -> Unit)?,
     onEditClick: (commentId: Long, content: String) -> Unit,
     onDeleteClick: (commentId: Long) -> Unit,
+    onReportClick: (commentId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -191,6 +197,12 @@ private fun CommentItem(
                     textColor = DialogTheme.colorScheme.error,
                     onClick = { onDeleteClick(comment.commentId) },
                 )
+            } else {
+                CommentSubButton(
+                    text = stringResource(Res.string.action_report),
+                    textColor = DialogTheme.colorScheme.error,
+                    onClick = { onReportClick(comment.commentId) },
+                )
             }
 
             onReplyClick?.let { onClick ->
@@ -212,6 +224,7 @@ private fun CommentItem(
                     )
                 },
                 onDeleteClick = { onDeleteClick(childComment.commentId) },
+                onReportClick = onReportClick,
             )
         }
     }
@@ -243,6 +256,7 @@ private fun ChildCommentItem(
     comment: DiscussionCommentUiModel,
     onEditClick: (commentId: Long, content: String) -> Unit,
     onDeleteClick: (commentId: Long) -> Unit,
+    onReportClick: (commentId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -255,6 +269,7 @@ private fun ChildCommentItem(
             onReplyClick = null,
             onEditClick = onEditClick,
             onDeleteClick = onDeleteClick,
+            onReportClick = onReportClick,
         )
     }
 }
@@ -324,6 +339,7 @@ private fun CommentSectionPreview() {
                 onReplyClick = {},
                 onEditClick = { _, _ -> },
                 onDeleteClick = {},
+                onReportClick = {},
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             )
         }

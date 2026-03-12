@@ -99,6 +99,20 @@ internal fun DiscussionDetailScreen(
         )
     }
 
+    uiState.reportCommentId?.let { reportCommentId ->
+        DiscussionReportDialog(
+            onDismiss = { viewModel.onIntent(DiscussionDetailIntent.CloseReportCommentDialog) },
+            onConfirm = { reason ->
+                viewModel.onIntent(
+                    DiscussionDetailIntent.OnReportComment(
+                        commentId = reportCommentId,
+                        reason = reason,
+                    ),
+                )
+            },
+        )
+    }
+
     DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
@@ -122,6 +136,11 @@ internal fun DiscussionDetailScreen(
         onCommentDeleteClick = { commentId ->
             viewModel.onIntent(
                 DiscussionDetailIntent.OpenDeleteCommentDialog(commentId = commentId),
+            )
+        },
+        onCommentReportClick = { commentId ->
+            viewModel.onIntent(
+                DiscussionDetailIntent.OpenReportCommentDialog(commentId = commentId),
             )
         },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
@@ -184,6 +203,7 @@ private fun DiscussionDetailScreen(
     onReplyClick: (commentId: Long) -> Unit,
     onCommentEditClick: (commentId: Long, content: String) -> Unit,
     onCommentDeleteClick: (commentId: Long) -> Unit,
+    onCommentReportClick: (commentId: Long) -> Unit,
     onBookmarkClick: () -> Unit,
     onLikeClick: () -> Unit,
     onParticipateClick: () -> Unit,
@@ -244,6 +264,7 @@ private fun DiscussionDetailScreen(
                 onReplyClick = onReplyClick,
                 onEditClick = onCommentEditClick,
                 onDeleteClick = onCommentDeleteClick,
+                onReportClick = onCommentReportClick,
             )
         }
     }
@@ -286,6 +307,7 @@ private fun DiscussionDetailScreenOfflinePreview() {
                 onReplyClick = {},
                 onCommentEditClick = { _, _ -> },
                 onCommentDeleteClick = {},
+                onCommentReportClick = {},
                 onBookmarkClick = {},
                 onLikeClick = {},
                 onParticipateClick = {},
@@ -327,6 +349,7 @@ private fun DiscussionDetailScreenOnlinePreview() {
             onReplyClick = {},
             onCommentEditClick = { _, _ -> },
             onCommentDeleteClick = {},
+            onCommentReportClick = {},
             onBookmarkClick = {},
             onLikeClick = {},
             onParticipateClick = {},

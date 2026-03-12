@@ -22,6 +22,7 @@ internal data class DiscussionDetailState(
     val commentType: CommentType? = null,
     val deleteCommentId: Long? = null,
     val isShowReportDiscussionDialog: Boolean = false,
+    val reportCommentId: Long? = null,
 ) : UiState {
     val isShowSummary: Boolean =
         discussion is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel &&

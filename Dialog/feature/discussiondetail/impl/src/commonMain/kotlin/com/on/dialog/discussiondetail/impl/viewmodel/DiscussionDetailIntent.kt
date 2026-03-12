@@ -17,6 +17,11 @@ internal sealed interface DiscussionDetailIntent : UiIntent {
         val reason: ReportReasonUiModel,
     ) : DiscussionDetailIntent
 
+    data class OnReportComment(
+        val commentId: Long,
+        val reason: ReportReasonUiModel,
+    ) : DiscussionDetailIntent
+
     data class OnSubmitComment(
         val content: String,
     ) : DiscussionDetailIntent
@@ -50,4 +55,10 @@ internal sealed interface DiscussionDetailIntent : UiIntent {
     data object OpenReportDiscussionDialog : DiscussionDetailIntent
 
     data object CloseReportDiscussionDialog : DiscussionDetailIntent
+
+    data class OpenReportCommentDialog(
+        val commentId: Long,
+    ) : DiscussionDetailIntent
+
+    data object CloseReportCommentDialog : DiscussionDetailIntent
 }
