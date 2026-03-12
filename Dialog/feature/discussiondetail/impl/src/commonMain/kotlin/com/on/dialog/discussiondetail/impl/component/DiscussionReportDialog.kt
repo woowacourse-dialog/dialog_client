@@ -90,6 +90,7 @@ internal fun DiscussionReportDialog(
                     text = stringResource(Res.string.action_report),
                     onClick = { onConfirm(selectedReason) },
                     modifier = Modifier.weight(1f),
+                    style = DialogButtonStyle.Error,
                 )
             }
         }
