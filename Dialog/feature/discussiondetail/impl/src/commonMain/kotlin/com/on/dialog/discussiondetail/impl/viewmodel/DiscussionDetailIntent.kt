@@ -1,5 +1,6 @@
 package com.on.dialog.discussiondetail.impl.viewmodel
 
+import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.ui.viewmodel.UiIntent
 
 sealed interface DiscussionDetailIntent : UiIntent {
@@ -28,4 +29,16 @@ sealed interface DiscussionDetailIntent : UiIntent {
     data class OnDeleteComment(
         val commentId: Long,
     ) : DiscussionDetailIntent
+
+    data class OpenCommentEditor(
+        val type: CommentType,
+    ) : DiscussionDetailIntent
+
+    data object CloseCommentEditor : DiscussionDetailIntent
+
+    data class OpenDeleteCommentDialog(
+        val commentId: Long,
+    ) : DiscussionDetailIntent
+
+    data object CloseDeleteCommentDialog : DiscussionDetailIntent
 }

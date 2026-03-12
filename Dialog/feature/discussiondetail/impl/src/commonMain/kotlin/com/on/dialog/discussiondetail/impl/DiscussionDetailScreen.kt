@@ -9,10 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,8 +55,6 @@ internal fun DiscussionDetailScreen(
 ) {
     val snackbarDelegate = LocalSnackbarDelegate.current
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
-    var commentType by rememberSaveable { mutableStateOf<CommentType?>(null) }
-    var deleteCommentId by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -75,19 +69,18 @@ internal fun DiscussionDetailScreen(
         }
     }
 
-    if (deleteCommentId != null) {
+    uiState.deleteCommentId?.let { deleteCommentId ->
         DecisionDialog(
             contentText = stringResource(Res.string.discussion_delete_confirm),
             confirmText = stringResource(Res.string.comment_delete_write),
             onConfirm = {
-                deleteCommentId?.let { commentId ->
-                    viewModel.onIntent(DiscussionDetailIntent.OnDeleteComment(commentId = commentId))
-                }
-                deleteCommentId = null
+                viewModel.onIntent(
+                    DiscussionDetailIntent.OnDeleteComment(commentId = deleteCommentId),
+                )
             },
             confirmButtonStyle = DialogButtonStyle.Error,
             dismissText = stringResource(Res.string.action_cancel),
-            onDismiss = { deleteCommentId = null },
+            onDismiss = { viewModel.onIntent(DiscussionDetailIntent.CloseDeleteCommentDialog) },
         )
     }
 
@@ -95,16 +88,24 @@ internal fun DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
         onCommentClick = {
-            commentType = CommentType.Comment
+            viewModel.onIntent(DiscussionDetailIntent.OpenCommentEditor(type = CommentType.Comment))
         },
         onReplyClick = { commentId ->
-            commentType = CommentType.Reply(commentId = commentId)
+            viewModel.onIntent(
+                DiscussionDetailIntent.OpenCommentEditor(
+                    type = CommentType.Reply(commentId = commentId),
+                ),
+            )
         },
         onCommentEditClick = { commentId, content ->
-            commentType = CommentType.Edit(commentId = commentId, originalContent = content)
+            viewModel.onIntent(
+                DiscussionDetailIntent.OpenCommentEditor(
+                    type = CommentType.Edit(commentId = commentId, originalContent = content),
+                ),
+            )
         },
         onCommentDeleteClick = { commentId ->
-            deleteCommentId = commentId
+            viewModel.onIntent(DiscussionDetailIntent.OpenDeleteCommentDialog(commentId = commentId))
         },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
@@ -115,14 +116,14 @@ internal fun DiscussionDetailScreen(
         modifier = modifier,
     )
 
-    if (commentType != null) {
+    if (uiState.commentType != null) {
         MarkdownEditor(
-            initialContent = when (val type = commentType) {
+            initialContent = when (val type = uiState.commentType) {
                 is CommentType.Edit -> type.originalContent
                 else -> ""
             },
             onConfirm = { newContent: String ->
-                val intent = when (val type = commentType) {
+                val intent = when (val type = uiState.commentType) {
                     CommentType.Comment -> DiscussionDetailIntent.OnSubmitComment(content = newContent)
 
                     is CommentType.Reply -> DiscussionDetailIntent.OnSubmitReply(
@@ -138,9 +139,8 @@ internal fun DiscussionDetailScreen(
                     null -> return@MarkdownEditor
                 }
                 viewModel.onIntent(intent)
-                commentType = null
             },
-            onExit = { commentType = null },
+            onExit = { viewModel.onIntent(DiscussionDetailIntent.CloseCommentEditor) },
         )
     }
 }

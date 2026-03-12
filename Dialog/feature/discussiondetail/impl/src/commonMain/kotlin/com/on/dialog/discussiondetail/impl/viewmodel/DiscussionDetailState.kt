@@ -1,6 +1,7 @@
 package com.on.dialog.discussiondetail.impl.viewmodel
 
 import androidx.compose.runtime.Immutable
+import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel
@@ -20,6 +21,8 @@ internal data class DiscussionDetailState(
     val isParticipating: Boolean = false,
     val isMyDiscussion: Boolean = false,
     val comments: ImmutableList<DiscussionCommentUiModel> = persistentListOf(),
+    val commentType: CommentType? = null,
+    val deleteCommentId: Long? = null,
 ) : UiState {
     val isShowSummary: Boolean =
         discussion?.discussionType == DiscussionType.ONLINE && discussion.status == DiscussionStatusUiModel.DISCUSSION_COMPLETE
