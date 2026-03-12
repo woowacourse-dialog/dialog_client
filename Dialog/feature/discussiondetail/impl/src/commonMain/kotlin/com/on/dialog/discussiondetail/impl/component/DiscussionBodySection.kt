@@ -35,7 +35,7 @@ internal fun DiscussionBodySection(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
-        modifier = modifier.fillMaxWidth().padding(top = DialogTheme.spacing.medium),
+        modifier = modifier.fillMaxWidth().padding(vertical = DialogTheme.spacing.medium),
     ) {
         DialogMarkdown(
             content = discussion.detailContent.content,
@@ -50,7 +50,6 @@ internal fun DiscussionBodySection(
                     isParticipating = discussion.isParticipating,
                     onParticipateClick = onParticipateClick,
                 )
-                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
             }
         }
     }
