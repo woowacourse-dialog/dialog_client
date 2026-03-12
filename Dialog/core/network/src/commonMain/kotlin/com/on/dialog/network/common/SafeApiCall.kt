@@ -1,6 +1,8 @@
 package com.on.dialog.network.common
 
 import com.on.dialog.core.common.error.NetworkError
+import com.on.dialog.model.error.DialogError
+import com.on.dialog.model.error.DialogErrorHttpStatus
 import com.on.dialog.network.dto.common.DataResponse
 import com.on.dialog.network.dto.common.ErrorResponse
 import io.ktor.client.call.body
@@ -42,19 +44,19 @@ private suspend fun handleClientRequestException(error: ClientRequestException):
         DialogError.fromCode(errorCode) ?: return NetworkError.Unknown(error)
 
     return when (dialogError.httpStatus) {
-        HttpStatus.UNAUTHORIZED -> NetworkError.Unauthorized(
+        DialogErrorHttpStatus.UNAUTHORIZED -> NetworkError.Unauthorized(
             cause = error,
             errorCode = dialogError.code,
             errorMessage = dialogError.message,
         )
 
-        HttpStatus.NOT_FOUND -> NetworkError.NotFound(
+        DialogErrorHttpStatus.NOT_FOUND -> NetworkError.NotFound(
             cause = error,
             errorCode = dialogError.code,
             errorMessage = dialogError.message,
         )
 
-        HttpStatus.BAD_REQUEST -> NetworkError.BadRequest(
+        DialogErrorHttpStatus.BAD_REQUEST -> NetworkError.BadRequest(
             cause = error,
             errorCode = dialogError.code,
             errorMessage = dialogError.message,
