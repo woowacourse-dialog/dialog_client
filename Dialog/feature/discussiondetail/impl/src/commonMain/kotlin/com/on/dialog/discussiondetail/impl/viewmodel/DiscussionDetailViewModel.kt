@@ -3,7 +3,6 @@ package com.on.dialog.discussiondetail.impl.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
-import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.Companion.toUiModel
@@ -86,83 +85,7 @@ internal class DiscussionDetailViewModel(
             )
 
             is DiscussionDetailIntent.OnDeleteComment -> deleteComment(commentId = intent.commentId)
-
-            is DiscussionDetailIntent.OpenCommentEditor -> openCommentEditor(type = intent.type)
-
-            DiscussionDetailIntent.CloseCommentEditor -> closeCommentEditor()
-
-            is DiscussionDetailIntent.OpenDeleteCommentDialog -> openDeleteCommentDialog(commentId = intent.commentId)
-
-            DiscussionDetailIntent.CloseDeleteCommentDialog -> closeDeleteCommentDialog()
-
-            DiscussionDetailIntent.OpenReportDiscussionDialog -> openReportDiscussionDialog()
-
-            DiscussionDetailIntent.CloseReportDiscussionDialog -> closeReportDiscussionDialog()
-
-            is DiscussionDetailIntent.OpenReportCommentDialog -> openReportCommentDialog(commentId = intent.commentId)
-
-            DiscussionDetailIntent.CloseReportCommentDialog -> closeReportCommentDialog()
         }
-    }
-
-    private fun openCommentEditor(type: CommentType) {
-        updateState {
-            copy(
-                commentType = type,
-                deleteCommentId = null,
-                isShowReportDiscussionDialog = false,
-                reportCommentId = null,
-            )
-        }
-    }
-
-    private fun closeCommentEditor() {
-        updateState { copy(commentType = null) }
-    }
-
-    private fun openDeleteCommentDialog(commentId: Long) {
-        updateState {
-            copy(
-                deleteCommentId = commentId,
-                commentType = null,
-                isShowReportDiscussionDialog = false,
-                reportCommentId = null,
-            )
-        }
-    }
-
-    private fun closeDeleteCommentDialog() {
-        updateState { copy(deleteCommentId = null) }
-    }
-
-    private fun openReportDiscussionDialog() {
-        updateState {
-            copy(
-                isShowReportDiscussionDialog = true,
-                reportCommentId = null,
-                commentType = null,
-                deleteCommentId = null,
-            )
-        }
-    }
-
-    private fun closeReportDiscussionDialog() {
-        updateState { copy(isShowReportDiscussionDialog = false) }
-    }
-
-    private fun openReportCommentDialog(commentId: Long) {
-        updateState {
-            copy(
-                reportCommentId = commentId,
-                isShowReportDiscussionDialog = false,
-                commentType = null,
-                deleteCommentId = null,
-            )
-        }
-    }
-
-    private fun closeReportCommentDialog() {
-        updateState { copy(reportCommentId = null) }
     }
 
     private fun fetchInitialData() {
@@ -305,7 +228,6 @@ internal class DiscussionDetailViewModel(
     }
 
     private fun submitComment(content: String) {
-        closeCommentEditor()
         viewModelScope.launch {
             commentRepository
                 .postComment(discussionId = discussionId, content = content)
@@ -315,50 +237,46 @@ internal class DiscussionDetailViewModel(
     }
 
     private fun submitReply(commentId: Long, content: String) {
-        viewModelScope
-            .launch {
-                commentRepository
-                    .postReply(
-                        discussionId = discussionId,
-                        parentCommentId = commentId,
-                        content = content,
-                    ).onSuccess { fetchComments() }
-                    .onFailure(::showErrorSnackbar)
-            }.invokeOnCompletion { closeCommentEditor() }
+        viewModelScope.launch {
+            commentRepository
+                .postReply(
+                    discussionId = discussionId,
+                    parentCommentId = commentId,
+                    content = content,
+                ).onSuccess { fetchComments() }
+                .onFailure(::showErrorSnackbar)
+        }
     }
 
     private fun editComment(commentId: Long, content: String) {
-        viewModelScope
-            .launch {
-                commentRepository
-                    .patchComment(discussionCommentId = commentId, content = content)
-                    .onSuccess {
-                        fetchComments()
-                        showSnackbar(
-                            message = Res.string.message_comment_edit_success,
-                            state = SnackbarState.POSITIVE,
-                        )
-                    }.onFailure(::showErrorSnackbar)
-            }.invokeOnCompletion { closeCommentEditor() }
+        viewModelScope.launch {
+            commentRepository
+                .patchComment(discussionCommentId = commentId, content = content)
+                .onSuccess {
+                    fetchComments()
+                    showSnackbar(
+                        message = Res.string.message_comment_edit_success,
+                        state = SnackbarState.POSITIVE,
+                    )
+                }.onFailure(::showErrorSnackbar)
+        }
     }
 
     private fun deleteComment(commentId: Long) {
-        viewModelScope
-            .launch {
-                commentRepository
-                    .deleteComment(discussionCommentId = commentId)
-                    .onSuccess {
-                        fetchComments()
-                        showSnackbar(
-                            message = Res.string.message_comment_delete_success,
-                            state = SnackbarState.POSITIVE,
-                        )
-                    }.onFailure(::showErrorSnackbar)
-            }.invokeOnCompletion { closeDeleteCommentDialog() }
+        viewModelScope.launch {
+            commentRepository
+                .deleteComment(discussionCommentId = commentId)
+                .onSuccess {
+                    fetchComments()
+                    showSnackbar(
+                        message = Res.string.message_comment_delete_success,
+                        state = SnackbarState.POSITIVE,
+                    )
+                }.onFailure(::showErrorSnackbar)
+        }
     }
 
     private fun reportDiscussion(reason: ReportReasonUiModel) {
-        closeReportDiscussionDialog()
         viewModelScope.launch {
             reportRepository
                 .reportDiscussion(
@@ -374,7 +292,6 @@ internal class DiscussionDetailViewModel(
     }
 
     private fun reportComment(commentId: Long, reason: ReportReasonUiModel) {
-        closeReportCommentDialog()
         viewModelScope.launch {
             reportRepository
                 .reportComment(

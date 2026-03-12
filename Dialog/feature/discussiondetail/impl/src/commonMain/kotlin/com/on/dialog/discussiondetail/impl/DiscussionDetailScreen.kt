@@ -32,6 +32,7 @@ import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel.AuthorUiMo
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.OfflineDiscussionDetailUiModel.ParticipantUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel
+import com.on.dialog.discussiondetail.impl.model.ReportType
 import com.on.dialog.discussiondetail.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailEffect
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailIntent
@@ -59,6 +60,9 @@ internal fun DiscussionDetailScreen(
 ) {
     val snackbarDelegate = LocalSnackbarDelegate.current
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
+    var commentType: CommentType? by remember { mutableStateOf(null) }
+    var deleteCommentId: Long? by remember { mutableStateOf(null) }
+    var reportType: ReportType? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -73,42 +77,39 @@ internal fun DiscussionDetailScreen(
         }
     }
 
-    uiState.deleteCommentId?.let { deleteCommentId ->
+    deleteCommentId?.let { targetCommentId ->
         DecisionDialog(
             contentText = stringResource(Res.string.discussion_delete_confirm),
             confirmText = stringResource(Res.string.comment_delete_write),
             onConfirm = {
+                deleteCommentId = null
                 viewModel.onIntent(
-                    DiscussionDetailIntent.OnDeleteComment(commentId = deleteCommentId),
+                    DiscussionDetailIntent.OnDeleteComment(commentId = targetCommentId),
                 )
             },
             confirmButtonStyle = DialogButtonStyle.Error,
             dismissText = stringResource(Res.string.action_cancel),
-            onDismiss = { viewModel.onIntent(DiscussionDetailIntent.CloseDeleteCommentDialog) },
+            onDismiss = { deleteCommentId = null },
         )
     }
 
-    if (uiState.isShowReportDiscussionDialog) {
+    reportType?.let { targetReportType ->
         DiscussionReportDialog(
-            onDismiss = { viewModel.onIntent(DiscussionDetailIntent.CloseReportDiscussionDialog) },
+            onDismiss = { reportType = null },
             onConfirm = { reason ->
-                viewModel.onIntent(
-                    DiscussionDetailIntent.OnReportDiscussion(reason = reason),
-                )
-            },
-        )
-    }
+                reportType = null
+                when (targetReportType) {
+                    ReportType.Discussion -> viewModel.onIntent(
+                        DiscussionDetailIntent.OnReportDiscussion(reason = reason),
+                    )
 
-    uiState.reportCommentId?.let { reportCommentId ->
-        DiscussionReportDialog(
-            onDismiss = { viewModel.onIntent(DiscussionDetailIntent.CloseReportCommentDialog) },
-            onConfirm = { reason ->
-                viewModel.onIntent(
-                    DiscussionDetailIntent.OnReportComment(
-                        commentId = reportCommentId,
-                        reason = reason,
-                    ),
-                )
+                    is ReportType.Comment -> viewModel.onIntent(
+                        DiscussionDetailIntent.OnReportComment(
+                            commentId = targetReportType.commentId,
+                            reason = reason,
+                        ),
+                    )
+                }
             },
         )
     }
@@ -117,31 +118,29 @@ internal fun DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
         onCommentClick = {
-            viewModel.onIntent(
-                DiscussionDetailIntent.OpenCommentEditor(type = CommentType.Comment),
-            )
+            deleteCommentId = null
+            reportType = null
+            commentType = CommentType.Comment
         },
         onReplyClick = { commentId ->
-            viewModel.onIntent(
-                DiscussionDetailIntent.OpenCommentEditor(type = CommentType.Reply(commentId = commentId)),
-            )
+            deleteCommentId = null
+            reportType = null
+            commentType = CommentType.Reply(commentId = commentId)
         },
         onCommentEditClick = { commentId, content ->
-            viewModel.onIntent(
-                DiscussionDetailIntent.OpenCommentEditor(
-                    type = CommentType.Edit(commentId = commentId, originalContent = content),
-                ),
-            )
+            deleteCommentId = null
+            reportType = null
+            commentType = CommentType.Edit(commentId = commentId, originalContent = content)
         },
         onCommentDeleteClick = { commentId ->
-            viewModel.onIntent(
-                DiscussionDetailIntent.OpenDeleteCommentDialog(commentId = commentId),
-            )
+            commentType = null
+            reportType = null
+            deleteCommentId = commentId
         },
         onCommentReportClick = { commentId ->
-            viewModel.onIntent(
-                DiscussionDetailIntent.OpenReportCommentDialog(commentId = commentId),
-            )
+            commentType = null
+            deleteCommentId = null
+            reportType = ReportType.Comment(commentId = commentId)
         },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
@@ -149,15 +148,22 @@ internal fun DiscussionDetailScreen(
         onSummaryClick = { viewModel.onIntent(DiscussionDetailIntent.GenerateSummary) },
         onEditClick = { /* TODO: 수정 화면으로 이동 */ },
         onDeleteClick = { /* TODO: 삭제 확인 다이얼로그 표시 */ },
-        onReportClick = { viewModel.onIntent(DiscussionDetailIntent.OpenReportDiscussionDialog) },
+        onReportClick = {
+            commentType = null
+            deleteCommentId = null
+            reportType = ReportType.Discussion
+        },
         modifier = modifier,
     )
 
-    uiState.commentType?.let { commentType ->
+    commentType?.let { targetCommentType ->
         DiscussionDetailMarkdownEditor(
-            type = commentType,
-            onConfirm = { intent -> viewModel.onIntent(intent) },
-            onExit = { viewModel.onIntent(DiscussionDetailIntent.CloseCommentEditor) },
+            type = targetCommentType,
+            onConfirm = { intent ->
+                commentType = null
+                viewModel.onIntent(intent)
+            },
+            onExit = { commentType = null },
         )
     }
 }

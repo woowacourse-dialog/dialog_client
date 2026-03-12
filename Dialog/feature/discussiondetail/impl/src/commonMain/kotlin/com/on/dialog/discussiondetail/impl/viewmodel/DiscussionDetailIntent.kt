@@ -1,6 +1,5 @@
 package com.on.dialog.discussiondetail.impl.viewmodel
 
-import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.ReportReasonUiModel
 import com.on.dialog.ui.viewmodel.UiIntent
 
@@ -40,25 +39,4 @@ internal sealed interface DiscussionDetailIntent : UiIntent {
         val commentId: Long,
     ) : DiscussionDetailIntent
 
-    data class OpenCommentEditor(
-        val type: CommentType,
-    ) : DiscussionDetailIntent
-
-    data object CloseCommentEditor : DiscussionDetailIntent
-
-    data class OpenDeleteCommentDialog(
-        val commentId: Long,
-    ) : DiscussionDetailIntent
-
-    data object CloseDeleteCommentDialog : DiscussionDetailIntent
-
-    data object OpenReportDiscussionDialog : DiscussionDetailIntent
-
-    data object CloseReportDiscussionDialog : DiscussionDetailIntent
-
-    data class OpenReportCommentDialog(
-        val commentId: Long,
-    ) : DiscussionDetailIntent
-
-    data object CloseReportCommentDialog : DiscussionDetailIntent
 }
