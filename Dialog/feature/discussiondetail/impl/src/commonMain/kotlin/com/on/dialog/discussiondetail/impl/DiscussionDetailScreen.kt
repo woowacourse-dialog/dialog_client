@@ -1,13 +1,7 @@
 package com.on.dialog.discussiondetail.impl
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,18 +12,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogButtonStyle
-import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.LoadingIndicator
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
-import com.on.dialog.designsystem.util.drawFadingEdges
-import com.on.dialog.discussiondetail.impl.component.DiscussionCommentSection
-import com.on.dialog.discussiondetail.impl.component.DiscussionBodySection
-import com.on.dialog.discussiondetail.impl.component.DiscussionHeaderSection
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailAppBar
+import com.on.dialog.discussiondetail.impl.component.DiscussionDetailMainSection
 import com.on.dialog.discussiondetail.impl.component.DiscussionReportReasonDialog
-import com.on.dialog.discussiondetail.impl.component.DiscussionSummarySection
 import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DeleteType
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
@@ -66,9 +55,7 @@ internal fun DiscussionDetailScreen(
 ) {
     val snackbarDelegate = LocalSnackbarDelegate.current
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
-    var commentType: CommentType? by remember { mutableStateOf(null) }
-    var deleteType: DeleteType? by remember { mutableStateOf(null) }
-    var reportType: ReportType? by remember { mutableStateOf(null) }
+    var activeOverlay: DiscussionDetailOverlay? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -83,106 +70,39 @@ internal fun DiscussionDetailScreen(
         }
     }
 
-    deleteType?.let { targetDeleteType ->
-        DecisionDialog(
-            contentText = stringResource(Res.string.discussion_delete_confirm),
-            confirmText = when (targetDeleteType) {
-                DeleteType.Discussion -> stringResource(Res.string.action_delete)
-                is DeleteType.Comment -> stringResource(Res.string.comment_delete_write)
-            },
-            onConfirm = {
-                deleteType = null
-                when (targetDeleteType) {
-                    DeleteType.Discussion -> viewModel.onIntent(DiscussionDetailIntent.OnDeleteDiscussion)
-
-                    is DeleteType.Comment -> viewModel.onIntent(
-                        DiscussionDetailIntent.OnDeleteComment(commentId = targetDeleteType.commentId),
-                    )
-                }
-            },
-            confirmButtonStyle = DialogButtonStyle.Error,
-            dismissText = stringResource(Res.string.action_cancel),
-            onDismiss = { deleteType = null },
-        )
-    }
-
-    reportType?.let { targetReportType ->
-        DiscussionReportReasonDialog(
-            onDismiss = { reportType = null },
-            onConfirm = { reason ->
-                reportType = null
-                when (targetReportType) {
-                    ReportType.Discussion -> viewModel.onIntent(
-                        DiscussionDetailIntent.OnReportDiscussion(reason = reason),
-                    )
-
-                    is ReportType.Comment -> viewModel.onIntent(
-                        DiscussionDetailIntent.OnReportComment(
-                            commentId = targetReportType.commentId,
-                            reason = reason,
-                        ),
-                    )
-                }
-            },
-        )
-    }
-
-    DiscussionDetailScreen(
+    DiscussionDetailScreenScaffold(
         state = uiState,
         goBack = goBack,
-        onCommentClick = {
-            deleteType = null
-            reportType = null
-            commentType = CommentType.Comment
-        },
+        onCommentClick = { activeOverlay = DiscussionDetailOverlay.Comment(CommentType.Comment) },
         onReplyClick = { commentId ->
-            deleteType = null
-            reportType = null
-            commentType = CommentType.Reply(commentId = commentId)
+            activeOverlay = DiscussionDetailOverlay.Comment(CommentType.Reply(commentId = commentId))
         },
         onCommentEditClick = { commentId, content ->
-            deleteType = null
-            reportType = null
-            commentType = CommentType.Edit(commentId = commentId, originalContent = content)
+            activeOverlay = DiscussionDetailOverlay.Comment(
+                CommentType.Edit(commentId = commentId, originalContent = content),
+            )
         },
         onCommentDeleteClick = { commentId ->
-            commentType = null
-            reportType = null
-            deleteType = DeleteType.Comment(commentId = commentId)
+            activeOverlay = DiscussionDetailOverlay.Delete(DeleteType.Comment(commentId = commentId))
         },
         onCommentReportClick = { commentId ->
-            commentType = null
-            deleteType = null
-            reportType = ReportType.Comment(commentId = commentId)
+            activeOverlay = DiscussionDetailOverlay.Report(ReportType.Comment(commentId = commentId))
         },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
         onParticipateClick = { viewModel.onIntent(DiscussionDetailIntent.Participate) },
         onSummaryClick = { viewModel.onIntent(DiscussionDetailIntent.GenerateSummary) },
         onEditClick = { /* TODO: 수정 화면으로 이동 */ },
-        onDeleteClick = {
-            commentType = null
-            reportType = null
-            deleteType = DeleteType.Discussion
-        },
-        onReportClick = {
-            commentType = null
-            deleteType = null
-            reportType = ReportType.Discussion
-        },
+        onDeleteClick = { activeOverlay = DiscussionDetailOverlay.Delete(DeleteType.Discussion) },
+        onReportClick = { activeOverlay = DiscussionDetailOverlay.Report(ReportType.Discussion) },
         modifier = modifier,
     )
 
-    commentType?.let { targetCommentType ->
-        DiscussionDetailMarkdownEditor(
-            type = targetCommentType,
-            onConfirm = { intent ->
-                commentType = null
-                viewModel.onIntent(intent)
-            },
-            onExit = { commentType = null },
-        )
-    }
+    DiscussionDetailOverlayHost(
+        activeOverlay = activeOverlay,
+        onDismiss = { activeOverlay = null },
+        onIntent = viewModel::onIntent,
+    )
 }
 
 @Composable
@@ -219,7 +139,72 @@ private fun DiscussionDetailMarkdownEditor(
 }
 
 @Composable
-private fun DiscussionDetailScreen(
+private fun DiscussionDetailOverlayHost(
+    activeOverlay: DiscussionDetailOverlay?,
+    onDismiss: () -> Unit,
+    onIntent: (DiscussionDetailIntent) -> Unit,
+) {
+    when (activeOverlay) {
+        is DiscussionDetailOverlay.Comment -> {
+            DiscussionDetailMarkdownEditor(
+                type = activeOverlay.type,
+                onConfirm = {
+                    onDismiss()
+                    onIntent(it)
+                },
+                onExit = onDismiss,
+            )
+        }
+
+        is DiscussionDetailOverlay.Delete -> {
+            DecisionDialog(
+                contentText = stringResource(Res.string.discussion_delete_confirm),
+                confirmText = when (activeOverlay.type) {
+                    DeleteType.Discussion -> stringResource(Res.string.action_delete)
+                    is DeleteType.Comment -> stringResource(Res.string.comment_delete_write)
+                },
+                onConfirm = {
+                    onDismiss()
+                    when (val type = activeOverlay.type) {
+                        DeleteType.Discussion -> onIntent(DiscussionDetailIntent.OnDeleteDiscussion)
+                        is DeleteType.Comment -> onIntent(
+                            DiscussionDetailIntent.OnDeleteComment(commentId = type.commentId),
+                        )
+                    }
+                },
+                confirmButtonStyle = DialogButtonStyle.Error,
+                dismissText = stringResource(Res.string.action_cancel),
+                onDismiss = onDismiss,
+            )
+        }
+
+        is DiscussionDetailOverlay.Report -> {
+            DiscussionReportReasonDialog(
+                onDismiss = onDismiss,
+                onConfirm = { reason ->
+                    onDismiss()
+                    when (val type = activeOverlay.type) {
+                        ReportType.Discussion -> onIntent(
+                            DiscussionDetailIntent.OnReportDiscussion(reason = reason),
+                        )
+
+                        is ReportType.Comment -> onIntent(
+                            DiscussionDetailIntent.OnReportComment(
+                                commentId = type.commentId,
+                                reason = reason,
+                            ),
+                        )
+                    }
+                },
+            )
+        }
+
+        null -> Unit
+    }
+}
+
+@Composable
+private fun DiscussionDetailScreenScaffold(
     state: DiscussionDetailState,
     goBack: () -> Unit,
     onCommentClick: () -> Unit,
@@ -236,8 +221,6 @@ private fun DiscussionDetailScreen(
     onReportClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scrollState = rememberScrollState()
-
     Column(modifier = modifier.fillMaxSize()) {
         DiscussionDetailAppBar(
             isMyDiscussion = state.isMyDiscussion,
@@ -255,63 +238,31 @@ private fun DiscussionDetailScreen(
             LoadingIndicator()
             return@Column
         }
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .drawFadingEdges(scrollState)
-                .verticalScroll(scrollState)
-                .padding(
-                    horizontal = DialogTheme.spacing.large,
-                    vertical = DialogTheme.spacing.medium,
-                ),
-            verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
-        ) {
-            state.discussion?.let { discussion ->
-                DialogCard(
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    DiscussionHeaderSection(discussion = discussion)
-                }
-
-                DialogCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(DialogTheme.spacing.none),
-                ) {
-                    DiscussionBodySection(
-                        discussion = discussion,
-                        isShowParticipateButton = state.isShowParticipateButton,
-                        onParticipateClick = onParticipateClick,
-                    )
-                }
-
-                if (state.isShowSummary && discussion is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel) {
-                    DiscussionSummarySection(
-                        summary = discussion.summary,
-                        isMyDiscussion = state.isMyDiscussion,
-                        isGeneratingSummary = state.isGeneratingSummary,
-                        onSummaryClick = onSummaryClick,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-            }
-
-            DialogCard(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(DialogTheme.spacing.none),
-            ) {
-                DiscussionCommentSection(
-                    comments = state.comments,
-                    totalCommentCount = state.totalCommentCount,
-                    onCommentClick = onCommentClick,
-                    onReplyClick = onReplyClick,
-                    onEditClick = onCommentEditClick,
-                    onDeleteClick = onCommentDeleteClick,
-                    onReportClick = onCommentReportClick,
-                )
-            }
-        }
+        DiscussionDetailMainSection(
+            discussion = state.discussion,
+            comments = state.comments,
+            totalCommentCount = state.totalCommentCount,
+            isMyDiscussion = state.isMyDiscussion,
+            isShowParticipateButton = state.isShowParticipateButton,
+            isShowSummary = state.isShowSummary,
+            isGeneratingSummary = state.isGeneratingSummary,
+            onParticipateClick = onParticipateClick,
+            onSummaryClick = onSummaryClick,
+            onCommentClick = onCommentClick,
+            onReplyClick = onReplyClick,
+            onCommentEditClick = onCommentEditClick,
+            onCommentDeleteClick = onCommentDeleteClick,
+            onCommentReportClick = onCommentReportClick,
+        )
     }
+}
+
+private sealed interface DiscussionDetailOverlay {
+    data class Comment(val type: CommentType) : DiscussionDetailOverlay
+
+    data class Delete(val type: DeleteType) : DiscussionDetailOverlay
+
+    data class Report(val type: ReportType) : DiscussionDetailOverlay
 }
 
 @ThemePreview
@@ -319,7 +270,7 @@ private fun DiscussionDetailScreen(
 private fun DiscussionDetailScreenOfflinePreview() {
     DialogTheme {
         Surface {
-            DiscussionDetailScreen(
+            DiscussionDetailScreenScaffold(
                 state = DiscussionDetailState(
                     isLoading = false,
                     discussion = DiscussionDetailUiModel.OfflineDiscussionDetailUiModel(
@@ -369,7 +320,7 @@ private fun DiscussionDetailScreenOfflinePreview() {
 private fun DiscussionDetailScreenOnlinePreview() {
     DialogTheme {
         Surface {
-            DiscussionDetailScreen(
+            DiscussionDetailScreenScaffold(
                 state = DiscussionDetailState(
                     isLoading = false,
                     discussion = DiscussionDetailUiModel.OnlineDiscussionDetailUiModel(
