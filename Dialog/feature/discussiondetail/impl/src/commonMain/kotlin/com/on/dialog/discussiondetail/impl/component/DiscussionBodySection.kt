@@ -27,7 +27,7 @@ import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun DiscussionDetailContent(
+internal fun DiscussionBodySection(
     discussion: DiscussionDetailUiModel,
     isShowParticipateButton: Boolean,
     onParticipateClick: () -> Unit,
@@ -42,14 +42,12 @@ internal fun DiscussionDetailContent(
             modifier = Modifier.padding(horizontal = DialogTheme.spacing.large),
         )
 
-        if (isShowParticipateButton) {
-            val offlineDiscussion = discussion
-                as? DiscussionDetailUiModel.OfflineDiscussionDetailUiModel ?: return
+        if (discussion is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel && isShowParticipateButton) {
             Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.large)) {
                 DialogHorizontalDivider()
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
                 ParticipateButton(
-                    isParticipating = offlineDiscussion.isParticipating,
+                    isParticipating = discussion.isParticipating,
                     onParticipateClick = onParticipateClick,
                 )
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
@@ -76,10 +74,10 @@ private fun ParticipateButton(
 
 @ThemePreview
 @Composable
-private fun OnlineDiscussionDetailContentPreview() {
+private fun OnlineDiscussionBodySectionPreview() {
     DialogTheme {
         Surface {
-            DiscussionDetailContent(
+            DiscussionBodySection(
                 discussion = DiscussionDetailUiModel.OnlineDiscussionDetailUiModel(
                     detailContent = DetailContentUiModel(
                         id = 0L,
@@ -108,10 +106,10 @@ private fun OnlineDiscussionDetailContentPreview() {
 
 @ThemePreview
 @Composable
-private fun OfflineDiscussionDetailContentPreview() {
+private fun OfflineDiscussionBodySectionPreview() {
     DialogTheme {
         Surface {
-            DiscussionDetailContent(
+            DiscussionBodySection(
                 discussion = DiscussionDetailUiModel.OfflineDiscussionDetailUiModel(
                     detailContent = DetailContentUiModel(
                         id = 0L,

@@ -34,7 +34,7 @@ import dialog.feature.discussiondetail.impl.generated.resources.header_like_cont
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun DiscussionDetailTopAppBar(
+internal fun DiscussionDetailAppBar(
     isMyDiscussion: Boolean,
     isLiked: Boolean,
     isBookmarked: Boolean,
@@ -237,7 +237,7 @@ private fun DetailDropDownMenu(
 
 @ThemePreview
 @Composable
-private fun DiscussionDetailTopAppBarPreview() {
+private fun DiscussionDetailAppBarPreview() {
     DialogTheme {
         Surface {
             Column(
@@ -246,7 +246,7 @@ private fun DiscussionDetailTopAppBarPreview() {
                     .background(DialogTheme.colorScheme.background)
                     .padding(vertical = 16.dp),
             ) {
-                DiscussionDetailTopAppBar(
+                DiscussionDetailAppBar(
                     isMyDiscussion = true,
                     goBack = {},
                     onEditClick = {},
@@ -258,7 +258,7 @@ private fun DiscussionDetailTopAppBarPreview() {
                     isBookmarked = true,
                 )
 
-                DiscussionDetailTopAppBar(
+                DiscussionDetailAppBar(
                     isMyDiscussion = false,
                     goBack = {},
                     onEditClick = {},

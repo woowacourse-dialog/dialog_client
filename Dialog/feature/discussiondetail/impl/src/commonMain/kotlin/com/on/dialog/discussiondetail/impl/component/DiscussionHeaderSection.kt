@@ -40,7 +40,7 @@ import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun DiscussionDetailHeader(
+internal fun DiscussionHeaderSection(
     discussion: DiscussionDetailUiModel,
     modifier: Modifier = Modifier,
 ) {
@@ -172,7 +172,7 @@ private fun InfoSection(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        IconTextRow(
+        DiscussionIconTextRow(
             iconImage = DialogIcons.Info,
             text = stringResource(Res.string.header_info),
             textStyle = DialogTheme.typography.titleSmall,
@@ -186,13 +186,13 @@ private fun InfoSection(
             verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
         ) {
             formattedDateTime?.let { text ->
-                MetaChip(
+                DiscussionMetaInfoChip(
                     text = text,
                     iconImage = DialogIcons.Calendar,
                 )
             }
             discussionPlace?.let { place ->
-                MetaChip(
+                DiscussionMetaInfoChip(
                     text = place,
                     iconImage = DialogIcons.Place,
                 )
@@ -212,7 +212,7 @@ private fun ParticipantList(
             .fillMaxWidth()
             .padding(horizontal = DialogTheme.spacing.large),
     ) {
-        IconTextRow(
+        DiscussionIconTextRow(
             iconImage = DialogIcons.Group,
             text = stringResource(Res.string.header_participants_format, capacity),
             textStyle = DialogTheme.typography.titleSmall,
@@ -224,17 +224,17 @@ private fun ParticipantList(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
         ) {
-            participants.forEach { participant -> MetaChip(text = participant.name) }
+            participants.forEach { participant -> DiscussionMetaInfoChip(text = participant.name) }
         }
     }
 }
 
 @ThemePreview
 @Composable
-private fun OnlineDiscussionDetailHeaderPreview() {
+private fun OnlineDiscussionHeaderSectionPreview() {
     DialogTheme {
         Surface {
-            DiscussionDetailHeader(
+            DiscussionHeaderSection(
                 discussion = DiscussionDetailUiModel.OnlineDiscussionDetailUiModel(
                     detailContent = DetailContentUiModel(
                         id = 0L,
@@ -257,10 +257,10 @@ private fun OnlineDiscussionDetailHeaderPreview() {
 
 @ThemePreview
 @Composable
-private fun OfflineDiscussionDetailHeaderPreview() {
+private fun OfflineDiscussionHeaderSectionPreview() {
     DialogTheme {
         Surface {
-            DiscussionDetailHeader(
+            DiscussionHeaderSection(
                 discussion = DiscussionDetailUiModel.OfflineDiscussionDetailUiModel(
                     detailContent = DetailContentUiModel(
                         id = 0L,

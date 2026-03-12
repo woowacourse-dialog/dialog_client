@@ -34,7 +34,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun DiscussionReportDialog(
+internal fun DiscussionReportReasonDialog(
     onDismiss: () -> Unit,
     onConfirm: (ReportReasonUiModel) -> Unit,
     modifier: Modifier = Modifier,
@@ -99,10 +99,10 @@ internal fun DiscussionReportDialog(
 
 @ThemePreview
 @Composable
-private fun DiscussionReportDialogPreview() {
+private fun DiscussionReportReasonDialogPreview() {
     DialogTheme {
         Surface {
-            DiscussionReportDialog(
+            DiscussionReportReasonDialog(
                 onDismiss = {},
                 onConfirm = {},
             )

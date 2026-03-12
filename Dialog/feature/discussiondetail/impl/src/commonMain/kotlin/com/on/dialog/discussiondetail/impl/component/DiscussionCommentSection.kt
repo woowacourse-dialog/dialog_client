@@ -44,7 +44,7 @@ import kotlinx.datetime.LocalDateTime
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun CommentSection(
+internal fun DiscussionCommentSection(
     comments: ImmutableList<DiscussionCommentUiModel>,
     totalCommentCount: Int,
     onCommentClick: () -> Unit,
@@ -55,7 +55,7 @@ internal fun CommentSection(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        CommentSectionHeader(commentCount = totalCommentCount)
+        DiscussionCommentSectionHeader(commentCount = totalCommentCount)
 
         CommentList(
             comments = comments,
@@ -82,7 +82,7 @@ internal fun CommentSection(
 }
 
 @Composable
-private fun CommentSectionHeader(
+private fun DiscussionCommentSectionHeader(
     commentCount: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -175,7 +175,7 @@ private fun CommentItem(
 
         Spacer(modifier = Modifier.height(DialogTheme.spacing.extraSmall))
 
-        CommentMarkdown(
+        CollapsibleCommentMarkdown(
             content = comment.content,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -276,10 +276,10 @@ private fun ChildCommentItem(
 
 @ThemePreview
 @Composable
-private fun CommentSectionPreview() {
+private fun DiscussionCommentSectionPreview() {
     DialogTheme {
         Surface {
-            CommentSection(
+            DiscussionCommentSection(
                 totalCommentCount = 6,
                 comments = listOf(
                     DiscussionCommentUiModel(

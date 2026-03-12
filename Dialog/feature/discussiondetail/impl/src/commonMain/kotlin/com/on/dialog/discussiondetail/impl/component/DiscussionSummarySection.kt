@@ -48,16 +48,19 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun DiscussionSummary(
+internal fun DiscussionSummarySection(
     summary: String?,
     isMyDiscussion: Boolean,
     isGeneratingSummary: Boolean,
     onSummaryClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    DialogCard(modifier = modifier.fillMaxWidth()) {
+    DialogCard(
+        tone = DialogCardTone.SurfaceContainerLow,
+        modifier = modifier.fillMaxWidth(),
+    ) {
         Column(verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small)) {
-            IconTextRow(
+            DiscussionIconTextRow(
                 iconImage = DialogIcons.AutoAwesome,
                 text = stringResource(Res.string.summary_discussion),
                 textStyle = DialogTheme.typography.titleMedium,
@@ -219,10 +222,10 @@ private fun SummaryMarkdownContent(
 
 @ThemePreview
 @Composable
-private fun DiscussionSummaryEmptyMyDiscussionPreview(modifier: Modifier = Modifier) {
+private fun DiscussionSummarySectionEmptyMyDiscussionPreview(modifier: Modifier = Modifier) {
     DialogTheme {
         Surface {
-            DiscussionSummary(
+            DiscussionSummarySection(
                 summary = null,
                 isMyDiscussion = true,
                 isGeneratingSummary = false,
@@ -235,10 +238,10 @@ private fun DiscussionSummaryEmptyMyDiscussionPreview(modifier: Modifier = Modif
 
 @ThemePreview
 @Composable
-private fun DiscussionSummaryGeneratingMyDiscussionPreview(modifier: Modifier = Modifier) {
+private fun DiscussionSummarySectionGeneratingMyDiscussionPreview(modifier: Modifier = Modifier) {
     DialogTheme {
         Surface {
-            DiscussionSummary(
+            DiscussionSummarySection(
                 summary = null,
                 isMyDiscussion = true,
                 isGeneratingSummary = true,
@@ -251,10 +254,10 @@ private fun DiscussionSummaryGeneratingMyDiscussionPreview(modifier: Modifier = 
 
 @ThemePreview
 @Composable
-private fun DiscussionSummaryEmptyNotMyDiscussionPreview(modifier: Modifier = Modifier) {
+private fun DiscussionSummarySectionEmptyNotMyDiscussionPreview(modifier: Modifier = Modifier) {
     DialogTheme {
         Surface {
-            DiscussionSummary(
+            DiscussionSummarySection(
                 summary = null,
                 isMyDiscussion = false,
                 isGeneratingSummary = false,
@@ -270,7 +273,7 @@ private fun DiscussionSummaryEmptyNotMyDiscussionPreview(modifier: Modifier = Mo
 private fun DiscussionLongSummaryPreview() {
     DialogTheme {
         Surface {
-            DiscussionSummary(
+            DiscussionSummarySection(
                 summary =
                     """
                     1. **토론의 핵심 주제**
@@ -296,7 +299,7 @@ private fun DiscussionLongSummaryPreview() {
 private fun DiscussionShortSummaryPreview() {
     DialogTheme {
         Surface {
-            DiscussionSummary(
+            DiscussionSummarySection(
                 summary = "이 토론은 Koin의 기능과 역할에 대한 논의",
                 isMyDiscussion = true,
                 isGeneratingSummary = false,

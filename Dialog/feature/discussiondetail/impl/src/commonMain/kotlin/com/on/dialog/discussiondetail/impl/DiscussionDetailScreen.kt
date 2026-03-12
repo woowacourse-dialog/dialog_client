@@ -24,12 +24,12 @@ import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.util.drawFadingEdges
-import com.on.dialog.discussiondetail.impl.component.CommentSection
-import com.on.dialog.discussiondetail.impl.component.DiscussionDetailContent
-import com.on.dialog.discussiondetail.impl.component.DiscussionDetailHeader
-import com.on.dialog.discussiondetail.impl.component.DiscussionDetailTopAppBar
-import com.on.dialog.discussiondetail.impl.component.DiscussionReportDialog
-import com.on.dialog.discussiondetail.impl.component.DiscussionSummary
+import com.on.dialog.discussiondetail.impl.component.DiscussionCommentSection
+import com.on.dialog.discussiondetail.impl.component.DiscussionBodySection
+import com.on.dialog.discussiondetail.impl.component.DiscussionHeaderSection
+import com.on.dialog.discussiondetail.impl.component.DiscussionDetailAppBar
+import com.on.dialog.discussiondetail.impl.component.DiscussionReportReasonDialog
+import com.on.dialog.discussiondetail.impl.component.DiscussionSummarySection
 import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DeleteType
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
@@ -107,7 +107,7 @@ internal fun DiscussionDetailScreen(
     }
 
     reportType?.let { targetReportType ->
-        DiscussionReportDialog(
+        DiscussionReportReasonDialog(
             onDismiss = { reportType = null },
             onConfirm = { reason ->
                 reportType = null
@@ -239,7 +239,7 @@ private fun DiscussionDetailScreen(
     val scrollState = rememberScrollState()
 
     Column(modifier = modifier.fillMaxSize()) {
-        DiscussionDetailTopAppBar(
+        DiscussionDetailAppBar(
             isMyDiscussion = state.isMyDiscussion,
             goBack = goBack,
             onEditClick = onEditClick,
@@ -271,14 +271,14 @@ private fun DiscussionDetailScreen(
                 DialogCard(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    DiscussionDetailHeader(discussion = discussion)
+                    DiscussionHeaderSection(discussion = discussion)
                 }
 
                 DialogCard(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(DialogTheme.spacing.none),
                 ) {
-                    DiscussionDetailContent(
+                    DiscussionBodySection(
                         discussion = discussion,
                         isShowParticipateButton = state.isShowParticipateButton,
                         onParticipateClick = onParticipateClick,
@@ -286,7 +286,7 @@ private fun DiscussionDetailScreen(
                 }
 
                 if (state.isShowSummary && discussion is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel) {
-                    DiscussionSummary(
+                    DiscussionSummarySection(
                         summary = discussion.summary,
                         isMyDiscussion = state.isMyDiscussion,
                         isGeneratingSummary = state.isGeneratingSummary,
@@ -300,7 +300,7 @@ private fun DiscussionDetailScreen(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(DialogTheme.spacing.none),
             ) {
-                CommentSection(
+                DiscussionCommentSection(
                     comments = state.comments,
                     totalCommentCount = state.totalCommentCount,
                     onCommentClick = onCommentClick,
