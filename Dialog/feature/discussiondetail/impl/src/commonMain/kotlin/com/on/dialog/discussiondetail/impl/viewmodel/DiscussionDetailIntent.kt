@@ -40,5 +40,4 @@ internal sealed interface DiscussionDetailIntent : UiIntent {
     ) : DiscussionDetailIntent
 
     data object OnDeleteDiscussion : DiscussionDetailIntent
-
 }

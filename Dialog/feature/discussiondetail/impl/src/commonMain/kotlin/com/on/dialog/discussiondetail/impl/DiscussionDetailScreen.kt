@@ -16,11 +16,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogCard
-import com.on.dialog.designsystem.component.DialogCardTone
 import com.on.dialog.designsystem.component.LoadingIndicator
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.preview.ThemePreview
