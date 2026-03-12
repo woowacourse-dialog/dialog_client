@@ -85,6 +85,8 @@ internal class DiscussionDetailViewModel(
             )
 
             is DiscussionDetailIntent.OnDeleteComment -> deleteComment(commentId = intent.commentId)
+
+            DiscussionDetailIntent.OnDeleteDiscussion -> deleteDiscussion()
         }
     }
 
@@ -272,6 +274,20 @@ internal class DiscussionDetailViewModel(
                         message = Res.string.message_comment_delete_success,
                         state = SnackbarState.POSITIVE,
                     )
+                }.onFailure(::showErrorSnackbar)
+        }
+    }
+
+    private fun deleteDiscussion() {
+        viewModelScope.launch {
+            discussionRepository
+                .deleteDiscussion(id = discussionId)
+                .onSuccess {
+                    showSnackbar(
+                        message = Res.string.message_comment_delete_success,
+                        state = SnackbarState.POSITIVE,
+                    )
+                    emitEffect(DiscussionDetailEffect.NavigateHome)
                 }.onFailure(::showErrorSnackbar)
         }
     }

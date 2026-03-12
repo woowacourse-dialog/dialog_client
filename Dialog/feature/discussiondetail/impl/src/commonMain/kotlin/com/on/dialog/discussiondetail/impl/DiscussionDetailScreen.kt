@@ -27,6 +27,7 @@ import com.on.dialog.discussiondetail.impl.component.DiscussionDetailHeader
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailTopAppBar
 import com.on.dialog.discussiondetail.impl.component.DiscussionReportDialog
 import com.on.dialog.discussiondetail.impl.model.CommentType
+import com.on.dialog.discussiondetail.impl.model.DeleteType
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel.AuthorUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
@@ -42,6 +43,7 @@ import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.DecisionDialog
 import com.on.dialog.ui.component.markdown.MarkdownEditor
 import dialog.feature.discussiondetail.impl.generated.resources.Res
+import dialog.feature.discussiondetail.impl.generated.resources.action_delete
 import dialog.feature.discussiondetail.impl.generated.resources.action_cancel
 import dialog.feature.discussiondetail.impl.generated.resources.comment_delete_write
 import dialog.feature.discussiondetail.impl.generated.resources.discussion_delete_confirm
@@ -61,7 +63,7 @@ internal fun DiscussionDetailScreen(
     val snackbarDelegate = LocalSnackbarDelegate.current
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
     var commentType: CommentType? by remember { mutableStateOf(null) }
-    var deleteCommentId: Long? by remember { mutableStateOf(null) }
+    var deleteType: DeleteType? by remember { mutableStateOf(null) }
     var reportType: ReportType? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
@@ -77,19 +79,25 @@ internal fun DiscussionDetailScreen(
         }
     }
 
-    deleteCommentId?.let { targetCommentId ->
+    deleteType?.let { targetDeleteType ->
         DecisionDialog(
             contentText = stringResource(Res.string.discussion_delete_confirm),
-            confirmText = stringResource(Res.string.comment_delete_write),
+            confirmText = when (targetDeleteType) {
+                DeleteType.Discussion -> stringResource(Res.string.action_delete)
+                is DeleteType.Comment -> stringResource(Res.string.comment_delete_write)
+            },
             onConfirm = {
-                deleteCommentId = null
-                viewModel.onIntent(
-                    DiscussionDetailIntent.OnDeleteComment(commentId = targetCommentId),
-                )
+                deleteType = null
+                when (targetDeleteType) {
+                    DeleteType.Discussion -> viewModel.onIntent(DiscussionDetailIntent.OnDeleteDiscussion)
+                    is DeleteType.Comment -> viewModel.onIntent(
+                        DiscussionDetailIntent.OnDeleteComment(commentId = targetDeleteType.commentId),
+                    )
+                }
             },
             confirmButtonStyle = DialogButtonStyle.Error,
             dismissText = stringResource(Res.string.action_cancel),
-            onDismiss = { deleteCommentId = null },
+            onDismiss = { deleteType = null },
         )
     }
 
@@ -118,28 +126,28 @@ internal fun DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
         onCommentClick = {
-            deleteCommentId = null
+            deleteType = null
             reportType = null
             commentType = CommentType.Comment
         },
         onReplyClick = { commentId ->
-            deleteCommentId = null
+            deleteType = null
             reportType = null
             commentType = CommentType.Reply(commentId = commentId)
         },
         onCommentEditClick = { commentId, content ->
-            deleteCommentId = null
+            deleteType = null
             reportType = null
             commentType = CommentType.Edit(commentId = commentId, originalContent = content)
         },
         onCommentDeleteClick = { commentId ->
             commentType = null
             reportType = null
-            deleteCommentId = commentId
+            deleteType = DeleteType.Comment(commentId = commentId)
         },
         onCommentReportClick = { commentId ->
             commentType = null
-            deleteCommentId = null
+            deleteType = null
             reportType = ReportType.Comment(commentId = commentId)
         },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
@@ -147,10 +155,14 @@ internal fun DiscussionDetailScreen(
         onParticipateClick = { viewModel.onIntent(DiscussionDetailIntent.Participate) },
         onSummaryClick = { viewModel.onIntent(DiscussionDetailIntent.GenerateSummary) },
         onEditClick = { /* TODO: 수정 화면으로 이동 */ },
-        onDeleteClick = { /* TODO: 삭제 확인 다이얼로그 표시 */ },
+        onDeleteClick = {
+            commentType = null
+            reportType = null
+            deleteType = DeleteType.Discussion
+        },
         onReportClick = {
             commentType = null
-            deleteCommentId = null
+            deleteType = null
             reportType = ReportType.Discussion
         },
         modifier = modifier,

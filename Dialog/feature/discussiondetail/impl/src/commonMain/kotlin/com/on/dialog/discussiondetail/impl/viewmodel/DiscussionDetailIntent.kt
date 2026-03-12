@@ -39,4 +39,6 @@ internal sealed interface DiscussionDetailIntent : UiIntent {
         val commentId: Long,
     ) : DiscussionDetailIntent
 
+    data object OnDeleteDiscussion : DiscussionDetailIntent
+
 }
