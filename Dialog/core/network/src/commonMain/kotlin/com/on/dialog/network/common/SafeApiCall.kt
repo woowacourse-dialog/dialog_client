@@ -7,6 +7,7 @@ import com.on.dialog.network.dto.common.DataResponse
 import com.on.dialog.network.dto.common.ErrorResponse
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
@@ -27,7 +28,7 @@ internal suspend inline fun <T> safeApiCall(
 
         val networkError: NetworkError = when (error) {
             is ClientRequestException -> handleClientRequestException(error)
-            is ServerResponseException -> NetworkError.ServerError(error)
+            is ServerResponseException -> handleServerResponseException(error)
             is IOException -> NetworkError.Network(error)
             else -> NetworkError.Unknown(error)
         }
@@ -36,30 +37,67 @@ internal suspend inline fun <T> safeApiCall(
 }
 
 private suspend fun handleClientRequestException(error: ClientRequestException): NetworkError {
-    // 에러 응답 본문을 파싱하여 errorCode 확인
-    val errorResponse = runCatching { error.response.body<ErrorResponse>() }.getOrNull()
-    val errorCode: String = errorResponse?.errorCode ?: return NetworkError.Unknown(error)
+    val dialogError: DialogError = parseDialogError(error = error)
+        ?: return NetworkError.Unknown(error)
 
-    val dialogError: DialogError =
-        DialogError.fromCode(errorCode) ?: return NetworkError.Unknown(error)
+    return dialogError.toNetworkError(cause = error)
+}
 
-    return when (dialogError.httpStatus) {
-        DialogErrorHttpStatus.UNAUTHORIZED -> NetworkError.Unauthorized(
-            cause = error,
-            errorCode = dialogError.code,
-            errorMessage = dialogError.message,
-        )
+private suspend fun handleServerResponseException(error: ServerResponseException): NetworkError {
+    val dialogError: DialogError = parseDialogError(error = error)
+        ?: return NetworkError.ServerError(error)
 
-        DialogErrorHttpStatus.NOT_FOUND -> NetworkError.NotFound(
-            cause = error,
-            errorCode = dialogError.code,
-            errorMessage = dialogError.message,
-        )
+    return dialogError.toNetworkError(cause = error)
+}
 
-        DialogErrorHttpStatus.BAD_REQUEST -> NetworkError.BadRequest(
-            cause = error,
-            errorCode = dialogError.code,
-            errorMessage = dialogError.message,
-        )
-    }
+private suspend fun parseDialogError(error: ResponseException): DialogError? {
+    val errorResponse: ErrorResponse =
+        runCatching { error.response.body<ErrorResponse>() }
+            .getOrNull()
+            ?: return null
+    return DialogError.fromCode(errorResponse.errorCode)
+}
+
+private fun DialogError.toNetworkError(cause: Exception): NetworkError = when (httpStatus) {
+    DialogErrorHttpStatus.BAD_REQUEST -> NetworkError.BadRequest(
+        cause = cause,
+        errorCode = code,
+        errorMessage = message,
+    )
+
+    DialogErrorHttpStatus.UNAUTHORIZED -> NetworkError.Unauthorized(
+        cause = cause,
+        errorCode = code,
+        errorMessage = message,
+    )
+
+    DialogErrorHttpStatus.FORBIDDEN -> NetworkError.Forbidden(
+        cause = cause,
+        errorCode = code,
+        errorMessage = message,
+    )
+
+    DialogErrorHttpStatus.NOT_FOUND -> NetworkError.NotFound(
+        cause = cause,
+        errorCode = code,
+        errorMessage = message,
+    )
+
+    DialogErrorHttpStatus.CONFLICT -> NetworkError.Conflict(
+        cause = cause,
+        errorCode = code,
+        errorMessage = message,
+    )
+
+    DialogErrorHttpStatus.INTERNAL_SERVER_ERROR -> NetworkError.InternalServerError(
+        cause = cause,
+        errorCode = code,
+        errorMessage = message,
+    )
+
+    DialogErrorHttpStatus.BAD_GATEWAY -> NetworkError.BadGateway(
+        cause = cause,
+        errorCode = code,
+        errorMessage = message,
+    )
 }
