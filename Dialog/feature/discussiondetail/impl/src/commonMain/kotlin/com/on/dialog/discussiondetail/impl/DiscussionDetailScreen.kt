@@ -29,6 +29,7 @@ import com.on.dialog.discussiondetail.impl.component.DiscussionDetailContent
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailHeader
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailTopAppBar
 import com.on.dialog.discussiondetail.impl.component.DiscussionReportDialog
+import com.on.dialog.discussiondetail.impl.component.DiscussionSummary
 import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DeleteType
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
@@ -278,13 +279,19 @@ private fun DiscussionDetailScreen(
                     contentPadding = PaddingValues(DialogTheme.spacing.none),
                 ) {
                     DiscussionDetailContent(
-                        discussion = state.discussion,
-                        isMyDiscussion = state.isMyDiscussion,
+                        discussion = discussion,
                         isShowParticipateButton = state.isShowParticipateButton,
-                        isShowSummary = state.isShowSummary,
+                        onParticipateClick = onParticipateClick,
+                    )
+                }
+
+                if (state.isShowSummary && discussion is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel) {
+                    DiscussionSummary(
+                        summary = discussion.summary,
+                        isMyDiscussion = state.isMyDiscussion,
                         isGeneratingSummary = state.isGeneratingSummary,
                         onSummaryClick = onSummaryClick,
-                        onParticipateClick = onParticipateClick,
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }

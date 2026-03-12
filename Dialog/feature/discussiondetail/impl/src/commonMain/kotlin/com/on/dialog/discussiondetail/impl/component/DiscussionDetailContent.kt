@@ -29,56 +29,31 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun DiscussionDetailContent(
     discussion: DiscussionDetailUiModel,
-    isMyDiscussion: Boolean,
     isShowParticipateButton: Boolean,
-    isShowSummary: Boolean,
-    isGeneratingSummary: Boolean,
-    onSummaryClick: () -> Unit,
     onParticipateClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
-        modifier = modifier.padding(top = DialogTheme.spacing.medium),
+        modifier = modifier.fillMaxWidth().padding(top = DialogTheme.spacing.medium),
     ) {
         DialogMarkdown(
             content = discussion.detailContent.content,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = DialogTheme.spacing.large),
+            modifier = Modifier.padding(horizontal = DialogTheme.spacing.large),
         )
 
-        Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.large)) {
-            val requireSpacer = isShowSummary || isShowParticipateButton
-
-            if (requireSpacer) {
+        if (isShowParticipateButton) {
+            val offlineDiscussion = discussion
+                as? DiscussionDetailUiModel.OfflineDiscussionDetailUiModel ?: return
+            Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.large)) {
                 DialogHorizontalDivider()
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
+                ParticipateButton(
+                    isParticipating = offlineDiscussion.isParticipating,
+                    onParticipateClick = onParticipateClick,
+                )
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
             }
-
-            when (discussion) {
-                is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel -> {
-                    if (isShowParticipateButton) {
-                        ParticipateButton(
-                            isParticipating = discussion.isParticipating,
-                            onParticipateClick = onParticipateClick,
-                        )
-                    }
-                }
-
-                is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel -> {
-                    if (isShowSummary) {
-                        DiscussionSummary(
-                            summary = discussion.summary,
-                            isMyDiscussion = isMyDiscussion,
-                            isGeneratingSummary = isGeneratingSummary,
-                            onSummaryClick = onSummaryClick,
-                        )
-                    }
-                }
-            }
-
-            if (requireSpacer) Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
         }
     }
 }
@@ -124,11 +99,7 @@ private fun OnlineDiscussionDetailContentPreview() {
                     endDate = "2026년 3월 10일",
                     summary = "요약된 내용",
                 ),
-                isMyDiscussion = true,
                 isShowParticipateButton = false,
-                isShowSummary = true,
-                isGeneratingSummary = false,
-                onSummaryClick = {},
                 onParticipateClick = {},
             )
         }
@@ -168,11 +139,7 @@ private fun OfflineDiscussionDetailContentPreview() {
                     }.toImmutableList(),
                     isParticipating = true,
                 ),
-                isMyDiscussion = true,
                 isShowParticipateButton = true,
-                isShowSummary = false,
-                isGeneratingSummary = false,
-                onSummaryClick = {},
                 onParticipateClick = {},
             )
         }

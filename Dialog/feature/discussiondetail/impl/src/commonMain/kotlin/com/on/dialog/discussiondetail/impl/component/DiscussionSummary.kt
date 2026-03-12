@@ -55,10 +55,7 @@ internal fun DiscussionSummary(
     onSummaryClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    DialogCard(
-        tone = DialogCardTone.SurfaceContainerLow,
-        modifier = modifier.fillMaxWidth(),
-    ) {
+    DialogCard(modifier = modifier.fillMaxWidth()) {
         Column(verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small)) {
             IconTextRow(
                 iconImage = DialogIcons.AutoAwesome,
