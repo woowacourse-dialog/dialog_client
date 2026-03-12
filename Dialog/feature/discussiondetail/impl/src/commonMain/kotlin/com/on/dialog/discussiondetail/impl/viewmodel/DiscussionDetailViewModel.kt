@@ -7,15 +7,15 @@ import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.Companion.toUiModel
-import com.on.dialog.discussiondetail.impl.usecase.GenerateDiscussionSummaryUseCase
-import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionBookmarkUseCase
-import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionLikeUseCase
 import com.on.dialog.domain.repository.CommentRepository
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.domain.repository.LikeRepository
 import com.on.dialog.domain.repository.ParticipantRepository
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.domain.repository.SessionRepository
+import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionBookmarkUseCase
+import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionLikeUseCase
+import com.on.dialog.domain.usecase.discussion.summary.GenerateDiscussionSummaryUseCase
 import com.on.dialog.model.discussion.comment.DiscussionComment
 import com.on.dialog.model.discussion.detail.DiscussionDetail
 import com.on.dialog.model.discussion.detail.OfflineDiscussionDetail
@@ -107,9 +107,9 @@ internal class DiscussionDetailViewModel(
         viewModelScope
             .launch {
                 awaitAll(
+                    async { fetchDiscussionDetail() },
                     async { fetchBookmarkStatus() },
                     async { fetchLikeStatus() },
-                    async { fetchDiscussionDetail() },
                     async { fetchComments() },
                 )
             }.invokeOnCompletion { updateState { copy(isLoading = false) } }

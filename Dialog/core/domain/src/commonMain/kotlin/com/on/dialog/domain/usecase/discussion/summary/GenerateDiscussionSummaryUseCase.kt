@@ -1,9 +1,9 @@
-package com.on.dialog.discussiondetail.impl.usecase
+package com.on.dialog.domain.usecase.discussion.summary
 
 import com.on.dialog.domain.repository.DiscussionRepository
 import kotlinx.coroutines.delay
 
-internal class GenerateDiscussionSummaryUseCase(
+class GenerateDiscussionSummaryUseCase(
     private val discussionRepository: DiscussionRepository,
 ) {
     suspend operator fun invoke(discussionId: Long): Result<String> =

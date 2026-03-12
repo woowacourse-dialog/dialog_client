@@ -1,8 +1,8 @@
-package com.on.dialog.discussiondetail.impl.usecase
+package com.on.dialog.domain.usecase.discussion.interaction
 
 import com.on.dialog.domain.repository.ScrapRepository
 
-internal class ToggleDiscussionBookmarkUseCase(
+class ToggleDiscussionBookmarkUseCase(
     private val scrapRepository: ScrapRepository,
 ) {
     suspend operator fun invoke(

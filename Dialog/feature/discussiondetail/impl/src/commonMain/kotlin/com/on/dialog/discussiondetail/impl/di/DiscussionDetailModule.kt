@@ -1,9 +1,9 @@
 package com.on.dialog.discussiondetail.impl.di
 
-import com.on.dialog.discussiondetail.impl.usecase.GenerateDiscussionSummaryUseCase
 import com.on.dialog.discussiondetail.impl.navigation.DiscussionDetailNavKeyProvider
-import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionBookmarkUseCase
-import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionLikeUseCase
+import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionBookmarkUseCase
+import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionLikeUseCase
+import com.on.dialog.domain.usecase.discussion.summary.GenerateDiscussionSummaryUseCase
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailViewModel
 import com.on.dialog.navigation.NavKeyProvider
 import org.koin.core.module.dsl.viewModel

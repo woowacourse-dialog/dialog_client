@@ -1,8 +1,8 @@
-package com.on.dialog.discussiondetail.impl.usecase
+package com.on.dialog.domain.usecase.discussion.interaction
 
 import com.on.dialog.domain.repository.LikeRepository
 
-internal class ToggleDiscussionLikeUseCase(
+class ToggleDiscussionLikeUseCase(
     private val likeRepository: LikeRepository,
 ) {
     suspend operator fun invoke(
