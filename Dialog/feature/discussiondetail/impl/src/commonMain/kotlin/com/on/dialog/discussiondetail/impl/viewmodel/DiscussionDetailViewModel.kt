@@ -15,13 +15,11 @@ import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.model.discussion.comment.DiscussionComment
 import com.on.dialog.model.discussion.detail.DiscussionDetail
 import com.on.dialog.model.discussion.detail.OfflineDiscussionDetail
+import com.on.dialog.ui.mapper.UNKNOWN_DIALOG_ERROR
+import com.on.dialog.ui.mapper.toDialogErrorStringResource
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.discussiondetail.impl.generated.resources.Res
-import dialog.feature.discussiondetail.impl.generated.resources.error_already_started
-import dialog.feature.discussiondetail.impl.generated.resources.error_common
 import dialog.feature.discussiondetail.impl.generated.resources.error_fetch_discussion_detail
-import dialog.feature.discussiondetail.impl.generated.resources.error_not_my_discussion
-import dialog.feature.discussiondetail.impl.generated.resources.error_should_login
 import dialog.feature.discussiondetail.impl.generated.resources.message_comment_delete_success
 import dialog.feature.discussiondetail.impl.generated.resources.message_comment_edit_success
 import io.github.aakira.napier.Napier
@@ -37,9 +35,9 @@ internal class DiscussionDetailViewModel(
     private val discussionRepository: DiscussionRepository,
     private val likeRepository: LikeRepository,
     private val scrapRepository: ScrapRepository,
+    private val commentRepository: CommentRepository,
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
-    private val commentRepository: CommentRepository,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
         initialState = DiscussionDetailState(),
     ) {
@@ -215,7 +213,7 @@ internal class DiscussionDetailViewModel(
         return sessionRepository
             .getUserId()
             .onSuccess { userId -> cachedUserId = userId }
-            .getOrNull() ?: -1
+            .getOrNull() ?: UNKNOWN_USER_ID
     }
 
     private suspend fun fetchParticipationStatus() {
@@ -325,22 +323,14 @@ internal class DiscussionDetailViewModel(
 
     private fun showErrorSnackbar(throwable: Throwable) {
         val message = when (throwable) {
-            is NetworkError.Unauthorized -> Res.string.error_should_login
-            is NetworkError.BadRequest -> errorCodeToStringRes(throwable.errorCode)
-            else -> Res.string.error_common
+            is NetworkError -> throwable.errorCode.toDialogErrorStringResource()
+            else -> UNKNOWN_DIALOG_ERROR
         }
         showSnackbar(message = message, state = SnackbarState.NEGATIVE)
     }
 
-    private fun errorCodeToStringRes(errorCode: String?): StringResource = when (errorCode) {
-        ERROR_CODE_ALREADY_STARTED -> Res.string.error_already_started
-        ERROR_CODE_NOT_MY_DISCUSSION -> Res.string.error_not_my_discussion
-        else -> Res.string.error_common
-    }
-
     companion object {
-        private const val ERROR_CODE_ALREADY_STARTED = "5026"
-        private const val ERROR_CODE_NOT_MY_DISCUSSION = "5031"
+        private const val UNKNOWN_USER_ID = -1L
         private const val SUMMARY_POLL_INTERVAL_MS = 10_000L
         private const val SUMMARY_POLL_MAX_RETRY = 3
     }
