@@ -152,10 +152,7 @@ private fun NotMineDetailDropDownMenu(
         showMenu = showMenu,
         onDismissRequest = onDismiss,
     ) {
-        DetailDropDownMenuItem(
-            text = stringResource(Res.string.action_report),
-            onClick = onReportClick,
-        )
+        NotMineDetailDropDownMenuContent(onReportClick = onReportClick)
     }
 }
 
@@ -172,15 +169,36 @@ private fun MineDetailDropDownMenu(
         showMenu = showMenu,
         onDismissRequest = onDismiss,
     ) {
-        DetailDropDownMenuItem(
-            text = stringResource(Res.string.action_edit),
-            onClick = onEditClick,
-        )
-        DetailDropDownMenuItem(
-            text = stringResource(Res.string.action_delete),
-            onClick = onDeleteClick,
+        MineDetailDropDownMenuContent(
+            onEditClick = onEditClick,
+            onDeleteClick = onDeleteClick,
         )
     }
+}
+
+@Composable
+private fun NotMineDetailDropDownMenuContent(
+    onReportClick: () -> Unit,
+) {
+    DetailDropDownMenuItem(
+        text = stringResource(Res.string.action_report),
+        onClick = onReportClick,
+    )
+}
+
+@Composable
+private fun MineDetailDropDownMenuContent(
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+) {
+    DetailDropDownMenuItem(
+        text = stringResource(Res.string.action_edit),
+        onClick = onEditClick,
+    )
+    DetailDropDownMenuItem(
+        text = stringResource(Res.string.action_delete),
+        onClick = onDeleteClick,
+    )
 }
 
 @Composable
@@ -219,35 +237,6 @@ private fun DetailDropDownMenu(
 
 @ThemePreview
 @Composable
-private fun NotMineDetailDropDownMenuPreview() {
-    DialogTheme {
-        Surface {
-            NotMineDetailDropDownMenu(
-                showMenu = true,
-                onDismiss = {},
-                onReportClick = {},
-            )
-        }
-    }
-}
-
-@ThemePreview
-@Composable
-private fun MineDetailDropDownMenuPreview() {
-    DialogTheme {
-        Surface {
-            MineDetailDropDownMenu(
-                showMenu = true,
-                onDismiss = {},
-                onEditClick = {},
-                onDeleteClick = {},
-            )
-        }
-    }
-}
-
-@ThemePreview
-@Composable
 private fun DiscussionDetailTopAppBarPreview() {
     DialogTheme {
         Surface {
@@ -277,8 +266,8 @@ private fun DiscussionDetailTopAppBarPreview() {
                     onReportClick = {},
                     onBookmarkClick = {},
                     onLikeClick = {},
-                    isLiked = true,
-                    isBookmarked = true,
+                    isLiked = false,
+                    isBookmarked = false,
                 )
             }
         }
