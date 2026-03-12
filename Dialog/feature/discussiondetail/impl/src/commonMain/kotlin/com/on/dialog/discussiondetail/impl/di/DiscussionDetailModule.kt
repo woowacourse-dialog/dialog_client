@@ -1,6 +1,8 @@
 package com.on.dialog.discussiondetail.impl.di
 
 import com.on.dialog.discussiondetail.impl.navigation.DiscussionDetailNavKeyProvider
+import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionBookmarkUseCase
+import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionLikeUseCase
 import com.on.dialog.discussiondetail.impl.viewmodel.DiscussionDetailViewModel
 import com.on.dialog.navigation.NavKeyProvider
 import org.koin.core.module.dsl.viewModel
@@ -9,6 +11,8 @@ import org.koin.dsl.module
 
 val discussionDetailModule = module {
     single { DiscussionDetailNavKeyProvider() } bind NavKeyProvider::class
+    factory { ToggleDiscussionBookmarkUseCase(scrapRepository = get()) }
+    factory { ToggleDiscussionLikeUseCase(likeRepository = get()) }
 
     viewModel { params ->
         DiscussionDetailViewModel(
@@ -19,6 +23,8 @@ val discussionDetailModule = module {
             commentRepository = get(),
             participantRepository = get(),
             sessionRepository = get(),
+            toggleDiscussionBookmarkUseCase = get(),
+            toggleDiscussionLikeUseCase = get(),
         )
     }
 }

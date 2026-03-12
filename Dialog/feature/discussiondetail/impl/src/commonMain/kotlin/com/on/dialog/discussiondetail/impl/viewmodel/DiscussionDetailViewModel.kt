@@ -6,6 +6,8 @@ import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.Companion.toUiModel
+import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionBookmarkUseCase
+import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionLikeUseCase
 import com.on.dialog.domain.repository.CommentRepository
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.domain.repository.LikeRepository
@@ -38,6 +40,8 @@ internal class DiscussionDetailViewModel(
     private val commentRepository: CommentRepository,
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
+    private val toggleDiscussionBookmarkUseCase: ToggleDiscussionBookmarkUseCase,
+    private val toggleDiscussionLikeUseCase: ToggleDiscussionLikeUseCase,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
         initialState = DiscussionDetailState(),
     ) {
@@ -148,16 +152,20 @@ internal class DiscussionDetailViewModel(
         updateState { copy(isBookmarked = !isCurrentlyBookmarked) }
 
         viewModelScope.launch {
-            if (isCurrentlyBookmarked) {
-                scrapRepository.deleteScrap(discussionId = discussionId)
-            } else {
-                scrapRepository.postScrap(discussionId = discussionId)
-            }.onFailure { handleUpdateBookmarkFailure(isCurrentlyBookmarked, it) }
+            toggleDiscussionBookmarkUseCase(
+                discussionId = discussionId,
+                isCurrentlyBookmarked = isCurrentlyBookmarked,
+            ).onFailure { throwable ->
+                handleUpdateBookmarkFailure(
+                    rollbackState = isCurrentlyBookmarked,
+                    throwable = throwable,
+                )
+            }
         }
     }
 
-    private fun handleUpdateBookmarkFailure(isCurrentlyBookmarked: Boolean, throwable: Throwable) {
-        updateState { copy(isBookmarked = isCurrentlyBookmarked) }
+    private fun handleUpdateBookmarkFailure(rollbackState: Boolean, throwable: Throwable) {
+        updateState { copy(isBookmarked = rollbackState) }
         showErrorSnackbar(throwable = throwable)
     }
 
@@ -181,24 +189,28 @@ internal class DiscussionDetailViewModel(
 
     private fun updateLike() {
         val isCurrentlyLiked = currentState.isLiked
-        updateState { copy(isLiked = !isCurrentlyLiked) }
+        updateState {
+            copy(
+                isLiked = !isCurrentlyLiked,
+                likeCount = likeCount + if (isCurrentlyLiked) -1 else 1,
+            )
+        }
 
         viewModelScope.launch {
-            if (isCurrentlyLiked) {
-                likeRepository.deleteLike(discussionId = discussionId)
-            } else {
-                likeRepository.postLike(discussionId = discussionId)
-            }.onSuccess { handleUpdateLikeSuccess(isCurrentlyLiked) }
-                .onFailure { handleUpdateLikeFailure(isCurrentlyLiked, it) }
+            toggleDiscussionLikeUseCase(
+                discussionId = discussionId,
+                isCurrentlyLiked = isCurrentlyLiked,
+            ).onFailure { throwable ->
+                handleUpdateLikeFailure(
+                    rollbackLikedState = isCurrentlyLiked,
+                    throwable = throwable,
+                )
+            }
         }
     }
 
-    private fun handleUpdateLikeSuccess(isCurrentlyLiked: Boolean) {
-        updateState { copy(likeCount = likeCount + if (isCurrentlyLiked) -1 else 1) }
-    }
-
-    private fun handleUpdateLikeFailure(isCurrentlyLiked: Boolean, throwable: Throwable) {
-        updateState { copy(isLiked = isCurrentlyLiked) }
+    private fun handleUpdateLikeFailure(rollbackLikedState: Boolean, throwable: Throwable) {
+        updateState { copy(isLiked = rollbackLikedState) }
         showErrorSnackbar(throwable = throwable)
     }
 
