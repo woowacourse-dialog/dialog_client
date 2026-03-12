@@ -55,7 +55,7 @@ internal fun DiscussionDetailHeader(
         Text(
             text = detailContent.title,
             style = DialogTheme.typography.titleLarge,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = DialogTheme.spacing.large),
+            modifier = Modifier.fillMaxWidth(),
         )
         Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
         DialogHorizontalDivider()
@@ -79,8 +79,7 @@ private fun DiscussionActionBar(
         onChipsChange = {},
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = DialogTheme.spacing.large)
-            .padding(top = DialogTheme.spacing.large, bottom = DialogTheme.spacing.small),
+            .padding(bottom = DialogTheme.spacing.small),
     )
 }
 
@@ -93,7 +92,7 @@ private fun ProfileSection(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = DialogTheme.spacing.small, horizontal = DialogTheme.spacing.large),
+            .padding(vertical = DialogTheme.spacing.small),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -172,7 +171,7 @@ private fun InfoSection(
     discussionPlace: String?,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxWidth().padding(horizontal = DialogTheme.spacing.large)) {
+    Column(modifier = modifier.fillMaxWidth()) {
         IconTextRow(
             iconImage = DialogIcons.Info,
             text = stringResource(Res.string.header_info),

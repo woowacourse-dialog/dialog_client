@@ -1,8 +1,11 @@
 package com.on.dialog.discussiondetail.impl
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
@@ -16,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogButtonStyle
+import com.on.dialog.designsystem.component.DialogCard
+import com.on.dialog.designsystem.component.DialogCardTone
 import com.on.dialog.designsystem.component.LoadingIndicator
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.preview.ThemePreview
@@ -43,8 +48,8 @@ import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.DecisionDialog
 import com.on.dialog.ui.component.markdown.MarkdownEditor
 import dialog.feature.discussiondetail.impl.generated.resources.Res
-import dialog.feature.discussiondetail.impl.generated.resources.action_delete
 import dialog.feature.discussiondetail.impl.generated.resources.action_cancel
+import dialog.feature.discussiondetail.impl.generated.resources.action_delete
 import dialog.feature.discussiondetail.impl.generated.resources.comment_delete_write
 import dialog.feature.discussiondetail.impl.generated.resources.discussion_delete_confirm
 import kotlinx.collections.immutable.persistentListOf
@@ -90,6 +95,7 @@ internal fun DiscussionDetailScreen(
                 deleteType = null
                 when (targetDeleteType) {
                     DeleteType.Discussion -> viewModel.onIntent(DiscussionDetailIntent.OnDeleteDiscussion)
+
                     is DeleteType.Comment -> viewModel.onIntent(
                         DiscussionDetailIntent.OnDeleteComment(commentId = targetDeleteType.commentId),
                     )
@@ -233,11 +239,7 @@ private fun DiscussionDetailScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(DialogTheme.colorScheme.background),
-    ) {
+    Column(modifier = modifier.fillMaxSize()) {
         DiscussionDetailTopAppBar(
             isMyDiscussion = state.isMyDiscussion,
             goBack = goBack,
@@ -259,31 +261,50 @@ private fun DiscussionDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .drawFadingEdges(scrollState)
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .padding(
+                    horizontal = DialogTheme.spacing.large,
+                    vertical = DialogTheme.spacing.medium,
+                ),
+            verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
         ) {
             state.discussion?.let { discussion ->
-                DiscussionDetailHeader(discussion = discussion)
+                DialogCard(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    DiscussionDetailHeader(discussion = discussion)
+                }
 
-                DiscussionDetailContent(
-                    discussion = state.discussion,
-                    isMyDiscussion = state.isMyDiscussion,
-                    isShowParticipateButton = state.isShowParticipateButton,
-                    isShowSummary = state.isShowSummary,
-                    isGeneratingSummary = state.isGeneratingSummary,
-                    onSummaryClick = onSummaryClick,
-                    onParticipateClick = onParticipateClick,
-                )
+                DialogCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(DialogTheme.spacing.none),
+                ) {
+                    DiscussionDetailContent(
+                        discussion = state.discussion,
+                        isMyDiscussion = state.isMyDiscussion,
+                        isShowParticipateButton = state.isShowParticipateButton,
+                        isShowSummary = state.isShowSummary,
+                        isGeneratingSummary = state.isGeneratingSummary,
+                        onSummaryClick = onSummaryClick,
+                        onParticipateClick = onParticipateClick,
+                    )
+                }
             }
 
-            CommentSection(
-                comments = state.comments,
-                totalCommentCount = state.totalCommentCount,
-                onCommentClick = onCommentClick,
-                onReplyClick = onReplyClick,
-                onEditClick = onCommentEditClick,
-                onDeleteClick = onCommentDeleteClick,
-                onReportClick = onCommentReportClick,
-            )
+            DialogCard(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(DialogTheme.spacing.none),
+            ) {
+                CommentSection(
+                    comments = state.comments,
+                    totalCommentCount = state.totalCommentCount,
+                    onCommentClick = onCommentClick,
+                    onReplyClick = onReplyClick,
+                    onEditClick = onCommentEditClick,
+                    onDeleteClick = onCommentDeleteClick,
+                    onReportClick = onCommentReportClick,
+                )
+            }
         }
     }
 }
@@ -338,43 +359,45 @@ private fun DiscussionDetailScreenOfflinePreview() {
     }
 }
 
+@ThemePreview
 @Composable
-@Preview(showBackground = true)
 private fun DiscussionDetailScreenOnlinePreview() {
     DialogTheme {
-        DiscussionDetailScreen(
-            state = DiscussionDetailState(
-                isLoading = false,
-                discussion = DiscussionDetailUiModel.OnlineDiscussionDetailUiModel(
-                    detailContent = DetailContentUiModel(
-                        id = 0L,
-                        title = "다이얼로그는 무슨 뜻인가요?",
-                        author = AuthorUiModel(0L, "크림", ""),
-                        category = Track.ANDROID.toUiModel(),
-                        content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
-                        createdAt = "2023.03.01",
-                        likeCount = 100,
-                        modifiedAt = "2023.03.01",
+        Surface {
+            DiscussionDetailScreen(
+                state = DiscussionDetailState(
+                    isLoading = false,
+                    discussion = DiscussionDetailUiModel.OnlineDiscussionDetailUiModel(
+                        detailContent = DetailContentUiModel(
+                            id = 0L,
+                            title = "다이얼로그는 무슨 뜻인가요?",
+                            author = AuthorUiModel(0L, "크림", ""),
+                            category = Track.ANDROID.toUiModel(),
+                            content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
+                            createdAt = "2023.03.01",
+                            likeCount = 100,
+                            modifiedAt = "2023.03.01",
+                        ),
+                        summary = null,
+                        status = DiscussionStatusUiModel.DISCUSSION_COMPLETE,
+                        endDate = "2026년 3월 10일",
                     ),
-                    summary = null,
-                    status = DiscussionStatusUiModel.DISCUSSION_COMPLETE,
-                    endDate = "2026년 3월 10일",
+                    isMyDiscussion = false,
                 ),
-                isMyDiscussion = false,
-            ),
-            goBack = {},
-            onCommentClick = {},
-            onReplyClick = {},
-            onCommentEditClick = { _, _ -> },
-            onCommentDeleteClick = {},
-            onCommentReportClick = {},
-            onBookmarkClick = {},
-            onLikeClick = {},
-            onParticipateClick = {},
-            onSummaryClick = {},
-            onEditClick = {},
-            onDeleteClick = {},
-            onReportClick = {},
-        )
+                goBack = {},
+                onCommentClick = {},
+                onReplyClick = {},
+                onCommentEditClick = { _, _ -> },
+                onCommentDeleteClick = {},
+                onCommentReportClick = {},
+                onBookmarkClick = {},
+                onLikeClick = {},
+                onParticipateClick = {},
+                onSummaryClick = {},
+                onEditClick = {},
+                onDeleteClick = {},
+                onReportClick = {},
+            )
+        }
     }
 }

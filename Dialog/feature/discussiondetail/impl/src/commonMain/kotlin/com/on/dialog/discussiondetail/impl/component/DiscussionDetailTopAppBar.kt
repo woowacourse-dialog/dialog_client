@@ -207,6 +207,7 @@ private fun DetailDropDownMenu(
         expanded = showMenu,
         onDismissRequest = onDismissRequest,
         shape = DialogTheme.shapes.medium,
+        containerColor = DialogTheme.colorScheme.surface,
         modifier = modifier.padding(horizontal = DialogTheme.spacing.extraSmall),
     ) {
         ProvideTextStyle(
