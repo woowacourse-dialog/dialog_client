@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,6 +23,7 @@ import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DeleteType
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel.AuthorUiModel
+import com.on.dialog.discussiondetail.impl.model.DiscussionDetailOverlay
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.OfflineDiscussionDetailUiModel.ParticipantUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel
@@ -55,7 +56,7 @@ internal fun DiscussionDetailScreen(
 ) {
     val snackbarDelegate = LocalSnackbarDelegate.current
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
-    var activeOverlay: DiscussionDetailOverlay? by remember { mutableStateOf(null) }
+    var activeOverlay: DiscussionDetailOverlay? by rememberSaveable { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -75,7 +76,8 @@ internal fun DiscussionDetailScreen(
         goBack = goBack,
         onCommentClick = { activeOverlay = DiscussionDetailOverlay.Comment(CommentType.Comment) },
         onReplyClick = { commentId ->
-            activeOverlay = DiscussionDetailOverlay.Comment(CommentType.Reply(commentId = commentId))
+            activeOverlay =
+                DiscussionDetailOverlay.Comment(CommentType.Reply(commentId = commentId))
         },
         onCommentEditClick = { commentId, content ->
             activeOverlay = DiscussionDetailOverlay.Comment(
@@ -83,10 +85,12 @@ internal fun DiscussionDetailScreen(
             )
         },
         onCommentDeleteClick = { commentId ->
-            activeOverlay = DiscussionDetailOverlay.Delete(DeleteType.Comment(commentId = commentId))
+            activeOverlay =
+                DiscussionDetailOverlay.Delete(DeleteType.Comment(commentId = commentId))
         },
         onCommentReportClick = { commentId ->
-            activeOverlay = DiscussionDetailOverlay.Report(ReportType.Comment(commentId = commentId))
+            activeOverlay =
+                DiscussionDetailOverlay.Report(ReportType.Comment(commentId = commentId))
         },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
@@ -167,6 +171,7 @@ private fun DiscussionDetailOverlayHost(
                     onDismiss()
                     when (val type = activeOverlay.type) {
                         DeleteType.Discussion -> onIntent(DiscussionDetailIntent.OnDeleteDiscussion)
+
                         is DeleteType.Comment -> onIntent(
                             DiscussionDetailIntent.OnDeleteComment(commentId = type.commentId),
                         )
@@ -199,7 +204,9 @@ private fun DiscussionDetailOverlayHost(
             )
         }
 
-        null -> Unit
+        null -> {
+            Unit
+        }
     }
 }
 
@@ -255,14 +262,6 @@ private fun DiscussionDetailScreenScaffold(
             onCommentReportClick = onCommentReportClick,
         )
     }
-}
-
-private sealed interface DiscussionDetailOverlay {
-    data class Comment(val type: CommentType) : DiscussionDetailOverlay
-
-    data class Delete(val type: DeleteType) : DiscussionDetailOverlay
-
-    data class Report(val type: ReportType) : DiscussionDetailOverlay
 }
 
 @ThemePreview
