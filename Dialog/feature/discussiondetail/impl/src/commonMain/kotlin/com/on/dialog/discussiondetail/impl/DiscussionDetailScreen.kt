@@ -9,6 +9,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +25,7 @@ import com.on.dialog.discussiondetail.impl.component.CommentSection
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailContent
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailHeader
 import com.on.dialog.discussiondetail.impl.component.DiscussionDetailTopAppBar
+import com.on.dialog.discussiondetail.impl.component.DiscussionReportDialog
 import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
 import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel.AuthorUiModel
@@ -84,6 +88,17 @@ internal fun DiscussionDetailScreen(
         )
     }
 
+    if (uiState.isShowReportDiscussionDialog) {
+        DiscussionReportDialog(
+            onDismiss = { viewModel.onIntent(DiscussionDetailIntent.CloseReportDiscussionDialog) },
+            onConfirm = { reason ->
+                viewModel.onIntent(
+                    DiscussionDetailIntent.OnReportDiscussion(reason = reason),
+                )
+            },
+        )
+    }
+
     DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
@@ -115,6 +130,7 @@ internal fun DiscussionDetailScreen(
         onSummaryClick = { viewModel.onIntent(DiscussionDetailIntent.GenerateSummary) },
         onEditClick = { /* TODO: 수정 화면으로 이동 */ },
         onDeleteClick = { /* TODO: 삭제 확인 다이얼로그 표시 */ },
+        onReportClick = { viewModel.onIntent(DiscussionDetailIntent.OpenReportDiscussionDialog) },
         modifier = modifier,
     )
 
@@ -174,6 +190,7 @@ private fun DiscussionDetailScreen(
     onSummaryClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onReportClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
@@ -188,7 +205,7 @@ private fun DiscussionDetailScreen(
             goBack = goBack,
             onEditClick = onEditClick,
             onDeleteClick = onDeleteClick,
-            onReportClick = {},
+            onReportClick = onReportClick,
             onBookmarkClick = onBookmarkClick,
             onLikeClick = onLikeClick,
             isLiked = state.isLiked,
@@ -275,6 +292,7 @@ private fun DiscussionDetailScreenOfflinePreview() {
                 onSummaryClick = {},
                 onEditClick = {},
                 onDeleteClick = {},
+                onReportClick = {},
             )
         }
     }
@@ -315,6 +333,7 @@ private fun DiscussionDetailScreenOnlinePreview() {
             onSummaryClick = {},
             onEditClick = {},
             onDeleteClick = {},
+            onReportClick = {},
         )
     }
 }

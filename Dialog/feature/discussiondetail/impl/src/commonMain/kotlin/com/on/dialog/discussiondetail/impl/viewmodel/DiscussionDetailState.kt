@@ -21,6 +21,7 @@ internal data class DiscussionDetailState(
     val comments: ImmutableList<DiscussionCommentUiModel> = persistentListOf(),
     val commentType: CommentType? = null,
     val deleteCommentId: Long? = null,
+    val isShowReportDiscussionDialog: Boolean = false,
 ) : UiState {
     val isShowSummary: Boolean =
         discussion is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel &&

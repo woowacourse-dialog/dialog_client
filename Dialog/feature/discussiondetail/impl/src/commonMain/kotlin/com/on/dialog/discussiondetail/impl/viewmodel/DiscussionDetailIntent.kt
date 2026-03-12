@@ -1,9 +1,10 @@
 package com.on.dialog.discussiondetail.impl.viewmodel
 
 import com.on.dialog.discussiondetail.impl.model.CommentType
+import com.on.dialog.discussiondetail.impl.model.ReportReasonUiModel
 import com.on.dialog.ui.viewmodel.UiIntent
 
-sealed interface DiscussionDetailIntent : UiIntent {
+internal sealed interface DiscussionDetailIntent : UiIntent {
     data object ToggleBookmark : DiscussionDetailIntent
 
     data object ToggleLike : DiscussionDetailIntent
@@ -11,6 +12,10 @@ sealed interface DiscussionDetailIntent : UiIntent {
     data object Participate : DiscussionDetailIntent
 
     data object GenerateSummary : DiscussionDetailIntent
+
+    data class OnReportDiscussion(
+        val reason: ReportReasonUiModel,
+    ) : DiscussionDetailIntent
 
     data class OnSubmitComment(
         val content: String,
@@ -41,4 +46,8 @@ sealed interface DiscussionDetailIntent : UiIntent {
     ) : DiscussionDetailIntent
 
     data object CloseDeleteCommentDialog : DiscussionDetailIntent
+
+    data object OpenReportDiscussionDialog : DiscussionDetailIntent
+
+    data object CloseReportDiscussionDialog : DiscussionDetailIntent
 }

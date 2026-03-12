@@ -7,10 +7,12 @@ import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel.Companion.toUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.Companion.toUiModel
+import com.on.dialog.discussiondetail.impl.model.ReportReasonUiModel
 import com.on.dialog.domain.repository.CommentRepository
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.domain.repository.LikeRepository
 import com.on.dialog.domain.repository.ParticipantRepository
+import com.on.dialog.domain.repository.ReportRepository
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionBookmarkUseCase
@@ -25,6 +27,7 @@ import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.error_fetch_discussion_detail
 import dialog.feature.discussiondetail.impl.generated.resources.message_comment_delete_success
 import dialog.feature.discussiondetail.impl.generated.resources.message_comment_edit_success
+import dialog.feature.discussiondetail.impl.generated.resources.message_discussion_report_success
 import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.async
@@ -40,6 +43,7 @@ internal class DiscussionDetailViewModel(
     private val commentRepository: CommentRepository,
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
+    private val reportRepository: ReportRepository,
     private val generateDiscussionSummaryUseCase: GenerateDiscussionSummaryUseCase,
     private val toggleDiscussionBookmarkUseCase: ToggleDiscussionBookmarkUseCase,
     private val toggleDiscussionLikeUseCase: ToggleDiscussionLikeUseCase,
@@ -62,6 +66,8 @@ internal class DiscussionDetailViewModel(
 
             DiscussionDetailIntent.GenerateSummary -> generateSummary()
 
+            is DiscussionDetailIntent.OnReportDiscussion -> reportDiscussion(reason = intent.reason)
+
             is DiscussionDetailIntent.OnSubmitComment -> submitComment(content = intent.content)
 
             is DiscussionDetailIntent.OnSubmitReply -> submitReply(
@@ -83,6 +89,10 @@ internal class DiscussionDetailViewModel(
             is DiscussionDetailIntent.OpenDeleteCommentDialog -> openDeleteCommentDialog(commentId = intent.commentId)
 
             DiscussionDetailIntent.CloseDeleteCommentDialog -> closeDeleteCommentDialog()
+
+            DiscussionDetailIntent.OpenReportDiscussionDialog -> openReportDiscussionDialog()
+
+            DiscussionDetailIntent.CloseReportDiscussionDialog -> closeReportDiscussionDialog()
         }
     }
 
@@ -100,6 +110,14 @@ internal class DiscussionDetailViewModel(
 
     private fun closeDeleteCommentDialog() {
         updateState { copy(deleteCommentId = null) }
+    }
+
+    private fun openReportDiscussionDialog() {
+        updateState { copy(isShowReportDiscussionDialog = true) }
+    }
+
+    private fun closeReportDiscussionDialog() {
+        updateState { copy(isShowReportDiscussionDialog = false) }
     }
 
     private fun fetchInitialData() {
@@ -292,6 +310,22 @@ internal class DiscussionDetailViewModel(
                         )
                     }.onFailure(::showErrorSnackbar)
             }.invokeOnCompletion { closeDeleteCommentDialog() }
+    }
+
+    private fun reportDiscussion(reason: ReportReasonUiModel) {
+        closeReportDiscussionDialog()
+        viewModelScope.launch {
+            reportRepository
+                .reportDiscussion(
+                    discussionId = discussionId,
+                    reason = reason.name,
+                ).onSuccess {
+                    showSnackbar(
+                        message = Res.string.message_discussion_report_success,
+                        state = SnackbarState.POSITIVE,
+                    )
+                }.onFailure(::showErrorSnackbar)
+        }
     }
 
     private fun showSnackbar(

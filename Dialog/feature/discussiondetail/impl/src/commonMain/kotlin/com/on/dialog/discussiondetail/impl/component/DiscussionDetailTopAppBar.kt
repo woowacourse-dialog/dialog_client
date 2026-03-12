@@ -29,6 +29,7 @@ import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.action_delete
 import dialog.feature.discussiondetail.impl.generated.resources.action_edit
 import dialog.feature.discussiondetail.impl.generated.resources.action_more
+import dialog.feature.discussiondetail.impl.generated.resources.action_report
 import dialog.feature.discussiondetail.impl.generated.resources.header_bookmark_content_description
 import dialog.feature.discussiondetail.impl.generated.resources.header_like_content_description
 import org.jetbrains.compose.resources.stringResource
@@ -153,7 +154,7 @@ private fun NotMineDetailDropDownMenu(
         onDismissRequest = onDismiss,
     ) {
         DetailDropDownMenuItem(
-            text = "신고",
+            text = stringResource(Res.string.action_report),
             onClick = onReportClick,
             icon = DialogIcons.Report,
         )
