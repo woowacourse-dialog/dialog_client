@@ -184,10 +184,15 @@ private fun DiscussionDetailScreen(
             .background(DialogTheme.colorScheme.background),
     ) {
         DiscussionDetailTopAppBar(
-            showActions = state.isMyDiscussion,
+            isMyDiscussion = state.isMyDiscussion,
             goBack = goBack,
             onEditClick = onEditClick,
             onDeleteClick = onDeleteClick,
+            onReportClick = {},
+            onBookmarkClick = onBookmarkClick,
+            onLikeClick = onLikeClick,
+            isLiked = state.isLiked,
+            isBookmarked = state.isBookmarked,
         )
 
         if (state.isLoading) {
@@ -202,14 +207,7 @@ private fun DiscussionDetailScreen(
                 .verticalScroll(scrollState),
         ) {
             state.discussion?.let { discussion ->
-                DiscussionDetailHeader(
-                    discussion = discussion,
-                    isBookmarked = state.isBookmarked,
-                    isLiked = state.isLiked,
-                    likeCount = state.likeCount,
-                    onLikeClick = onLikeClick,
-                    onBookmarkClick = onBookmarkClick,
-                )
+                DiscussionDetailHeader(discussion = discussion)
 
                 DiscussionDetailContent(
                     discussion = state.discussion,

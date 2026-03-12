@@ -9,7 +9,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.MenuItemColors
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
@@ -28,14 +29,21 @@ import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.action_delete
 import dialog.feature.discussiondetail.impl.generated.resources.action_edit
 import dialog.feature.discussiondetail.impl.generated.resources.action_more
+import dialog.feature.discussiondetail.impl.generated.resources.header_bookmark_content_description
+import dialog.feature.discussiondetail.impl.generated.resources.header_like_content_description
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionDetailTopAppBar(
-    showActions: Boolean,
+    isMyDiscussion: Boolean,
+    isLiked: Boolean,
+    isBookmarked: Boolean,
     goBack: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onReportClick: () -> Unit,
+    onBookmarkClick: () -> Unit,
+    onLikeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DialogTopAppBar(
@@ -47,24 +55,54 @@ internal fun DiscussionDetailTopAppBar(
             }
         },
         actions = {
-            if (showActions) {
-                DiscussionDetailActions(
-                    onEditClick = onEditClick,
-                    onDeleteClick = onDeleteClick,
-                )
-            }
+            DiscussionDetailDefaultActions(
+                isBookmarked = isBookmarked,
+                onBookmarkClick = onBookmarkClick,
+                isLiked = isLiked,
+                onLikeClick = onLikeClick,
+            )
+            DiscussionDetailActions(
+                isMyDiscussion = isMyDiscussion,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick,
+                onReportClick = onReportClick,
+            )
         },
     )
 }
 
 @Composable
+private fun DiscussionDetailDefaultActions(
+    isBookmarked: Boolean,
+    onBookmarkClick: () -> Unit,
+    isLiked: Boolean,
+    onLikeClick: () -> Unit,
+) {
+    DialogIconButton(onClick = onBookmarkClick) {
+        Icon(
+            imageVector = if (isBookmarked) DialogIcons.Bookmark else DialogIcons.BookmarkBorder,
+            contentDescription = stringResource(Res.string.header_bookmark_content_description),
+        )
+    }
+    DialogIconButton(onClick = onLikeClick) {
+        Icon(
+            imageVector = if (isLiked) DialogIcons.Favorite else DialogIcons.FavoriteBorder,
+            contentDescription = stringResource(Res.string.header_like_content_description),
+        )
+    }
+}
+
+@Composable
 private fun DiscussionDetailActions(
+    isMyDiscussion: Boolean,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onReportClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
 
-    Box {
+    Box(modifier = modifier) {
         DialogIconButton(onClick = { showMenu = true }) {
             Icon(
                 imageVector = DialogIcons.MoreVert,
@@ -72,64 +110,142 @@ private fun DiscussionDetailActions(
             )
         }
 
-        DetailDropDownMenu(
-            showMenu = showMenu,
-            onDismissRequest = { showMenu = false },
-            onEditClick = {
-                onEditClick()
-                showMenu = false
-            },
-            onDeleteClick = {
-                onDeleteClick()
-                showMenu = false
-            },
+        when (isMyDiscussion) {
+            true -> {
+                MineDetailDropDownMenu(
+                    showMenu = showMenu,
+                    onDismiss = { showMenu = false },
+                    onEditClick = {
+                        onEditClick()
+                        showMenu = false
+                    },
+                    onDeleteClick = {
+                        onDeleteClick()
+                        showMenu = false
+                    },
+                )
+            }
+
+            false -> {
+                NotMineDetailDropDownMenu(
+                    showMenu = showMenu,
+                    onDismiss = { showMenu = false },
+                    onReportClick = {
+                        onReportClick()
+                        showMenu = false
+                    },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NotMineDetailDropDownMenu(
+    showMenu: Boolean,
+    onDismiss: () -> Unit,
+    onReportClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    DetailDropDownMenu(
+        modifier = modifier,
+        showMenu = showMenu,
+        onDismissRequest = onDismiss,
+    ) {
+        DetailDropDownMenuItem(
+            text = "신고",
+            onClick = onReportClick,
+            icon = DialogIcons.Report,
         )
     }
+}
+
+@Composable
+private fun MineDetailDropDownMenu(
+    showMenu: Boolean,
+    onDismiss: () -> Unit,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    DetailDropDownMenu(
+        modifier = modifier,
+        showMenu = showMenu,
+        onDismissRequest = onDismiss,
+    ) {
+        DetailDropDownMenuItem(
+            text = stringResource(Res.string.action_edit),
+            onClick = onEditClick,
+            icon = DialogIcons.Edit,
+        )
+        DetailDropDownMenuItem(
+            text = stringResource(Res.string.action_delete),
+            onClick = onDeleteClick,
+            icon = DialogIcons.Delete,
+        )
+    }
+}
+
+@Composable
+private fun DetailDropDownMenuItem(
+    text: String,
+    onClick: () -> Unit,
+    icon: ImageVector,
+    modifier: Modifier = Modifier,
+) {
+    DropdownMenuItem(
+        modifier = modifier,
+        text = { Text(text = text) },
+        colors = MenuDefaults.itemColors(
+            textColor = DialogTheme.colorScheme.onSurface,
+            leadingIconColor = DialogTheme.colorScheme.onSurface,
+        ),
+        onClick = onClick,
+        leadingIcon = { Icon(imageVector = icon, contentDescription = text) },
+    )
 }
 
 @Composable
 private fun DetailDropDownMenu(
     showMenu: Boolean,
     onDismissRequest: () -> Unit,
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
 ) {
     DropdownMenu(
         expanded = showMenu,
         onDismissRequest = onDismissRequest,
         modifier = modifier,
     ) {
-        val textStyle = DialogTheme.typography.titleMedium
-        DropdownMenuItem(
-            text = { Text(text = stringResource(Res.string.action_edit), style = textStyle) },
-            colors = dropdownColors(),
-            onClick = onEditClick,
-            leadingIcon = { Icon(imageVector = DialogIcons.Edit, contentDescription = null) },
-        )
-        DropdownMenuItem(
-            text = { Text(text = stringResource(Res.string.action_delete), style = textStyle) },
-            colors = dropdownColors(),
-            onClick = onDeleteClick,
-            leadingIcon = { Icon(imageVector = DialogIcons.Delete, contentDescription = null) },
+        ProvideTextStyle(
+            value = DialogTheme.typography.titleMedium,
+            content = content,
         )
     }
 }
 
+@ThemePreview
 @Composable
-private fun dropdownColors(): MenuItemColors = MenuDefaults.itemColors(
-    textColor = DialogTheme.colorScheme.onSurface,
-    leadingIconColor = DialogTheme.colorScheme.onSurface,
-)
+private fun NotMineDetailDropDownMenuPreview() {
+    DialogTheme {
+        Surface {
+            NotMineDetailDropDownMenu(
+                showMenu = true,
+                onDismiss = {},
+                onReportClick = {},
+            )
+        }
+    }
+}
 
 @ThemePreview
 @Composable
-private fun DiscussionDetailActionsPreview() {
+private fun MineDetailDropDownMenuPreview() {
     DialogTheme {
         Surface {
-            DetailDropDownMenu(
+            MineDetailDropDownMenu(
                 showMenu = true,
-                onDismissRequest = {},
+                onDismiss = {},
                 onEditClick = {},
                 onDeleteClick = {},
             )
@@ -139,27 +255,39 @@ private fun DiscussionDetailActionsPreview() {
 
 @ThemePreview
 @Composable
-fun DiscussionDetailTopAppBarPreview() {
+private fun DiscussionDetailTopAppBarPreview() {
     DialogTheme {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .background(DialogTheme.colorScheme.background)
-                .padding(vertical = 16.dp),
-        ) {
-            DiscussionDetailTopAppBar(
-                showActions = true,
-                goBack = {},
-                onEditClick = {},
-                onDeleteClick = {},
-            )
+        Surface {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .background(DialogTheme.colorScheme.background)
+                    .padding(vertical = 16.dp),
+            ) {
+                DiscussionDetailTopAppBar(
+                    isMyDiscussion = true,
+                    goBack = {},
+                    onEditClick = {},
+                    onDeleteClick = {},
+                    onReportClick = {},
+                    onBookmarkClick = {},
+                    onLikeClick = {},
+                    isLiked = true,
+                    isBookmarked = true,
+                )
 
-            DiscussionDetailTopAppBar(
-                showActions = false,
-                goBack = {},
-                onEditClick = {},
-                onDeleteClick = {},
-            )
+                DiscussionDetailTopAppBar(
+                    isMyDiscussion = false,
+                    goBack = {},
+                    onEditClick = {},
+                    onDeleteClick = {},
+                    onReportClick = {},
+                    onBookmarkClick = {},
+                    onLikeClick = {},
+                    isLiked = true,
+                    isBookmarked = true,
+                )
+            }
         }
     }
 }
