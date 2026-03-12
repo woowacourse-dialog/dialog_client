@@ -39,6 +39,7 @@ sealed interface DiscussionDetailUiModel {
         val participantCapacity: String,
         val place: String,
         val participants: ImmutableList<ParticipantUiModel>,
+        val isParticipating: Boolean,
     ) : DiscussionDetailUiModel {
         @Composable
         override fun toChipCategories(): ImmutableList<ChipCategory> = persistentListOf(
@@ -60,6 +61,7 @@ sealed interface DiscussionDetailUiModel {
             @OptIn(ExperimentalTime::class)
             fun OfflineDiscussionDetail.toOfflineUiModel(
                 now: LocalDateTime = LocalDateTime.now(),
+                userId: Long,
             ): OfflineDiscussionDetailUiModel = OfflineDiscussionDetailUiModel(
                 detailContent = detailContent.toUiModel(),
                 dateTimePeriod = periodToKoreanString(dateTimePeriod.startAt, dateTimePeriod.endAt),
@@ -67,6 +69,7 @@ sealed interface DiscussionDetailUiModel {
                 place = place,
                 participants = participants.map { it.toUiModel() }.toImmutableList(),
                 status = status(now).toUiModel(),
+                isParticipating = participants.any { participant -> participant.id == userId },
             )
         }
     }
@@ -98,8 +101,8 @@ sealed interface DiscussionDetailUiModel {
     }
 
     companion object {
-        fun DiscussionDetail.toUiModel() = when (this) {
-            is OfflineDiscussionDetail -> toOfflineUiModel()
+        fun DiscussionDetail.toUiModel(userId: Long) = when (this) {
+            is OfflineDiscussionDetail -> toOfflineUiModel(userId = userId)
             is OnlineDiscussionDetail -> toOnlineUiModel()
         }
     }

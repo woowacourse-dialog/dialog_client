@@ -33,7 +33,6 @@ internal fun DiscussionDetailContent(
     isShowParticipateButton: Boolean,
     isShowSummary: Boolean,
     isGeneratingSummary: Boolean,
-    isParticipating: Boolean,
     onSummaryClick: () -> Unit,
     onParticipateClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -50,32 +49,36 @@ internal fun DiscussionDetailContent(
         )
 
         Column(modifier = Modifier.padding(horizontal = DialogTheme.spacing.large)) {
-            val includeSpacing = isShowSummary || isShowParticipateButton
+            val requireSpacer = isShowSummary || isShowParticipateButton
 
-            if (includeSpacing) {
+            if (requireSpacer) {
                 DialogHorizontalDivider()
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
             }
 
-            if (isShowSummary) {
-                val summary =
-                    (discussion as? DiscussionDetailUiModel.OnlineDiscussionDetailUiModel)?.summary
-                DiscussionSummary(
-                    summary = summary,
-                    isMyDiscussion = isMyDiscussion,
-                    isGeneratingSummary = isGeneratingSummary,
-                    onSummaryClick = onSummaryClick,
-                )
+            when (discussion) {
+                is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel -> {
+                    if (isShowParticipateButton) {
+                        ParticipateButton(
+                            isParticipating = discussion.isParticipating,
+                            onParticipateClick = onParticipateClick,
+                        )
+                    }
+                }
+
+                is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel -> {
+                    if (isShowSummary) {
+                        DiscussionSummary(
+                            summary = discussion.summary,
+                            isMyDiscussion = isMyDiscussion,
+                            isGeneratingSummary = isGeneratingSummary,
+                            onSummaryClick = onSummaryClick,
+                        )
+                    }
+                }
             }
 
-            if (isShowParticipateButton) {
-                ParticipateButton(
-                    isParticipating = isParticipating,
-                    onParticipateClick = onParticipateClick,
-                )
-            }
-
-            if (includeSpacing) Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
+            if (requireSpacer) Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
         }
     }
 }
@@ -125,7 +128,6 @@ private fun OnlineDiscussionDetailContentPreview() {
                 isShowParticipateButton = false,
                 isShowSummary = true,
                 isGeneratingSummary = false,
-                isParticipating = false,
                 onSummaryClick = {},
                 onParticipateClick = {},
             )
@@ -164,12 +166,12 @@ private fun OfflineDiscussionDetailContentPreview() {
                             name = "크림 $it",
                         )
                     }.toImmutableList(),
+                    isParticipating = true,
                 ),
                 isMyDiscussion = true,
                 isShowParticipateButton = true,
                 isShowSummary = false,
                 isGeneratingSummary = false,
-                isParticipating = false,
                 onSummaryClick = {},
                 onParticipateClick = {},
             )

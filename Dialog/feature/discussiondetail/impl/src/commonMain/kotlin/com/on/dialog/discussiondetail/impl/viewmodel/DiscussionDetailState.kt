@@ -17,7 +17,6 @@ internal data class DiscussionDetailState(
     val isBookmarked: Boolean = false,
     val isLiked: Boolean = false,
     val likeCount: Int = 0,
-    val isParticipating: Boolean = false,
     val isMyDiscussion: Boolean = false,
     val comments: ImmutableList<DiscussionCommentUiModel> = persistentListOf(),
     val commentType: CommentType? = null,
@@ -28,7 +27,8 @@ internal data class DiscussionDetailState(
             discussion.status == DiscussionStatusUiModel.DISCUSSION_COMPLETE
 
     val isShowParticipateButton: Boolean =
-        discussion is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel
+        discussion is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel &&
+            discussion.status == DiscussionStatusUiModel.RECRUITING
 
     val totalCommentCount: Int =
         comments.size + comments.sumOf { comment -> comment.childComments.size }

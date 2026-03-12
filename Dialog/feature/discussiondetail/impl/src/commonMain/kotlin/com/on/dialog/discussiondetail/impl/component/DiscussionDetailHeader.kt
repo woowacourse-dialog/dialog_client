@@ -323,6 +323,7 @@ private fun OfflineDiscussionDetailHeaderPreview() {
                         ParticipantUiModel(id = 1L, name = "제리"),
                         ParticipantUiModel(id = 2L, name = "크림"),
                     ),
+                    isParticipating = false,
                     dateTimePeriod = "2023년 3월 1일 13시 15분 ~ 15시 15분",
                 ),
                 isBookmarked = false,

@@ -18,7 +18,6 @@ import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionLikeU
 import com.on.dialog.domain.usecase.discussion.summary.GenerateDiscussionSummaryUseCase
 import com.on.dialog.model.discussion.comment.DiscussionComment
 import com.on.dialog.model.discussion.detail.DiscussionDetail
-import com.on.dialog.model.discussion.detail.OfflineDiscussionDetail
 import com.on.dialog.ui.mapper.UNKNOWN_DIALOG_ERROR
 import com.on.dialog.ui.mapper.toDialogErrorStringResource
 import com.on.dialog.ui.viewmodel.BaseViewModel
@@ -50,14 +49,14 @@ internal class DiscussionDetailViewModel(
     private var cachedUserId: Long? = null
 
     init {
-        fetchDiscussion()
+        fetchInitialData()
     }
 
     override fun onIntent(intent: DiscussionDetailIntent) {
         when (intent) {
-            DiscussionDetailIntent.ToggleBookmark -> updateBookmark()
+            DiscussionDetailIntent.ToggleBookmark -> toggleBookmark()
 
-            DiscussionDetailIntent.ToggleLike -> updateLike()
+            DiscussionDetailIntent.ToggleLike -> toggleLike()
 
             DiscussionDetailIntent.Participate -> participate()
 
@@ -103,7 +102,8 @@ internal class DiscussionDetailViewModel(
         updateState { copy(deleteCommentId = null) }
     }
 
-    private fun fetchDiscussion() {
+    private fun fetchInitialData() {
+        updateState { copy(isLoading = true) }
         viewModelScope
             .launch {
                 awaitAll(
@@ -115,23 +115,31 @@ internal class DiscussionDetailViewModel(
             }.invokeOnCompletion { updateState { copy(isLoading = false) } }
     }
 
-    private suspend fun fetchDiscussionDetail(): Result<DiscussionDetail> =
-        discussionRepository
-            .getDiscussionDetail(id = discussionId)
-            .onSuccess { discussionDetail ->
-                handleFetchDiscussionDetailSuccess(discussionDetail)
-                updateIsMyDiscussion(authorId = discussionDetail.detailContent.author.id)
-                if (discussionDetail is OfflineDiscussionDetail) {
-                    fetchParticipationStatus()
-                }
-            }.onFailure { handleFetchDiscussionDetailFailure() }
-
-    private fun handleFetchDiscussionDetailSuccess(discussionDetail: DiscussionDetail) =
-        with(discussionDetail) {
-            updateState {
-                copy(discussion = toUiModel(), likeCount = detailContent.likeCount)
-            }
+    private fun fetchDiscussionDetail() {
+        viewModelScope.launch {
+            discussionRepository
+                .getDiscussionDetail(id = discussionId)
+                .onSuccess { discussionDetail ->
+                    handleFetchDiscussionDetailSuccess(
+                        discussionDetail = discussionDetail,
+                        userId = getUserId(),
+                    )
+                }.onFailure { handleFetchDiscussionDetailFailure() }
         }
+    }
+
+    private fun handleFetchDiscussionDetailSuccess(
+        discussionDetail: DiscussionDetail,
+        userId: Long,
+    ) {
+        updateState {
+            copy(
+                discussion = discussionDetail.toUiModel(userId = userId),
+                likeCount = discussionDetail.detailContent.likeCount,
+                isMyDiscussion = discussionDetail.detailContent.author.id == userId,
+            )
+        }
+    }
 
     private fun handleFetchDiscussionDetailFailure() {
         emitEffect(
@@ -149,26 +157,19 @@ internal class DiscussionDetailViewModel(
             .onSuccess { updateState { copy(isBookmarked = it.isScraped) } }
     }
 
-    private fun updateBookmark() {
-        val isCurrentlyBookmarked = currentState.isBookmarked
-        updateState { copy(isBookmarked = !isCurrentlyBookmarked) }
+    private fun toggleBookmark() {
+        val wasBookmarked = currentState.isBookmarked
+        updateState { copy(isBookmarked = !wasBookmarked) }
 
         viewModelScope.launch {
             toggleDiscussionBookmarkUseCase(
                 discussionId = discussionId,
-                isCurrentlyBookmarked = isCurrentlyBookmarked,
+                isCurrentlyBookmarked = wasBookmarked,
             ).onFailure { throwable ->
-                handleUpdateBookmarkFailure(
-                    rollbackState = isCurrentlyBookmarked,
-                    throwable = throwable,
-                )
+                updateState { copy(isBookmarked = wasBookmarked) }
+                showErrorSnackbar(throwable = throwable)
             }
         }
-    }
-
-    private fun handleUpdateBookmarkFailure(rollbackState: Boolean, throwable: Throwable) {
-        updateState { copy(isBookmarked = rollbackState) }
-        showErrorSnackbar(throwable = throwable)
     }
 
     private suspend fun fetchLikeStatus() {
@@ -182,43 +183,26 @@ internal class DiscussionDetailViewModel(
             .fetchComments(discussionId = discussionId)
             .onSuccess { comments ->
                 val userId = getUserId()
-                val newComments =
-                    comments.map { comment -> comment.toUiModel(userId = userId) }.toImmutableList()
-                updateState { copy(comments = newComments) }
-            }.onFailure { throwable ->
-                Napier.e(message = throwable.message.orEmpty(), throwable = throwable)
-            }
+                val newComments = comments.map { comment -> comment.toUiModel(userId = userId) }
+                updateState { copy(comments = newComments.toImmutableList()) }
+            }.onFailure(::showErrorSnackbar)
 
-    private fun updateLike() {
-        val isCurrentlyLiked = currentState.isLiked
+    private fun toggleLike() {
+        val wasLiked = currentState.isLiked
+        val likeDelta = if (wasLiked) -1 else 1
         updateState {
-            copy(
-                isLiked = !isCurrentlyLiked,
-                likeCount = likeCount + if (isCurrentlyLiked) -1 else 1,
-            )
+            copy(isLiked = !wasLiked, likeCount = likeCount + likeDelta)
         }
 
         viewModelScope.launch {
             toggleDiscussionLikeUseCase(
                 discussionId = discussionId,
-                isCurrentlyLiked = isCurrentlyLiked,
+                isCurrentlyLiked = wasLiked,
             ).onFailure { throwable ->
-                handleUpdateLikeFailure(
-                    rollbackLikedState = isCurrentlyLiked,
-                    throwable = throwable,
-                )
+                updateState { copy(isLiked = wasLiked, likeCount = likeCount - likeDelta) }
+                showErrorSnackbar(throwable = throwable)
             }
         }
-    }
-
-    private fun handleUpdateLikeFailure(rollbackLikedState: Boolean, throwable: Throwable) {
-        updateState { copy(isLiked = rollbackLikedState) }
-        showErrorSnackbar(throwable = throwable)
-    }
-
-    private suspend fun updateIsMyDiscussion(authorId: Long) {
-        val isMyDiscussion = getUserId() == authorId
-        updateState { copy(isMyDiscussion = isMyDiscussion) }
     }
 
     private suspend fun getUserId(): Long {
@@ -230,27 +214,12 @@ internal class DiscussionDetailViewModel(
             .getOrNull() ?: UNKNOWN_USER_ID
     }
 
-    private suspend fun fetchParticipationStatus() {
-        participantRepository
-            .getParticipationStatus(discussionId = discussionId)
-            .onSuccess { updateState { copy(isParticipating = it.isParticipation) } }
-    }
-
     private fun participate() {
         viewModelScope.launch {
             participantRepository
                 .postParticipation(discussionId = discussionId)
-                .onSuccess { refreshAfterParticipate() }
+                .onSuccess { fetchDiscussionDetail() }
                 .onFailure(::showErrorSnackbar)
-        }
-    }
-
-    private fun refreshAfterParticipate() {
-        viewModelScope.launch {
-            awaitAll(
-                async { fetchDiscussionDetail() },
-                async { fetchParticipationStatus() },
-            )
         }
     }
 
@@ -261,12 +230,15 @@ internal class DiscussionDetailViewModel(
         viewModelScope
             .launch {
                 generateDiscussionSummaryUseCase(discussionId = discussionId)
-                    .onSuccess { summary ->
-                        (currentState.discussion as? DiscussionDetailUiModel.OnlineDiscussionDetailUiModel)?.let { discussion ->
-                            updateState { copy(discussion = discussion.copy(summary = summary)) }
-                        }
-                    }.onFailure(::showErrorSnackbar)
+                    .onSuccess(::handleGenerateSummarySuccess)
+                    .onFailure(::showErrorSnackbar)
             }.invokeOnCompletion { updateState { copy(isGeneratingSummary = false) } }
+    }
+
+    private fun handleGenerateSummarySuccess(summary: String) {
+        val discussion = currentState.discussion
+            as? DiscussionDetailUiModel.OnlineDiscussionDetailUiModel ?: return
+        updateState { copy(discussion = discussion.copy(summary = summary)) }
     }
 
     private fun submitComment(content: String) {
@@ -330,6 +302,8 @@ internal class DiscussionDetailViewModel(
     }
 
     private fun showErrorSnackbar(throwable: Throwable) {
+        Napier.e(message = throwable.message.orEmpty(), throwable = throwable)
+
         val message = when (throwable) {
             is NetworkError -> throwable.errorCode.toDialogErrorStringResource()
             else -> UNKNOWN_DIALOG_ERROR

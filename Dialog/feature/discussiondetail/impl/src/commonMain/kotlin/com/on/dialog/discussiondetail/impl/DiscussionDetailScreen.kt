@@ -88,13 +88,13 @@ internal fun DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
         onCommentClick = {
-            viewModel.onIntent(DiscussionDetailIntent.OpenCommentEditor(type = CommentType.Comment))
+            viewModel.onIntent(
+                DiscussionDetailIntent.OpenCommentEditor(type = CommentType.Comment),
+            )
         },
         onReplyClick = { commentId ->
             viewModel.onIntent(
-                DiscussionDetailIntent.OpenCommentEditor(
-                    type = CommentType.Reply(commentId = commentId),
-                ),
+                DiscussionDetailIntent.OpenCommentEditor(type = CommentType.Reply(commentId = commentId)),
             )
         },
         onCommentEditClick = { commentId, content ->
@@ -105,7 +105,9 @@ internal fun DiscussionDetailScreen(
             )
         },
         onCommentDeleteClick = { commentId ->
-            viewModel.onIntent(DiscussionDetailIntent.OpenDeleteCommentDialog(commentId = commentId))
+            viewModel.onIntent(
+                DiscussionDetailIntent.OpenDeleteCommentDialog(commentId = commentId),
+            )
         },
         onBookmarkClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleBookmark) },
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
@@ -116,33 +118,46 @@ internal fun DiscussionDetailScreen(
         modifier = modifier,
     )
 
-    if (uiState.commentType != null) {
-        MarkdownEditor(
-            initialContent = when (val type = uiState.commentType) {
-                is CommentType.Edit -> type.originalContent
-                else -> ""
-            },
-            onConfirm = { newContent: String ->
-                val intent = when (val type = uiState.commentType) {
-                    CommentType.Comment -> DiscussionDetailIntent.OnSubmitComment(content = newContent)
-
-                    is CommentType.Reply -> DiscussionDetailIntent.OnSubmitReply(
-                        commentId = type.commentId,
-                        content = newContent,
-                    )
-
-                    is CommentType.Edit -> DiscussionDetailIntent.OnEditComment(
-                        commentId = type.commentId,
-                        content = newContent,
-                    )
-
-                    null -> return@MarkdownEditor
-                }
-                viewModel.onIntent(intent)
-            },
+    uiState.commentType?.let { commentType ->
+        DiscussionDetailMarkdownEditor(
+            type = commentType,
+            onConfirm = { intent -> viewModel.onIntent(intent) },
             onExit = { viewModel.onIntent(DiscussionDetailIntent.CloseCommentEditor) },
         )
     }
+}
+
+@Composable
+private fun DiscussionDetailMarkdownEditor(
+    type: CommentType,
+    onConfirm: (intent: DiscussionDetailIntent) -> Unit,
+    onExit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    MarkdownEditor(
+        modifier = modifier,
+        initialContent = when (type) {
+            is CommentType.Edit -> type.originalContent
+            else -> ""
+        },
+        onConfirm = { newContent: String ->
+            val intent = when (type) {
+                CommentType.Comment -> DiscussionDetailIntent.OnSubmitComment(content = newContent)
+
+                is CommentType.Reply -> DiscussionDetailIntent.OnSubmitReply(
+                    commentId = type.commentId,
+                    content = newContent,
+                )
+
+                is CommentType.Edit -> DiscussionDetailIntent.OnEditComment(
+                    commentId = type.commentId,
+                    content = newContent,
+                )
+            }
+            onConfirm(intent)
+        },
+        onExit = onExit,
+    )
 }
 
 @Composable
@@ -202,7 +217,6 @@ private fun DiscussionDetailScreen(
                     isShowParticipateButton = state.isShowParticipateButton,
                     isShowSummary = state.isShowSummary,
                     isGeneratingSummary = state.isGeneratingSummary,
-                    isParticipating = state.isParticipating,
                     onSummaryClick = onSummaryClick,
                     onParticipateClick = onParticipateClick,
                 )
@@ -247,6 +261,7 @@ private fun DiscussionDetailScreenOfflinePreview() {
                             ParticipantUiModel(id = 1L, name = "제리"),
                             ParticipantUiModel(id = 2L, name = "크림"),
                         ),
+                        isParticipating = true,
                         dateTimePeriod = "2023년 3월 1일 13시 15분 ~ 15시 15분",
                     ),
                     isMyDiscussion = true,
