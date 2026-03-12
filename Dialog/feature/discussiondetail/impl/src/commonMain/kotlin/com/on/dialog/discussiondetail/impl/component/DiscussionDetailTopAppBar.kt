@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,7 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.component.DialogTopAppBar
@@ -106,7 +105,7 @@ private fun DiscussionDetailActions(
     Box(modifier = modifier) {
         DialogIconButton(onClick = { showMenu = true }) {
             Icon(
-                imageVector = DialogIcons.MoreVert,
+                imageVector = DialogIcons.Menu,
                 contentDescription = stringResource(Res.string.action_more),
             )
         }
@@ -156,7 +155,6 @@ private fun NotMineDetailDropDownMenu(
         DetailDropDownMenuItem(
             text = stringResource(Res.string.action_report),
             onClick = onReportClick,
-            icon = DialogIcons.Report,
         )
     }
 }
@@ -177,12 +175,10 @@ private fun MineDetailDropDownMenu(
         DetailDropDownMenuItem(
             text = stringResource(Res.string.action_edit),
             onClick = onEditClick,
-            icon = DialogIcons.Edit,
         )
         DetailDropDownMenuItem(
             text = stringResource(Res.string.action_delete),
             onClick = onDeleteClick,
-            icon = DialogIcons.Delete,
         )
     }
 }
@@ -191,18 +187,12 @@ private fun MineDetailDropDownMenu(
 private fun DetailDropDownMenuItem(
     text: String,
     onClick: () -> Unit,
-    icon: ImageVector,
     modifier: Modifier = Modifier,
 ) {
     DropdownMenuItem(
-        modifier = modifier,
+        modifier = modifier.clip(DialogTheme.shapes.small),
         text = { Text(text = text) },
-        colors = MenuDefaults.itemColors(
-            textColor = DialogTheme.colorScheme.onSurface,
-            leadingIconColor = DialogTheme.colorScheme.onSurface,
-        ),
         onClick = onClick,
-        leadingIcon = { Icon(imageVector = icon, contentDescription = text) },
     )
 }
 
@@ -216,10 +206,11 @@ private fun DetailDropDownMenu(
     DropdownMenu(
         expanded = showMenu,
         onDismissRequest = onDismissRequest,
-        modifier = modifier,
+        shape = DialogTheme.shapes.medium,
+        modifier = modifier.padding(horizontal = DialogTheme.spacing.extraSmall),
     ) {
         ProvideTextStyle(
-            value = DialogTheme.typography.titleMedium,
+            value = DialogTheme.typography.labelLarge,
             content = content,
         )
     }
