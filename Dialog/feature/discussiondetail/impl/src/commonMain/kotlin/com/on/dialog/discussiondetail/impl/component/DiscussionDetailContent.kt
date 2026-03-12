@@ -15,16 +15,20 @@ import com.on.dialog.designsystem.component.DialogHorizontalDivider
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.discussiondetail.impl.model.DetailContentUiModel
+import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
+import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel
+import com.on.dialog.discussiondetail.impl.model.TrackUiModel
 import com.on.dialog.ui.component.markdown.DialogMarkdown
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.participate_button
 import dialog.feature.discussiondetail.impl.generated.resources.participate_done_button
+import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionDetailContent(
-    content: String,
-    summary: String?,
+    discussion: DiscussionDetailUiModel,
     isMyDiscussion: Boolean,
     isShowParticipateButton: Boolean,
     isShowSummary: Boolean,
@@ -39,7 +43,7 @@ internal fun DiscussionDetailContent(
         modifier = modifier.padding(top = DialogTheme.spacing.medium),
     ) {
         DialogMarkdown(
-            content = content,
+            content = discussion.detailContent.content,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = DialogTheme.spacing.large),
@@ -54,6 +58,8 @@ internal fun DiscussionDetailContent(
             }
 
             if (isShowSummary) {
+                val summary =
+                    (discussion as? DiscussionDetailUiModel.OnlineDiscussionDetailUiModel)?.summary
                 DiscussionSummary(
                     summary = summary,
                     isMyDiscussion = isMyDiscussion,
@@ -96,8 +102,25 @@ private fun OnlineDiscussionDetailContentPreview() {
     DialogTheme {
         Surface {
             DiscussionDetailContent(
-                content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
-                summary = "요약된 내용",
+                discussion = DiscussionDetailUiModel.OnlineDiscussionDetailUiModel(
+                    detailContent = DetailContentUiModel(
+                        id = 0L,
+                        title = "다이얼로그는 무슨 뜻인가요?",
+                        author = DetailContentUiModel.AuthorUiModel(
+                            id = 0L,
+                            nickname = "크림",
+                            imageUrl = "",
+                        ),
+                        category = TrackUiModel.ANDROID,
+                        content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
+                        createdAt = "2023.03.01",
+                        likeCount = 100,
+                        modifiedAt = "2023.03.01",
+                    ),
+                    status = DiscussionStatusUiModel.DISCUSSION_COMPLETE,
+                    endDate = "2026년 3월 10일",
+                    summary = "요약된 내용",
+                ),
                 isMyDiscussion = true,
                 isShowParticipateButton = false,
                 isShowSummary = true,
@@ -116,8 +139,32 @@ private fun OfflineDiscussionDetailContentPreview() {
     DialogTheme {
         Surface {
             DiscussionDetailContent(
-                content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
-                summary = "요약된 내용",
+                discussion = DiscussionDetailUiModel.OfflineDiscussionDetailUiModel(
+                    detailContent = DetailContentUiModel(
+                        id = 0L,
+                        title = "다이얼로그는 무슨 뜻인가요?",
+                        author = DetailContentUiModel.AuthorUiModel(
+                            id = 0L,
+                            nickname = "크림",
+                            imageUrl = "",
+                        ),
+                        category = TrackUiModel.ANDROID,
+                        content = "다이얼로그가 무슨 뜻인지 궁금합니다. ".repeat(15),
+                        createdAt = "2023.03.01",
+                        likeCount = 100,
+                        modifiedAt = "2023.03.01",
+                    ),
+                    status = DiscussionStatusUiModel.DISCUSSION_COMPLETE,
+                    dateTimePeriod = "2023년 3월 1일 13시 15분 ~ 15시 15분",
+                    participantCapacity = "3/4",
+                    place = "우아한테크코스",
+                    participants = List(3) {
+                        DiscussionDetailUiModel.OfflineDiscussionDetailUiModel.ParticipantUiModel(
+                            id = 0L,
+                            name = "크림 $it",
+                        )
+                    }.toImmutableList(),
+                ),
                 isMyDiscussion = true,
                 isShowParticipateButton = true,
                 isShowSummary = false,

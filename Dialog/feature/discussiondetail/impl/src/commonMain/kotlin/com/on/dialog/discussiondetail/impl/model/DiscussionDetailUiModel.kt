@@ -26,16 +26,7 @@ import kotlin.time.ExperimentalTime
 @Immutable
 sealed interface DiscussionDetailUiModel {
     val detailContent: DetailContentUiModel
-    val summary: String?
     val status: DiscussionStatusUiModel
-
-    val discussionType: DiscussionType
-        get() {
-            return when (this) {
-                is OfflineDiscussionDetailUiModel -> DiscussionType.OFFLINE
-                is OnlineDiscussionDetailUiModel -> DiscussionType.ONLINE
-            }
-        }
 
     @Composable
     fun toChipCategories(): ImmutableList<ChipCategory>
@@ -43,7 +34,6 @@ sealed interface DiscussionDetailUiModel {
     @Immutable
     data class OfflineDiscussionDetailUiModel(
         override val detailContent: DetailContentUiModel,
-        override val summary: String?,
         override val status: DiscussionStatusUiModel,
         val dateTimePeriod: String,
         val participantCapacity: String,
@@ -72,7 +62,6 @@ sealed interface DiscussionDetailUiModel {
                 now: LocalDateTime = LocalDateTime.now(),
             ): OfflineDiscussionDetailUiModel = OfflineDiscussionDetailUiModel(
                 detailContent = detailContent.toUiModel(),
-                summary = summary,
                 dateTimePeriod = periodToKoreanString(dateTimePeriod.startAt, dateTimePeriod.endAt),
                 participantCapacity = "${participantCapacity.current}/${participantCapacity.max}",
                 place = place,
@@ -85,8 +74,8 @@ sealed interface DiscussionDetailUiModel {
     @Immutable
     data class OnlineDiscussionDetailUiModel(
         override val detailContent: DetailContentUiModel,
-        override val summary: String?,
         override val status: DiscussionStatusUiModel,
+        val summary: String? = null,
         val endDate: String,
     ) : DiscussionDetailUiModel {
         @Composable

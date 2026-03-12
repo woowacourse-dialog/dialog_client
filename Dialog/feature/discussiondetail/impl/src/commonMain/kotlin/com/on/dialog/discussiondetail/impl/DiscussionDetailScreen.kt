@@ -197,8 +197,7 @@ private fun DiscussionDetailScreen(
                 )
 
                 DiscussionDetailContent(
-                    content = discussion.detailContent.content,
-                    summary = discussion.summary,
+                    discussion = state.discussion,
                     isMyDiscussion = state.isMyDiscussion,
                     isShowParticipateButton = state.isShowParticipateButton,
                     isShowSummary = state.isShowSummary,
@@ -240,7 +239,6 @@ private fun DiscussionDetailScreenOfflinePreview() {
                             likeCount = 100,
                             modifiedAt = "2023.03.01",
                         ),
-                        summary = "요약된 내용",
                         status = DiscussionStatusUiModel.IN_DISCUSSION,
                         participantCapacity = "3/4",
                         place = "우아한테크코스",

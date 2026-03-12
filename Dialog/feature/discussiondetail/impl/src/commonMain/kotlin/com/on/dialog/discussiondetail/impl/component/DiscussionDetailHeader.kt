@@ -315,7 +315,6 @@ private fun OfflineDiscussionDetailHeaderPreview() {
                         likeCount = 100,
                         modifiedAt = "2023.03.01",
                     ),
-                    summary = "요약된 내용",
                     status = DiscussionStatusUiModel.IN_DISCUSSION,
                     participantCapacity = "3/4",
                     place = "우아한테크코스",

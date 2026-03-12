@@ -5,7 +5,9 @@ import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel.Companion.toUiModel
+import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.Companion.toUiModel
+import com.on.dialog.discussiondetail.impl.usecase.GenerateDiscussionSummaryUseCase
 import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionBookmarkUseCase
 import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionLikeUseCase
 import com.on.dialog.domain.repository.CommentRepository
@@ -28,7 +30,6 @@ import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
@@ -40,6 +41,7 @@ internal class DiscussionDetailViewModel(
     private val commentRepository: CommentRepository,
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
+    private val generateDiscussionSummaryUseCase: GenerateDiscussionSummaryUseCase,
     private val toggleDiscussionBookmarkUseCase: ToggleDiscussionBookmarkUseCase,
     private val toggleDiscussionLikeUseCase: ToggleDiscussionLikeUseCase,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
@@ -258,19 +260,13 @@ internal class DiscussionDetailViewModel(
 
         viewModelScope
             .launch {
-                discussionRepository
-                    .createDiscussionSummary(discussionId = discussionId)
-                    .onSuccess { pollSummaryUntilLoaded() }
-                    .onFailure(::showErrorSnackbar)
+                generateDiscussionSummaryUseCase(discussionId = discussionId)
+                    .onSuccess { summary ->
+                        (currentState.discussion as? DiscussionDetailUiModel.OnlineDiscussionDetailUiModel)?.let { discussion ->
+                            updateState { copy(discussion = discussion.copy(summary = summary)) }
+                        }
+                    }.onFailure(::showErrorSnackbar)
             }.invokeOnCompletion { updateState { copy(isGeneratingSummary = false) } }
-    }
-
-    private suspend fun pollSummaryUntilLoaded() {
-        repeat(SUMMARY_POLL_MAX_RETRY) {
-            delay(SUMMARY_POLL_INTERVAL_MS)
-            fetchDiscussionDetail()
-                .onSuccess { detail -> if (detail.summary != null) return }
-        }
     }
 
     private fun submitComment(content: String) {
@@ -343,7 +339,5 @@ internal class DiscussionDetailViewModel(
 
     companion object {
         private const val UNKNOWN_USER_ID = -1L
-        private const val SUMMARY_POLL_INTERVAL_MS = 10_000L
-        private const val SUMMARY_POLL_MAX_RETRY = 3
     }
 }

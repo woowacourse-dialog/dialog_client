@@ -5,7 +5,6 @@ import com.on.dialog.discussiondetail.impl.model.CommentType
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel
-import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.ui.viewmodel.UiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -25,9 +24,11 @@ internal data class DiscussionDetailState(
     val deleteCommentId: Long? = null,
 ) : UiState {
     val isShowSummary: Boolean =
-        discussion?.discussionType == DiscussionType.ONLINE && discussion.status == DiscussionStatusUiModel.DISCUSSION_COMPLETE
+        discussion is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel &&
+            discussion.status == DiscussionStatusUiModel.DISCUSSION_COMPLETE
 
-    val isShowParticipateButton: Boolean = discussion?.discussionType == DiscussionType.OFFLINE
+    val isShowParticipateButton: Boolean =
+        discussion is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel
 
     val totalCommentCount: Int =
         comments.size + comments.sumOf { comment -> comment.childComments.size }

@@ -1,5 +1,6 @@
 package com.on.dialog.discussiondetail.impl.di
 
+import com.on.dialog.discussiondetail.impl.usecase.GenerateDiscussionSummaryUseCase
 import com.on.dialog.discussiondetail.impl.navigation.DiscussionDetailNavKeyProvider
 import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionBookmarkUseCase
 import com.on.dialog.discussiondetail.impl.usecase.ToggleDiscussionLikeUseCase
@@ -11,6 +12,7 @@ import org.koin.dsl.module
 
 val discussionDetailModule = module {
     single { DiscussionDetailNavKeyProvider() } bind NavKeyProvider::class
+    factory { GenerateDiscussionSummaryUseCase(discussionRepository = get()) }
     factory { ToggleDiscussionBookmarkUseCase(scrapRepository = get()) }
     factory { ToggleDiscussionLikeUseCase(likeRepository = get()) }
 
@@ -23,6 +25,7 @@ val discussionDetailModule = module {
             commentRepository = get(),
             participantRepository = get(),
             sessionRepository = get(),
+            generateDiscussionSummaryUseCase = get(),
             toggleDiscussionBookmarkUseCase = get(),
             toggleDiscussionLikeUseCase = get(),
         )
