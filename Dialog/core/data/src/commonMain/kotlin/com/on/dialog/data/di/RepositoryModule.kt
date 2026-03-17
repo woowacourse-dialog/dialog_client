@@ -64,7 +64,7 @@ val repositoryModule = module {
     }
     single<FirebaseRepository> {
         FirebaseDefaultRepository(
-            firebaseDatasource = get()
+            firebaseDatasource = get(),
         )
     }
 }
