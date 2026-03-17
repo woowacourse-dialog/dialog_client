@@ -110,32 +110,28 @@ private fun DiscussionDetailActions(
             )
         }
 
-        when (isMyDiscussion) {
-            true -> {
-                MineDetailDropDownMenu(
-                    showMenu = showMenu,
-                    onDismiss = { showMenu = false },
-                    onEditClick = {
-                        onEditClick()
-                        showMenu = false
-                    },
-                    onDeleteClick = {
-                        onDeleteClick()
-                        showMenu = false
-                    },
-                )
-            }
-
-            false -> {
-                NotMineDetailDropDownMenu(
-                    showMenu = showMenu,
-                    onDismiss = { showMenu = false },
-                    onReportClick = {
-                        onReportClick()
-                        showMenu = false
-                    },
-                )
-            }
+        if (isMyDiscussion) {
+            MineDetailDropDownMenu(
+                showMenu = showMenu,
+                onDismiss = { showMenu = false },
+                onEditClick = {
+                    onEditClick()
+                    showMenu = false
+                },
+                onDeleteClick = {
+                    onDeleteClick()
+                    showMenu = false
+                },
+            )
+        } else {
+            NotMineDetailDropDownMenu(
+                showMenu = showMenu,
+                onDismiss = { showMenu = false },
+                onReportClick = {
+                    onReportClick()
+                    showMenu = false
+                },
+            )
         }
     }
 }
