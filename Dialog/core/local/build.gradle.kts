@@ -13,5 +13,8 @@ kotlin {
             // dataStore
             implementation(libs.androidx.datastore.preferences)
         }
+        androidMain.dependencies {
+            implementation(libs.firebase.messaging)
+        }
     }
 }

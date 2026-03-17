@@ -61,7 +61,7 @@ multiplatformMarkdownRenderer = "0.37.0"
 
 # Firebase
 google-services = "4.4.4"
-firebase-bom = "34.10.0"
+firebase-messaging = "25.0.1"
 
 # Util
 napier = "2.7.1"
@@ -153,7 +153,7 @@ multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-mark
 
 # Firebase
 google-services-gradle-plugin = { group = "com.google.gms", name = "google-services", version.ref = "google-services" }
-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebase-messaging" }
 
 # Util
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
