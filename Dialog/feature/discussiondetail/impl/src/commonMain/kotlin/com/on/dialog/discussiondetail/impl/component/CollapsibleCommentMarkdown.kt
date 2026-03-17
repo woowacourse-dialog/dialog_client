@@ -42,7 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
 
 @Composable
-fun CommentMarkdown(
+fun CollapsibleCommentMarkdown(
     content: String,
     modifier: Modifier = Modifier,
     maxCollapsedHeight: Dp = 120.dp,
@@ -62,7 +62,7 @@ fun CommentMarkdown(
 
         // 2) 실제 화면에 그릴 컨텐츠(접힘/펼침)
         val contentPlaceable = subcompose("content") {
-            CommentMarkdownCard(
+            CollapsibleCommentMarkdownCard(
                 content = content,
                 isOverflow = isOverflow,
                 maxCollapsedHeight = maxCollapsedHeight,
@@ -76,7 +76,7 @@ fun CommentMarkdown(
     }
 
     if (isDialogVisible) {
-        CommentMarkdownDialog(
+        CollapsibleCommentMarkdownDialog(
             content = content,
             onDismiss = { isDialogVisible = false },
         )
@@ -84,7 +84,7 @@ fun CommentMarkdown(
 }
 
 @Composable
-private fun CommentMarkdownCard(
+private fun CollapsibleCommentMarkdownCard(
     content: String,
     isOverflow: Boolean,
     maxCollapsedHeight: Dp,
@@ -118,7 +118,7 @@ private fun CommentMarkdownCard(
 }
 
 @Composable
-private fun CommentMarkdownDialog(
+private fun CollapsibleCommentMarkdownDialog(
     content: String,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
@@ -191,21 +191,21 @@ private fun Modifier.fadeOutBottom(
 
 @ThemePreview
 @Composable
-private fun CommentMarkdownPreview() {
+private fun CollapsibleCommentMarkdownPreview() {
     DialogTheme {
         Surface {
             Column(
                 modifier = Modifier.padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                CommentMarkdown(
+                CollapsibleCommentMarkdown(
                     content =
                         """
                         실무에서는 ‘완벽한 설계’보다 ‘변경 비용을 낮추는 설계’가 더 중요하다고 느꼈어요. 그래서 모듈 경계랑 책임 분리가 먼저인 듯.
                         """.trimIndent(),
                 )
 
-                CommentMarkdown(
+                CollapsibleCommentMarkdown(
                     content =
                         """
                         실무에서는 ‘완벽한 설계’보다 ‘변경 비용을 낮추는 설계’가 더 중요하다고 느꼈어요. 그래서 모듈 경계랑 책임 분리가 먼저인 듯.
@@ -221,9 +221,9 @@ private fun CommentMarkdownPreview() {
 
 @ThemePreview
 @Composable
-private fun CommentMarkdownDialogPreview() {
+private fun CollapsibleCommentMarkdownDialogPreview() {
     DialogTheme {
-        CommentMarkdownDialog(
+        CollapsibleCommentMarkdownDialog(
             modifier = Modifier.padding(8.dp),
             content =
                 """

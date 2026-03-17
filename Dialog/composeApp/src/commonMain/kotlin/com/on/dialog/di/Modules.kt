@@ -2,6 +2,9 @@ package com.on.dialog.di
 
 import com.on.dialog.data.di.dataModule
 import com.on.dialog.discussiondetail.impl.di.discussionDetailModule
+import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionBookmarkUseCase
+import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionLikeUseCase
+import com.on.dialog.domain.usecase.discussion.summary.GenerateDiscussionSummaryUseCase
 import com.on.dialog.domain.usecase.pushtoken.RegisterPushTokenUseCase
 import com.on.dialog.domain.usecase.pushtoken.UnregisterPushTokenUseCase
 import com.on.dialog.feature.discussionlist.impl.di.discussionListModule
@@ -16,6 +19,9 @@ import org.koin.dsl.module
 
 val useCaseModule =
     module {
+        factory { GenerateDiscussionSummaryUseCase(discussionRepository = get()) }
+        factory { ToggleDiscussionBookmarkUseCase(scrapRepository = get()) }
+        factory { ToggleDiscussionLikeUseCase(likeRepository = get()) }
         factoryOf(::RegisterPushTokenUseCase)
         factoryOf(::UnregisterPushTokenUseCase)
     }

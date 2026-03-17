@@ -19,7 +19,7 @@ import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 
 @Composable
-internal fun IconTextRow(
+internal fun DiscussionIconTextRow(
     iconImage: ImageVector,
     text: String,
     textStyle: TextStyle,
@@ -48,9 +48,9 @@ internal fun IconTextRow(
 
 @Preview(showBackground = true)
 @Composable
-private fun IconTextRowPreview() {
+private fun DiscussionIconTextRowPreview() {
     DialogTheme {
-        IconTextRow(
+        DiscussionIconTextRow(
             iconImage = DialogIcons.Group,
             text = "1/4",
             textStyle = DialogTheme.typography.titleMedium,

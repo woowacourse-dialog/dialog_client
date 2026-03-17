@@ -10,7 +10,7 @@ import dialog.feature.discussiondetail.impl.generated.resources.track_frontend
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
-enum class TrackUiModel(
+internal enum class TrackUiModel(
     private val titleResId: StringResource,
 ) {
     COMMON(titleResId = Res.string.track_common),
