@@ -238,6 +238,7 @@ private fun DiscussionDetailScreen(
             onBookmarkClick = onBookmarkClick,
             onLikeClick = onLikeClick,
             isLiked = state.isLiked,
+            likeCount = state.likeCount,
             isBookmarked = state.isBookmarked,
         )
 

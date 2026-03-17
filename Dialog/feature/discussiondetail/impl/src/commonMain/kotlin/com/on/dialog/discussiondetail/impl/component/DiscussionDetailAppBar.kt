@@ -24,19 +24,20 @@ import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.ui.component.InteractionIndicator
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.action_delete
 import dialog.feature.discussiondetail.impl.generated.resources.action_edit
 import dialog.feature.discussiondetail.impl.generated.resources.action_more
 import dialog.feature.discussiondetail.impl.generated.resources.action_report
 import dialog.feature.discussiondetail.impl.generated.resources.header_bookmark_content_description
-import dialog.feature.discussiondetail.impl.generated.resources.header_like_content_description
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionDetailAppBar(
     isMyDiscussion: Boolean,
     isLiked: Boolean,
+    likeCount: Int,
     isBookmarked: Boolean,
     goBack: () -> Unit,
     onEditClick: () -> Unit,
@@ -59,6 +60,7 @@ internal fun DiscussionDetailAppBar(
                 isBookmarked = isBookmarked,
                 onBookmarkClick = onBookmarkClick,
                 isLiked = isLiked,
+                likeCount = likeCount,
                 onLikeClick = onLikeClick,
             )
             DiscussionDetailActions(
@@ -76,20 +78,26 @@ private fun DiscussionDetailDefaultActions(
     isBookmarked: Boolean,
     onBookmarkClick: () -> Unit,
     isLiked: Boolean,
+    likeCount: Int,
     onLikeClick: () -> Unit,
 ) {
+    InteractionIndicator(
+        icon = if (isLiked) DialogIcons.Favorite else DialogIcons.FavoriteBorder,
+        count = likeCount,
+        onClick = onLikeClick,
+    )
     DialogIconButton(onClick = onBookmarkClick) {
         Icon(
             imageVector = if (isBookmarked) DialogIcons.Bookmark else DialogIcons.BookmarkBorder,
             contentDescription = stringResource(Res.string.header_bookmark_content_description),
         )
     }
-    DialogIconButton(onClick = onLikeClick) {
-        Icon(
-            imageVector = if (isLiked) DialogIcons.Favorite else DialogIcons.FavoriteBorder,
-            contentDescription = stringResource(Res.string.header_like_content_description),
-        )
-    }
+//    DialogIconButton(onClick = onLikeClick) {
+//        Icon(
+//            imageVector = if (isLiked) DialogIcons.Favorite else DialogIcons.FavoriteBorder,
+//            contentDescription = stringResource(Res.string.header_like_content_description),
+//        )
+//    }
 }
 
 @Composable
@@ -251,6 +259,7 @@ private fun DiscussionDetailAppBarPreview() {
                     onBookmarkClick = {},
                     onLikeClick = {},
                     isLiked = true,
+                    likeCount = 100,
                     isBookmarked = true,
                 )
 
@@ -263,6 +272,7 @@ private fun DiscussionDetailAppBarPreview() {
                     onBookmarkClick = {},
                     onLikeClick = {},
                     isLiked = false,
+                    likeCount = 100,
                     isBookmarked = false,
                 )
             }
