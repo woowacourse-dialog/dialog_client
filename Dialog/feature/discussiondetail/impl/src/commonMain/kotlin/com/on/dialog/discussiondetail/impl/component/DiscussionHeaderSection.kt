@@ -207,11 +207,7 @@ private fun ParticipantList(
     participants: ImmutableList<ParticipantUiModel>,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = DialogTheme.spacing.large),
-    ) {
+    Column(modifier = modifier.fillMaxWidth()) {
         DiscussionIconTextRow(
             iconImage = DialogIcons.Group,
             text = stringResource(Res.string.header_participants_format, capacity),
