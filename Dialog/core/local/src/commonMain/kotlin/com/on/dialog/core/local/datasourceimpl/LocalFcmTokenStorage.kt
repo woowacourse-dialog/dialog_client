@@ -4,28 +4,29 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
+import com.on.dialog.core.local.datasource.LocalPushTokenStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class LocalUserStorage(
+class LocalFcmTokenStorage(
     private val dataStore: DataStore<Preferences>,
-) {
-    private val userIdKey = longPreferencesKey(name = "user_id")
+) : LocalPushTokenStorage {
+    private val fcmTokenIdKey = longPreferencesKey(name = "fcm_token_id")
 
-    suspend fun saveUserId(userId: Long) {
+    override suspend fun savePushTokenId(tokenId: Long) {
         dataStore.edit { preferences ->
-            preferences[userIdKey] = userId
+            preferences[fcmTokenIdKey] = tokenId
         }
     }
 
-    suspend fun getUserId(): Long? = dataStore.data
+    override suspend fun getPushTokenId(): Long? = dataStore.data
         .map { preferences ->
-            preferences[userIdKey]
+            preferences[fcmTokenIdKey]
         }.first()
 
-    suspend fun clearUserId() {
+    override suspend fun clearPushToken() {
         dataStore.edit { preferences ->
-            preferences.remove(userIdKey)
+            preferences.remove(fcmTokenIdKey)
         }
     }
 }
