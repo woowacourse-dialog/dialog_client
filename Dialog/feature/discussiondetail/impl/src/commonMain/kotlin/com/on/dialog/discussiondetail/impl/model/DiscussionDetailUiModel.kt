@@ -24,18 +24,9 @@ import kotlinx.datetime.LocalDateTime
 import kotlin.time.ExperimentalTime
 
 @Immutable
-sealed interface DiscussionDetailUiModel {
+internal sealed interface DiscussionDetailUiModel {
     val detailContent: DetailContentUiModel
-    val summary: String?
     val status: DiscussionStatusUiModel
-
-    val discussionType: DiscussionType
-        get() {
-            return when (this) {
-                is OfflineDiscussionDetailUiModel -> DiscussionType.OFFLINE
-                is OnlineDiscussionDetailUiModel -> DiscussionType.ONLINE
-            }
-        }
 
     @Composable
     fun toChipCategories(): ImmutableList<ChipCategory>
@@ -43,16 +34,17 @@ sealed interface DiscussionDetailUiModel {
     @Immutable
     data class OfflineDiscussionDetailUiModel(
         override val detailContent: DetailContentUiModel,
-        override val summary: String?,
         override val status: DiscussionStatusUiModel,
         val dateTimePeriod: String,
         val participantCapacity: String,
         val place: String,
         val participants: ImmutableList<ParticipantUiModel>,
+        val isParticipating: Boolean,
     ) : DiscussionDetailUiModel {
         @Composable
         override fun toChipCategories(): ImmutableList<ChipCategory> = persistentListOf(
             DiscussionType.OFFLINE.toChipCategory(),
+            status.toDomain().toChipCategory(),
             detailContent.category.toDomain().toChipCategory(),
         )
 
@@ -70,14 +62,15 @@ sealed interface DiscussionDetailUiModel {
             @OptIn(ExperimentalTime::class)
             fun OfflineDiscussionDetail.toOfflineUiModel(
                 now: LocalDateTime = LocalDateTime.now(),
+                userId: Long,
             ): OfflineDiscussionDetailUiModel = OfflineDiscussionDetailUiModel(
                 detailContent = detailContent.toUiModel(),
-                summary = summary,
                 dateTimePeriod = periodToKoreanString(dateTimePeriod.startAt, dateTimePeriod.endAt),
                 participantCapacity = "${participantCapacity.current}/${participantCapacity.max}",
                 place = place,
                 participants = participants.map { it.toUiModel() }.toImmutableList(),
                 status = status(now).toUiModel(),
+                isParticipating = participants.any { participant -> participant.id == userId },
             )
         }
     }
@@ -85,13 +78,14 @@ sealed interface DiscussionDetailUiModel {
     @Immutable
     data class OnlineDiscussionDetailUiModel(
         override val detailContent: DetailContentUiModel,
-        override val summary: String?,
         override val status: DiscussionStatusUiModel,
+        val summary: String? = null,
         val endDate: String,
     ) : DiscussionDetailUiModel {
         @Composable
         override fun toChipCategories(): ImmutableList<ChipCategory> = persistentListOf(
             DiscussionType.ONLINE.toChipCategory(),
+            status.toDomain().toChipCategory(),
             detailContent.category.toDomain().toChipCategory(),
         )
 
@@ -109,8 +103,8 @@ sealed interface DiscussionDetailUiModel {
     }
 
     companion object {
-        fun DiscussionDetail.toUiModel() = when (this) {
-            is OfflineDiscussionDetail -> toOfflineUiModel()
+        fun DiscussionDetail.toUiModel(userId: Long) = when (this) {
+            is OfflineDiscussionDetail -> toOfflineUiModel(userId = userId)
             is OnlineDiscussionDetail -> toOnlineUiModel()
         }
     }

@@ -23,6 +23,30 @@ sealed class NetworkError(
         errorMessage: String,
     ) : NetworkError(cause, errorCode, errorMessage)
 
+    class Forbidden(
+        cause: Exception,
+        errorCode: String,
+        errorMessage: String,
+    ) : NetworkError(cause, errorCode, errorMessage)
+
+    class Conflict(
+        cause: Exception,
+        errorCode: String,
+        errorMessage: String,
+    ) : NetworkError(cause, errorCode, errorMessage)
+
+    class InternalServerError(
+        cause: Exception,
+        errorCode: String,
+        errorMessage: String,
+    ) : NetworkError(cause, errorCode, errorMessage)
+
+    class BadGateway(
+        cause: Exception,
+        errorCode: String,
+        errorMessage: String,
+    ) : NetworkError(cause, errorCode, errorMessage)
+
     class ServerError(
         cause: Exception,
     ) : NetworkError(cause)
