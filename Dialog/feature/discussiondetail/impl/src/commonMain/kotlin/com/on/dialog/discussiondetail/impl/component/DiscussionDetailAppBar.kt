@@ -92,12 +92,6 @@ private fun DiscussionDetailDefaultActions(
             contentDescription = stringResource(Res.string.header_bookmark_content_description),
         )
     }
-//    DialogIconButton(onClick = onLikeClick) {
-//        Icon(
-//            imageVector = if (isLiked) DialogIcons.Favorite else DialogIcons.FavoriteBorder,
-//            contentDescription = stringResource(Res.string.header_like_content_description),
-//        )
-//    }
 }
 
 @Composable
