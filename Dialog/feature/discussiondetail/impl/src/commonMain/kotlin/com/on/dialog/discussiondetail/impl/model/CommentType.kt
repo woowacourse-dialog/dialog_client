@@ -5,13 +5,16 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Immutable
-sealed interface CommentType {
+internal sealed interface CommentType {
+    @Serializable
     data object Comment : CommentType
 
+    @Serializable
     data class Reply(
         val commentId: Long,
     ) : CommentType
 
+    @Serializable
     data class Edit(
         val commentId: Long,
         val originalContent: String,

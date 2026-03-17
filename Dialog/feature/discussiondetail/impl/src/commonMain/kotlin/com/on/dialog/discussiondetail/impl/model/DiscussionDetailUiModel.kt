@@ -24,7 +24,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlin.time.ExperimentalTime
 
 @Immutable
-sealed interface DiscussionDetailUiModel {
+internal sealed interface DiscussionDetailUiModel {
     val detailContent: DetailContentUiModel
     val status: DiscussionStatusUiModel
 

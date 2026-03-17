@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -56,7 +56,9 @@ internal fun DiscussionDetailScreen(
 ) {
     val snackbarDelegate = LocalSnackbarDelegate.current
     val uiState: DiscussionDetailState by viewModel.uiState.collectAsStateWithLifecycle()
-    var activeOverlay: DiscussionDetailOverlay? by rememberSaveable { mutableStateOf(null) }
+    var activeOverlay: DiscussionDetailOverlay by rememberSerializable {
+        mutableStateOf(DiscussionDetailOverlay.None)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -104,7 +106,7 @@ internal fun DiscussionDetailScreen(
 
     DiscussionDetailOverlayHost(
         activeOverlay = activeOverlay,
-        onDismiss = { activeOverlay = null },
+        onDismiss = { activeOverlay = DiscussionDetailOverlay.None },
         onIntent = viewModel::onIntent,
     )
 }
@@ -144,11 +146,13 @@ private fun DiscussionDetailMarkdownEditor(
 
 @Composable
 private fun DiscussionDetailOverlayHost(
-    activeOverlay: DiscussionDetailOverlay?,
+    activeOverlay: DiscussionDetailOverlay,
     onDismiss: () -> Unit,
     onIntent: (DiscussionDetailIntent) -> Unit,
 ) {
     when (activeOverlay) {
+        DiscussionDetailOverlay.None -> {}
+
         is DiscussionDetailOverlay.Comment -> {
             DiscussionDetailMarkdownEditor(
                 type = activeOverlay.type,
@@ -202,10 +206,6 @@ private fun DiscussionDetailOverlayHost(
                     }
                 },
             )
-        }
-
-        null -> {
-            Unit
         }
     }
 }
