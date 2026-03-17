@@ -3,6 +3,7 @@ package com.on.dialog.network.di
 import com.on.dialog.network.datasource.AuthDatasource
 import com.on.dialog.network.datasource.CommentDatasource
 import com.on.dialog.network.datasource.DiscussionDatasource
+import com.on.dialog.network.datasource.FirebaseDatasource
 import com.on.dialog.network.datasource.LikeDatasource
 import com.on.dialog.network.datasource.ParticipantDatasource
 import com.on.dialog.network.datasource.ScrapDatasource
@@ -10,6 +11,7 @@ import com.on.dialog.network.datasource.UserDatasource
 import com.on.dialog.network.datasourceimpl.AuthRemoteDatasource
 import com.on.dialog.network.datasourceimpl.CommentRemoteDatasource
 import com.on.dialog.network.datasourceimpl.DiscussionRemoteDatasource
+import com.on.dialog.network.datasourceimpl.FirebaseRemoteDatasource
 import com.on.dialog.network.datasourceimpl.LikeRemoteDatasource
 import com.on.dialog.network.datasourceimpl.ParticipantRemoteDatasource
 import com.on.dialog.network.datasourceimpl.ScrapRemoteDatasource
@@ -37,5 +39,8 @@ val datasourceModule = module {
     }
     single<CommentDatasource> {
         CommentRemoteDatasource(service = get())
+    }
+    single<FirebaseDatasource> {
+        FirebaseRemoteDatasource(firebaseService = get())
     }
 }
