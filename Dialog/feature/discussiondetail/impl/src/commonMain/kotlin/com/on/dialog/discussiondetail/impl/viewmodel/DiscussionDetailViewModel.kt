@@ -103,17 +103,15 @@ internal class DiscussionDetailViewModel(
             }.invokeOnCompletion { updateState { copy(isLoading = false) } }
     }
 
-    private fun fetchDiscussionDetail() {
-        viewModelScope.launch {
-            discussionRepository
-                .getDiscussionDetail(id = discussionId)
-                .onSuccess { discussionDetail ->
-                    handleFetchDiscussionDetailSuccess(
-                        discussionDetail = discussionDetail,
-                        userId = getUserId(),
-                    )
-                }.onFailure { handleFetchDiscussionDetailFailure() }
-        }
+    private suspend fun fetchDiscussionDetail() {
+        discussionRepository
+            .getDiscussionDetail(id = discussionId)
+            .onSuccess { discussionDetail ->
+                handleFetchDiscussionDetailSuccess(
+                    discussionDetail = discussionDetail,
+                    userId = getUserId(),
+                )
+            }.onFailure { handleFetchDiscussionDetailFailure() }
     }
 
     private fun handleFetchDiscussionDetailSuccess(
@@ -204,10 +202,13 @@ internal class DiscussionDetailViewModel(
 
     private fun participate() {
         viewModelScope.launch {
-            participantRepository
-                .postParticipation(discussionId = discussionId)
-                .onSuccess { fetchDiscussionDetail() }
-                .onFailure(::showErrorSnackbar)
+            val participationResult =
+                participantRepository.postParticipation(discussionId = discussionId)
+            participationResult.onFailure(::showErrorSnackbar)
+
+            if (participationResult.isSuccess) {
+                fetchDiscussionDetail()
+            }
         }
     }
 

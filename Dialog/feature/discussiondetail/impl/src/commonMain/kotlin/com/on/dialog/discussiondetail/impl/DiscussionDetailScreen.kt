@@ -73,7 +73,7 @@ internal fun DiscussionDetailScreen(
         }
     }
 
-    DiscussionDetailScreenScaffold(
+    DiscussionDetailScreen(
         state = uiState,
         goBack = goBack,
         onCommentClick = { activeOverlay = DiscussionDetailOverlay.Comment(CommentType.Comment) },
@@ -211,7 +211,7 @@ private fun DiscussionDetailOverlayHost(
 }
 
 @Composable
-private fun DiscussionDetailScreenScaffold(
+private fun DiscussionDetailScreen(
     state: DiscussionDetailState,
     goBack: () -> Unit,
     onCommentClick: () -> Unit,
@@ -269,7 +269,7 @@ private fun DiscussionDetailScreenScaffold(
 private fun DiscussionDetailScreenOfflinePreview() {
     DialogTheme {
         Surface {
-            DiscussionDetailScreenScaffold(
+            DiscussionDetailScreen(
                 state = DiscussionDetailState(
                     isLoading = false,
                     discussion = DiscussionDetailUiModel.OfflineDiscussionDetailUiModel(
@@ -319,7 +319,7 @@ private fun DiscussionDetailScreenOfflinePreview() {
 private fun DiscussionDetailScreenOnlinePreview() {
     DialogTheme {
         Surface {
-            DiscussionDetailScreenScaffold(
+            DiscussionDetailScreen(
                 state = DiscussionDetailState(
                     isLoading = false,
                     discussion = DiscussionDetailUiModel.OnlineDiscussionDetailUiModel(
