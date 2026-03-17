@@ -58,6 +58,11 @@ imagepicker = "1.0.30"
 # Markdown
 multiplatformMarkdownRenderer = "0.37.0"
 
+
+# Firebase
+google-services = "4.4.4"
+firebase-bom = "34.10.0"
+
 # Util
 napier = "2.7.1"
 ksp = "2.2.21-2.0.4"
@@ -146,6 +151,10 @@ imagepicker = { module = "io.github.ismoy:imagepickerkmp", version.ref = "imagep
 multiplatform-markdown-renderer = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "multiplatformMarkdownRenderer" }
 multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRenderer" }
 
+# Firebase
+google-services-gradle-plugin = { group = "com.google.gms", name = "google-services", version.ref = "google-services" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+
 # Util
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 
@@ -198,6 +207,9 @@ android-test = { id = "com.android.test", version.ref = "android-gradle-plugin" 
 # Network
 ktrofit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 
+# Firebase
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+
 [bundles]
 plugins = [
     "android-gradle-plugin",
@@ -207,4 +219,5 @@ plugins = [
     "compose-gradle-plugin",
     "ksp-gradle-plugin",
     "kotlinx-serialization-gradle-plugin",
+    "google-services-gradle-plugin"
 ]

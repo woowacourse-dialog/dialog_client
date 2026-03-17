@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
  * - `org.jetbrains.kotlin.multiplatform`
  * - `com.android.application`
  * - `dialog.convention.kmp.compose`
+ * - `com.google.gms.google-services`
  *
  * ## Kotlin Multiplatform 설정
  * - `configureDialogTargets()`를 통해 Android / iOS 타겟을 구성한다.
@@ -41,6 +42,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
  *     - `koin-compose`
  *     - `koin-compose-viewmodel`
  *     - `koin-compose-viewmodel-navigation`
+ *   - FCM 푸시 알림을 위한 `firebase-messaging`
  *
  * ## Android Application 설정
  * - compileSdk / minSdk / targetSdk 버전을 Version Catalog 기준으로 통일한다.
@@ -67,6 +69,7 @@ internal class KmpApplicationConventionPlugin : Plugin<Project> {
             apply(PluginIds.KOTLIN_MULTIPLATFORM)
             apply(PluginIds.ANDROID_APPLICATION)
             apply("dialog.convention.kmp.compose")
+            apply(PluginIds.GOOGLE_SERVICES)
         }
 
         extensions.configure<KotlinMultiplatformExtension> {
@@ -95,6 +98,7 @@ internal class KmpApplicationConventionPlugin : Plugin<Project> {
                     implementation(libs.library("koin-compose"))
                     implementation(libs.library("koin-compose-viewmodel"))
                     implementation(libs.library("koin-compose-viewmodel-navigation"))
+                    implementation(libs.library("firebase-messaging"))
                 }
             }
         }

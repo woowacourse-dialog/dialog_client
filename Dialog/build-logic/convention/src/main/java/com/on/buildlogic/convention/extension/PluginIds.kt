@@ -13,4 +13,6 @@ internal object PluginIds {
     const val KMP_COMPOSE_CONVENTION = "dialog.convention.kmp.compose"
 
     const val KMP_LIBRARY_CONVENTION = "dialog.convention.kmp.library"
+
+    const val GOOGLE_SERVICES = "com.google.gms.google-services"
 }
