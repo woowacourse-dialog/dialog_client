@@ -24,9 +24,9 @@ import com.on.dialog.ui.mapper.toDialogErrorStringResource
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.error_fetch_discussion_detail
-import dialog.feature.discussiondetail.impl.generated.resources.message_comment_delete_success
-import dialog.feature.discussiondetail.impl.generated.resources.message_comment_edit_success
+import dialog.feature.discussiondetail.impl.generated.resources.message_delete_success
 import dialog.feature.discussiondetail.impl.generated.resources.message_discussion_report_success
+import dialog.feature.discussiondetail.impl.generated.resources.message_edit_success
 import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.async
@@ -258,7 +258,7 @@ internal class DiscussionDetailViewModel(
                 .onSuccess {
                     fetchComments()
                     showSnackbar(
-                        message = Res.string.message_comment_edit_success,
+                        message = Res.string.message_edit_success,
                         state = SnackbarState.POSITIVE,
                     )
                 }.onFailure(::showErrorSnackbar)
@@ -272,7 +272,7 @@ internal class DiscussionDetailViewModel(
                 .onSuccess {
                     fetchComments()
                     showSnackbar(
-                        message = Res.string.message_comment_delete_success,
+                        message = Res.string.message_delete_success,
                         state = SnackbarState.POSITIVE,
                     )
                 }.onFailure(::showErrorSnackbar)
@@ -285,7 +285,7 @@ internal class DiscussionDetailViewModel(
                 .deleteDiscussion(id = discussionId)
                 .onSuccess {
                     showSnackbar(
-                        message = Res.string.message_comment_delete_success,
+                        message = Res.string.message_delete_success,
                         state = SnackbarState.POSITIVE,
                     )
                     emitEffect(DiscussionDetailEffect.NavigateHome)

@@ -67,7 +67,7 @@
     <string name="error_fetch_discussion_detail">토론 상세 정보를 가져오는데 실패했습니다</string>
 
     <!-- Message -->
-    <string name="message_comment_delete_success">삭제했습니다</string>
-    <string name="message_comment_edit_success">수정했습니다</string>
+    <string name="message_delete_success">삭제했습니다</string>
+    <string name="message_edit_success">수정했습니다</string>
     <string name="message_discussion_report_success">신고가 접수되었습니다</string>
 </resources>
