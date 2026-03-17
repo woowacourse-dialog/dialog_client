@@ -12,6 +12,7 @@ val myPageModule = module {
             authRepository = get(),
             userRepository = get(),
             sessionRepository = get(),
+            unregisterPushTokenUseCase = get(),
         )
     }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.repository.UserRepository
+import com.on.dialog.domain.usecase.pushtoken.RegisterPushTokenUseCase
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.login.impl.generated.resources.Res
 import dialog.feature.login.impl.generated.resources.error_save_session
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val sessionRepository: SessionRepository,
     private val userRepository: UserRepository,
+    private val registerPushTokenUseCase: RegisterPushTokenUseCase,
 ) : BaseViewModel<LoginIntent, LoginState, LoginEffect>(initialState = LoginState()) {
     override fun onIntent(intent: LoginIntent) {
         when (intent) {
@@ -31,14 +33,18 @@ class LoginViewModel(
             .launch {
                 sessionRepository
                     .saveSession(jsessionId = jsessionId)
-                    .onSuccess {
-                        if (isNewUser) {
-                            handleSaveUserSessionSuccess(isNewUser = true)
-                        } else {
-                            saveUserId()
-                        }
-                    }.onFailure { handleSaveUserSessionFailure() }
+                    .onSuccess { handleSaveUserSessionSuccess(isNewUser = isNewUser) }
+                    .onFailure { handleSaveUserSessionFailure() }
             }.invokeOnCompletion { updateState { LoginState() } }
+    }
+
+    private suspend fun handleSaveUserSessionSuccess(isNewUser: Boolean) {
+        if (isNewUser) {
+            updateState { copy(isLoginComplete = true, isNewUser = true) }
+            emitEffect(LoginEffect.NavigateToSignUp)
+        } else {
+            saveUserId()
+        }
     }
 
     private suspend fun saveUserId() {
@@ -47,14 +53,18 @@ class LoginViewModel(
             .onSuccess { userInfo ->
                 sessionRepository
                     .saveUserId(userId = userInfo.id)
-                    .onSuccess { handleSaveUserSessionSuccess(isNewUser = false) }
+                    .onSuccess { handleSaveUserIdSuccess() }
                     .onFailure { handleSaveUserSessionFailure() }
             }.onFailure { handleSaveUserSessionFailure() }
     }
 
-    private fun handleSaveUserSessionSuccess(isNewUser: Boolean) {
-        updateState { copy(isLoginComplete = true, isNewUser = isNewUser) }
-        emitEffect(if (isNewUser) LoginEffect.NavigateToSignUp else LoginEffect.GoBack)
+    private suspend fun handleSaveUserIdSuccess() {
+        updateState { copy(isLoginComplete = true, isNewUser = false) }
+        registerPushTokenUseCase()
+            .onFailure { result: Throwable ->
+                Napier.e(result.message.orEmpty(), result)
+            }
+        emitEffect(LoginEffect.GoBack)
     }
 
     private fun handleSaveUserSessionFailure() {

@@ -11,6 +11,7 @@ val loginModule = module {
         LoginViewModel(
             sessionRepository = get(),
             userRepository = get(),
+            registerPushTokenUseCase = get(),
         )
     }
 

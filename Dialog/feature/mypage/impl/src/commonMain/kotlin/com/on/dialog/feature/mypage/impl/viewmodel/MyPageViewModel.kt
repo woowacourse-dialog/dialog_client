@@ -6,6 +6,7 @@ import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.repository.UserRepository
+import com.on.dialog.domain.usecase.pushtoken.UnregisterPushTokenUseCase
 import com.on.dialog.feature.mypage.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.feature.mypage.impl.model.UserInfoUiModel.Companion.toUiModel
 import com.on.dialog.model.common.ProfileImage
@@ -19,6 +20,7 @@ class MyPageViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
     private val sessionRepository: SessionRepository,
+    private val unregisterPushTokenUseCase: UnregisterPushTokenUseCase,
 ) : BaseViewModel<MyPageIntent, MyPageState, MyPageEffect>(initialState = MyPageState()) {
     override fun onIntent(intent: MyPageIntent) {
         when (intent) {
@@ -207,6 +209,10 @@ class MyPageViewModel(
                 .onSuccess {
                     updateState { MyPageState() }
                     sessionRepository.clearUserId()
+                    unregisterPushTokenUseCase()
+                        .onFailure { result: Throwable ->
+                            Napier.e(result.message.orEmpty(), result)
+                        }
                 }.onFailure { result: Throwable ->
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
@@ -222,15 +228,8 @@ class MyPageViewModel(
         viewModelScope.launch {
             userRepository
                 .deleteAccount()
-                .onSuccess {
-                    updateState { MyPageState() }
-                    emitEffect(
-                        MyPageEffect.ShowSnackbar(
-                            message = "회원 탈퇴에 성공했습니다.",
-                            state = SnackbarState.POSITIVE,
-                        ),
-                    )
-                }.onFailure { result: Throwable ->
+                .onSuccess { handleDeleteAccountSuccess() }
+                .onFailure { result: Throwable ->
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = "회원 탈퇴에 실패했습니다.",
@@ -239,5 +238,16 @@ class MyPageViewModel(
                     )
                 }
         }
+    }
+
+    private suspend fun handleDeleteAccountSuccess() {
+        updateState { MyPageState() }
+        emitEffect(
+            MyPageEffect.ShowSnackbar(
+                message = "회원 탈퇴에 성공했습니다.",
+                state = SnackbarState.POSITIVE,
+            ),
+        )
+        unregisterPushTokenUseCase()
     }
 }
