@@ -460,10 +460,7 @@ private fun ParticipantContent(
             modifier = Modifier.padding(DialogTheme.spacing.small),
         )
 
-        Row(
-            modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             DialogIconButton(
                 onClick = { onParticipantCountChange(participantCount - 1) },
                 tone = DialogIconButtonTone.Primary,
