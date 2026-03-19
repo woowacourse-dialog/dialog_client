@@ -56,6 +56,7 @@ internal fun DiscussionListScreen(
     val snackbarState = LocalSnackbarDelegate.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
+    var isFabAllowed by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -69,6 +70,10 @@ internal fun DiscussionListScreen(
 
                 DiscussionListEffect.ScrollToTop -> {
                     listState.animateScrollToItem(0)
+                }
+
+                is DiscussionListEffect.SetFabVisible -> {
+                    isFabAllowed = effect.isVisible
                 }
             }
         }
@@ -98,6 +103,7 @@ internal fun DiscussionListScreen(
         onClickTypeFilter = { type ->
             viewModel.onIntent(DiscussionListIntent.ClickDiscussionTypeFilter(type))
         },
+        isFabAllowed = isFabAllowed,
         modifier = modifier,
     )
 }
@@ -113,6 +119,7 @@ private fun DiscussionListScreen(
     onClickTrackFilter: (track: TrackUiModel) -> Unit,
     onClickStatusFilter: (status: DiscussionStatusUiModel) -> Unit,
     onClickTypeFilter: (type: DiscussionTypeUiModel) -> Unit,
+    isFabAllowed: Boolean,
     modifier: Modifier = Modifier,
 ) {
     var shouldShowFilterSection by rememberSaveable { mutableStateOf(false) }
@@ -156,7 +163,7 @@ private fun DiscussionListScreen(
         DiscussionListContent(
             uiState = uiState,
             listState = listState,
-            isFabVisible = isFabVisible,
+            isFabVisible = isFabVisible && isFabAllowed,
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
             onClickDiscussion = onClickDiscussion,
@@ -226,6 +233,7 @@ private fun DiscussionListScreenPreview() {
                 onClickTrackFilter = {},
                 onClickStatusFilter = {},
                 onClickTypeFilter = {},
+                isFabAllowed = true,
                 listState = rememberLazyListState(),
                 uiState = DiscussionListState(
                     discussions = List(4) {

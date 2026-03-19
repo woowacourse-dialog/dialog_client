@@ -3,6 +3,7 @@ package com.on.dialog.feature.discussionlist.impl.viewmodel
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.viewModelScope
 import com.on.dialog.domain.repository.DiscussionRepository
+import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionStatusUiModel
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionTypeUiModel
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionUiModel.Companion.toUiModel
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 @Stable
 internal class DiscussionListViewModel(
     private val discussionRepository: DiscussionRepository,
+    private val sessionRepository: SessionRepository,
 ) : BaseViewModel<DiscussionListIntent, DiscussionListState, DiscussionListEffect>(
         DiscussionListState(),
     ) {
@@ -42,6 +44,8 @@ internal class DiscussionListViewModel(
             .onEach { refreshListInternal() }
             .launchIn(viewModelScope)
 
+        observeLoginState()
+        refreshSessionState()
         fetchDiscussions()
     }
 
@@ -135,6 +139,20 @@ internal class DiscussionListViewModel(
         val newFilters = currentState.filter.updateDiscussionStatusFilter(discussionStatus)
         updateState { copy(filter = newFilters) }
         filterChanged.tryEmit(Unit)
+    }
+
+    private fun observeLoginState() {
+        viewModelScope.launch {
+            sessionRepository.isLoggedIn.collect { isLoggedIn ->
+                emitEffect(DiscussionListEffect.SetFabVisible(isVisible = isLoggedIn == true))
+            }
+        }
+    }
+
+    private fun refreshSessionState() {
+        viewModelScope.launch {
+            sessionRepository.hasValidSession()
+        }
     }
 
     private companion object {
