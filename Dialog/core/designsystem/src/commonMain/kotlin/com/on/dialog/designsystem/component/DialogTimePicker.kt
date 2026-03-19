@@ -20,8 +20,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.on.dialog.core.common.extension.formatToString
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.core.designsystem.generated.resources.Res
 import dialog.core.designsystem.generated.resources.dialog_time_picker_cancel
@@ -171,30 +171,17 @@ private fun DialogTimePickerIcon() {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DialogTimePickerPreviewLight() {
-    DialogTheme {
-        DialogTimePickerPreviewContent()
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFF131315)
-@Composable
-private fun DialogTimePickerPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        DialogTimePickerPreviewContent()
-    }
-}
-
+@ThemePreview
 @Composable
 private fun DialogTimePickerPreviewContent() {
     var selectedTime by remember { mutableStateOf<LocalTime?>(null) }
 
-    DialogTimePickerDialog(
-        selectedTime = selectedTime,
-        is24Hour = true,
-        onDismiss = { },
-        onConfirm = { _, _ -> },
-    )
+    DialogTheme {
+        DialogTimePickerDialog(
+            selectedTime = selectedTime,
+            is24Hour = true,
+            onDismiss = { },
+            onConfirm = { _, _ -> },
+        )
+    }
 }

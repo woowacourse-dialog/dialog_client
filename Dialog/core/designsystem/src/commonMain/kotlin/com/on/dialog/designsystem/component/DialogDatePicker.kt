@@ -19,8 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import com.on.dialog.core.common.extension.formatToString
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.core.designsystem.generated.resources.Res
 import dialog.core.designsystem.generated.resources.dialog_date_picker_cancel
@@ -163,29 +163,16 @@ private fun DialogDatePickerIcon() {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DialogDatePickerPreviewLight() {
-    DialogTheme {
-        DialogDatePickerPreviewContent()
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFF131315)
-@Composable
-private fun DialogDatePickerPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        DialogDatePickerPreviewContent()
-    }
-}
-
+@ThemePreview
 @Composable
 private fun DialogDatePickerPreviewContent() {
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 
-    DialogDatePickerDialog(
-        selectedDate = selectedDate,
-        onDismiss = { selectedDate = null },
-        onConfirm = {},
-    )
+    DialogTheme {
+        DialogDatePickerDialog(
+            selectedDate = selectedDate,
+            onDismiss = { selectedDate = null },
+            onConfirm = {},
+        )
+    }
 }

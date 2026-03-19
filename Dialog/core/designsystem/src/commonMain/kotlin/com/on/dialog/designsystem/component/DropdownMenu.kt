@@ -10,6 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,7 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -88,29 +89,18 @@ fun DialogDropdownMenu(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DialogDropdownMenuPreviewLight() {
-    DialogTheme {
-        DialogDropdownMenuPreviewContent()
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0)
-@Composable
-private fun DialogDropdownMenuPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        DialogDropdownMenuPreviewContent()
-    }
-}
-
+@ThemePreview
 @Composable
 private fun DialogDropdownMenuPreviewContent() {
-    DialogDropdownMenu(
-        options = persistentListOf("안드로이드", "백엔드", "프론트엔드"),
-        onSelectedIndexChange = {},
-        label = "트랙",
-        placeholder = "트랙을 선택해주세요",
-        supportingText = "중복 선택 불가",
-    )
+    DialogTheme {
+        Surface {
+            DialogDropdownMenu(
+                options = persistentListOf("안드로이드", "백엔드", "프론트엔드"),
+                onSelectedIndexChange = {},
+                label = "트랙",
+                placeholder = "트랙을 선택해주세요",
+                supportingText = "중복 선택 불가",
+            )
+        }
+    }
 }

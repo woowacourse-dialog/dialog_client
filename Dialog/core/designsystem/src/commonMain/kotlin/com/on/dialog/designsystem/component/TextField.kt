@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -22,8 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 
 /**
@@ -211,43 +212,32 @@ private fun dialogTextFieldColors() = TextFieldDefaults.colors(
     cursorColor = DialogTheme.colorScheme.onSurface,
 )
 
-@Preview(showBackground = true)
-@Composable
-private fun DialogTextFieldPreviewLight() {
-    DialogTheme {
-        DialogTextFieldPreviewContent()
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0)
-@Composable
-private fun DialogTextFieldPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        DialogTextFieldPreviewContent()
-    }
-}
-
+@ThemePreview
 @Composable
 private fun DialogTextFieldPreviewContent() {
     var text by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier.padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        DialogTextField(
-            value = text,
-            onValueChange = { text = it },
-            label = "닉네임",
-            placeholder = "이름을 입력하세요",
-            supportingText = "10자 이내",
-        )
-        DialogTextField(
-            value = "다이얼로그 다이얼로그 다이얼로그",
-            onValueChange = { text = it },
-            label = "닉네임",
-            supportingText = "10자 이내",
-            isError = true,
-        )
+    DialogTheme {
+        Surface {
+            Column(
+                modifier = Modifier.padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                DialogTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    label = "닉네임",
+                    placeholder = "이름을 입력하세요",
+                    supportingText = "10자 이내",
+                )
+                DialogTextField(
+                    value = "다이얼로그 다이얼로그 다이얼로그",
+                    onValueChange = { text = it },
+                    label = "닉네임",
+                    supportingText = "10자 이내",
+                    isError = true,
+                )
+            }
+        }
     }
 }

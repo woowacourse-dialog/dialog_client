@@ -12,7 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 
 @Composable
@@ -52,38 +52,25 @@ fun AnimatedTab(
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DialogButtonPreviewLight() {
-    DialogTheme {
-        AnimatedTabPreviewContent()
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0)
-@Composable
-private fun DialogButtonPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        AnimatedTabPreviewContent()
-    }
-}
-
+@ThemePreview
 @Composable
 private fun AnimatedTabPreviewContent() {
-    SecondaryTabRow(
-        selectedTabIndex = 0,
-        indicator = {},
-        divider = {},
-    ) {
-        AnimatedTab(
-            title = "작성",
-            selected = true,
-            onClick = {},
-        )
-        AnimatedTab(
-            title = "미리보기",
-            selected = false,
-            onClick = {},
-        )
+    DialogTheme {
+        SecondaryTabRow(
+            selectedTabIndex = 0,
+            indicator = {},
+            divider = {},
+        ) {
+            AnimatedTab(
+                title = "작성",
+                selected = true,
+                onClick = {},
+            )
+            AnimatedTab(
+                title = "미리보기",
+                selected = false,
+                onClick = {},
+            )
+        }
     }
 }

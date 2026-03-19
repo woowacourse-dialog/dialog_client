@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -17,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 
 /**
@@ -93,48 +94,37 @@ fun DialogToggle(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DialogTogglePreviewLight() {
-    DialogTheme {
-        DialogTogglePreviewContent()
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFF131315)
-@Composable
-private fun DialogTogglePreviewDark() {
-    DialogTheme(darkTheme = true) {
-        DialogTogglePreviewContent()
-    }
-}
-
+@ThemePreview
 @Composable
 private fun DialogTogglePreviewContent() {
     var checked1 by remember { mutableStateOf(true) }
     var checked2 by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier.padding(DialogTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
-    ) {
-        DialogToggle(
-            checked = checked1,
-            onCheckedChange = { checked1 = it },
-            label = "만나서 토론하기",
-        )
-        DialogToggle(
-            checked = checked2,
-            onCheckedChange = { checked2 = it },
-            label = "알림 받기",
-            supportingText = "새로운 토론 주제를 알려드립니다",
-        )
-        DialogToggle(
-            checked = true,
-            onCheckedChange = {},
-            label = "비활성화 상태",
-            supportingText = "변경할 수 없습니다",
-            enabled = false,
-        )
+    DialogTheme {
+        Surface {
+            Column(
+                modifier = Modifier.padding(DialogTheme.spacing.large),
+                verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.large),
+            ) {
+                DialogToggle(
+                    checked = checked1,
+                    onCheckedChange = { checked1 = it },
+                    label = "만나서 토론하기",
+                )
+                DialogToggle(
+                    checked = checked2,
+                    onCheckedChange = { checked2 = it },
+                    label = "알림 받기",
+                    supportingText = "새로운 토론 주제를 알려드립니다",
+                )
+                DialogToggle(
+                    checked = true,
+                    onCheckedChange = {},
+                    label = "비활성화 상태",
+                    supportingText = "변경할 수 없습니다",
+                    enabled = false,
+                )
+            }
+        }
     }
 }
