@@ -13,6 +13,7 @@ val scrapModule = module {
         ScrapViewModel(
             scrapRepository = get(),
             sessionRepository = get(),
+            checkLoginStatusUseCase = get(),
         )
     }
 }
