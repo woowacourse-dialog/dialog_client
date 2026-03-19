@@ -56,7 +56,6 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionEff
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionIntent
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
-import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode
 import com.on.dialog.ui.component.DecisionDialog
 import com.on.dialog.ui.component.markdown.DialogMarkdown
 import com.on.dialog.ui.component.markdown.MarkdownEditor
@@ -110,7 +109,9 @@ internal fun CreateDiscussionScreen(
 
     val handleBackPress: () -> Unit = remember {
         {
-            if (uiState == CreateDiscussionState()) {
+            if (uiState == CreateDiscussionState.Online() ||
+                uiState == CreateDiscussionState.Offline()
+            ) {
                 goBack()
             } else {
                 showExitDialog = true
@@ -237,7 +238,7 @@ private fun CreateDiscussionForm(
         Spacer(modifier = Modifier.height(DialogTheme.spacing.mediumLarge))
 
         DialogToggle(
-            checked = uiState.mode is DiscussionMode.Offline,
+            checked = uiState is CreateDiscussionState.Offline,
             onCheckedChange = { onIntent(CreateDiscussionIntent.OnMeetupEnabledChange(it)) },
             label = stringResource(Res.string.create_discussion_label_meetup),
             modifier = Modifier.padding(start = DialogTheme.spacing.small),
@@ -266,11 +267,11 @@ private fun OnlineModeSection(
     onIntent: (CreateDiscussionIntent) -> Unit,
 ) {
     AnimatedVisibility(
-        visible = uiState.mode is DiscussionMode.Online,
+        visible = uiState is CreateDiscussionState.Online,
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut(),
     ) {
-        val onlineMode = uiState.mode as? DiscussionMode.Online ?: return@AnimatedVisibility
+        val onlineMode = uiState as? CreateDiscussionState.Online ?: return@AnimatedVisibility
         Column {
             Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
             DialogDropdownMenu(
@@ -291,11 +292,11 @@ private fun OfflineModeSection(
     onIntent: (CreateDiscussionIntent) -> Unit,
 ) {
     AnimatedVisibility(
-        visible = uiState.mode is DiscussionMode.Offline,
+        visible = uiState is CreateDiscussionState.Offline,
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut(),
     ) {
-        val offlineMode = uiState.mode as? DiscussionMode.Offline ?: return@AnimatedVisibility
+        val offlineMode = uiState as? CreateDiscussionState.Offline ?: return@AnimatedVisibility
         Column {
             Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
             OfflineDiscussion(
@@ -544,7 +545,7 @@ private fun LabeledTextField(
 private fun CreateDiscussionScreenPreview() {
     DialogTheme {
         CreateDiscussionScreen(
-            uiState = CreateDiscussionState(),
+            uiState = CreateDiscussionState.Online(),
             onBackClick = {},
             onContentClick = {},
             onIntent = {},
@@ -557,12 +558,10 @@ private fun CreateDiscussionScreenPreview() {
 private fun CreateDiscussionScreenPreview2() {
     DialogTheme {
         CreateDiscussionScreen(
-            uiState = CreateDiscussionState(
-                mode = DiscussionMode.Offline(
-                    selectedDateErrorMessage = Res.string.create_discussion_error_past_date,
-                    selectedStartTimeErrorMessage = Res.string.create_discussion_error_start_time_range,
-                    selectedEndTimeErrorMessage = Res.string.create_discussion_error_end_time_range,
-                ),
+            uiState = CreateDiscussionState.Offline(
+                selectedDateErrorMessage = Res.string.create_discussion_error_past_date,
+                selectedStartTimeErrorMessage = Res.string.create_discussion_error_start_time_range,
+                selectedEndTimeErrorMessage = Res.string.create_discussion_error_end_time_range,
             ),
             onBackClick = {},
             onContentClick = {},

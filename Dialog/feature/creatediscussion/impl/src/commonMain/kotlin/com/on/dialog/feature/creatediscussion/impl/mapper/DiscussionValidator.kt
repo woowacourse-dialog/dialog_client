@@ -1,7 +1,7 @@
 package com.on.dialog.feature.creatediscussion.impl.mapper
 
 import com.on.dialog.core.common.extension.now
-import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode
+import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.model.discussion.draft.DraftValidationError
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import dialog.feature.creatediscussion.impl.generated.resources.Res
@@ -18,13 +18,13 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 internal object DiscussionValidator {
-    fun validateOffline(mode: DiscussionMode.Offline): DiscussionMode.Offline {
+    fun validateOffline(offlineState: CreateDiscussionState.Offline): CreateDiscussionState.Offline {
         val now = LocalDateTime.now()
-        val date = mode.selectedDate
-        val startTime = mode.selectedStartTime
-        val endTime = mode.selectedEndTime
+        val date = offlineState.selectedDate
+        val startTime = offlineState.selectedStartTime
+        val endTime = offlineState.selectedEndTime
 
-        val offlineErrors = mode.collectOfflineValidationErrors(now)
+        val offlineErrors = offlineState.collectOfflineValidationErrors(now)
 
         // Date 단독 검증은 명시적으로 처리하고, 시각 관련은 Domain validation 결과를 사용한다.
         val dateError = date?.let {
@@ -51,7 +51,7 @@ internal object DiscussionValidator {
                 }?.toMessage()
         }
 
-        return mode.copy(
+        return offlineState.copy(
             selectedDateErrorMessage = dateError,
             selectedStartTimeErrorMessage = startTimeError,
             selectedEndTimeErrorMessage = endTimeError,
@@ -59,7 +59,7 @@ internal object DiscussionValidator {
     }
 }
 
-private fun DiscussionMode.Offline.collectOfflineValidationErrors(
+private fun CreateDiscussionState.Offline.collectOfflineValidationErrors(
     now: LocalDateTime,
 ): List<DraftValidationError.Offline> {
     val date = selectedDate ?: now.date

@@ -4,8 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.feature.creatediscussion.impl.mapper.DiscussionValidator
-import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode.Offline
-import com.on.dialog.feature.creatediscussion.impl.viewmodel.DiscussionMode.Online
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.ui.viewmodel.BaseViewModel
@@ -18,10 +16,10 @@ import kotlinx.coroutines.launch
 internal class CreateDiscussionViewModel(
     private val discussionRepository: DiscussionRepository,
 ) : BaseViewModel<CreateDiscussionIntent, CreateDiscussionState, CreateDiscussionEffect>(
-    initialState = CreateDiscussionState(),
+    initialState = CreateDiscussionState.Online(),
 ) {
-    private var offlineModeCache: Offline = Offline()
-    private var onlineModeCache: Online = Online()
+    private var offlineModeCache: CreateDiscussionState.Offline = CreateDiscussionState.Offline()
+    private var onlineModeCache: CreateDiscussionState.Online = CreateDiscussionState.Online()
 
     override fun onIntent(intent: CreateDiscussionIntent) {
         when (intent) {
@@ -53,80 +51,77 @@ internal class CreateDiscussionViewModel(
 
     private fun handleTitleChange(intent: CreateDiscussionIntent.OnTitleChange) {
         if (intent.title.length > OfflineDiscussionDraft.MAX_TITLE_LENGTH) return
-        updateState { copy(title = intent.title) }
+        updateState { update(title = intent.title) }
     }
 
     private fun handleContentChange(intent: CreateDiscussionIntent.OnContentChange) {
-        updateState { copy(content = intent.content) }
+        updateState { update(content = intent.content) }
     }
 
     private fun handleTrackIndexChange(intent: CreateDiscussionIntent.OnTrackIndexChange) {
-        updateState { copy(selectedTrackIndex = intent.selectedIndex) }
+        updateState { update(selectedTrackIndex = intent.selectedIndex) }
     }
 
     private fun handleMeetupEnabledChange(intent: CreateDiscussionIntent.OnMeetupEnabledChange) {
         updateState {
-            copy(
-                mode = if (intent.enabled) offlineModeCache else onlineModeCache,
+            if (intent.enabled) toOfflineState(offlineModeCache) else toOnlineState(
+                onlineModeCache
             )
         }
     }
 
     private fun handlePlaceChange(intent: CreateDiscussionIntent.OnPlaceChange) {
         if (intent.place.length > OfflineDiscussionDraft.MAX_PLACE_LENGTH) return
-        val currentMode = currentState.mode as? Offline ?: return
-        val updatedMode = currentMode.copy(place = intent.place)
-        updateOfflineMode(updatedMode)
+        val currentState = currentState as? CreateDiscussionState.Offline ?: return
+        val updatedState = currentState.copy(place = intent.place)
+        updateOfflineState(updatedState)
     }
 
     private fun handleParticipantCountChange(intent: CreateDiscussionIntent.OnParticipantCountChange) {
-        val currentMode = currentState.mode as? Offline ?: return
-        val updatedMode = currentMode.copy(
+        val currentState = currentState as? CreateDiscussionState.Offline ?: return
+        val updatedState = currentState.copy(
             participantCount = intent.participantCount.coerceIn(
                 OfflineDiscussionDraft.MIN_PARTICIPANT_COUNT,
                 OfflineDiscussionDraft.MAX_PARTICIPANT_COUNT,
             ),
         )
-        updateOfflineMode(updatedMode)
+        updateOfflineState(updatedState)
     }
 
     private fun handleDateChange(intent: CreateDiscussionIntent.OnDateChange) {
-        val currentMode = currentState.mode as? Offline ?: return
-        val updated = currentMode.copy(selectedDate = intent.date)
+        val currentState = currentState as? CreateDiscussionState.Offline ?: return
+        val updated = currentState.copy(selectedDate = intent.date)
         val validated = DiscussionValidator.validateOffline(updated)
-        updateOfflineMode(validated)
+        updateOfflineState(validated)
     }
 
     private fun handleStartTimeChange(intent: CreateDiscussionIntent.OnStartTimeChange) {
-        val currentMode = currentState.mode as? Offline ?: return
-        val updated = currentMode.copy(selectedStartTime = intent.time)
+        val currentState = currentState as? CreateDiscussionState.Offline ?: return
+        val updated = currentState.copy(selectedStartTime = intent.time)
         val validated = DiscussionValidator.validateOffline(updated)
-        updateOfflineMode(validated)
+        updateOfflineState(validated)
     }
 
     private fun handleEndTimeChange(intent: CreateDiscussionIntent.OnEndTimeChange) {
-        val currentMode = currentState.mode as? Offline ?: return
-        val updated = currentMode.copy(selectedEndTime = intent.time)
+        val currentState = currentState as? CreateDiscussionState.Offline ?: return
+        val updated = currentState.copy(selectedEndTime = intent.time)
         val validated = DiscussionValidator.validateOffline(updated)
-        updateOfflineMode(validated)
+        updateOfflineState(validated)
     }
 
-    private fun updateOfflineMode(updatedMode: Offline) {
-        updateState {
-            offlineModeCache = updatedMode
-            copy(mode = updatedMode)
-        }
+    private fun updateOfflineState(updatedState: CreateDiscussionState.Offline) {
+        updateState { updatedState.also { offlineModeCache = it } }
     }
 
     private fun handleEndDateIndexChange(intent: CreateDiscussionIntent.OnEndDateIndexChange) {
         updateState {
-            val currentMode = mode
-            if (currentMode is Online) {
-                val updatedMode = currentMode.copy(selectedEndDateIndex = intent.selectedIndex)
-                onlineModeCache = updatedMode
-                copy(mode = updatedMode)
+            val currentState = this
+            if (currentState is CreateDiscussionState.Online) {
+                val updatedState = currentState.copy(selectedEndDateIndex = intent.selectedIndex)
+                onlineModeCache = updatedState
+                updatedState
             } else {
-                this
+                currentState
             }
         }
     }
@@ -138,7 +133,7 @@ internal class CreateDiscussionViewModel(
     }
 
     private fun submitDiscussion() {
-        updateState { copy(isSubmitting = true) }
+        updateState { update(isSubmitting = true) }
         viewModelScope.launch {
             val result = when (val draft = currentState.toDomain()) {
                 is OfflineDiscussionDraft -> discussionRepository.createOfflineDiscussion(draft)
@@ -164,7 +159,7 @@ internal class CreateDiscussionViewModel(
                     )
                 }
 
-            updateState { copy(isSubmitting = false) }
+            updateState { update(isSubmitting = false) }
         }
     }
 }
