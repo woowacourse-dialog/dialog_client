@@ -245,12 +245,12 @@ private fun CreateDiscussionForm(
         )
 
         OnlineModeSection(
-            uiState = uiState,
+            uiState = uiState as? CreateDiscussionState.Online,
             onIntent = onIntent,
         )
 
         OfflineModeSection(
-            uiState = uiState,
+            uiState = uiState as? CreateDiscussionState.Offline,
             onIntent = onIntent,
         )
 
@@ -263,20 +263,20 @@ private fun CreateDiscussionForm(
 
 @Composable
 private fun OnlineModeSection(
-    uiState: CreateDiscussionState,
+    uiState: CreateDiscussionState.Online?,
     onIntent: (CreateDiscussionIntent) -> Unit,
 ) {
     AnimatedVisibility(
-        visible = uiState is CreateDiscussionState.Online,
+        visible = uiState != null,
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut(),
     ) {
-        val onlineMode = uiState as? CreateDiscussionState.Online ?: return@AnimatedVisibility
         Column {
             Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
             DialogDropdownMenu(
-                options = onlineMode.endDateOptions.map { stringResource(it) }.toImmutableList(),
-                selectedIndex = onlineMode.selectedEndDateIndex.takeIf { it >= 0 },
+                options = uiState?.endDateOptions?.map { stringResource(it) }?.toImmutableList()
+                    ?: return@AnimatedVisibility,
+                selectedIndex = uiState.selectedEndDateIndex.takeIf { it >= 0 },
                 onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnEndDateIndexChange(it)) },
                 label = stringResource(Res.string.create_discussion_label_end_date),
                 placeholder = stringResource(Res.string.create_discussion_placeholder_date),
@@ -288,36 +288,25 @@ private fun OnlineModeSection(
 
 @Composable
 private fun OfflineModeSection(
-    uiState: CreateDiscussionState,
+    uiState: CreateDiscussionState.Offline?,
     onIntent: (CreateDiscussionIntent) -> Unit,
 ) {
     AnimatedVisibility(
-        visible = uiState is CreateDiscussionState.Offline,
+        visible = uiState != null,
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut(),
     ) {
-        val offlineMode = uiState as? CreateDiscussionState.Offline ?: return@AnimatedVisibility
         Column {
             Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
             OfflineDiscussion(
-                place = offlineMode.place,
+                uiState = uiState ?: return@AnimatedVisibility,
                 onPlaceChange = { onIntent(CreateDiscussionIntent.OnPlaceChange(it)) },
-                participantCount = offlineMode.participantCount,
                 onParticipantCountChange = {
                     onIntent(CreateDiscussionIntent.OnParticipantCountChange(it))
                 },
-                selectedDate = offlineMode.selectedDate,
                 onDateSelected = { onIntent(CreateDiscussionIntent.OnDateChange(it)) },
-                selectedStartTime = offlineMode.selectedStartTime,
                 onStartTimeSelected = { onIntent(CreateDiscussionIntent.OnStartTimeChange(it)) },
-                selectedEndTime = offlineMode.selectedEndTime,
                 onEndTimeSelected = { onIntent(CreateDiscussionIntent.OnEndTimeChange(it)) },
-                selectedDateErrorMessage = offlineMode.selectedDateErrorMessage
-                    ?.let { stringResource(it) },
-                selectedStartTimeErrorMessage = offlineMode.selectedStartTimeErrorMessage
-                    ?.let { stringResource(it) },
-                selectedEndTimeErrorMessage = offlineMode.selectedEndTimeErrorMessage
-                    ?.let { stringResource(it) },
             )
         }
     }
@@ -401,23 +390,16 @@ private fun DiscussionContent(
 
 @Composable
 private fun OfflineDiscussion(
-    place: String,
+    uiState: CreateDiscussionState.Offline,
     onPlaceChange: (String) -> Unit,
-    participantCount: Int,
     onParticipantCountChange: (Int) -> Unit,
-    selectedDate: LocalDate?,
-    selectedDateErrorMessage: String?,
     onDateSelected: (LocalDate) -> Unit,
-    selectedStartTime: LocalTime?,
-    selectedStartTimeErrorMessage: String?,
     onStartTimeSelected: (LocalTime) -> Unit,
-    selectedEndTime: LocalTime?,
-    selectedEndTimeErrorMessage: String?,
     onEndTimeSelected: (LocalTime) -> Unit,
 ) {
     Column {
         LabeledTextField(
-            title = place,
+            title = uiState.place,
             onTitleChange = onPlaceChange,
             label = stringResource(Res.string.create_discussion_label_place),
             placeHolder = stringResource(Res.string.create_discussion_placeholder_place),
@@ -425,7 +407,7 @@ private fun OfflineDiscussion(
 
         ParticipantContent(
             label = stringResource(Res.string.create_discussion_label_participant_count),
-            participantCount = participantCount,
+            participantCount = uiState.participantCount,
             onParticipantCountChange = onParticipantCountChange,
         )
 
@@ -434,28 +416,29 @@ private fun OfflineDiscussion(
         DialogDatePicker(
             label = stringResource(Res.string.create_discussion_label_date),
             placeholder = stringResource(Res.string.create_discussion_placeholder_date),
-            selectedDate = selectedDate,
+            selectedDate = uiState.selectedDate,
             onDateSelected = onDateSelected,
-            isError = selectedDateErrorMessage != null,
-            supportingText = selectedDateErrorMessage ?: " ",
+            isError = uiState.selectedDateErrorMessage != null,
+            supportingText = uiState.selectedDateErrorMessage?.let { stringResource(it) } ?: " ",
         )
 
         DialogTimePicker(
-            selectedTime = selectedStartTime,
+            selectedTime = uiState.selectedStartTime,
             onTimeSelected = onStartTimeSelected,
             placeholder = stringResource(Res.string.create_discussion_placeholder_start_time),
             label = stringResource(Res.string.create_discussion_label_start_time),
-            isError = selectedStartTimeErrorMessage != null,
-            supportingText = selectedStartTimeErrorMessage ?: " ",
+            isError = uiState.selectedStartTimeErrorMessage != null,
+            supportingText = uiState.selectedStartTimeErrorMessage?.let { stringResource(it) }
+                ?: " ",
         )
 
         DialogTimePicker(
-            selectedTime = selectedEndTime,
+            selectedTime = uiState.selectedEndTime,
             onTimeSelected = onEndTimeSelected,
             placeholder = stringResource(Res.string.create_discussion_placeholder_end_time),
             label = stringResource(Res.string.create_discussion_label_end_time),
-            isError = selectedEndTimeErrorMessage != null,
-            supportingText = selectedEndTimeErrorMessage ?: " ",
+            isError = uiState.selectedEndTimeErrorMessage != null,
+            supportingText = uiState.selectedEndTimeErrorMessage?.let { stringResource(it) } ?: " ",
         )
     }
 }
