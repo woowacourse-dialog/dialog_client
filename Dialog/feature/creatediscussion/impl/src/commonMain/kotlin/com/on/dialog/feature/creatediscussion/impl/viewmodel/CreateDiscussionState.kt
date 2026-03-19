@@ -56,15 +56,19 @@ internal sealed interface DiscussionMode {
 
     @Immutable
     data class Online(
-        val endDateOptions: ImmutableList<StringResource> = persistentListOf(
-            Res.string.create_discussion_end_date_option_1,
-            Res.string.create_discussion_end_date_option_2,
-            Res.string.create_discussion_end_date_option_3,
-        ),
+        val endDateOptions: ImmutableList<StringResource> = deadlineChoices,
         val selectedEndDateIndex: Int = -1,
     ) : DiscussionMode {
         override val isValid: Boolean
-            get() = selectedEndDateIndex in endDateOptions.indices
+            get() = selectedEndDateIndex in this@Online.endDateOptions.indices
+
+        companion object {
+            private val deadlineChoices = persistentListOf(
+                Res.string.create_discussion_end_date_option_1,
+                Res.string.create_discussion_end_date_option_2,
+                Res.string.create_discussion_end_date_option_3,
+            )
+        }
     }
 
     @Immutable
@@ -80,9 +84,9 @@ internal sealed interface DiscussionMode {
     ) : DiscussionMode {
         override val isValid: Boolean
             get() = place.isNotBlank() &&
-                selectedDate != null &&
-                selectedStartTime != null &&
-                selectedEndTime != null
+                    selectedDate != null &&
+                    selectedStartTime != null &&
+                    selectedEndTime != null
     }
 }
 
