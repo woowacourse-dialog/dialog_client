@@ -58,6 +58,17 @@ internal class ScrapViewModel(
     private fun handleFetchScrapSuccess(result: ScrapCatalogCursorPage) {
         nextCursorId = result.nextCursorId
         hasNext = result.hasNext
+
+        val currentCatalogs = scrapRepository.scrapCatalogs.value
+        updateState {
+            if (currentCatalogs.isEmpty()) {
+                ScrapState.Empty
+            } else {
+                ScrapState.Content(
+                    currentCatalogs.map { it.toUiModel() }.toImmutableList(),
+                )
+            }
+        }
     }
 
     private fun handleFetchScrapFailure(throwable: Throwable) {
