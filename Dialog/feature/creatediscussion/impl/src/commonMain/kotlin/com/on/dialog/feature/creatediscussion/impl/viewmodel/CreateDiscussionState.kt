@@ -92,10 +92,9 @@ internal sealed interface DiscussionMode {
 }
 
 private fun CreateDiscussionState.toDomain(mode: DiscussionMode.Offline): OfflineDiscussionDraft {
-    val selectedDate = requireNotNull(mode.selectedDate) { "selectedDate가 null입니다." }
-    val selectedStartTime =
-        requireNotNull(mode.selectedStartTime) { "selectedStartTime가 null입니다." }
-    val selectedEndTime = requireNotNull(mode.selectedEndTime) { "selectedEndTime가 null입니다." }
+    val selectedDate = mode.selectedDate ?: LocalDate(0, 0, 0)
+    val selectedStartTime = mode.selectedStartTime ?: LocalTime(0, 0)
+    val selectedEndTime = mode.selectedEndTime ?: LocalTime(0, 0)
 
     return OfflineDiscussionDraft(
         title = title.trim(),
