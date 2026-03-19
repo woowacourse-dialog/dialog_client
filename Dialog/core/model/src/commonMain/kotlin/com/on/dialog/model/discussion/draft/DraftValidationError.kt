@@ -16,6 +16,6 @@ sealed interface DraftValidationError {
 
         data object EndTimeOutOfRange : Offline
 
-        data object ParticipantCountTooLow : Offline
+        data object ParticipantCountOutOfRange : Offline
     }
 }

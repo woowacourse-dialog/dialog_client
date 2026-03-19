@@ -7,7 +7,7 @@ import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import dialog.feature.creatediscussion.impl.generated.resources.Res
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_end_after_start
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_end_time_range
-import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_participant_min
+import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_participant_range
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_past_date
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_start_time_range
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_time_after_now
@@ -38,7 +38,7 @@ internal object DiscussionValidator {
             offlineErrors
                 .firstOrNull {
                     it is DraftValidationError.Offline.StartTimeOutOfRange ||
-                        it is DraftValidationError.Offline.StartDateNotAfterToday
+                            it is DraftValidationError.Offline.StartDateNotAfterToday
                 }?.toMessage()
         }
 
@@ -46,8 +46,8 @@ internal object DiscussionValidator {
             offlineErrors
                 .firstOrNull {
                     it is DraftValidationError.Offline.EndTimeOutOfRange ||
-                        it is DraftValidationError.Offline.EndDateNotAfterToday ||
-                        (startTime != null && it is DraftValidationError.Offline.StartNotBeforeEnd)
+                            it is DraftValidationError.Offline.EndDateNotAfterToday ||
+                            (startTime != null && it is DraftValidationError.Offline.StartNotBeforeEnd)
                 }?.toMessage()
         }
 
@@ -107,7 +107,7 @@ private fun DraftValidationError.Offline.toMessage(): StringResource = when (thi
     DraftValidationError.Offline.StartNotBeforeEnd -> Res.string.create_discussion_error_end_after_start
     DraftValidationError.Offline.StartTimeOutOfRange -> Res.string.create_discussion_error_start_time_range
     DraftValidationError.Offline.EndTimeOutOfRange -> Res.string.create_discussion_error_end_time_range
-    DraftValidationError.Offline.ParticipantCountTooLow -> Res.string.create_discussion_error_participant_min
+    DraftValidationError.Offline.ParticipantCountOutOfRange -> Res.string.create_discussion_error_participant_range
     DraftValidationError.Offline.StartDateNotAfterToday -> Res.string.create_discussion_error_time_after_now
     DraftValidationError.Offline.EndDateNotAfterToday -> Res.string.create_discussion_error_time_after_now
 }
