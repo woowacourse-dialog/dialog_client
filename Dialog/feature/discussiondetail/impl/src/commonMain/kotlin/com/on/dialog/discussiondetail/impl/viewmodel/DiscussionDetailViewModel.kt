@@ -4,30 +4,33 @@ import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel.Companion.toUiModel
+import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel.Companion.toUiModel
+import com.on.dialog.discussiondetail.impl.model.ReportReasonUiModel
 import com.on.dialog.domain.repository.CommentRepository
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.domain.repository.LikeRepository
 import com.on.dialog.domain.repository.ParticipantRepository
+import com.on.dialog.domain.repository.ReportRepository
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.domain.repository.SessionRepository
+import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionBookmarkUseCase
+import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionLikeUseCase
+import com.on.dialog.domain.usecase.discussion.summary.GenerateDiscussionSummaryUseCase
 import com.on.dialog.model.discussion.comment.DiscussionComment
-import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.model.discussion.detail.DiscussionDetail
+import com.on.dialog.ui.mapper.UNKNOWN_DIALOG_ERROR
+import com.on.dialog.ui.mapper.toDialogErrorStringResource
 import com.on.dialog.ui.viewmodel.BaseViewModel
 import dialog.feature.discussiondetail.impl.generated.resources.Res
-import dialog.feature.discussiondetail.impl.generated.resources.error_already_started
-import dialog.feature.discussiondetail.impl.generated.resources.error_common
 import dialog.feature.discussiondetail.impl.generated.resources.error_fetch_discussion_detail
-import dialog.feature.discussiondetail.impl.generated.resources.error_not_my_discussion
-import dialog.feature.discussiondetail.impl.generated.resources.error_should_login
-import dialog.feature.discussiondetail.impl.generated.resources.message_comment_delete_success
-import dialog.feature.discussiondetail.impl.generated.resources.message_comment_edit_success
+import dialog.feature.discussiondetail.impl.generated.resources.message_delete_success
+import dialog.feature.discussiondetail.impl.generated.resources.message_discussion_report_success
+import dialog.feature.discussiondetail.impl.generated.resources.message_edit_success
 import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
@@ -36,27 +39,38 @@ internal class DiscussionDetailViewModel(
     private val discussionRepository: DiscussionRepository,
     private val likeRepository: LikeRepository,
     private val scrapRepository: ScrapRepository,
+    private val commentRepository: CommentRepository,
     private val participantRepository: ParticipantRepository,
     private val sessionRepository: SessionRepository,
-    private val commentRepository: CommentRepository,
+    private val reportRepository: ReportRepository,
+    private val generateDiscussionSummaryUseCase: GenerateDiscussionSummaryUseCase,
+    private val toggleDiscussionBookmarkUseCase: ToggleDiscussionBookmarkUseCase,
+    private val toggleDiscussionLikeUseCase: ToggleDiscussionLikeUseCase,
 ) : BaseViewModel<DiscussionDetailIntent, DiscussionDetailState, DiscussionDetailEffect>(
         initialState = DiscussionDetailState(),
     ) {
     private var cachedUserId: Long? = null
 
     init {
-        fetchDiscussion()
+        fetchInitialData()
     }
 
     override fun onIntent(intent: DiscussionDetailIntent) {
         when (intent) {
-            DiscussionDetailIntent.ToggleBookmark -> updateBookmark()
+            DiscussionDetailIntent.ToggleBookmark -> toggleBookmark()
 
-            DiscussionDetailIntent.ToggleLike -> updateLike()
+            DiscussionDetailIntent.ToggleLike -> toggleLike()
 
             DiscussionDetailIntent.Participate -> participate()
 
             DiscussionDetailIntent.GenerateSummary -> generateSummary()
+
+            is DiscussionDetailIntent.OnReportDiscussion -> reportDiscussion(reason = intent.reason)
+
+            is DiscussionDetailIntent.OnReportComment -> reportComment(
+                commentId = intent.commentId,
+                reason = intent.reason,
+            )
 
             is DiscussionDetailIntent.OnSubmitComment -> submitComment(content = intent.content)
 
@@ -71,39 +85,47 @@ internal class DiscussionDetailViewModel(
             )
 
             is DiscussionDetailIntent.OnDeleteComment -> deleteComment(commentId = intent.commentId)
+
+            DiscussionDetailIntent.OnDeleteDiscussion -> deleteDiscussion()
         }
     }
 
-    private fun fetchDiscussion() {
+    private fun fetchInitialData() {
+        updateState { copy(isLoading = true) }
         viewModelScope
             .launch {
                 awaitAll(
+                    async { fetchDiscussionDetail() },
                     async { fetchBookmarkStatus() },
                     async { fetchLikeStatus() },
-                    async { fetchDiscussionDetail() },
                     async { fetchComments() },
                 )
             }.invokeOnCompletion { updateState { copy(isLoading = false) } }
     }
 
-    private suspend fun fetchDiscussionDetail(): Result<DiscussionDetail> =
+    private suspend fun fetchDiscussionDetail() {
         discussionRepository
             .getDiscussionDetail(id = discussionId)
-            .onSuccess(::handleFetchDiscussionDetailSuccess)
-            .onFailure { handleFetchDiscussionDetailFailure() }
-            .also {
-                checkIsMyDiscussion()
-                if (currentState.discussion?.discussionType == DiscussionType.OFFLINE) {
-                    fetchParticipationStatus()
-                }
-            }
+            .onSuccess { discussionDetail ->
+                handleFetchDiscussionDetailSuccess(
+                    discussionDetail = discussionDetail,
+                    userId = getUserId(),
+                )
+            }.onFailure { handleFetchDiscussionDetailFailure() }
+    }
 
-    private fun handleFetchDiscussionDetailSuccess(discussionDetail: DiscussionDetail) =
-        with(discussionDetail) {
-            updateState {
-                copy(discussion = toUiModel(), likeCount = detailContent.likeCount)
-            }
+    private fun handleFetchDiscussionDetailSuccess(
+        discussionDetail: DiscussionDetail,
+        userId: Long,
+    ) {
+        updateState {
+            copy(
+                discussion = discussionDetail.toUiModel(userId = userId),
+                likeCount = discussionDetail.detailContent.likeCount,
+                isMyDiscussion = discussionDetail.detailContent.author.id == userId,
+            )
         }
+    }
 
     private fun handleFetchDiscussionDetailFailure() {
         emitEffect(
@@ -121,22 +143,19 @@ internal class DiscussionDetailViewModel(
             .onSuccess { updateState { copy(isBookmarked = it.isScraped) } }
     }
 
-    private fun updateBookmark() {
-        val isCurrentlyBookmarked = currentState.isBookmarked
-        updateState { copy(isBookmarked = !isCurrentlyBookmarked) }
+    private fun toggleBookmark() {
+        val wasBookmarked = currentState.isBookmarked
+        updateState { copy(isBookmarked = !wasBookmarked) }
 
         viewModelScope.launch {
-            if (isCurrentlyBookmarked) {
-                scrapRepository.deleteScrap(discussionId = discussionId)
-            } else {
-                scrapRepository.postScrap(discussionId = discussionId)
-            }.onFailure { handleUpdateBookmarkFailure(isCurrentlyBookmarked, it) }
+            toggleDiscussionBookmarkUseCase(
+                discussionId = discussionId,
+                isCurrentlyBookmarked = wasBookmarked,
+            ).onFailure { throwable ->
+                updateState { copy(isBookmarked = wasBookmarked) }
+                showErrorSnackbar(throwable = throwable)
+            }
         }
-    }
-
-    private fun handleUpdateBookmarkFailure(isCurrentlyBookmarked: Boolean, throwable: Throwable) {
-        updateState { copy(isBookmarked = isCurrentlyBookmarked) }
-        showErrorSnackbar(throwable = throwable)
     }
 
     private suspend fun fetchLikeStatus() {
@@ -150,42 +169,26 @@ internal class DiscussionDetailViewModel(
             .fetchComments(discussionId = discussionId)
             .onSuccess { comments ->
                 val userId = getUserId()
-                val newComments =
-                    comments.map { comment -> comment.toUiModel(userId = userId) }.toImmutableList()
-                updateState { copy(comments = newComments) }
-            }.onFailure { throwable ->
-                Napier.e(message = throwable.message.orEmpty(), throwable = throwable)
-            }
+                val newComments = comments.map { comment -> comment.toUiModel(userId = userId) }
+                updateState { copy(comments = newComments.toImmutableList()) }
+            }.onFailure(::showErrorSnackbar)
 
-    private fun updateLike() {
-        val isCurrentlyLiked = currentState.isLiked
-        updateState { copy(isLiked = !isCurrentlyLiked) }
+    private fun toggleLike() {
+        val wasLiked = currentState.isLiked
+        val likeDelta = if (wasLiked) -1 else 1
+        updateState {
+            copy(isLiked = !wasLiked, likeCount = likeCount + likeDelta)
+        }
 
         viewModelScope.launch {
-            if (isCurrentlyLiked) {
-                likeRepository.deleteLike(discussionId = discussionId)
-            } else {
-                likeRepository.postLike(discussionId = discussionId)
-            }.onSuccess { handleUpdateLikeSuccess(isCurrentlyLiked) }
-                .onFailure { handleUpdateLikeFailure(isCurrentlyLiked, it) }
+            toggleDiscussionLikeUseCase(
+                discussionId = discussionId,
+                isCurrentlyLiked = wasLiked,
+            ).onFailure { throwable ->
+                updateState { copy(isLiked = wasLiked, likeCount = likeCount - likeDelta) }
+                showErrorSnackbar(throwable = throwable)
+            }
         }
-    }
-
-    private fun handleUpdateLikeSuccess(isCurrentlyLiked: Boolean) {
-        updateState { copy(likeCount = likeCount + if (isCurrentlyLiked) -1 else 1) }
-    }
-
-    private fun handleUpdateLikeFailure(isCurrentlyLiked: Boolean, throwable: Throwable) {
-        updateState { copy(isLiked = isCurrentlyLiked) }
-        showErrorSnackbar(throwable = throwable)
-    }
-
-    private suspend fun checkIsMyDiscussion() {
-        val discussion = currentState.discussion ?: return
-        val authorId = discussion.detailContent.author.id
-
-        val isMyDiscussion = getUserId() == authorId
-        updateState { copy(isMyDiscussion = isMyDiscussion) }
     }
 
     private suspend fun getUserId(): Long {
@@ -194,33 +197,18 @@ internal class DiscussionDetailViewModel(
         return sessionRepository
             .getUserId()
             .onSuccess { userId -> cachedUserId = userId }
-            .getOrNull() ?: -1
-    }
-
-    private suspend fun fetchParticipationStatus() {
-        participantRepository
-            .getParticipationStatus(discussionId = discussionId)
-            .onSuccess { updateState { copy(isParticipating = it.isParticipation) } }
+            .getOrNull() ?: UNKNOWN_USER_ID
     }
 
     private fun participate() {
         viewModelScope.launch {
-            participantRepository
-                .postParticipation(discussionId = discussionId)
-                .onSuccess { handleParticipateSuccess() }
-                .onFailure { showErrorSnackbar(it) }
-        }
-    }
+            val participationResult =
+                participantRepository.postParticipation(discussionId = discussionId)
+            participationResult.onFailure(::showErrorSnackbar)
 
-    private fun handleParticipateSuccess() {
-        viewModelScope.launch {
-            awaitAll(
-                async {
-                    fetchDiscussionDetail()
-                        .onFailure { handleFetchDiscussionDetailFailure() }
-                },
-                async { fetchParticipationStatus() },
-            )
+            if (participationResult.isSuccess) {
+                fetchDiscussionDetail()
+            }
         }
     }
 
@@ -228,23 +216,18 @@ internal class DiscussionDetailViewModel(
         if (currentState.isGeneratingSummary) return
         updateState { copy(isGeneratingSummary = true) }
 
-        viewModelScope.launch {
-            discussionRepository
-                .createDiscussionSummary(discussionId = discussionId)
-                .onSuccess { pollSummaryUntilLoaded() }
-                .onFailure { showErrorSnackbar(it) }
-            updateState { copy(isGeneratingSummary = false) }
-        }
+        viewModelScope
+            .launch {
+                generateDiscussionSummaryUseCase(discussionId = discussionId)
+                    .onSuccess(::handleGenerateSummarySuccess)
+                    .onFailure(::showErrorSnackbar)
+            }.invokeOnCompletion { updateState { copy(isGeneratingSummary = false) } }
     }
 
-    private suspend fun pollSummaryUntilLoaded() {
-        repeat(SUMMARY_POLL_MAX_RETRY) {
-            delay(SUMMARY_POLL_INTERVAL_MS)
-            fetchDiscussionDetail()
-                .onSuccess { detail ->
-                    if (detail.summary != null) return
-                }
-        }
+    private fun handleGenerateSummarySuccess(summary: String) {
+        val discussion = currentState.discussion
+            as? DiscussionDetailUiModel.OnlineDiscussionDetailUiModel ?: return
+        updateState { copy(discussion = discussion.copy(summary = summary)) }
     }
 
     private fun submitComment(content: String) {
@@ -274,11 +257,9 @@ internal class DiscussionDetailViewModel(
                 .patchComment(discussionCommentId = commentId, content = content)
                 .onSuccess {
                     fetchComments()
-                    emitEffect(
-                        DiscussionDetailEffect.ShowSnackbar(
-                            message = Res.string.message_comment_edit_success,
-                            state = SnackbarState.POSITIVE,
-                        ),
+                    showSnackbar(
+                        message = Res.string.message_edit_success,
+                        state = SnackbarState.POSITIVE,
                     )
                 }.onFailure(::showErrorSnackbar)
         }
@@ -290,37 +271,77 @@ internal class DiscussionDetailViewModel(
                 .deleteComment(discussionCommentId = commentId)
                 .onSuccess {
                     fetchComments()
-                    emitEffect(
-                        DiscussionDetailEffect.ShowSnackbar(
-                            message = Res.string.message_comment_delete_success,
-                            state = SnackbarState.POSITIVE,
-                        ),
+                    showSnackbar(
+                        message = Res.string.message_delete_success,
+                        state = SnackbarState.POSITIVE,
                     )
                 }.onFailure(::showErrorSnackbar)
         }
     }
 
-    private fun showErrorSnackbar(throwable: Throwable) {
-        val message = when (throwable) {
-            is NetworkError.Unauthorized -> Res.string.error_should_login
-            is NetworkError.BadRequest -> errorCodeToStringRes(throwable.errorCode)
-            else -> Res.string.error_common
+    private fun deleteDiscussion() {
+        viewModelScope.launch {
+            discussionRepository
+                .deleteDiscussion(id = discussionId)
+                .onSuccess {
+                    showSnackbar(
+                        message = Res.string.message_delete_success,
+                        state = SnackbarState.POSITIVE,
+                    )
+                    emitEffect(DiscussionDetailEffect.NavigateHome)
+                }.onFailure(::showErrorSnackbar)
         }
-        emitEffect(
-            DiscussionDetailEffect.ShowSnackbar(message = message, state = SnackbarState.NEGATIVE),
-        )
     }
 
-    private fun errorCodeToStringRes(errorCode: String?): StringResource = when (errorCode) {
-        ERROR_CODE_ALREADY_STARTED -> Res.string.error_already_started
-        ERROR_CODE_NOT_MY_DISCUSSION -> Res.string.error_not_my_discussion
-        else -> Res.string.error_common
+    private fun reportDiscussion(reason: ReportReasonUiModel) {
+        viewModelScope.launch {
+            reportRepository
+                .reportDiscussion(
+                    discussionId = discussionId,
+                    reason = reason.name,
+                ).onSuccess {
+                    showSnackbar(
+                        message = Res.string.message_discussion_report_success,
+                        state = SnackbarState.POSITIVE,
+                    )
+                }.onFailure(::showErrorSnackbar)
+        }
+    }
+
+    private fun reportComment(commentId: Long, reason: ReportReasonUiModel) {
+        viewModelScope.launch {
+            reportRepository
+                .reportComment(
+                    discussionId = discussionId,
+                    commentId = commentId,
+                    reason = reason.name,
+                ).onSuccess {
+                    showSnackbar(
+                        message = Res.string.message_discussion_report_success,
+                        state = SnackbarState.POSITIVE,
+                    )
+                }.onFailure(::showErrorSnackbar)
+        }
+    }
+
+    private fun showSnackbar(
+        message: StringResource,
+        state: SnackbarState,
+    ) {
+        emitEffect(DiscussionDetailEffect.ShowSnackbar(message = message, state = state))
+    }
+
+    private fun showErrorSnackbar(throwable: Throwable) {
+        Napier.e(message = throwable.message.orEmpty(), throwable = throwable)
+
+        val message = when (throwable) {
+            is NetworkError -> throwable.errorCode.toDialogErrorStringResource()
+            else -> UNKNOWN_DIALOG_ERROR
+        }
+        showSnackbar(message = message, state = SnackbarState.NEGATIVE)
     }
 
     companion object {
-        private const val ERROR_CODE_ALREADY_STARTED = "5026"
-        private const val ERROR_CODE_NOT_MY_DISCUSSION = "5031"
-        private const val SUMMARY_POLL_INTERVAL_MS = 10_000L
-        private const val SUMMARY_POLL_MAX_RETRY = 3
+        private const val UNKNOWN_USER_ID = -1L
     }
 }

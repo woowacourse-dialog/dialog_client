@@ -10,7 +10,7 @@ import dialog.feature.discussiondetail.impl.generated.resources.discussion_statu
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
-enum class DiscussionStatusUiModel(
+internal enum class DiscussionStatusUiModel(
     private val titleResId: StringResource,
 ) {
     RECRUITING(Res.string.discussion_status_recruiting),

@@ -8,10 +8,8 @@
 
     <string name="discussion_status_recruiting">모집 중</string>
     <string name="discussion_status_recruit_complete">모집 완료</string>
-    <string name="discussion_status_in_discussion">진행 중</string>
-    <string name="discussion_status_discussion_complete">종료</string>
-
-    <string name="discussion_card_title_format">%1$s (%2$s)</string>
+    <string name="discussion_status_in_discussion">토론 중</string>
+    <string name="discussion_status_discussion_complete">토론 완료</string>
 
     <!-- Empty View   -->
     <string name="discussion_list_empty_view_title">진행 중이거나 모집 중인 토론이 없어요</string>

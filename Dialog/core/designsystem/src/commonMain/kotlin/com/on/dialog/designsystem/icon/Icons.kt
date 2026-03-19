@@ -32,6 +32,7 @@ import androidx.compose.material.icons.rounded.NotificationsOff
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PersonOff
 import androidx.compose.material.icons.rounded.Place
+import androidx.compose.material.icons.rounded.Report
 import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
@@ -56,6 +57,7 @@ object DialogIcons {
     val Close = Icons.Rounded.Close
     val Delete = Icons.Rounded.Delete
     val Edit = Icons.Rounded.Edit
+    val Report = Icons.Rounded.Report
     val Favorite = Icons.Rounded.Favorite
     val FavoriteBorder = Icons.Rounded.FavoriteBorder
     val Forum = Icons.Rounded.Forum
