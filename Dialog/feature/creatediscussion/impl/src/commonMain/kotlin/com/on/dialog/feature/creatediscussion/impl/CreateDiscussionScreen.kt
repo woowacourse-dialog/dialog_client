@@ -40,6 +40,7 @@ import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.component.DialogButtonStyle
+import com.on.dialog.designsystem.component.DialogCard
 import com.on.dialog.designsystem.component.DialogDatePicker
 import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogIconButton
@@ -214,51 +215,51 @@ private fun CreateDiscussionForm(
     onIntent: (CreateDiscussionIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .padding(horizontal = DialogTheme.spacing.mediumLarge)
-            .verticalScroll(rememberScrollState()),
-    ) {
-        Spacer(modifier = Modifier.height(DialogTheme.spacing.mediumLarge))
+    Spacer(modifier = Modifier.height(DialogTheme.spacing.mediumLarge))
 
-        LabeledTextField(
-            title = uiState.title,
-            onTitleChange = { onIntent(CreateDiscussionIntent.OnTitleChange(it)) },
-            label = stringResource(Res.string.create_discussion_label_title),
-            placeHolder = stringResource(Res.string.create_discussion_placeholder_title),
-        )
+    DialogCard(modifier = modifier.padding(horizontal = DialogTheme.spacing.medium)) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+        ) {
+            LabeledTextField(
+                title = uiState.title,
+                onTitleChange = { onIntent(CreateDiscussionIntent.OnTitleChange(it)) },
+                label = stringResource(Res.string.create_discussion_label_title),
+                placeHolder = stringResource(Res.string.create_discussion_placeholder_title),
+            )
 
-        DialogDropdownMenu(
-            options = uiState.trackOptions.map { stringResource(it) }.toImmutableList(),
-            selectedIndex = uiState.selectedTrackIndex.takeIf { it >= 0 },
-            onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnTrackIndexChange(it)) },
-            label = stringResource(Res.string.create_discussion_label_track),
-            placeholder = stringResource(Res.string.create_discussion_placeholder_track),
-        )
+            DialogDropdownMenu(
+                options = uiState.trackOptions.map { stringResource(it) }.toImmutableList(),
+                selectedIndex = uiState.selectedTrackIndex.takeIf { it >= 0 },
+                onSelectedIndexChange = { onIntent(CreateDiscussionIntent.OnTrackIndexChange(it)) },
+                label = stringResource(Res.string.create_discussion_label_track),
+                placeholder = stringResource(Res.string.create_discussion_placeholder_track),
+            )
 
-        Spacer(modifier = Modifier.height(DialogTheme.spacing.mediumLarge))
+            Spacer(modifier = Modifier.height(DialogTheme.spacing.mediumLarge))
 
-        DialogToggle(
-            checked = uiState is CreateDiscussionState.Offline,
-            onCheckedChange = { onIntent(CreateDiscussionIntent.OnMeetupEnabledChange(it)) },
-            label = stringResource(Res.string.create_discussion_label_meetup),
-            modifier = Modifier.padding(start = DialogTheme.spacing.small),
-        )
+            DialogToggle(
+                checked = uiState is CreateDiscussionState.Offline,
+                onCheckedChange = { onIntent(CreateDiscussionIntent.OnMeetupEnabledChange(it)) },
+                label = stringResource(Res.string.create_discussion_label_meetup),
+                modifier = Modifier.padding(start = DialogTheme.spacing.small),
+            )
 
-        OnlineModeSection(
-            uiState = uiState as? CreateDiscussionState.Online,
-            onIntent = onIntent,
-        )
+            OnlineModeSection(
+                uiState = uiState as? CreateDiscussionState.Online,
+                onIntent = onIntent,
+            )
 
-        OfflineModeSection(
-            uiState = uiState as? CreateDiscussionState.Offline,
-            onIntent = onIntent,
-        )
+            OfflineModeSection(
+                uiState = uiState as? CreateDiscussionState.Offline,
+                onIntent = onIntent,
+            )
 
-        DiscussionContent(
-            content = uiState.content,
-            onContentChange = onContentClick,
-        )
+            DiscussionContent(
+                content = uiState.content,
+                onContentChange = onContentClick,
+            )
+        }
     }
 }
 
