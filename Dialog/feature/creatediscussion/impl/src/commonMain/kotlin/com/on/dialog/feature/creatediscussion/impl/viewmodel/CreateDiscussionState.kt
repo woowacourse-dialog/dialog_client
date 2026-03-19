@@ -84,12 +84,12 @@ internal sealed interface CreateDiscussionState : UiState {
     ) : CreateDiscussionState {
         override val isModeValid: Boolean
             get() = place.isNotBlank() &&
-                    selectedDate != null &&
-                    selectedStartTime != null &&
-                    selectedEndTime != null &&
-                    selectedDateErrorMessage == null &&
-                    selectedStartTimeErrorMessage == null &&
-                    selectedEndTimeErrorMessage == null
+                selectedDate != null &&
+                selectedStartTime != null &&
+                selectedEndTime != null &&
+                selectedDateErrorMessage == null &&
+                selectedStartTimeErrorMessage == null &&
+                selectedEndTimeErrorMessage == null
     }
 
     companion object {
@@ -99,7 +99,9 @@ internal sealed interface CreateDiscussionState : UiState {
     }
 }
 
-enum class EndDateOption(val offsetDays: Int) {
+enum class EndDateOption(
+    val offsetDays: Int,
+) {
     ONE_DAY_LATER(1),
     TWO_DAYS_LATER(2),
     THREE_DAYS_LATER(3),

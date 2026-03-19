@@ -38,7 +38,7 @@ internal object DiscussionValidator {
             offlineErrors
                 .firstOrNull {
                     it is DraftValidationError.Offline.StartTimeOutOfRange ||
-                            it is DraftValidationError.Offline.StartDateNotAfterToday
+                        it is DraftValidationError.Offline.StartDateNotAfterToday
                 }?.toMessage()
         }
 
@@ -46,8 +46,8 @@ internal object DiscussionValidator {
             offlineErrors
                 .firstOrNull {
                     it is DraftValidationError.Offline.EndTimeOutOfRange ||
-                            it is DraftValidationError.Offline.EndDateNotAfterToday ||
-                            (startTime != null && it is DraftValidationError.Offline.StartNotBeforeEnd)
+                        it is DraftValidationError.Offline.EndDateNotAfterToday ||
+                        (startTime != null && it is DraftValidationError.Offline.StartNotBeforeEnd)
                 }?.toMessage()
         }
 

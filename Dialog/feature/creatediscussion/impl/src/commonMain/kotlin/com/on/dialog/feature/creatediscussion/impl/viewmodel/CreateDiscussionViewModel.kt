@@ -17,8 +17,8 @@ import kotlinx.coroutines.launch
 internal class CreateDiscussionViewModel(
     private val discussionRepository: DiscussionRepository,
 ) : BaseViewModel<CreateDiscussionIntent, CreateDiscussionState, CreateDiscussionEffect>(
-    initialState = CreateDiscussionState.Online(),
-) {
+        initialState = CreateDiscussionState.Online(),
+    ) {
     private var offlineModeCache: CreateDiscussionState.Offline = CreateDiscussionState.Offline()
     private var onlineModeCache: CreateDiscussionState.Online = CreateDiscussionState.Online()
 
@@ -65,9 +65,13 @@ internal class CreateDiscussionViewModel(
 
     private fun handleMeetupEnabledChange(intent: CreateDiscussionIntent.OnMeetupEnabledChange) {
         updateState {
-            if (intent.enabled) toOfflineState(offlineModeCache) else toOnlineState(
-                onlineModeCache
-            )
+            if (intent.enabled) {
+                toOfflineState(offlineModeCache)
+            } else {
+                toOnlineState(
+                    onlineModeCache,
+                )
+            }
         }
     }
 
