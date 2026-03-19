@@ -29,7 +29,6 @@ class CookieStoreAdapter(
         value = value,
         domain = domain,
         path = path,
-        expires = expires,
         secure = secure,
         httpOnly = httpOnly,
     )
@@ -40,7 +39,6 @@ class CookieStoreAdapter(
             value = value,
             domain = domain,
             path = path,
-            expires = expires,
             secure = secure,
             httpOnly = httpOnly,
         )

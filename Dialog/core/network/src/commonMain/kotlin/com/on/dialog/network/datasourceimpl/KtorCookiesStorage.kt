@@ -16,7 +16,6 @@ class KtorCookiesStorage(
                 value = cookie.value,
                 domain = requestUrl.host,
                 path = requestUrl.encodedPath,
-                expires = cookie.expires?.timestamp,
                 secure = cookie.secure,
                 httpOnly = cookie.httpOnly,
             ),
