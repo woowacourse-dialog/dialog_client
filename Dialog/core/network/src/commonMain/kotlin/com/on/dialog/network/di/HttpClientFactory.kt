@@ -1,9 +1,12 @@
 package com.on.dialog.network.di
 
 import com.on.dialog.core.network.BuildKonfig
+import com.on.dialog.domain.repository.SessionRepository
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
@@ -12,13 +15,17 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
-expect fun createHttpClient(cookiesStorage: CookiesStorage): HttpClient
+expect fun createHttpClient(
+    cookiesStorage: CookiesStorage,
+    sessionRepository: SessionRepository,
+): HttpClient
 
 internal fun HttpClientConfig<*>.installContentNegotiation() {
     /**
@@ -73,6 +80,24 @@ internal fun HttpClientConfig<*>.installCookies(cookiesStorage: CookiesStorage) 
     install(plugin = HttpCookies) {
         // 커스텀 쿠키 스토리지 사용 (DataStore 기반)
         storage = cookiesStorage
+    }
+}
+
+/**
+ * 401 Unauthorized 응답 수신 시 세션을 초기화하는 핸들러
+ *
+ * 서버 세션이 만료되어 401이 반환되면 [SessionRepository.clearSession]을 호출해
+ * 로컬에 저장된 쿠키와 로그인 상태를 초기화합니다.
+ */
+internal fun HttpClientConfig<*>.installUnauthorizedHandler(sessionRepository: SessionRepository) {
+    HttpResponseValidator {
+        handleResponseExceptionWithRequest { exception, _ ->
+            val response = (exception as? ClientRequestException)?.response
+                ?: return@handleResponseExceptionWithRequest
+            if (response.status == HttpStatusCode.Unauthorized) {
+                sessionRepository.clearSession()
+            }
+        }
     }
 }
 

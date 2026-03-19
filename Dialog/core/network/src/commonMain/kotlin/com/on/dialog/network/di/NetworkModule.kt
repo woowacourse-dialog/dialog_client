@@ -14,7 +14,7 @@ val networkModule = module {
     }
 
     single<HttpClient> {
-        createHttpClient(cookiesStorage = get())
+        createHttpClient(cookiesStorage = get(), sessionRepository = get())
     }
 
     single<Ktorfit> {
