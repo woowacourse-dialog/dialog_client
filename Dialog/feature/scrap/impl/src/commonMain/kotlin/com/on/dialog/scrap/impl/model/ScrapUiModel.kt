@@ -3,6 +3,7 @@ package com.on.dialog.scrap.impl.model
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import com.on.dialog.core.common.extension.now
+import com.on.dialog.model.common.Track
 import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.model.discussion.scrap.OfflineScrapCatalog
 import com.on.dialog.model.discussion.scrap.OnlineScrapCatalog
@@ -10,7 +11,6 @@ import com.on.dialog.model.discussion.scrap.ScrapCatalog
 import com.on.dialog.scrap.impl.model.DiscussionStatusUiModel.Companion.toUiModel
 import com.on.dialog.scrap.impl.model.ScrapUiModel.OfflineScrapUiModel.Companion.toOfflineUiModel
 import com.on.dialog.scrap.impl.model.ScrapUiModel.OnlineScrapUiModel.Companion.toOnlineUiModel
-import com.on.dialog.scrap.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.ui.component.ChipCategory
 import com.on.dialog.ui.mapper.toChipCategory
 import kotlinx.collections.immutable.ImmutableList
@@ -23,7 +23,7 @@ internal sealed interface ScrapUiModel {
     val id: Long
     val title: String
     val author: String
-    val track: TrackUiModel
+    val track: Track
     val status: DiscussionStatusUiModel
     val commentCount: Int
     val period: String
@@ -36,7 +36,7 @@ internal sealed interface ScrapUiModel {
         override val id: Long,
         override val title: String,
         override val author: String,
-        override val track: TrackUiModel,
+        override val track: Track,
         override val status: DiscussionStatusUiModel,
         override val commentCount: Int,
         override val period: String,
@@ -45,7 +45,8 @@ internal sealed interface ScrapUiModel {
         override fun toChipCategories(): ImmutableList<ChipCategory> =
             persistentListOf(
                 DiscussionType.ONLINE.toChipCategory(),
-                track.toDomain().toChipCategory(),
+                status.toDomain().toChipCategory(),
+                track.toChipCategory(),
             )
 
         companion object {
@@ -55,7 +56,7 @@ internal sealed interface ScrapUiModel {
                     id = catalogContent.id,
                     title = catalogContent.title,
                     author = catalogContent.author,
-                    track = catalogContent.category.toUiModel(),
+                    track = catalogContent.category,
                     status = status(now = now).toUiModel(),
                     commentCount = catalogContent.commentCount,
                     period = "~ ${endDate.endDate}".replace("-", "."),
@@ -68,7 +69,7 @@ internal sealed interface ScrapUiModel {
         override val id: Long,
         override val title: String,
         override val author: String,
-        override val track: TrackUiModel,
+        override val track: Track,
         override val status: DiscussionStatusUiModel,
         override val commentCount: Int,
         override val period: String,
@@ -78,7 +79,8 @@ internal sealed interface ScrapUiModel {
         @Composable
         override fun toChipCategories(): ImmutableList<ChipCategory> = persistentListOf(
             DiscussionType.OFFLINE.toChipCategory(),
-            track.toDomain().toChipCategory(),
+            status.toDomain().toChipCategory(),
+            track.toChipCategory(),
         )
 
         companion object {
@@ -88,7 +90,7 @@ internal sealed interface ScrapUiModel {
                     id = catalogContent.id,
                     title = catalogContent.title,
                     author = catalogContent.author,
-                    track = catalogContent.category.toUiModel(),
+                    track = catalogContent.category,
                     status = status(now = now).toUiModel(),
                     commentCount = catalogContent.commentCount,
                     participantCapacity = "${participantCapacity.current}/${participantCapacity.max}",

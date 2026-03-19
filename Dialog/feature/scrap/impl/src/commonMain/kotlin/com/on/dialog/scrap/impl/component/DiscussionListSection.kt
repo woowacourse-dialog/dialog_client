@@ -15,15 +15,12 @@ import androidx.compose.ui.Modifier
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.util.drawFadingEdges
+import com.on.dialog.model.common.Track
 import com.on.dialog.scrap.impl.model.DiscussionStatusUiModel
 import com.on.dialog.scrap.impl.model.ScrapUiModel
-import com.on.dialog.scrap.impl.model.TrackUiModel
 import com.on.dialog.ui.component.DiscussionCard
-import dialog.feature.scrap.impl.generated.resources.Res
-import dialog.feature.scrap.impl.generated.resources.discussion_card_title_format
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionListSection(
@@ -66,11 +63,7 @@ private fun DiscussionListSection(
         items(items = discussions, key = { discussion -> discussion.id }) { discussion ->
             DiscussionCard(
                 chips = discussion.toChipCategories(),
-                title = stringResource(
-                    Res.string.discussion_card_title_format,
-                    discussion.title,
-                    discussion.status.title,
-                ),
+                title = discussion.title,
                 author = discussion.author,
                 period = discussion.period,
                 discussionCount = discussion.commentCount,
@@ -93,7 +86,7 @@ private fun DiscussionListSectionPreview() {
                         id = 1,
                         title = "Jetpack Compose is awesome",
                         author = "Android Dev",
-                        track = TrackUiModel.ANDROID,
+                        track = Track.ANDROID,
                         status = DiscussionStatusUiModel.IN_DISCUSSION,
                         commentCount = 10,
                         period = "~ 2025.02.03",
@@ -102,7 +95,7 @@ private fun DiscussionListSectionPreview() {
                         id = 2,
                         title = "KMP is the future",
                         author = "Kotlin Dev",
-                        track = TrackUiModel.COMMON,
+                        track = Track.COMMON,
                         status = DiscussionStatusUiModel.RECRUIT_COMPLETE,
                         commentCount = 20,
                         period = "2025.02.03 ~ 2025.03.31",

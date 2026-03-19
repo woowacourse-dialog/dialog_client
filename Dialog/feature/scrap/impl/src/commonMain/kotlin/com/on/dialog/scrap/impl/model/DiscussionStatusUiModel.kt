@@ -19,6 +19,13 @@ internal enum class DiscussionStatusUiModel(
     DISCUSSION_COMPLETE(Res.string.discussion_status_discussion_complete),
     ;
 
+    fun toDomain(): DiscussionStatus = when (this) {
+        RECRUITING -> DiscussionStatus.RECRUITING
+        RECRUIT_COMPLETE -> DiscussionStatus.RECRUIT_COMPLETE
+        IN_DISCUSSION -> DiscussionStatus.IN_DISCUSSION
+        DISCUSSION_COMPLETE -> DiscussionStatus.DISCUSSION_COMPLETE
+    }
+
     val title: String
         @Composable get() = stringResource(titleRes)
 

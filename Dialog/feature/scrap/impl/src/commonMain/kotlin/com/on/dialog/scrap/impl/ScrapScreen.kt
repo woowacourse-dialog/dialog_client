@@ -21,10 +21,10 @@ import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.model.common.Track
 import com.on.dialog.scrap.impl.component.DiscussionListSection
 import com.on.dialog.scrap.impl.model.DiscussionStatusUiModel
 import com.on.dialog.scrap.impl.model.ScrapUiModel
-import com.on.dialog.scrap.impl.model.TrackUiModel
 import com.on.dialog.scrap.impl.viewmodel.ScrapEffect
 import com.on.dialog.scrap.impl.viewmodel.ScrapIntent
 import com.on.dialog.scrap.impl.viewmodel.ScrapState
@@ -122,7 +122,7 @@ private fun ScrapScreen(
 
                 is ScrapState.Loading,
                 is ScrapState.Content,
-                -> {
+                    -> {
                     DiscussionListSection(
                         listState = listState,
                         discussions = uiState.scraps,
@@ -172,7 +172,7 @@ private fun ScrapScreenPreview() {
                                 id = it.toLong(),
                                 title = "토론 제목 $it",
                                 author = "작성자 $it",
-                                track = TrackUiModel.entries.random(),
+                                track = Track.entries.random(),
                                 status = DiscussionStatusUiModel.entries.random(),
                                 commentCount = 3,
                                 period = "~ 2025.03.01",
@@ -182,7 +182,7 @@ private fun ScrapScreenPreview() {
                                 id = it.toLong(),
                                 title = "토론 제목 $it",
                                 author = "작성자 $it",
-                                track = TrackUiModel.entries.random(),
+                                track = Track.entries.random(),
                                 status = DiscussionStatusUiModel.entries.random(),
                                 commentCount = 5,
                                 period = "2025.02.03 ~ 2025.03.01",
