@@ -28,6 +28,9 @@ val datasourceModule = module {
     single<UserDatasource> {
         UserRemoteDatasource(userService = get())
     }
+    single<ScrapDatasource> {
+        ScrapRemoteDatasource(scrapService = get())
+    }
     single<LikeDatasource> {
         LikeRemoteDatasource(likeService = get())
     }

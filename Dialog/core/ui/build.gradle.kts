@@ -15,6 +15,7 @@ kotlin {
 
             // Kotlinx
             implementation(libs.kotlinx.collections.immutable)
+            implementation(libs.kotlinx.coroutines.core)
 
             // Image
             implementation(libs.coil.compose)

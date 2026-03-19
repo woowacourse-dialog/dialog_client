@@ -15,9 +15,9 @@ fun EntryProviderScope<NavKey>.loginScreen(
         LoginWebViewScreen(
             loginType = LoginType.GITHUB,
             goBack = navigator::goBack,
-            navigateToSignUp = {
+            navigateToSignUp = { jsessionId: String ->
                 navigator.goBack()
-                navigator.navigate(SignUpNavKey)
+                navigator.navigate(SignUpNavKey(jsessionId = jsessionId))
             },
         )
     }

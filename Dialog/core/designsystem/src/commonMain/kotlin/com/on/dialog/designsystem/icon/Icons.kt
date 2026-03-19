@@ -26,6 +26,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.NoAccounts
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.NotificationsOff
 import androidx.compose.material.icons.rounded.Person
@@ -70,6 +71,8 @@ object DialogIcons {
     val Person = Icons.Rounded.Person
     val PersonOff = Icons.Rounded.PersonOff
     val Place = Icons.Rounded.Place
+
+    val Unauthorized = Icons.Rounded.NoAccounts
 
     val Group = Icons.Rounded.Group
     val Settings = Icons.Rounded.Settings

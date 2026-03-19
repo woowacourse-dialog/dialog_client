@@ -12,6 +12,8 @@ fun EntryProviderScope<NavKey>.signUpScreen(
 ) {
     entry<SignUpNavKey> {
         SignUpScreen(
+            jsessionId = it.jsessionId,
+            exitSignUp = navigator::goBack,
             navigateToHome = {
                 navigator.goBack()
                 navigator.navigate(DiscussionListNavKey)

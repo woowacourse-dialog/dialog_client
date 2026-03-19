@@ -6,6 +6,7 @@ import com.on.dialog.feature.login.api.LoginNavKey
 import com.on.dialog.feature.mycreated.api.MyCreatedNavKey
 import com.on.dialog.feature.mypage.api.MyPageNavKey
 import com.on.dialog.feature.mypage.impl.MyPageScreen
+import com.on.dialog.feature.scrap.api.ScrapNavKey
 import com.on.dialog.navigation.Navigator
 
 fun EntryProviderScope<NavKey>.myPageScreen(
@@ -15,6 +16,7 @@ fun EntryProviderScope<NavKey>.myPageScreen(
         MyPageScreen(
             navigateToLogin = { navigator.navigate(LoginNavKey) },
             navigateToMyCreated = { navigator.navigate(MyCreatedNavKey) },
+            navigateToScrap = { navigator.navigate(ScrapNavKey) },
         )
     }
 }

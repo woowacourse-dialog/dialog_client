@@ -1,9 +1,13 @@
 package com.on.dialog.network.datasource
 
+import com.on.dialog.network.dto.scrap.ScrapCursorPageResponse
 import com.on.dialog.network.dto.scrap.ScrapStatusResponse
+import com.on.dialog.network.dto.scrap.ScrapSuccessResponse
 
 interface ScrapDatasource {
-    suspend fun postScrap(id: Long): Result<Unit>
+    suspend fun getScraps(lastCursorId: Long?, size: Int): Result<ScrapCursorPageResponse>
+
+    suspend fun postScrap(id: Long): Result<ScrapSuccessResponse>
 
     suspend fun deleteScrap(id: Long): Result<Unit>
 

@@ -1,6 +1,6 @@
 <resources>
     <string name="top_level_nav_item_home">홈</string>
-    <string name="top_level_nav_item_scrap">북마크</string>
+    <string name="top_level_nav_item_scrap">스크랩</string>
     <string name="top_level_nav_item_my_page">마이페이지</string>
     <string name="top_level_back_press_exit_guide">한 번 더 누르면 종료됩니다.</string>
 </resources>

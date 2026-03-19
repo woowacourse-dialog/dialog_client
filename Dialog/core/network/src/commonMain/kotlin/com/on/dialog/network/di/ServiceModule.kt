@@ -29,6 +29,9 @@ val serviceModule = module {
     single<UserService> {
         get<Ktorfit>().createUserService()
     }
+    single<ScrapService> {
+        get<Ktorfit>().createScrapService()
+    }
     single<LikeService> {
         get<Ktorfit>().createLikeService()
     }
