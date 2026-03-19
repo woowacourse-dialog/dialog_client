@@ -86,7 +86,10 @@ internal sealed interface CreateDiscussionState : UiState {
             get() = place.isNotBlank() &&
                     selectedDate != null &&
                     selectedStartTime != null &&
-                    selectedEndTime != null
+                    selectedEndTime != null &&
+                    selectedDateErrorMessage == null &&
+                    selectedStartTimeErrorMessage == null &&
+                    selectedEndTimeErrorMessage == null
     }
 
     companion object {
