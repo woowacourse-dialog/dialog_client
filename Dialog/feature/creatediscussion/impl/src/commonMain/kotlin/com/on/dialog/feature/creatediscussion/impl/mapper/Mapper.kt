@@ -1,5 +1,6 @@
 package com.on.dialog.feature.creatediscussion.impl.mapper
 
+import com.on.dialog.feature.creatediscussion.impl.viewmodel.EndDateOption
 import com.on.dialog.model.common.Track
 import dialog.feature.creatediscussion.impl.generated.resources.Res
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_track_android
@@ -23,7 +24,7 @@ internal fun Int.toTrackCategory(): String = when (this) {
 }
 
 internal fun Int.toEndDateOffsetDays(): Int = when (this) {
-    0 -> 1
-    1 -> 2
-    else -> 3
+    0 -> EndDateOption.ONE_DAY_LATER.offsetDays
+    1 -> EndDateOption.TWO_DAYS_LATER.offsetDays
+    else -> EndDateOption.THREE_DAYS_LATER.offsetDays
 }

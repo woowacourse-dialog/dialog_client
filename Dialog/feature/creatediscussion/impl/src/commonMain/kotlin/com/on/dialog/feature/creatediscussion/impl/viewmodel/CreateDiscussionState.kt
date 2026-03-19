@@ -96,6 +96,12 @@ internal sealed interface CreateDiscussionState : UiState {
     }
 }
 
+enum class EndDateOption(val offsetDays: Int) {
+    ONE_DAY_LATER(1),
+    TWO_DAYS_LATER(2),
+    THREE_DAYS_LATER(3),
+}
+
 private fun CreateDiscussionState.Offline.toDomain(): OfflineDiscussionDraft {
     val selectedDate = selectedDate ?: LocalDate(0, 0, 0)
     val selectedStartTime = selectedStartTime ?: LocalTime(0, 0)
