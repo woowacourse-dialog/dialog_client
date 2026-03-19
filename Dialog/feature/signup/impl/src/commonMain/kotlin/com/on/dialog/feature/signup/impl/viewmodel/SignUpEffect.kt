@@ -6,6 +6,7 @@ import org.jetbrains.compose.resources.StringResource
 
 interface SignUpEffect : UiEffect {
     data object ExitSignUp : SignUpEffect
+
     data object NavigateHome : SignUpEffect
 
     data class ShowSnackbar(

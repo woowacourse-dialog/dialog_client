@@ -66,7 +66,9 @@ class MyPageViewModel(
                 updateState { MyPageState(isLoggedIn = false, isLoading = false) }
             }
 
-            null -> Unit
+            null -> {
+                Unit
+            }
         }
     }
 

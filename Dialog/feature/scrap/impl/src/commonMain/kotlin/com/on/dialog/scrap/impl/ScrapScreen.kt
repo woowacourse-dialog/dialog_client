@@ -75,7 +75,7 @@ internal fun ScrapScreen(
                 if (shouldLoad) viewModel.onIntent(ScrapIntent.LoadNextPage)
             }
     }
-    
+
     LaunchedEffect(uiState.scraps) {
         val currentFirstScrapId = uiState.scraps.firstOrNull()?.id
         if (previousFirstScrapId != null &&
@@ -122,7 +122,7 @@ private fun ScrapScreen(
 
                 is ScrapState.Loading,
                 is ScrapState.Content,
-                    -> {
+                -> {
                     DiscussionListSection(
                         listState = listState,
                         discussions = uiState.scraps,

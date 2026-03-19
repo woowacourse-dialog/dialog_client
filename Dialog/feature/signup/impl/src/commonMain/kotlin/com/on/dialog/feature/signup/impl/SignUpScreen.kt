@@ -74,12 +74,16 @@ fun SignUpScreen(
                     exitSignUp()
                 }
 
-                SignUpEffect.NavigateHome -> navigateToHome()
+                SignUpEffect.NavigateHome -> {
+                    navigateToHome()
+                }
 
-                is SignUpEffect.ShowSnackbar -> snackbarHostState.showSnackbar(
-                    message = getString(effect.stringResource),
-                    state = effect.state,
-                )
+                is SignUpEffect.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = getString(effect.stringResource),
+                        state = effect.state,
+                    )
+                }
             }
         }
     }

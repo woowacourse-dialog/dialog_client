@@ -160,7 +160,7 @@ private fun MyPageScreen(
         } else {
             MyPageScreenLoggedOut(
                 onLoginClick = onLoginClick,
-                onLoggedOutInteraction = onLoggedOutInteraction
+                onLoggedOutInteraction = onLoggedOutInteraction,
             )
         }
     }
