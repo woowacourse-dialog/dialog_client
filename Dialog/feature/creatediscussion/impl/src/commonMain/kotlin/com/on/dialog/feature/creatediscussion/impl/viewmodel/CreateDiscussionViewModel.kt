@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.feature.creatediscussion.impl.mapper.DiscussionValidator
+import com.on.dialog.model.discussion.draft.DiscussionDraft
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
 import com.on.dialog.ui.viewmodel.BaseViewModel
@@ -50,7 +51,7 @@ internal class CreateDiscussionViewModel(
     }
 
     private fun handleTitleChange(intent: CreateDiscussionIntent.OnTitleChange) {
-        if (intent.title.length > OfflineDiscussionDraft.MAX_TITLE_LENGTH) return
+        if (intent.title.length > DiscussionDraft.MAX_TITLE_LENGTH) return
         updateState { update(title = intent.title) }
     }
 

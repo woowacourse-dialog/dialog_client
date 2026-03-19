@@ -56,6 +56,7 @@ import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionEff
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionIntent
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionViewModel
+import com.on.dialog.model.discussion.draft.DiscussionDraft
 import com.on.dialog.ui.component.DecisionDialog
 import com.on.dialog.ui.component.markdown.DialogMarkdown
 import com.on.dialog.ui.component.markdown.MarkdownEditor
@@ -514,7 +515,7 @@ private fun LabeledTextField(
                 text = stringResource(
                     Res.string.create_discussion_title_count_format,
                     title.length,
-                    50,
+                    DiscussionDraft.MAX_TITLE_LENGTH,
                 ),
                 color = DialogTheme.colorScheme.primary,
                 style = DialogTheme.typography.bodySmall,

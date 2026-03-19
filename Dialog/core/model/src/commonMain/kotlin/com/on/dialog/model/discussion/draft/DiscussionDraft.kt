@@ -8,4 +8,8 @@ sealed interface DiscussionDraft {
     val category: String
 
     fun validate(today: LocalDateTime): List<DraftValidationError>
+
+    companion object {
+        const val MAX_TITLE_LENGTH = 50
+    }
 }

@@ -21,8 +21,6 @@ data class OfflineDiscussionDraft(
     companion object {
         const val MIN_PARTICIPANT_COUNT = 2
         const val MAX_PARTICIPANT_COUNT = 10
-
-        const val MAX_TITLE_LENGTH = 50
         const val MAX_PLACE_LENGTH = 50
     }
 }
