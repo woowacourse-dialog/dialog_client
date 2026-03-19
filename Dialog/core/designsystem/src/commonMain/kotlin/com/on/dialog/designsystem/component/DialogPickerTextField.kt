@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.on.dialog.designsystem.extensions.noRippleClickable
 import com.on.dialog.designsystem.theme.DialogTheme
 import dialog.core.designsystem.generated.resources.Res
 import dialog.core.designsystem.generated.resources.dialog_time_picker_content_description
@@ -52,11 +53,7 @@ internal fun DialogPickerTextField(
             Box(
                 modifier = Modifier
                     .matchParentSize()
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = onClick,
-                    ),
+                    .noRippleClickable(onClick = onClick)
             )
         }
     }
