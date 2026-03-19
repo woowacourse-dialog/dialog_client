@@ -6,6 +6,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.data)
+            implementation(projects.core.domain)
 
             implementation(projects.feature.main)
             implementation(projects.feature.login.impl)

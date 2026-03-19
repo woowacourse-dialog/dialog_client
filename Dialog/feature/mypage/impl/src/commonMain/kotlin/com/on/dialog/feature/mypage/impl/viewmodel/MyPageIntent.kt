@@ -4,8 +4,6 @@ import com.on.dialog.model.common.Track
 import com.on.dialog.ui.viewmodel.UiIntent
 
 sealed interface MyPageIntent : UiIntent {
-    data object CheckLoginStatus : MyPageIntent
-
     data object Logout : MyPageIntent
 
     data class EditProfile(

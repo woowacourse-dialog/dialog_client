@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.feature.login.impl.model.LoginType
@@ -40,7 +39,7 @@ expect fun LoginWebView(
 fun LoginWebViewScreen(
     loginType: LoginType,
     goBack: () -> Unit,
-    navigateToSignUp: () -> Unit,
+    navigateToSignUp: (String) -> Unit,
     viewModel: LoginViewModel = koinViewModel(),
 ) {
     val snackbarHostState = LocalSnackbarDelegate.current
@@ -53,8 +52,8 @@ fun LoginWebViewScreen(
                     goBack()
                 }
 
-                LoginEffect.NavigateToSignUp -> {
-                    navigateToSignUp()
+                is LoginEffect.NavigateToSignUp -> {
+                    navigateToSignUp(effect.jsessionId)
                 }
 
                 is LoginEffect.ShowSnackbar -> {

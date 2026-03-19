@@ -26,12 +26,14 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.NoAccounts
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.NotificationsOff
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PersonOff
 import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material.icons.rounded.Remove
+import androidx.compose.material.icons.rounded.Report
 import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
@@ -56,6 +58,7 @@ object DialogIcons {
     val Close = Icons.Rounded.Close
     val Delete = Icons.Rounded.Delete
     val Edit = Icons.Rounded.Edit
+    val Report = Icons.Rounded.Report
     val Favorite = Icons.Rounded.Favorite
     val FavoriteBorder = Icons.Rounded.FavoriteBorder
     val Forum = Icons.Rounded.Forum
@@ -69,6 +72,8 @@ object DialogIcons {
     val Person = Icons.Rounded.Person
     val PersonOff = Icons.Rounded.PersonOff
     val Place = Icons.Rounded.Place
+
+    val Unauthorized = Icons.Rounded.NoAccounts
 
     val Group = Icons.Rounded.Group
     val Settings = Icons.Rounded.Settings

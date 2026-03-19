@@ -16,6 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.on.dialog.designsystem.component.DialogButton
 import com.on.dialog.designsystem.component.DialogDropdownMenu
 import com.on.dialog.designsystem.component.DialogTopAppBar
@@ -44,6 +47,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SignUpScreen(
+    jsessionId: String,
+    exitSignUp: () -> Unit,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = koinViewModel(),
@@ -56,15 +61,29 @@ fun SignUpScreen(
         .map { stringResource(it.toFullNameRes()) }
         .toImmutableList()
 
+    NavigationBackHandler(
+        state = rememberNavigationEventState(currentInfo = NavigationEventInfo.None),
+        isBackEnabled = true,
+        onBackCompleted = { viewModel.onIntent(SignUpIntent.CancelSignUp) },
+    )
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect: SignUpEffect ->
             when (effect) {
-                SignUpEffect.NavigateHome -> navigateToHome()
+                SignUpEffect.ExitSignUp -> {
+                    exitSignUp()
+                }
 
-                is SignUpEffect.ShowSnackbar -> snackbarHostState.showSnackbar(
-                    message = getString(effect.stringResource),
-                    state = effect.state,
-                )
+                SignUpEffect.NavigateHome -> {
+                    navigateToHome()
+                }
+
+                is SignUpEffect.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = getString(effect.stringResource),
+                        state = effect.state,
+                    )
+                }
             }
         }
     }
@@ -74,7 +93,7 @@ fun SignUpScreen(
         tracks = tracks,
         onSelectTrack = { viewModel.onIntent(SignUpIntent.SelectTrack(track = trackEntries[it])) },
         onToggleNotification = { viewModel.onIntent(SignUpIntent.ToggleNotification(enabled = it)) },
-        onSignUpClick = { viewModel.onIntent(SignUpIntent.ValidateAndSignUp) },
+        onSignUpClick = { viewModel.onIntent(SignUpIntent.ValidateAndSignUp(jsessionId = jsessionId)) },
         modifier = modifier,
     )
 }

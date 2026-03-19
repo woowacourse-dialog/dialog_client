@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.on.dialog.designsystem.component.DialogHorizontalDivider
-import com.on.dialog.designsystem.component.DialogIconButton
 import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
@@ -31,27 +29,19 @@ import com.on.dialog.discussiondetail.impl.model.TrackUiModel.Companion.toUiMode
 import com.on.dialog.model.common.Track
 import com.on.dialog.ui.component.ChipCategory
 import com.on.dialog.ui.component.DialogChipGroup
-import com.on.dialog.ui.component.InteractionIndicator
 import com.on.dialog.ui.component.ProfileImage
 import dialog.feature.discussiondetail.impl.generated.resources.Res
 import dialog.feature.discussiondetail.impl.generated.resources.end_date_format
-import dialog.feature.discussiondetail.impl.generated.resources.header_bookmark_content_description
 import dialog.feature.discussiondetail.impl.generated.resources.header_created_at
 import dialog.feature.discussiondetail.impl.generated.resources.header_info
-import dialog.feature.discussiondetail.impl.generated.resources.header_like_content_description
 import dialog.feature.discussiondetail.impl.generated.resources.header_participants_format
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun DiscussionDetailHeader(
+internal fun DiscussionHeaderSection(
     discussion: DiscussionDetailUiModel,
-    isBookmarked: Boolean,
-    isLiked: Boolean,
-    likeCount: Int,
-    onLikeClick: () -> Unit,
-    onBookmarkClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val detailContent: DetailContentUiModel = discussion.detailContent
@@ -59,18 +49,13 @@ internal fun DiscussionDetailHeader(
     Column(modifier = modifier) {
         DiscussionActionBar(
             chips = discussion.toChipCategories(),
-            likeCount = likeCount,
-            isBookmarked = isBookmarked,
-            isLiked = isLiked,
-            onLikeClick = onLikeClick,
-            onBookmarkClick = onBookmarkClick,
         )
         Spacer(modifier = Modifier.height(DialogTheme.spacing.extraSmall))
 
         Text(
             text = detailContent.title,
             style = DialogTheme.typography.titleLarge,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = DialogTheme.spacing.large),
+            modifier = Modifier.fillMaxWidth(),
         )
         Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
         DialogHorizontalDivider()
@@ -87,38 +72,15 @@ internal fun DiscussionDetailHeader(
 @Composable
 private fun DiscussionActionBar(
     chips: ImmutableList<ChipCategory>,
-    likeCount: Int,
-    isBookmarked: Boolean,
-    isLiked: Boolean,
-    onLikeClick: () -> Unit,
-    onBookmarkClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    DialogChipGroup(
+        chips = chips,
+        onChipsChange = {},
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = DialogTheme.spacing.large, end = DialogTheme.spacing.extraSmall),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly,
-    ) {
-        DialogChipGroup(
-            chips = chips,
-            onChipsChange = {},
-            modifier = Modifier.weight(1f),
-        )
-        InteractionIndicator(
-            icon = if (isLiked) DialogIcons.Favorite else DialogIcons.FavoriteBorder,
-            contentDescription = stringResource(Res.string.header_like_content_description),
-            count = likeCount,
-            onClick = onLikeClick,
-        )
-        DialogIconButton(onClick = onBookmarkClick) {
-            Icon(
-                imageVector = if (isBookmarked) DialogIcons.Bookmark else DialogIcons.BookmarkBorder,
-                contentDescription = stringResource(Res.string.header_bookmark_content_description),
-            )
-        }
-    }
+            .padding(bottom = DialogTheme.spacing.small),
+    )
 }
 
 @Composable
@@ -130,7 +92,7 @@ private fun ProfileSection(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = DialogTheme.spacing.small, horizontal = DialogTheme.spacing.large),
+            .padding(vertical = DialogTheme.spacing.small),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -209,8 +171,8 @@ private fun InfoSection(
     discussionPlace: String?,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxWidth().padding(horizontal = DialogTheme.spacing.large)) {
-        IconTextRow(
+    Column(modifier = modifier.fillMaxWidth()) {
+        DiscussionIconTextRow(
             iconImage = DialogIcons.Info,
             text = stringResource(Res.string.header_info),
             textStyle = DialogTheme.typography.titleSmall,
@@ -218,18 +180,19 @@ private fun InfoSection(
 
         Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
 
-        Row(
+        FlowRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
+            verticalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
         ) {
             formattedDateTime?.let { text ->
-                MetaChip(
+                DiscussionMetaInfoChip(
                     text = text,
                     iconImage = DialogIcons.Calendar,
                 )
             }
             discussionPlace?.let { place ->
-                MetaChip(
+                DiscussionMetaInfoChip(
                     text = place,
                     iconImage = DialogIcons.Place,
                 )
@@ -244,12 +207,8 @@ private fun ParticipantList(
     participants: ImmutableList<ParticipantUiModel>,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = DialogTheme.spacing.large),
-    ) {
-        IconTextRow(
+    Column(modifier = modifier.fillMaxWidth()) {
+        DiscussionIconTextRow(
             iconImage = DialogIcons.Group,
             text = stringResource(Res.string.header_participants_format, capacity),
             textStyle = DialogTheme.typography.titleSmall,
@@ -261,17 +220,17 @@ private fun ParticipantList(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(DialogTheme.spacing.small),
         ) {
-            participants.forEach { participant -> MetaChip(text = participant.name) }
+            participants.forEach { participant -> DiscussionMetaInfoChip(text = participant.name) }
         }
     }
 }
 
 @ThemePreview
 @Composable
-private fun OnlineDiscussionDetailHeaderPreview() {
+private fun OnlineDiscussionHeaderSectionPreview() {
     DialogTheme {
         Surface {
-            DiscussionDetailHeader(
+            DiscussionHeaderSection(
                 discussion = DiscussionDetailUiModel.OnlineDiscussionDetailUiModel(
                     detailContent = DetailContentUiModel(
                         id = 0L,
@@ -287,11 +246,6 @@ private fun OnlineDiscussionDetailHeaderPreview() {
                     status = DiscussionStatusUiModel.IN_DISCUSSION,
                     endDate = "2026년 3월 28일",
                 ),
-                isBookmarked = false,
-                isLiked = true,
-                likeCount = 100,
-                onLikeClick = {},
-                onBookmarkClick = {},
             )
         }
     }
@@ -299,10 +253,10 @@ private fun OnlineDiscussionDetailHeaderPreview() {
 
 @ThemePreview
 @Composable
-private fun OfflineDiscussionDetailHeaderPreview() {
+private fun OfflineDiscussionHeaderSectionPreview() {
     DialogTheme {
         Surface {
-            DiscussionDetailHeader(
+            DiscussionHeaderSection(
                 discussion = DiscussionDetailUiModel.OfflineDiscussionDetailUiModel(
                     detailContent = DetailContentUiModel(
                         id = 0L,
@@ -314,7 +268,6 @@ private fun OfflineDiscussionDetailHeaderPreview() {
                         likeCount = 100,
                         modifiedAt = "2023.03.01",
                     ),
-                    summary = "요약된 내용",
                     status = DiscussionStatusUiModel.IN_DISCUSSION,
                     participantCapacity = "3/4",
                     place = "우아한테크코스",
@@ -323,13 +276,9 @@ private fun OfflineDiscussionDetailHeaderPreview() {
                         ParticipantUiModel(id = 1L, name = "제리"),
                         ParticipantUiModel(id = 2L, name = "크림"),
                     ),
-                    dateTimePeriod = "2023년 3월 1일 13시 ~ 15시",
+                    isParticipating = false,
+                    dateTimePeriod = "2023년 3월 1일 13시 15분 ~ 15시 15분",
                 ),
-                isBookmarked = false,
-                isLiked = true,
-                likeCount = 100,
-                onLikeClick = {},
-                onBookmarkClick = {},
             )
         }
     }

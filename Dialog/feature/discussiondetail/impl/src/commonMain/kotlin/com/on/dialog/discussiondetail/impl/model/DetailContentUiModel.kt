@@ -8,7 +8,7 @@ import com.on.dialog.model.discussion.content.Author
 import com.on.dialog.model.discussion.content.DetailContent
 
 @Immutable
-data class DetailContentUiModel(
+internal data class DetailContentUiModel(
     val id: Long,
     val title: String,
     val author: AuthorUiModel,

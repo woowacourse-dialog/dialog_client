@@ -9,6 +9,12 @@
     <string name="discussion_type_online">온라인</string>
     <string name="discussion_type_offline">오프라인</string>
 
+    <!-- Discussion Status -->
+    <string name="discussion_status_recruiting">모집 중</string>
+    <string name="discussion_status_recruit_complete">모집 완료</string>
+    <string name="discussion_status_in_discussion">토론 중</string>
+    <string name="discussion_status_discussion_complete">토론 완료</string>
+
     <!-- DiscussionCard.kt -->
     <string name="discussion_card_author">개설자: %1$s</string>
     <string name="discussion_card_period">기간: %1$s</string>
@@ -25,5 +31,61 @@
     <string name="markdown_editor_dialog_exit">취소</string>
     <string name="markdown_editor_back">뒤로가기</string>
     <string name="markdown_editor_confirm">확인</string>
+
+    <!-- Dialog Error -->
+    <string name="dialog_error_common">오류가 발생했습니다</string>
+    <string name="dialog_error_invalid_signup">유효하지 않은 회원가입입니다</string>
+    <string name="dialog_error_login_required">로그인 후 이용할 수 있습니다</string>
+    <string name="dialog_error_bad_request">잘못된 요청입니다</string>
+    <string name="dialog_error_already_scrapped">이미 스크랩을 했습니다</string>
+    <string name="dialog_error_not_scrapped_yet">스크랩이 되어 있지 않습니다</string>
+    <string name="dialog_error_already_liked">이미 좋아요를 눌렀습니다</string>
+    <string name="dialog_error_not_liked_yet">좋아요를 누르지 않았습니다</string>
+    <string name="dialog_error_not_found_user">사용자를 찾을 수 없습니다</string>
+    <string name="dialog_error_not_found_discussion">토론을 찾을 수 없습니다</string>
+    <string name="dialog_error_already_participation_discussion">이미 참여 중인 토론입니다</string>
+    <string name="dialog_error_participation_limit_exceeded">최대 참여자 수를 초과했습니다</string>
+    <string name="dialog_error_create_discussion_failed">토론을 생성할 수 없습니다</string>
+    <string name="dialog_error_discussion_already_started">이미 시작된 토론입니다</string>
+    <string name="dialog_error_user_not_found">사용자를 찾을 수 없습니다</string>
+    <string name="dialog_error_exist_user_email">이미 존재하는 이메일입니다</string>
+    <string name="dialog_error_registered_user">이미 회원가입한 회원입니다</string>
+    <string name="dialog_error_not_registered_user">회원가입하지 않은 회원입니다</string>
+    <string name="dialog_error_already_reported">이미 신고한 콘텐츠입니다</string>
+    <string name="dialog_error_cannot_report_own_content">본인의 콘텐츠는 신고할 수 없습니다</string>
+    <string name="dialog_error_oauth_user_id_missing">OAuth 제공자에서 사용자 ID를 가져올 수 없습니다</string>
+    <string name="dialog_error_authentication_not_found">인증 정보를 찾을 수 없습니다</string>
+    <string name="dialog_error_invalid_user_id_format">유효하지 않은 인증 정보입니다</string>
+    <string name="dialog_error_withdraw_user">탈퇴한 사용자입니다</string>
+    <string name="dialog_error_invalid_identity_token">유효하지 않은 인증 토큰입니다</string>
+    <string name="dialog_error_apple_auth_server_error">인증에 실패했습니다. 잠시 후 다시 시도해주세요</string>
+    <string name="dialog_error_cannot_delete_discussion">삭제할 수 없는 토론입니다</string>
+    <string name="dialog_error_invalid_search_type">유효하지 않은 검색 조건입니다</string>
+    <string name="dialog_error_page_size_too_large">페이지의 크기는 50개가 최대입니다</string>
+    <string name="dialog_error_cannot_summarize_offline_discussion">오프라인 토론은 요약할 수 없습니다</string>
+    <string name="dialog_error_unauthorized_discussion_summary">토론 작성자만 요약을 생성할 수 있습니다</string>
+    <string name="dialog_error_already_discussion_summary">토론 요약이 이미 존재합니다</string>
+    <string name="dialog_error_invalid_discussion_title">제목은 1자 이상 50자 이하로 입력해야 합니다</string>
+    <string name="dialog_error_invalid_discussion_content">내용은 1자 이상 10,000자 이하로 입력해야 합니다</string>
+    <string name="dialog_error_invalid_discussion_summary">요약은 1자 이상 300자 이하로 입력해야 합니다</string>
+    <string name="dialog_error_invalid_discussion_time">토론 시작/종료 시간이 올바르지 않습니다</string>
+    <string name="dialog_error_invalid_discussion_start_time">토론 시작 시간은 08:00~23:00 사이여야 합니다</string>
+    <string name="dialog_error_invalid_discussion_max_participants">참여자 수는 1명 이상 10명 이하여야 합니다</string>
+    <string name="dialog_error_messaging_token_not_found">메시징 토큰을 찾을 수 없습니다</string>
+    <string name="dialog_error_unauthorized_token_access">토큰에 접근할 권한이 없습니다</string>
+    <string name="dialog_error_invalid_image_format">지원하지 않는 이미지 형식입니다</string>
+    <string name="dialog_error_profile_image_not_found">프로필 이미지를 찾을 수 없습니다</string>
+    <string name="dialog_error_conflict_profile_image">프로필 이미지가 이미 존재합니다</string>
+    <string name="dialog_error_failed_save_image">이미지 저장에 실패하였습니다</string>
+    <string name="dialog_error_comment_not_found">댓글을 찾을 수 없습니다</string>
+    <string name="dialog_error_reply_depth_exceeded">답글에 답글을 달 수 없습니다</string>
+    <string name="dialog_error_unauthorized_access">접근 권한이 없습니다</string>
+    <string name="dialog_error_not_offline_discussion">오프라인 토론이 아닙니다</string>
+    <string name="dialog_error_not_online_discussion">온라인 토론이 아닙니다</string>
+    <string name="dialog_error_invalid_online_discussion_end_date">오늘로부터 최대 3일동안 토론을 열 수 있습니다</string>
+    <string name="dialog_error_invalid_nickname_length">닉네임은 2글자 이상 15자 이내여야 합니다</string>
+    <string name="dialog_error_failed_load_prompt">프롬프트 리소스 로드에 실패하였습니다</string>
+    <string name="dialog_error_failed_ai_summary">AI 요약에 실패하였습니다</string>
+    <string name="dialog_error_notification_not_found">해당 알림을 찾을 수 없습니다</string>
 
 </resources>

@@ -20,10 +20,13 @@ class MyPageViewModel(
     private val userRepository: UserRepository,
     private val sessionRepository: SessionRepository,
 ) : BaseViewModel<MyPageIntent, MyPageState, MyPageEffect>(initialState = MyPageState()) {
+    init {
+        observeLoginState()
+        refreshSessionState()
+    }
+
     override fun onIntent(intent: MyPageIntent) {
         when (intent) {
-            MyPageIntent.CheckLoginStatus -> getLoginStatus()
-
             MyPageIntent.Logout -> logout()
 
             is MyPageIntent.EditProfile -> updateMyProfile(
@@ -37,25 +40,36 @@ class MyPageViewModel(
         }
     }
 
-    private fun getLoginStatus() {
-        if (currentState.isLoggedIn) return
-
-        viewModelScope
-            .launch {
-                authRepository
-                    .getLoginStatus()
-                    .onSuccess(::handleGetLoginStatus)
-            }.invokeOnCompletion {
-                updateState { copy(isLoading = false) }
+    private fun observeLoginState() {
+        viewModelScope.launch {
+            sessionRepository.isLoggedIn.collect { isLoggedIn ->
+                handleLoginStatusChanged(isLoggedIn)
             }
+        }
     }
 
-    private fun handleGetLoginStatus(isLoggedIn: Boolean) {
-        if (isLoggedIn) {
-            loadMyPage()
-            loadMyProfileImage()
+    private fun refreshSessionState() {
+        viewModelScope.launch {
+            sessionRepository.hasValidSession()
         }
-        updateState { copy(isLoggedIn = isLoggedIn) }
+    }
+
+    private fun handleLoginStatusChanged(isLoggedIn: Boolean?) {
+        when (isLoggedIn) {
+            true -> {
+                loadMyPage()
+                loadMyProfileImage()
+                updateState { copy(isLoggedIn = true) }
+            }
+
+            false -> {
+                updateState { MyPageState(isLoggedIn = false, isLoading = false) }
+            }
+
+            null -> {
+                Unit
+            }
+        }
     }
 
     private fun loadMyPage() {
@@ -82,6 +96,7 @@ class MyPageViewModel(
 
     private fun handleLoadMyPageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
+            sessionRepository.setLoggedIn(isLoggedIn = false)
             updateState { copy(isLoggedIn = false) }
             emitEffect(
                 MyPageEffect.ShowSnackbar(
@@ -123,6 +138,7 @@ class MyPageViewModel(
 
     private fun handleLoadMyProfileImageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
+            sessionRepository.setLoggedIn(isLoggedIn = false)
             updateState { copy(isLoggedIn = false) }
             emitEffect(
                 MyPageEffect.ShowSnackbar(
@@ -206,6 +222,7 @@ class MyPageViewModel(
                 .logout()
                 .onSuccess {
                     updateState { MyPageState() }
+                    sessionRepository.setLoggedIn(isLoggedIn = false)
                     sessionRepository.clearUserId()
                 }.onFailure { result: Throwable ->
                     emitEffect(

@@ -4,6 +4,8 @@ import com.on.dialog.model.common.Track
 import com.on.dialog.ui.viewmodel.UiIntent
 
 sealed interface SignUpIntent : UiIntent {
+    data object CancelSignUp : SignUpIntent
+
     data class SelectTrack(
         val track: Track,
     ) : SignUpIntent
@@ -12,5 +14,7 @@ sealed interface SignUpIntent : UiIntent {
         val enabled: Boolean,
     ) : SignUpIntent
 
-    data object ValidateAndSignUp : SignUpIntent
+    data class ValidateAndSignUp(
+        val jsessionId: String,
+    ) : SignUpIntent
 }

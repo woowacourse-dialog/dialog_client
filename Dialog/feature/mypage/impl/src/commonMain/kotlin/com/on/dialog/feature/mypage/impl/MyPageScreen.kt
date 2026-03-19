@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.DialogButtonStyle
 import com.on.dialog.designsystem.component.DialogCard
-import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -64,6 +63,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun MyPageScreen(
     navigateToLogin: () -> Unit,
     navigateToMyCreated: () -> Unit,
+    navigateToScrap: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = koinViewModel(),
 ) {
@@ -72,11 +72,11 @@ fun MyPageScreen(
     var showGallery by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.onIntent(intent = MyPageIntent.CheckLoginStatus)
-
         viewModel.effect.collect { effect: MyPageEffect ->
-            if (effect is MyPageEffect.ShowSnackbar) {
-                snackbarHostState.showSnackbar(message = effect.message, state = effect.state)
+            when (effect) {
+                is MyPageEffect.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(message = effect.message, state = effect.state)
+                }
             }
         }
     }
@@ -93,9 +93,7 @@ fun MyPageScreen(
         onProfileImageClick = { showGallery = true },
         onDeleteAccount = { viewModel.onIntent(intent = MyPageIntent.DeleteAccount) },
         onMyCreatedClick = navigateToMyCreated,
-        onMyFavoriteClick = {
-            snackbarHostState.showSnackbar(message = "준비 중인 기능이에요.", state = SnackbarState.DEFAULT)
-        },
+        onScrapClick = navigateToScrap,
         onLoggedOutInteraction = {
             snackbarHostState.showSnackbar(
                 message = "먼저 로그인을 해주세요",
@@ -141,33 +139,29 @@ private fun MyPageScreen(
     onProfileImageClick: () -> Unit,
     onDeleteAccount: () -> Unit,
     onMyCreatedClick: () -> Unit,
-    onMyFavoriteClick: () -> Unit,
+    onScrapClick: () -> Unit,
     onLoggedOutInteraction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        DialogTopAppBar(title = "", centerAligned = false)
-
-        Column(
-            modifier = Modifier.padding(all = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            if (uiState.isLoggedIn) {
-                MyPageScreenLoggedIn(
-                    uiState = uiState,
-                    onLogoutClick = onLogoutClick,
-                    onUpdateProfile = onUpdateProfile,
-                    onProfileImageClick = onProfileImageClick,
-                    onDeleteAccount = onDeleteAccount,
-                    onMyCreatedClick = onMyCreatedClick,
-                    onMyFavoriteClick = onMyFavoriteClick,
-                )
-            } else {
-                MyPageScreenLoggedOut(
-                    onLoginClick = onLoginClick,
-                    onLoggedOutInteraction = onLoggedOutInteraction,
-                )
-            }
+    Column(
+        modifier = modifier.fillMaxSize().padding(all = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        if (uiState.isLoggedIn) {
+            MyPageScreenLoggedIn(
+                uiState = uiState,
+                onLogoutClick = onLogoutClick,
+                onUpdateProfile = onUpdateProfile,
+                onProfileImageClick = onProfileImageClick,
+                onDeleteAccount = onDeleteAccount,
+                onMyCreatedClick = onMyCreatedClick,
+                onScrapClick = onScrapClick,
+            )
+        } else {
+            MyPageScreenLoggedOut(
+                onLoginClick = onLoginClick,
+                onLoggedOutInteraction = onLoggedOutInteraction,
+            )
         }
     }
 }
@@ -180,7 +174,7 @@ private fun MyPageScreenLoggedIn(
     onProfileImageClick: () -> Unit,
     onDeleteAccount: () -> Unit,
     onMyCreatedClick: () -> Unit,
-    onMyFavoriteClick: () -> Unit,
+    onScrapClick: () -> Unit,
 ) {
     var showProfileEditDialog by rememberSaveable { mutableStateOf(false) }
     var showLogoutDialog by rememberSaveable { mutableStateOf(false) }
@@ -192,9 +186,10 @@ private fun MyPageScreenLoggedIn(
         onProfileImageClick = onProfileImageClick,
     )
     Spacer(Modifier.height(height = DialogTheme.spacing.extraLarge))
+
     DiscussionManagementSection(
         onMyCreatedClick = onMyCreatedClick,
-        onMyFavoriteClick = onMyFavoriteClick,
+        onScrapClick = onScrapClick,
     )
     Spacer(Modifier.height(height = DialogTheme.spacing.large))
     AccountManagementSection(
@@ -250,7 +245,7 @@ private fun MyPageScreenLoggedOut(
     Spacer(modifier = Modifier.height(height = DialogTheme.spacing.extraLarge))
     DiscussionManagementSection(
         onMyCreatedClick = { onLoggedOutInteraction() },
-        onMyFavoriteClick = { onLoggedOutInteraction() },
+        onScrapClick = { onLoggedOutInteraction() },
     )
     Spacer(modifier = Modifier.height(height = DialogTheme.spacing.large))
     AccountManagementSection()
@@ -301,7 +296,7 @@ private fun MyPageScreenLoggedInPreview() {
                 onProfileImageClick = {},
                 onDeleteAccount = {},
                 onMyCreatedClick = {},
-                onMyFavoriteClick = {},
+                onScrapClick = {},
                 onLoggedOutInteraction = {},
             )
         }
@@ -329,7 +324,7 @@ private fun MyPageScreenLoggedOutPreview() {
                 onProfileImageClick = {},
                 onDeleteAccount = {},
                 onMyCreatedClick = {},
-                onMyFavoriteClick = {},
+                onScrapClick = {},
                 onLoggedOutInteraction = {},
             )
         }

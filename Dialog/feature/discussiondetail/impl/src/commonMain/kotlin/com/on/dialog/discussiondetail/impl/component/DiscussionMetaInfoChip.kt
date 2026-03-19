@@ -17,7 +17,7 @@ import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 
 @Composable
-internal fun MetaChip(
+internal fun DiscussionMetaInfoChip(
     text: String,
     modifier: Modifier = Modifier,
     iconImage: ImageVector? = null,
@@ -53,9 +53,9 @@ internal fun MetaChip(
 
 @ThemePreview
 @Composable
-private fun MetaChipPreview() {
+private fun DiscussionMetaInfoChipPreview() {
     DialogTheme {
-        MetaChip(
+        DiscussionMetaInfoChip(
             text = "굿샷",
             iconImage = DialogIcons.Place,
             modifier = Modifier.padding(4.dp),

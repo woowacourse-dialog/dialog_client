@@ -19,11 +19,8 @@ import com.on.dialog.feature.discussionlist.impl.model.DiscussionStatusUiModel
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionUiModel
 import com.on.dialog.feature.discussionlist.impl.model.TrackUiModel
 import com.on.dialog.ui.component.DiscussionCard
-import dialog.feature.discussionlist.impl.generated.resources.Res
-import dialog.feature.discussionlist.impl.generated.resources.discussion_card_title_format
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun DiscussionListSection(
@@ -66,11 +63,7 @@ private fun DiscussionListSection(
         items(items = discussions, key = { discussion -> discussion.id }) { discussion ->
             DiscussionCard(
                 chips = discussion.toChipCategories(),
-                title = stringResource(
-                    Res.string.discussion_card_title_format,
-                    discussion.title,
-                    discussion.status.title,
-                ),
+                title = discussion.title,
                 author = discussion.author,
                 period = discussion.period,
                 discussionCount = discussion.commentCount,

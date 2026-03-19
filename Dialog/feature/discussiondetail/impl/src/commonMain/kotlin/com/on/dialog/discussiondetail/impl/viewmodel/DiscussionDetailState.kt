@@ -4,7 +4,6 @@ import androidx.compose.runtime.Immutable
 import com.on.dialog.discussiondetail.impl.model.DiscussionCommentUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionDetailUiModel
 import com.on.dialog.discussiondetail.impl.model.DiscussionStatusUiModel
-import com.on.dialog.model.discussion.content.DiscussionType
 import com.on.dialog.ui.viewmodel.UiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -17,14 +16,16 @@ internal data class DiscussionDetailState(
     val isBookmarked: Boolean = false,
     val isLiked: Boolean = false,
     val likeCount: Int = 0,
-    val isParticipating: Boolean = false,
     val isMyDiscussion: Boolean = false,
     val comments: ImmutableList<DiscussionCommentUiModel> = persistentListOf(),
 ) : UiState {
     val isShowSummary: Boolean =
-        discussion?.discussionType == DiscussionType.ONLINE && discussion.status == DiscussionStatusUiModel.DISCUSSION_COMPLETE
+        discussion is DiscussionDetailUiModel.OnlineDiscussionDetailUiModel &&
+            discussion.status == DiscussionStatusUiModel.DISCUSSION_COMPLETE
 
-    val isShowParticipateButton: Boolean = discussion?.discussionType == DiscussionType.OFFLINE
+    val isShowParticipateButton: Boolean =
+        discussion is DiscussionDetailUiModel.OfflineDiscussionDetailUiModel &&
+            discussion.status == DiscussionStatusUiModel.RECRUITING
 
     val totalCommentCount: Int =
         comments.size + comments.sumOf { comment -> comment.childComments.size }

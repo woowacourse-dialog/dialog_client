@@ -27,6 +27,7 @@ fun DecisionDialog(
     dismissText: String,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    confirmButtonStyle: DialogButtonStyle = DialogButtonStyle.Primary,
 ) {
     BasicAlertDialog(
         onDismissRequest = onDismiss,
@@ -39,6 +40,7 @@ fun DecisionDialog(
             contentText = contentText,
             confirmText = confirmText,
             onConfirm = onConfirm,
+            confirmButtonStyle = confirmButtonStyle,
             dismissText = dismissText,
             onDismiss = onDismiss,
             modifier = modifier,
@@ -51,6 +53,7 @@ private fun DecisionContent(
     contentText: String,
     confirmText: String,
     onConfirm: () -> Unit,
+    confirmButtonStyle: DialogButtonStyle,
     dismissText: String,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
@@ -58,7 +61,7 @@ private fun DecisionContent(
     Column(modifier = modifier) {
         Text(
             text = contentText,
-            style = DialogTheme.typography.bodyMedium,
+            style = DialogTheme.typography.bodyLarge,
         )
 
         Spacer(modifier = Modifier.padding(all = DialogTheme.spacing.medium))
@@ -76,6 +79,7 @@ private fun DecisionContent(
             DialogButton(
                 text = confirmText,
                 onClick = onConfirm,
+                style = confirmButtonStyle,
                 modifier = Modifier.weight(1f),
             )
         }

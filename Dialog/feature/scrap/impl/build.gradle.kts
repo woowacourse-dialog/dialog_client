@@ -11,6 +11,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.feature.scrap.api)
             implementation(projects.feature.discussiondetail.api)
+            implementation(projects.feature.login.api)
         }
     }
 }

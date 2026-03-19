@@ -6,11 +6,21 @@ import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.network.datasource.CookieStore
 import com.on.dialog.network.dto.session.CookieNetworkEntity
 import io.ktor.http.Url
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 internal class SessionDefaultRepository(
     private val cookieStore: CookieStore,
     private val localUserStorage: LocalUserStorage,
 ) : SessionRepository {
+    private val _isLoggedIn = MutableStateFlow<Boolean?>(null)
+    override val isLoggedIn: StateFlow<Boolean?> = _isLoggedIn.asStateFlow()
+
+    override fun setLoggedIn(isLoggedIn: Boolean) {
+        _isLoggedIn.value = isLoggedIn
+    }
+
     override suspend fun saveSession(
         jsessionId: String,
     ): Result<Unit> = runCatching {
@@ -24,10 +34,12 @@ internal class SessionDefaultRepository(
                 httpOnly = true,
             ),
         )
+        _isLoggedIn.value = true
     }
 
     override suspend fun clearSession(): Result<Unit> = runCatching {
         cookieStore.clear()
+        _isLoggedIn.value = false
     }
 
     override suspend fun hasValidSession(): Result<Boolean> = runCatching {
@@ -37,7 +49,9 @@ internal class SessionDefaultRepository(
             requestHost = url.host,
             requestPath = url.encodedPath,
         )
-        cookies.any { it.name == JSESSIONID }
+        cookies.any { it.name == JSESSIONID }.also { isValid ->
+            _isLoggedIn.value = isValid
+        }
     }
 
     override suspend fun saveUserId(userId: Long): Result<Unit> = runCatching {
