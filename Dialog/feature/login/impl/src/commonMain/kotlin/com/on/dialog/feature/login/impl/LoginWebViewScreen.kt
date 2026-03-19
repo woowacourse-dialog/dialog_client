@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.feature.login.impl.model.LoginType
@@ -13,7 +12,6 @@ import com.on.dialog.feature.login.impl.viewmodel.LoginEffect
 import com.on.dialog.feature.login.impl.viewmodel.LoginIntent
 import com.on.dialog.feature.login.impl.viewmodel.LoginState
 import com.on.dialog.feature.login.impl.viewmodel.LoginViewModel
-import com.on.dialog.ui.state.LocalAppLoginState
 import org.jetbrains.compose.resources.getString
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -45,16 +43,11 @@ fun LoginWebViewScreen(
     viewModel: LoginViewModel = koinViewModel(),
 ) {
     val snackbarHostState = LocalSnackbarDelegate.current
-    val appLoginState = LocalAppLoginState.current
     val uiState: LoginState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                LoginEffect.OnLoginSuccess -> {
-                    appLoginState.setLoggedIn(isLoggedIn = true)
-                }
-
                 LoginEffect.GoBack -> {
                     goBack()
                 }

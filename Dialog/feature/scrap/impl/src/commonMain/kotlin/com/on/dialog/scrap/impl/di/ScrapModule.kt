@@ -12,6 +12,7 @@ val scrapModule = module {
     viewModel {
         ScrapViewModel(
             scrapRepository = get(),
+            sessionRepository = get(),
         )
     }
 }

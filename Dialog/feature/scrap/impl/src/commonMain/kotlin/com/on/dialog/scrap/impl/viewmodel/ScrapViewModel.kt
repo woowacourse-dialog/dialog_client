@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.ScrapRepository
+import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
 import com.on.dialog.model.discussion.scrap.ScrapCatalog
 import com.on.dialog.scrap.impl.model.ScrapUiModel.Companion.toUiModel
@@ -20,12 +21,15 @@ import kotlinx.coroutines.launch
 @Stable
 internal class ScrapViewModel(
     private val scrapRepository: ScrapRepository,
+    private val sessionRepository: SessionRepository,
 ) : BaseViewModel<ScrapIntent, ScrapState, ScrapEffect>(ScrapState.Loading()) {
     private var nextCursorId: Long? = null
     private var hasNext: Boolean = true
 
     init {
+        observeLoginState()
         observeScrapCatalogs()
+        refreshSessionState()
         fetchScraps()
     }
 
@@ -33,7 +37,6 @@ internal class ScrapViewModel(
         when (intent) {
             ScrapIntent.LoadNextPage -> fetchScraps()
             ScrapIntent.Refresh -> refresh()
-            is ScrapIntent.LoginStatusChanged -> handleLoginStatusChanged(intent.isLoggedIn)
         }
     }
 
@@ -109,6 +112,20 @@ internal class ScrapViewModel(
                     }
                 }
             }
+        }
+    }
+
+    private fun observeLoginState() {
+        viewModelScope.launch {
+            sessionRepository.isLoggedIn.collect { isLoggedIn ->
+                handleLoginStatusChanged(isLoggedIn)
+            }
+        }
+    }
+
+    private fun refreshSessionState() {
+        viewModelScope.launch {
+            sessionRepository.hasValidSession()
         }
     }
 

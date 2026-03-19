@@ -30,7 +30,6 @@ import com.on.dialog.feature.signup.impl.viewmodel.SignUpIntent
 import com.on.dialog.feature.signup.impl.viewmodel.SignUpState
 import com.on.dialog.feature.signup.impl.viewmodel.SignUpViewModel
 import com.on.dialog.model.common.Track
-import com.on.dialog.ui.state.LocalAppLoginState
 import dialog.feature.signup.impl.generated.resources.Res
 import dialog.feature.signup.impl.generated.resources.notification_confirm
 import dialog.feature.signup.impl.generated.resources.signup
@@ -56,7 +55,6 @@ fun SignUpScreen(
 ) {
     val snackbarHostState = LocalSnackbarDelegate.current
     val uiState: SignUpState by viewModel.uiState.collectAsStateWithLifecycle()
-    val appLoginState = LocalAppLoginState.current
 
     val trackEntries = Track.entries.filter { it != Track.COMMON }
     val tracks: ImmutableList<String> = trackEntries
@@ -73,7 +71,6 @@ fun SignUpScreen(
         viewModel.effect.collect { effect: SignUpEffect ->
             when (effect) {
                 SignUpEffect.ExitSignUp -> {
-                    appLoginState.setLoggedIn(isLoggedIn = false)
                     exitSignUp()
                 }
 
@@ -83,10 +80,6 @@ fun SignUpScreen(
                     message = getString(effect.stringResource),
                     state = effect.state,
                 )
-
-                SignUpEffect.OnLoginSuccess -> {
-                    appLoginState.setLoggedIn(isLoggedIn = true)
-                }
             }
         }
     }

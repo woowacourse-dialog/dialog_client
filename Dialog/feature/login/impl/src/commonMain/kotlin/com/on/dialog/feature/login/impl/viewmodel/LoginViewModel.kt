@@ -58,7 +58,6 @@ class LoginViewModel(
 
     private fun handleSaveUserSessionSuccess() {
         updateState { copy(isLoginComplete = true, isNewUser = false) }
-        emitEffect(LoginEffect.OnLoginSuccess)
         emitEffect(LoginEffect.GoBack)
     }
 
