@@ -492,16 +492,14 @@ private fun LabeledTextField(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Box {
-            DialogTextField(
-                value = title,
-                onValueChange = onTitleChange,
-                label = label,
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = placeHolder,
-                singleLine = true,
-            )
-        }
+        DialogTextField(
+            value = title,
+            onValueChange = onTitleChange,
+            label = label,
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = placeHolder,
+            singleLine = true,
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
