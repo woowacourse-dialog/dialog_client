@@ -18,8 +18,8 @@ import kotlinx.coroutines.launch
 internal class CreateDiscussionViewModel(
     private val discussionRepository: DiscussionRepository,
 ) : BaseViewModel<CreateDiscussionIntent, CreateDiscussionState, CreateDiscussionEffect>(
-        initialState = CreateDiscussionState(),
-    ) {
+    initialState = CreateDiscussionState(),
+) {
     private var offlineModeCache: Offline = Offline()
     private var onlineModeCache: Online = Online()
 
@@ -74,75 +74,47 @@ internal class CreateDiscussionViewModel(
 
     private fun handlePlaceChange(intent: CreateDiscussionIntent.OnPlaceChange) {
         if (intent.place.length > OfflineDiscussionDraft.MAX_PLACE_LENGTH) return
-        updateState {
-            val currentMode = mode
-            if (currentMode is Offline) {
-                val updatedMode = currentMode.copy(place = intent.place)
-                offlineModeCache = updatedMode
-                copy(mode = updatedMode)
-            } else {
-                this
-            }
-        }
+        val currentMode = currentState.mode as? Offline ?: return
+        val updatedMode = currentMode.copy(place = intent.place)
+        updateOfflineMode(updatedMode)
     }
 
     private fun handleParticipantCountChange(intent: CreateDiscussionIntent.OnParticipantCountChange) {
-        updateState {
-            val currentMode = mode
-            if (currentMode is Offline) {
-                val updatedMode = currentMode.copy(
-                    participantCount = intent.participantCount.coerceIn(
-                        OfflineDiscussionDraft.MIN_PARTICIPANT_COUNT,
-                        OfflineDiscussionDraft.MAX_PARTICIPANT_COUNT,
-                    ),
-                )
-                offlineModeCache = updatedMode
-                copy(mode = updatedMode)
-            } else {
-                this
-            }
-        }
+        val currentMode = currentState.mode as? Offline ?: return
+        val updatedMode = currentMode.copy(
+            participantCount = intent.participantCount.coerceIn(
+                OfflineDiscussionDraft.MIN_PARTICIPANT_COUNT,
+                OfflineDiscussionDraft.MAX_PARTICIPANT_COUNT,
+            ),
+        )
+        updateOfflineMode(updatedMode)
     }
 
     private fun handleDateChange(intent: CreateDiscussionIntent.OnDateChange) {
-        updateState {
-            val currentMode = mode
-            if (currentMode is Offline) {
-                val updated = currentMode.copy(selectedDate = intent.date)
-                val validated = DiscussionValidator.validateOffline(updated)
-                offlineModeCache = validated
-                copy(mode = validated)
-            } else {
-                this
-            }
-        }
+        val currentMode = currentState.mode as? Offline ?: return
+        val updated = currentMode.copy(selectedDate = intent.date)
+        val validated = DiscussionValidator.validateOffline(updated)
+        updateOfflineMode(validated)
     }
 
     private fun handleStartTimeChange(intent: CreateDiscussionIntent.OnStartTimeChange) {
-        updateState {
-            val currentMode = mode
-            if (currentMode is Offline) {
-                val updated = currentMode.copy(selectedStartTime = intent.time)
-                val validated = DiscussionValidator.validateOffline(updated)
-                offlineModeCache = validated
-                copy(mode = validated)
-            } else {
-                this
-            }
-        }
+        val currentMode = currentState.mode as? Offline ?: return
+        val updated = currentMode.copy(selectedStartTime = intent.time)
+        val validated = DiscussionValidator.validateOffline(updated)
+        updateOfflineMode(validated)
     }
 
     private fun handleEndTimeChange(intent: CreateDiscussionIntent.OnEndTimeChange) {
+        val currentMode = currentState.mode as? Offline ?: return
+        val updated = currentMode.copy(selectedEndTime = intent.time)
+        val validated = DiscussionValidator.validateOffline(updated)
+        updateOfflineMode(validated)
+    }
+
+    private fun updateOfflineMode(updatedMode: Offline) {
         updateState {
-            val currentMode = mode
-            if (currentMode is Offline) {
-                val updated = currentMode.copy(selectedEndTime = intent.time)
-                val validated = DiscussionValidator.validateOffline(updated)
-                offlineModeCache = validated
-                copy(mode = validated)
-            } else {
-                this
-            }
+            offlineModeCache = updatedMode
+            copy(mode = updatedMode)
         }
     }
 
