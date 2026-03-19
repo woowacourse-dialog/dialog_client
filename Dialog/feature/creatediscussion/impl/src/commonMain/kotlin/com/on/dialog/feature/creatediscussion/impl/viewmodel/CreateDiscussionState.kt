@@ -40,6 +40,7 @@ internal data class CreateDiscussionState(
             when {
                 title.isBlank() -> false
                 selectedTrackIndex !in trackOptions.indices -> false
+                content.isBlank() -> false
                 else -> mode.isValid
             }
 
