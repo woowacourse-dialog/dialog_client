@@ -2,8 +2,8 @@ package com.on.dialog.feature.creatediscussion.impl.mapper
 
 import com.on.dialog.core.common.extension.now
 import com.on.dialog.feature.creatediscussion.impl.viewmodel.CreateDiscussionState
+import com.on.dialog.model.discussion.draft.DraftPeriod
 import com.on.dialog.model.discussion.draft.DraftValidationError
-import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import dialog.feature.creatediscussion.impl.generated.resources.Res
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_end_after_start
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_error_end_time_range
@@ -66,41 +66,26 @@ private fun CreateDiscussionState.Offline.collectOfflineValidationErrors(
     val start = selectedStartTime
     val end = selectedEndTime
 
-    val draft = when {
-        start != null && end != null -> OfflineDiscussionDraft(
-            title = "",
-            content = "",
-            category = "",
+    val period = when {
+        start != null && end != null -> DraftPeriod(
             startAt = LocalDateTime(date, start),
             endAt = LocalDateTime(date, end),
-            place = place,
-            maxParticipantCount = participantCount,
         )
 
-        start != null -> OfflineDiscussionDraft(
-            title = "",
-            content = "",
-            category = "",
+        start != null -> DraftPeriod(
             startAt = LocalDateTime(date, start),
             endAt = LocalDateTime(date, LocalTime(23, 59)),
-            place = place,
-            maxParticipantCount = participantCount,
         )
 
-        end != null -> OfflineDiscussionDraft(
-            title = "",
-            content = "",
-            category = "",
+        end != null -> DraftPeriod(
             startAt = LocalDateTime(date, LocalTime(0, 0)),
             endAt = LocalDateTime(date, end),
-            place = place,
-            maxParticipantCount = participantCount,
         )
 
         else -> return emptyList()
     }
 
-    return draft.validate(now).filterIsInstance<DraftValidationError.Offline>()
+    return period.validate(now)
 }
 
 private fun DraftValidationError.Offline.toMessage(): StringResource = when (this) {
