@@ -5,7 +5,6 @@ import com.on.dialog.core.local.datasourceimpl.LocalUserStorage
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.network.datasource.CookieStore
 import com.on.dialog.network.dto.session.CookieNetworkEntity
-import io.ktor.http.Url
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,18 +39,6 @@ internal class SessionDefaultRepository(
     override suspend fun clearSession(): Result<Unit> = runCatching {
         cookieStore.clear()
         _isLoggedIn.value = false
-    }
-
-    override suspend fun hasValidSession(): Result<Boolean> = runCatching {
-        // JSESSIONID 쿠키가 있는지 확인
-        val url = Url(urlString = BuildKonfig.BASE_URL)
-        val cookies: List<CookieNetworkEntity> = cookieStore.loadAll(
-            requestHost = url.host,
-            requestPath = url.encodedPath,
-        )
-        cookies.any { it.name == JSESSIONID }.also { isValid ->
-            _isLoggedIn.value = isValid
-        }
     }
 
     override suspend fun saveUserId(userId: Long): Result<Unit> = runCatching {

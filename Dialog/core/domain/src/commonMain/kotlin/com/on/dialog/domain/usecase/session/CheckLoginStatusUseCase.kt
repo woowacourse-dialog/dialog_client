@@ -18,7 +18,8 @@ class CheckLoginStatusUseCase(
     private val sessionRepository: SessionRepository,
 ) {
     suspend operator fun invoke(): Result<Boolean> =
-        authRepository.getLoginStatus()
+        authRepository
+            .getLoginStatus()
             .onSuccess { isLoggedIn ->
                 if (isLoggedIn) {
                     sessionRepository.setLoggedIn(true)
