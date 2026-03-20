@@ -143,6 +143,7 @@ internal fun CreateDiscussionScreen(
 
     CreateDiscussionScreen(
         uiState = uiState,
+        isEditMode = discussionId != null,
         onBackClick = { showExitDialog = true },
         onContentClick = { showMarkdownEditor = true },
         onIntent = viewModel::onIntent,
@@ -177,6 +178,7 @@ internal fun CreateDiscussionScreen(
 @Composable
 private fun CreateDiscussionScreen(
     uiState: CreateDiscussionState,
+    isEditMode: Boolean,
     onBackClick: () -> Unit,
     onContentClick: () -> Unit,
     onIntent: (CreateDiscussionIntent) -> Unit,
@@ -184,7 +186,11 @@ private fun CreateDiscussionScreen(
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         DialogTopAppBar(
-            title = stringResource(Res.string.create_discussion_title),
+            title = if (isEditMode) {
+                "토론 수정"
+            } else {
+                stringResource(Res.string.create_discussion_title)
+            },
             navigationIcon = {
                 DialogIconButton(onClick = onBackClick) {
                     Icon(
@@ -531,6 +537,7 @@ private fun CreateDiscussionScreenPreview() {
             onBackClick = {},
             onContentClick = {},
             onIntent = {},
+            isEditMode = true,
         )
     }
 }
@@ -548,6 +555,7 @@ private fun CreateDiscussionScreenPreview2() {
             onBackClick = {},
             onContentClick = {},
             onIntent = {},
+            isEditMode = false,
         )
     }
 }
