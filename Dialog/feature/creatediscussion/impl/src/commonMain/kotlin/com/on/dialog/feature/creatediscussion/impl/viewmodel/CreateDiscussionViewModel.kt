@@ -1,9 +1,14 @@
 package com.on.dialog.feature.creatediscussion.impl.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.on.dialog.core.common.extension.now
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.feature.creatediscussion.impl.mapper.DiscussionValidator
+import com.on.dialog.model.common.Track
+import com.on.dialog.model.discussion.detail.DiscussionDetail
+import com.on.dialog.model.discussion.detail.OfflineDiscussionDetail
+import com.on.dialog.model.discussion.detail.OnlineDiscussionDetail
 import com.on.dialog.model.discussion.draft.DiscussionDraft
 import com.on.dialog.model.discussion.draft.OfflineDiscussionDraft
 import com.on.dialog.model.discussion.draft.OnlineDiscussionDraft
@@ -13,14 +18,22 @@ import dialog.feature.creatediscussion.impl.generated.resources.create_discussio
 import dialog.feature.creatediscussion.impl.generated.resources.create_discussion_snackbar_success
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlin.time.ExperimentalTime
 
 internal class CreateDiscussionViewModel(
     private val discussionRepository: DiscussionRepository,
+    private val discussionId: Long?,
 ) : BaseViewModel<CreateDiscussionIntent, CreateDiscussionState, CreateDiscussionEffect>(
-        initialState = CreateDiscussionState.Online(),
-    ) {
+    initialState = CreateDiscussionState.Online(),
+) {
     private var offlineModeCache: CreateDiscussionState.Offline = CreateDiscussionState.Offline()
     private var onlineModeCache: CreateDiscussionState.Online = CreateDiscussionState.Online()
+
+    init {
+        discussionId?.let { loadDiscussionForEdit(it) }
+    }
 
     override fun onIntent(intent: CreateDiscussionIntent) {
         when (intent) {
@@ -141,8 +154,23 @@ internal class CreateDiscussionViewModel(
         updateState { update(isSubmitting = true) }
         viewModelScope.launch {
             val result = when (val draft = currentState.toDomain()) {
-                is OfflineDiscussionDraft -> discussionRepository.createOfflineDiscussion(draft)
-                is OnlineDiscussionDraft -> discussionRepository.createOnlineDiscussion(draft)
+                is OfflineDiscussionDraft -> {
+                    val id = discussionId
+                    if (id == null) {
+                        discussionRepository.createOfflineDiscussion(draft)
+                    } else {
+                        discussionRepository.updateOfflineDiscussion(id, draft).map { id }
+                    }
+                }
+
+                is OnlineDiscussionDraft -> {
+                    val id = discussionId
+                    if (id == null) {
+                        discussionRepository.createOnlineDiscussion(draft)
+                    } else {
+                        discussionRepository.updateOnlineDiscussion(id, draft).map { id }
+                    }
+                }
             }
 
             result
@@ -165,6 +193,59 @@ internal class CreateDiscussionViewModel(
                 }
 
             updateState { update(isSubmitting = false) }
+        }
+    }
+
+    private fun loadDiscussionForEdit(id: Long) {
+        viewModelScope.launch {
+            discussionRepository
+                .getDiscussionDetail(id = id)
+                .onSuccess(::applyDiscussionDetail)
+                .onFailure { throwable ->
+                    Napier.e(throwable.message.orEmpty(), throwable)
+                }
+        }
+    }
+
+
+    @OptIn(ExperimentalTime::class)
+    private fun applyDiscussionDetail(detail: DiscussionDetail) {
+        when (detail) {
+            is OfflineDiscussionDetail -> {
+                val startAt = detail.dateTimePeriod.startAt
+                val endAt = detail.dateTimePeriod.endAt
+                val trackIndex =
+                    Track.entries.indexOf(detail.detailContent.category).takeIf { it >= 0 } ?: -1
+                val updated = CreateDiscussionState.Offline(
+                    title = detail.detailContent.title,
+                    content = detail.detailContent.content,
+                    selectedTrackIndex = trackIndex,
+                    place = detail.place,
+                    participantCount = detail.participantCapacity.max,
+                    selectedDate = startAt.date,
+                    selectedStartTime = LocalTime(startAt.hour, startAt.minute),
+                    selectedEndTime = LocalTime(endAt.hour, endAt.minute),
+                )
+                offlineModeCache = updated
+                updateState { updated }
+            }
+
+            is OnlineDiscussionDetail -> {
+                val today = LocalDateTime.now().date
+                val diffDays = (detail.endDate.endDate.toEpochDays() - today.toEpochDays())
+                    .coerceIn(1, 3)
+                val selectedEndDateIndex = diffDays - 1
+                val trackIndex =
+                    Track.entries.indexOf(detail.detailContent.category).takeIf { it >= 0 } ?: -1
+                val updated = CreateDiscussionState.Online(
+                    title = detail.detailContent.title,
+                    content = detail.detailContent.content,
+                    selectedTrackIndex = trackIndex,
+                    selectedEndDateIndex = selectedEndDateIndex.toInt(),
+                )
+                onlineModeCache = updated
+                updateState { updated }
+            }
         }
     }
 }

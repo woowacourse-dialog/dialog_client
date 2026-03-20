@@ -51,6 +51,7 @@ import org.koin.core.parameter.parametersOf
 internal fun DiscussionDetailScreen(
     discussionId: Long,
     goBack: () -> Unit,
+    navigateToEdit: (discussionId: Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiscussionDetailViewModel = koinViewModel { parametersOf(discussionId) },
 ) {
@@ -98,7 +99,7 @@ internal fun DiscussionDetailScreen(
         onLikeClick = { viewModel.onIntent(DiscussionDetailIntent.ToggleLike) },
         onParticipateClick = { viewModel.onIntent(DiscussionDetailIntent.Participate) },
         onSummaryClick = { viewModel.onIntent(DiscussionDetailIntent.GenerateSummary) },
-        onEditClick = { /* TODO: 수정 화면으로 이동 */ },
+        onEditClick = { navigateToEdit(discussionId) },
         onDeleteClick = { activeOverlay = DiscussionDetailOverlay.Delete(DeleteType.Discussion) },
         onReportClick = { activeOverlay = DiscussionDetailOverlay.Report(ReportType.Discussion) },
         modifier = modifier,

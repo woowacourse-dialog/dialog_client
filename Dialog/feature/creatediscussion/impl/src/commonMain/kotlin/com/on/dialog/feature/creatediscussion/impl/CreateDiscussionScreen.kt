@@ -96,13 +96,15 @@ import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun CreateDiscussionScreen(
     goBack: () -> Unit,
     navigateToDetail: (Long) -> Unit,
+    discussionId: Long? = null,
     modifier: Modifier = Modifier,
-    viewModel: CreateDiscussionViewModel = koinViewModel(),
+    viewModel: CreateDiscussionViewModel = koinViewModel { parametersOf(discussionId) },
 ) {
     val uiState: CreateDiscussionState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarState = LocalSnackbarDelegate.current

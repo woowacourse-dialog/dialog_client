@@ -5,3 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data object CreateDiscussionNavKey : NavKey
+
+@Serializable
+data class EditDiscussionNavKey(
+    val discussionId: Long,
+) : NavKey

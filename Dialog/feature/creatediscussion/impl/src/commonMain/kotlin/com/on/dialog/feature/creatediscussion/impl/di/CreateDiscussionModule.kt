@@ -8,6 +8,11 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val createDiscussionModule = module {
-    viewModel { CreateDiscussionViewModel(discussionRepository = get()) }
+    viewModel { (discussionId: Long?) ->
+        CreateDiscussionViewModel(
+            discussionRepository = get(),
+            discussionId = discussionId,
+        )
+    }
     single { CreateDiscussionNavKeyProvider() } bind NavKeyProvider::class
 }
