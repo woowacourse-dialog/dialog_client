@@ -94,7 +94,6 @@ class MyPageViewModel(
 
     private fun handleLoadMyPageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
-            sessionRepository.setLoggedIn(isLoggedIn = false)
             updateState { copy(isLoggedIn = false) }
             emitEffect(
                 MyPageEffect.ShowSnackbar(
