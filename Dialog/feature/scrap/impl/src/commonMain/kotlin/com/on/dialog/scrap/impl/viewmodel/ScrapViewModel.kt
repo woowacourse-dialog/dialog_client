@@ -34,7 +34,6 @@ internal class ScrapViewModel(
             observeLoginState()
         }
         observeScrapCatalogs()
-        fetchScraps()
     }
 
     override fun onIntent(intent: ScrapIntent) {
