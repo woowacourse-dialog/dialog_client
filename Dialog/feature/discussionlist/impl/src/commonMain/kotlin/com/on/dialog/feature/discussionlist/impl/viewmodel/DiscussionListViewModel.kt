@@ -2,6 +2,8 @@ package com.on.dialog.feature.discussionlist.impl.viewmodel
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.viewModelScope
+import com.on.dialog.core.common.error.NetworkError
+import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.DiscussionRepository
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.feature.discussionlist.impl.model.DiscussionStatusUiModel
@@ -24,10 +26,11 @@ import kotlinx.coroutines.launch
 @Stable
 internal class DiscussionListViewModel(
     private val discussionRepository: DiscussionRepository,
+    private val authRepository: AuthRepository,
     private val sessionRepository: SessionRepository,
 ) : BaseViewModel<DiscussionListIntent, DiscussionListState, DiscussionListEffect>(
-        DiscussionListState(),
-    ) {
+    DiscussionListState(),
+) {
     private var nextCursor: String? = null
     private var hasNext: Boolean = true
 
@@ -45,7 +48,7 @@ internal class DiscussionListViewModel(
             .launchIn(viewModelScope)
 
         observeLoginState()
-        refreshSessionState()
+        refreshLoginStatus()
         fetchDiscussions()
     }
 
@@ -149,9 +152,20 @@ internal class DiscussionListViewModel(
         }
     }
 
-    private fun refreshSessionState() {
+    private fun refreshLoginStatus() {
         viewModelScope.launch {
-            sessionRepository.hasValidSession()
+            authRepository
+                .getLoginStatus()
+                .onSuccess { isLoggedIn ->
+                    sessionRepository.setLoggedIn(isLoggedIn = isLoggedIn)
+                }
+                .onFailure { throwable ->
+                    if (throwable is NetworkError.Unauthorized) {
+                        sessionRepository.setLoggedIn(isLoggedIn = false)
+                    } else {
+                        Napier.e("DiscussionList: login status failure", throwable)
+                    }
+                }
         }
     }
 

@@ -29,7 +29,6 @@ internal class ScrapViewModel(
     init {
         observeLoginState()
         observeScrapCatalogs()
-        refreshSessionState()
         fetchScraps()
     }
 
@@ -122,13 +121,7 @@ internal class ScrapViewModel(
             }
         }
     }
-
-    private fun refreshSessionState() {
-        viewModelScope.launch {
-            sessionRepository.hasValidSession()
-        }
-    }
-
+    
     private fun handleLoginStatusChanged(isLoggedIn: Boolean?) {
         isLoggedIn?.let {
             when (it) {

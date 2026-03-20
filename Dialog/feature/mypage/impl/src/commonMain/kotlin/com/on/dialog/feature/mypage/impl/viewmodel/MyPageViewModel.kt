@@ -22,7 +22,7 @@ class MyPageViewModel(
 ) : BaseViewModel<MyPageIntent, MyPageState, MyPageEffect>(initialState = MyPageState()) {
     init {
         observeLoginState()
-        refreshSessionState()
+        refreshLoginStatus()
     }
 
     override fun onIntent(intent: MyPageIntent) {
@@ -48,9 +48,20 @@ class MyPageViewModel(
         }
     }
 
-    private fun refreshSessionState() {
+    private fun refreshLoginStatus() {
         viewModelScope.launch {
-            sessionRepository.hasValidSession()
+            authRepository
+                .getLoginStatus()
+                .onSuccess { isLoggedIn ->
+                    sessionRepository.setLoggedIn(isLoggedIn = isLoggedIn)
+                }
+                .onFailure { throwable ->
+                    if (throwable is NetworkError.Unauthorized) {
+                        sessionRepository.setLoggedIn(isLoggedIn = false)
+                    } else {
+                        Napier.e("DiscussionList: login status failure", throwable)
+                    }
+                }
         }
     }
 
