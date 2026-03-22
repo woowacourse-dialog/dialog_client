@@ -5,13 +5,15 @@ tone_instructions: >
   비판보다는 개선 방향을 중심으로 작성하고, 필요한 경우 관련 문서나 학습 키워드를 함께 제안하세요.
   우선순위는 P1~P5로 표시하세요.
 
-auto_review:
+reviews:
+  profile: chill
+  auto_review:
     enabled: true
     auto_incremental_review: true
     base_branches:
       - "main"
       - "develop"
-
+  request_changes_workflow: true
 reviews:
   profile: chill
   request_changes_workflow: true
