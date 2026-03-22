@@ -52,11 +52,12 @@ internal class DiscussionDetailViewModel(
     private var cachedUserId: Long? = null
 
     init {
-        fetchInitialData()
     }
 
     override fun onIntent(intent: DiscussionDetailIntent) {
         when (intent) {
+            DiscussionDetailIntent.FetchInitial -> fetchInitialData()
+
             DiscussionDetailIntent.ToggleBookmark -> toggleBookmark()
 
             DiscussionDetailIntent.ToggleLike -> toggleLike()

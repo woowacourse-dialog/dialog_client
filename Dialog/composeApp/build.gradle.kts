@@ -16,6 +16,7 @@ kotlin {
             implementation(projects.feature.mycreated.impl)
             implementation(projects.feature.discussionlist.impl)
             implementation(projects.feature.discussiondetail.impl)
+            implementation(projects.feature.creatediscussion.impl)
         }
     }
 }

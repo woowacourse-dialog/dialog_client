@@ -15,8 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.dropShadow
 
@@ -80,28 +80,15 @@ private fun DialogCardTone.backgroundColor(): Color = when (this) {
     DialogCardTone.SurfaceContainerLow -> DialogTheme.colorScheme.surfaceContainerLow
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DialogCardPreviewLight() {
-    DialogTheme {
-        DialogCardPreviewContent()
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0)
-@Composable
-private fun DialogCardPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        DialogCardPreviewContent()
-    }
-}
-
+@ThemePreview
 @Composable
 private fun DialogCardPreviewContent() {
-    Surface(color = DialogTheme.colorScheme.surfaceContainer) {
-        Box(modifier = Modifier.padding(12.dp)) {
-            DialogCard(tone = DialogCardTone.Surface, onClick = {}) {
-                Text("Surface Card")
+    DialogTheme {
+        Surface(color = DialogTheme.colorScheme.surfaceContainer) {
+            Box(modifier = Modifier.padding(12.dp)) {
+                DialogCard(tone = DialogCardTone.Surface, onClick = {}) {
+                    Text("Surface Card")
+                }
             }
         }
     }

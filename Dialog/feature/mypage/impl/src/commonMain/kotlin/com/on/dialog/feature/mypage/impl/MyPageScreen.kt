@@ -43,6 +43,7 @@ import com.on.dialog.feature.mypage.impl.viewmodel.MyPageIntent
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageState
 import com.on.dialog.feature.mypage.impl.viewmodel.MyPageViewModel
 import com.on.dialog.model.common.Track
+import com.on.dialog.ui.component.DefaultDialogTopBar
 import dialog.feature.mypage.impl.generated.resources.Res
 import dialog.feature.mypage.impl.generated.resources.delete_account
 import dialog.feature.mypage.impl.generated.resources.delete_account_confirm
@@ -144,24 +145,32 @@ private fun MyPageScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxSize().padding(all = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.fillMaxSize(),
     ) {
-        if (uiState.isLoggedIn) {
-            MyPageScreenLoggedIn(
-                uiState = uiState,
-                onLogoutClick = onLogoutClick,
-                onUpdateProfile = onUpdateProfile,
-                onProfileImageClick = onProfileImageClick,
-                onDeleteAccount = onDeleteAccount,
-                onMyCreatedClick = onMyCreatedClick,
-                onScrapClick = onScrapClick,
-            )
-        } else {
-            MyPageScreenLoggedOut(
-                onLoginClick = onLoginClick,
-                onLoggedOutInteraction = onLoggedOutInteraction,
-            )
+        DefaultDialogTopBar()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            if (uiState.isLoggedIn) {
+                MyPageScreenLoggedIn(
+                    uiState = uiState,
+                    onLogoutClick = onLogoutClick,
+                    onUpdateProfile = onUpdateProfile,
+                    onProfileImageClick = onProfileImageClick,
+                    onDeleteAccount = onDeleteAccount,
+                    onMyCreatedClick = onMyCreatedClick,
+                    onScrapClick = onScrapClick,
+                )
+            } else {
+                MyPageScreenLoggedOut(
+                    onLoginClick = onLoginClick,
+                    onLoggedOutInteraction = onLoggedOutInteraction,
+                )
+            }
         }
     }
 }

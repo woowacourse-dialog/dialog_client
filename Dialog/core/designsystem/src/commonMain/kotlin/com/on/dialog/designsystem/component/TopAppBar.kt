@@ -13,14 +13,15 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.designsystem.theme.dropShadow
 
@@ -65,54 +66,43 @@ fun DialogTopAppBar(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DialogTopAppBarPreviewLight() {
-    DialogTheme {
-        DialogTopAppBarPreviewContent()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun DialogTopAppBarPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        DialogTopAppBarPreviewContent()
-    }
-}
-
+@ThemePreview
 @Composable
 private fun DialogTopAppBarPreviewContent() {
-    Column {
-        DialogTopAppBar(
-            title = "Dialog",
-            navigationIcon = {
-                DialogIconButton(onClick = {}) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                }
-            },
-            actions = {
-                DialogIconButton(onClick = {}) {
-                    Icon(Icons.Default.Search, contentDescription = null)
-                }
-            },
-        )
+    DialogTheme {
+        Surface {
+            Column {
+                DialogTopAppBar(
+                    title = "Dialog",
+                    navigationIcon = {
+                        DialogIconButton(onClick = {}) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        }
+                    },
+                    actions = {
+                        DialogIconButton(onClick = {}) {
+                            Icon(Icons.Default.Search, contentDescription = null)
+                        }
+                    },
+                )
 
-        Spacer(
-            Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-                .background(Color.Gray),
-        )
+                Spacer(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(4.dp)
+                        .background(Color.Gray),
+                )
 
-        DialogTopAppBar(
-            title = "Dialog",
-            centerAligned = false,
-            navigationIcon = {
-                DialogIconButton(onClick = {}) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                }
-            },
-        )
+                DialogTopAppBar(
+                    title = "Dialog",
+                    centerAligned = false,
+                    navigationIcon = {
+                        DialogIconButton(onClick = {}) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        }
+                    },
+                )
+            }
+        }
     }
 }

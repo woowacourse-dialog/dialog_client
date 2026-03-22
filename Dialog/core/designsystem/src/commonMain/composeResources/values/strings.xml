@@ -1,3 +1,14 @@
 <resources>
     <string name="dialog_snackbar_dismiss_action_icon_content_description">닫기</string>
+    <string name="dialog_date_picker_confirm">확인</string>
+    <string name="dialog_date_picker_cancel">취소</string>
+    <string name="dialog_date_picker_content_description">날짜 선택</string>
+    <string name="dialog_date_picker_preview_label">날짜</string>
+    <string name="dialog_date_picker_preview_placeholder">날짜를 선택해주세요</string>
+    <string name="dialog_date_picker_preview_supporting_text">토론 시작일</string>
+    <string name="dialog_date_picker_preview_error_text">올바른 날짜를 선택해주세요</string>
+
+    <string name="dialog_time_picker_confirm">확인</string>
+    <string name="dialog_time_picker_cancel">취소</string>
+    <string name="dialog_time_picker_content_description">시간 선택</string>
 </resources>

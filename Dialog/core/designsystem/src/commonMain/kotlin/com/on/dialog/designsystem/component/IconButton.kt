@@ -9,12 +9,13 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 
 enum class DialogIconButtonTone { None, Primary }
@@ -72,42 +73,31 @@ private fun dialogIconButtonBaseBackground(tone: DialogIconButtonTone): Color =
         DialogIconButtonTone.Primary -> DialogTheme.colorScheme.primary.copy(alpha = 0.15f)
     }
 
-@Preview(showBackground = true)
-@Composable
-private fun DialogIconButtonPreviewLight() {
-    DialogTheme {
-        DialogIconButtonPreviewContent()
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0)
-@Composable
-private fun DialogIconButtonPreviewDark() {
-    DialogTheme(darkTheme = true) {
-        DialogIconButtonPreviewContent()
-    }
-}
-
+@ThemePreview
 @Composable
 private fun DialogIconButtonPreviewContent() {
-    Row(
-        modifier = Modifier.padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        DialogIconButton(onClick = {}, tone = DialogIconButtonTone.None) {
-            Icon(Icons.Default.Close, null)
-        }
+    DialogTheme {
+        Surface {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                DialogIconButton(onClick = {}, tone = DialogIconButtonTone.None) {
+                    Icon(Icons.Default.Close, null)
+                }
 
-        DialogIconButton(onClick = {}, tone = DialogIconButtonTone.Primary) {
-            Icon(Icons.Default.Bookmark, null)
-        }
+                DialogIconButton(onClick = {}, tone = DialogIconButtonTone.Primary) {
+                    Icon(Icons.Default.Bookmark, null)
+                }
 
-        DialogIconButton(
-            onClick = {},
-            tone = DialogIconButtonTone.Primary,
-            enabled = false,
-        ) {
-            Icon(Icons.Default.Bookmark, null)
+                DialogIconButton(
+                    onClick = {},
+                    tone = DialogIconButtonTone.Primary,
+                    enabled = false,
+                ) {
+                    Icon(Icons.Default.Bookmark, null)
+                }
+            }
         }
     }
 }

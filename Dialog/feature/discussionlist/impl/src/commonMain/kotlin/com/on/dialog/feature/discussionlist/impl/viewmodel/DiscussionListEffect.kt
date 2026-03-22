@@ -8,4 +8,8 @@ sealed interface DiscussionListEffect : UiEffect {
     ) : DiscussionListEffect
 
     data object ScrollToTop : DiscussionListEffect
+
+    data class SetFabVisible(
+        val isVisible: Boolean,
+    ) : DiscussionListEffect
 }

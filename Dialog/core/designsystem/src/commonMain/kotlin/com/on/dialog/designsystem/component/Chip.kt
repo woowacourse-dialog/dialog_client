@@ -19,8 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
 
 @Composable
@@ -67,32 +67,34 @@ fun DialogChip(
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreview
 @Composable
 private fun DialogChipPreview() {
     DialogTheme {
-        Column(modifier = Modifier.padding(16.dp)) {
-            DialogChip(
-                text = "Android",
-                textColor = Color(0xFF003D2E),
-                backgroundColor = Color(0xFF3DDC84),
-            )
-            Spacer(Modifier.height(8.dp))
-            DialogChip(
-                text = "Backend",
-                textColor = Color.White,
-                backgroundColor = Color(0xFFFF6F00),
-            )
-            Spacer(Modifier.height(8.dp))
-            DialogChip(
-                text = "Frontend",
-                textColor = Color.White,
-                backgroundColor = Color(0xFF2196F3),
-            )
-            Spacer(Modifier.height(8.dp))
-            DialogChip(text = "#기본 스타일")
-            Spacer(Modifier.height(8.dp))
-            DialogChip(text = "#기본 스타일", onRemove = {})
+        Surface {
+            Column(modifier = Modifier.padding(16.dp)) {
+                DialogChip(
+                    text = "Android",
+                    textColor = Color(0xFF003D2E),
+                    backgroundColor = Color(0xFF3DDC84),
+                )
+                Spacer(Modifier.height(8.dp))
+                DialogChip(
+                    text = "Backend",
+                    textColor = Color.White,
+                    backgroundColor = Color(0xFFFF6F00),
+                )
+                Spacer(Modifier.height(8.dp))
+                DialogChip(
+                    text = "Frontend",
+                    textColor = Color.White,
+                    backgroundColor = Color(0xFF2196F3),
+                )
+                Spacer(Modifier.height(8.dp))
+                DialogChip(text = "#기본 스타일")
+                Spacer(Modifier.height(8.dp))
+                DialogChip(text = "#기본 스타일", onRemove = {})
+            }
         }
     }
 }

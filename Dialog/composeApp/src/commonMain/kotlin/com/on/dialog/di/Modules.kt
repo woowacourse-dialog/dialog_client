@@ -5,6 +5,7 @@ import com.on.dialog.discussiondetail.impl.di.discussionDetailModule
 import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionBookmarkUseCase
 import com.on.dialog.domain.usecase.discussion.interaction.ToggleDiscussionLikeUseCase
 import com.on.dialog.domain.usecase.discussion.summary.GenerateDiscussionSummaryUseCase
+import com.on.dialog.feature.creatediscussion.impl.di.createDiscussionModule
 import com.on.dialog.feature.discussionlist.impl.di.discussionListModule
 import com.on.dialog.feature.login.impl.di.loginModule
 import com.on.dialog.feature.mycreated.impl.di.myCreatedModule
@@ -37,6 +38,7 @@ val featureModule =
             loginModule,
             signUpModule,
             myCreatedModule,
+            createDiscussionModule,
         )
     }
 
