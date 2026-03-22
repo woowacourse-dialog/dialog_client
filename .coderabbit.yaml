@@ -25,15 +25,14 @@ reviews:
   suggested_reviewers: false
   auto_assign_reviewers: false
   poem: false
+  finishing_touches:
+    docstrings:
+      enabled: true
+    unit_tests:
+      enabled: false
 
 chat:
   auto_reply: true
-
-finishing_touches:
-  docstrings:
-    enabled: true
-  unit_tests:
-    enabled: false
 
 code_generation:
   docstrings:
