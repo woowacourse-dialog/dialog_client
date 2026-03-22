@@ -25,6 +25,7 @@ import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
 import com.on.dialog.designsystem.preview.ThemePreview
 import com.on.dialog.designsystem.theme.DialogTheme
+import org.intellij.markdown.MarkdownTokenTypes
 
 @Composable
 fun DialogMarkdown(
@@ -70,6 +71,26 @@ fun DialogMarkdown(
             heading6 = {
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
                 MarkdownHeader(it.content, it.node, style = typography.titleLarge)
+            },
+            setextHeading1 = {
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
+                MarkdownHeader(
+                    content = it.content,
+                    node = it.node,
+                    style = typography.headlineMedium,
+                    contentChildType = MarkdownTokenTypes.SETEXT_CONTENT,
+                )
+                MarkdownDivider(modifier = Modifier.padding(vertical = DialogTheme.spacing.medium))
+            },
+            setextHeading2 = {
+                Spacer(modifier = Modifier.height(DialogTheme.spacing.medium))
+                MarkdownHeader(
+                    content = it.content,
+                    node = it.node,
+                    style = typography.headlineSmall,
+                    contentChildType = MarkdownTokenTypes.SETEXT_CONTENT,
+                )
+                MarkdownDivider(modifier = Modifier.padding(vertical = DialogTheme.spacing.medium))
             },
             eol = {
                 Spacer(modifier = Modifier.height(DialogTheme.spacing.small))
@@ -152,6 +173,8 @@ private const val PREVIEW_MARKDOWN = """
     
     > 인용문(Quote)입니다. 여러 줄도 가능합니다.  
     > 두 번째 줄입니다.
+    
+    /n---/n
     
     ---
     
