@@ -8,7 +8,6 @@ data class CookieLocalEntity(
     val value: String,
     val domain: String,
     val path: String,
-    val expires: Long? = null,
     val secure: Boolean = true,
     val httpOnly: Boolean = true,
 )

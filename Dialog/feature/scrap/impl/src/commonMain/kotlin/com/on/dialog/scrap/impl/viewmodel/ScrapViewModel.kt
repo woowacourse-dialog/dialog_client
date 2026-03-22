@@ -6,6 +6,7 @@ import com.on.dialog.core.common.error.NetworkError
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.ScrapRepository
 import com.on.dialog.domain.repository.SessionRepository
+import com.on.dialog.domain.usecase.session.CheckLoginStatusUseCase
 import com.on.dialog.model.discussion.cursorpage.ScrapCatalogCursorPage
 import com.on.dialog.model.discussion.scrap.ScrapCatalog
 import com.on.dialog.scrap.impl.model.ScrapUiModel.Companion.toUiModel
@@ -22,14 +23,17 @@ import kotlinx.coroutines.launch
 internal class ScrapViewModel(
     private val scrapRepository: ScrapRepository,
     private val sessionRepository: SessionRepository,
+    private val checkLoginStatusUseCase: CheckLoginStatusUseCase,
 ) : BaseViewModel<ScrapIntent, ScrapState, ScrapEffect>(ScrapState.Loading()) {
     private var nextCursorId: Long? = null
     private var hasNext: Boolean = true
 
     init {
-        observeLoginState()
+        viewModelScope.launch {
+            checkLoginStatusUseCase()
+            observeLoginState()
+        }
         observeScrapCatalogs()
-        fetchScraps()
     }
 
     override fun onIntent(intent: ScrapIntent) {

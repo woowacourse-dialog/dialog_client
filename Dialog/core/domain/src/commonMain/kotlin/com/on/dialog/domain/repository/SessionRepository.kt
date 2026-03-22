@@ -11,8 +11,6 @@ interface SessionRepository {
 
     suspend fun clearSession(): Result<Unit>
 
-    suspend fun hasValidSession(): Result<Boolean>
-
     suspend fun saveUserId(userId: Long): Result<Unit>
 
     suspend fun getUserId(): Result<Long?>

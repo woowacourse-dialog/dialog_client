@@ -6,6 +6,7 @@ import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.repository.UserRepository
+import com.on.dialog.domain.usecase.session.CheckLoginStatusUseCase
 import com.on.dialog.feature.mypage.impl.model.TrackUiModel.Companion.toUiModel
 import com.on.dialog.feature.mypage.impl.model.UserInfoUiModel.Companion.toUiModel
 import com.on.dialog.model.common.ProfileImage
@@ -19,10 +20,13 @@ class MyPageViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
     private val sessionRepository: SessionRepository,
+    private val checkLoginStatusUseCase: CheckLoginStatusUseCase,
 ) : BaseViewModel<MyPageIntent, MyPageState, MyPageEffect>(initialState = MyPageState()) {
     init {
-        observeLoginState()
-        refreshLoginStatus()
+        viewModelScope.launch {
+            checkLoginStatusUseCase()
+            observeLoginState()
+        }
     }
 
     override fun onIntent(intent: MyPageIntent) {
@@ -45,22 +49,6 @@ class MyPageViewModel(
             sessionRepository.isLoggedIn.collect { isLoggedIn ->
                 handleLoginStatusChanged(isLoggedIn)
             }
-        }
-    }
-
-    private fun refreshLoginStatus() {
-        viewModelScope.launch {
-            authRepository
-                .getLoginStatus()
-                .onSuccess { isLoggedIn ->
-                    sessionRepository.setLoggedIn(isLoggedIn = isLoggedIn)
-                }.onFailure { throwable ->
-                    if (throwable is NetworkError.Unauthorized) {
-                        sessionRepository.setLoggedIn(isLoggedIn = false)
-                    } else {
-                        Napier.e("DiscussionList: login status failure", throwable)
-                    }
-                }
         }
     }
 
@@ -106,7 +94,6 @@ class MyPageViewModel(
 
     private fun handleLoadMyPageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
-            sessionRepository.setLoggedIn(isLoggedIn = false)
             updateState { copy(isLoggedIn = false) }
             emitEffect(
                 MyPageEffect.ShowSnackbar(

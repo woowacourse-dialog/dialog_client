@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 class LocalCookieStorage(
     private val dataStore: DataStore<Preferences>,
@@ -62,13 +60,7 @@ class LocalCookieStorage(
         dataStore.edit { it[cookiesKey] = json }
     }
 
-    @OptIn(ExperimentalTime::class)
     private fun CookieLocalEntity.matches(requestHost: String, requestPath: String): Boolean {
-        // 만료 검사
-        if (expires != null && expires < Clock.System.now().toEpochMilliseconds()) {
-            return false
-        }
-
         // Domain 검사
         val cookieDomain: String = domain.lowercase()
         val requestDomain: String = requestHost.lowercase()
