@@ -121,7 +121,7 @@ internal class ScrapViewModel(
             }
         }
     }
-    
+
     private fun handleLoginStatusChanged(isLoggedIn: Boolean?) {
         isLoggedIn?.let {
             when (it) {

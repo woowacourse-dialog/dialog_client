@@ -54,8 +54,7 @@ class MyPageViewModel(
                 .getLoginStatus()
                 .onSuccess { isLoggedIn ->
                     sessionRepository.setLoggedIn(isLoggedIn = isLoggedIn)
-                }
-                .onFailure { throwable ->
+                }.onFailure { throwable ->
                     if (throwable is NetworkError.Unauthorized) {
                         sessionRepository.setLoggedIn(isLoggedIn = false)
                     } else {

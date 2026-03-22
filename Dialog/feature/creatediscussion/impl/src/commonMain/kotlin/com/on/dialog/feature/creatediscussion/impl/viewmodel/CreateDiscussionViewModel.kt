@@ -26,8 +26,8 @@ internal class CreateDiscussionViewModel(
     private val discussionRepository: DiscussionRepository,
     private val discussionId: Long?,
 ) : BaseViewModel<CreateDiscussionIntent, CreateDiscussionState, CreateDiscussionEffect>(
-    initialState = CreateDiscussionState.Online(),
-) {
+        initialState = CreateDiscussionState.Online(),
+    ) {
     private var offlineModeCache: CreateDiscussionState.Offline = CreateDiscussionState.Offline()
     private var onlineModeCache: CreateDiscussionState.Online = CreateDiscussionState.Online()
 
@@ -206,7 +206,6 @@ internal class CreateDiscussionViewModel(
                 }
         }
     }
-
 
     @OptIn(ExperimentalTime::class)
     private fun applyDiscussionDetail(detail: DiscussionDetail) {

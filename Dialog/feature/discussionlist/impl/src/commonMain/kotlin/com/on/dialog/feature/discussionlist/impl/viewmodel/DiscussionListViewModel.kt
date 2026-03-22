@@ -29,8 +29,8 @@ internal class DiscussionListViewModel(
     private val authRepository: AuthRepository,
     private val sessionRepository: SessionRepository,
 ) : BaseViewModel<DiscussionListIntent, DiscussionListState, DiscussionListEffect>(
-    DiscussionListState(),
-) {
+        DiscussionListState(),
+    ) {
     private var nextCursor: String? = null
     private var hasNext: Boolean = true
 
@@ -158,8 +158,7 @@ internal class DiscussionListViewModel(
                 .getLoginStatus()
                 .onSuccess { isLoggedIn ->
                     sessionRepository.setLoggedIn(isLoggedIn = isLoggedIn)
-                }
-                .onFailure { throwable ->
+                }.onFailure { throwable ->
                     if (throwable is NetworkError.Unauthorized) {
                         sessionRepository.setLoggedIn(isLoggedIn = false)
                     } else {
