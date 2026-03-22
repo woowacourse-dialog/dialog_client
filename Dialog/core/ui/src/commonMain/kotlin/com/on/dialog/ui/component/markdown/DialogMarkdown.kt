@@ -174,8 +174,7 @@ private const val PREVIEW_MARKDOWN = """
     > 인용문(Quote)입니다. 여러 줄도 가능합니다.  
     > 두 번째 줄입니다.
     
-    /n---/n
-    
+
     ---
     
     - Bullet 1
