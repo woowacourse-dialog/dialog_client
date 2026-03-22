@@ -21,7 +21,7 @@ reviews:
   sequence_diagrams: false
   assess_linked_issues: true
   suggested_labels: false
-  auto_apply_labels: false
+  auto_apply_labels: true
   suggested_reviewers: false
   auto_assign_reviewers: false
   poem: false
