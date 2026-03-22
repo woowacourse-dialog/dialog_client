@@ -33,6 +33,9 @@ chat:
 finishing_touches:
   docstrings:
     enabled: true
+
+code_generation:
+  docstrings:
     language: ko-KR
     path_instructions:
       - path: "**/*.kt"
