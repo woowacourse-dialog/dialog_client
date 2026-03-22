@@ -33,7 +33,7 @@ finishing_touches:
     enabled: true
     language: ko-KR
     path_instructions:
-      - path: **/*.kt
+      - path: "**/*.kt"
         instructions: |
           - 모든 public 함수에 대해 KDoc 양식을 따라 한글로 간결하게 Docstring을 작성해주세요.
           - 함수 목적, 파라미터, 반환값, 예외를 명확하게 기술해 주세요.
