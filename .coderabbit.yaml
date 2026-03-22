@@ -1,9 +1,11 @@
 language: ko-KR
 
 tone_instructions: >
-  문제의 원인과 개선 방법을 명확히 설명하세요.
-  비판보다는 개선 방향을 중심으로 작성하고, 필요한 경우 관련 문서나 학습 키워드를 함께 제안하세요.
-  우선순위는 P1~P5로 표시하세요.
+  문제의 원인과 개선 방향을 명확하게 설명하세요.
+  비판보다는 개선 가능성과 대안을 중심으로 작성하세요.
+  리뷰 코멘트에는 왜 문제가 되는지와 어떻게 수정하면 좋은지를 함께 제시하세요.
+  필요한 경우 관련 개념, 공식 문서, 학습 키워드를 간단히 덧붙이세요.
+  중요도는 P1~P5 우선순위로 표시하세요.
 
 reviews:
   profile: chill
@@ -30,6 +32,8 @@ chat:
 finishing_touches:
   docstrings:
     enabled: true
+  unit_tests:
+    enabled: false
 
 code_generation:
   docstrings:
@@ -37,6 +41,8 @@ code_generation:
     path_instructions:
       - path: "**/*.kt"
         instructions: |
-          - 모든 public 함수에 대해 KDoc 양식을 따라 한글로 간결하게 Docstring을 작성해주세요.
-          - 함수 목적, 파라미터, 반환값, 예외를 명확하게 기술해 주세요.
-          - 샘플 코드/사용 예시는 필요한 경우에만 포함해 주세요.
+          모든 public 함수에 대해 KDoc 양식의 Docstring을 한글로 작성해주세요.
+          Docstring에는 함수의 목적, 주요 파라미터의 의미, 반환값의 의미를 간결하게 포함해주세요.
+          호출 시 주의할 제약이나 전제조건이 있다면 함께 작성해주세요.
+          예외 상황은 실제로 중요한 경우에만 포함해주세요.
+          샘플 코드나 사용 예시는 필요한 경우에만 작성해주세요.
