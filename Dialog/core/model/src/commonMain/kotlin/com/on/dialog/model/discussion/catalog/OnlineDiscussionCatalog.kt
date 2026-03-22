@@ -11,6 +11,8 @@ data class OnlineDiscussionCatalog(
 ) : DiscussionCatalog {
     override fun status(now: LocalDateTime): DiscussionStatus =
         when {
+            now < catalogContent.createdAt -> DiscussionStatus.RECRUITING
+
             endDate.isInPeriod(
                 startAt = catalogContent.createdAt,
                 dateTime = now,
@@ -18,6 +20,6 @@ data class OnlineDiscussionCatalog(
 
             endDate.isAfterEnd(dateTime = now) -> DiscussionStatus.DISCUSSION_COMPLETE
 
-            else -> throw IllegalStateException("Unknown DiscussionStatus")
+            else -> DiscussionStatus.DISCUSSION_COMPLETE
         }
 }

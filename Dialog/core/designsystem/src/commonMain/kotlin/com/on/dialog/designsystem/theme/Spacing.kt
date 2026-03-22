@@ -32,6 +32,7 @@ data class Spacing(
     val small: Dp = 8.dp,
     val medium: Dp = 12.dp,
     val large: Dp = 16.dp,
+    val mediumLarge: Dp = 20.dp,
     val extraLarge: Dp = 24.dp,
     val extraExtraLarge: Dp = 32.dp,
     val huge: Dp = 48.dp,
@@ -61,6 +62,7 @@ private fun SpacingPreview() {
                 SpacingItem("small", DialogTheme.spacing.small)
                 SpacingItem("medium", DialogTheme.spacing.medium)
                 SpacingItem("large", DialogTheme.spacing.large)
+                SpacingItem("mediumLarge", DialogTheme.spacing.mediumLarge)
                 SpacingItem("extraLarge", DialogTheme.spacing.extraLarge)
                 SpacingItem("extraExtraLarge", DialogTheme.spacing.extraExtraLarge)
                 SpacingItem("huge", DialogTheme.spacing.huge)

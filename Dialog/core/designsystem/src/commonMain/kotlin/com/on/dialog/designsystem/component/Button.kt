@@ -9,6 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -107,26 +108,28 @@ private fun buttonColorsByStyle(style: DialogButtonStyle) =
 @Composable
 private fun DialogButtonPreview() {
     DialogTheme {
-        Column {
-            DialogButton(onClick = {}, text = "Primary")
-            DialogButton(
-                onClick = {},
-                text = "Secondary",
-                style = DialogButtonStyle.Secondary,
-            )
-            DialogButton(
-                onClick = {},
-                text = "Error",
-                style = DialogButtonStyle.Error,
-            )
-            DialogButton(onClick = {}, text = "None", style = DialogButtonStyle.None)
-            DialogButton(
-                onClick = {},
-                text = "Icon",
-                leadingIcon = {
-                    Icon(imageVector = DialogIcons.Add, contentDescription = null)
-                },
-            )
+        Surface {
+            Column {
+                DialogButton(onClick = {}, text = "Primary")
+                DialogButton(
+                    onClick = {},
+                    text = "Secondary",
+                    style = DialogButtonStyle.Secondary,
+                )
+                DialogButton(
+                    onClick = {},
+                    text = "Error",
+                    style = DialogButtonStyle.Error,
+                )
+                DialogButton(onClick = {}, text = "None", style = DialogButtonStyle.None)
+                DialogButton(
+                    onClick = {},
+                    text = "Icon",
+                    leadingIcon = {
+                        Icon(imageVector = DialogIcons.Add, contentDescription = null)
+                    },
+                )
+            }
         }
     }
 }

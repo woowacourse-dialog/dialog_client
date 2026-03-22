@@ -4,6 +4,8 @@ import com.on.dialog.discussiondetail.impl.model.ReportReasonUiModel
 import com.on.dialog.ui.viewmodel.UiIntent
 
 internal sealed interface DiscussionDetailIntent : UiIntent {
+    data object FetchInitial : DiscussionDetailIntent
+
     data object ToggleBookmark : DiscussionDetailIntent
 
     data object ToggleLike : DiscussionDetailIntent

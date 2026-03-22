@@ -12,6 +12,8 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.material.icons.extended)
             implementation(libs.kotlinx.collections.immutable)
+            implementation(libs.kotlinx.datetime)
+            implementation(projects.core.common)
         }
     }
 }

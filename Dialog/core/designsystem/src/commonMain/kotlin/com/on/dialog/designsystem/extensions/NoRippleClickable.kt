@@ -1,4 +1,4 @@
-package com.on.dialog.ui.extensions
+package com.on.dialog.designsystem.extensions
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

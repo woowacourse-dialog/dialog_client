@@ -1,10 +1,18 @@
 package com.on.dialog.feature.discussionlist.impl
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,11 +21,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.component.snackbar.SnackbarState
+import com.on.dialog.designsystem.icon.DialogIcons
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.discussionlist.impl.component.DiscussionListEmptyView
 import com.on.dialog.feature.discussionlist.impl.component.DiscussionListFilterSection
@@ -46,6 +56,7 @@ internal fun DiscussionListScreen(
     val snackbarState = LocalSnackbarDelegate.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
+    var isFabAllowed by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -59,6 +70,10 @@ internal fun DiscussionListScreen(
 
                 DiscussionListEffect.ScrollToTop -> {
                     listState.animateScrollToItem(0)
+                }
+
+                is DiscussionListEffect.SetFabVisible -> {
+                    isFabAllowed = effect.isVisible
                 }
             }
         }
@@ -88,6 +103,7 @@ internal fun DiscussionListScreen(
         onClickTypeFilter = { type ->
             viewModel.onIntent(DiscussionListIntent.ClickDiscussionTypeFilter(type))
         },
+        isFabAllowed = isFabAllowed,
         modifier = modifier,
     )
 }
@@ -103,9 +119,12 @@ private fun DiscussionListScreen(
     onClickTrackFilter: (track: TrackUiModel) -> Unit,
     onClickStatusFilter: (status: DiscussionStatusUiModel) -> Unit,
     onClickTypeFilter: (type: DiscussionTypeUiModel) -> Unit,
+    isFabAllowed: Boolean,
     modifier: Modifier = Modifier,
 ) {
     var shouldShowFilterSection by rememberSaveable { mutableStateOf(false) }
+    var isFabVisible by rememberSaveable { mutableStateOf(true) }
+    var previousScrollOffset by rememberSaveable { mutableStateOf(0) }
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.isScrollInProgress }
@@ -114,6 +133,16 @@ private fun DiscussionListScreen(
                 if (isScrolling && shouldShowFilterSection) {
                     shouldShowFilterSection = false
                 }
+            }
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemScrollOffset to listState.firstVisibleItemIndex }
+            .distinctUntilChanged()
+            .collect { (offset, index) ->
+                val currentOffset = index * 10000 + offset
+                isFabVisible = currentOffset <= previousScrollOffset
+                previousScrollOffset = currentOffset
             }
     }
 
@@ -131,6 +160,29 @@ private fun DiscussionListScreen(
             onClickTypeFilter = onClickTypeFilter,
         )
 
+        DiscussionListContent(
+            uiState = uiState,
+            listState = listState,
+            isFabVisible = isFabVisible && isFabAllowed,
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            onClickDiscussion = onClickDiscussion,
+            onClickCreateDiscussion = onClickCreateDiscussion,
+        )
+    }
+}
+
+@Composable
+private fun DiscussionListContent(
+    uiState: DiscussionListState,
+    listState: LazyListState,
+    isFabVisible: Boolean,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    onClickDiscussion: (discussionId: Long) -> Unit,
+    onClickCreateDiscussion: () -> Unit,
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
         if (uiState.shouldShowEmptyView) {
             DiscussionListEmptyView(onClickCreateDiscussion = onClickCreateDiscussion)
         } else {
@@ -141,6 +193,30 @@ private fun DiscussionListScreen(
                 isRefreshing = isRefreshing,
                 onRefresh = onRefresh,
             )
+        }
+
+        AnimatedVisibility(
+            visible = isFabVisible,
+            enter = slideInVertically(
+                initialOffsetY = { it },
+                animationSpec = tween(durationMillis = 300),
+            ),
+            exit = slideOutVertically(
+                targetOffsetY = { it },
+                animationSpec = tween(durationMillis = 300),
+            ),
+            modifier = Modifier
+                .align(Alignment.BottomEnd),
+        ) {
+            FloatingActionButton(
+                onClick = onClickCreateDiscussion,
+                shape = CircleShape,
+                containerColor = DialogTheme.colorScheme.primary,
+                contentColor = DialogTheme.colorScheme.onPrimary,
+                modifier = Modifier.padding(DialogTheme.spacing.extraLarge),
+            ) {
+                Icon(imageVector = DialogIcons.Add, contentDescription = null)
+            }
         }
     }
 }
@@ -157,6 +233,7 @@ private fun DiscussionListScreenPreview() {
                 onClickTrackFilter = {},
                 onClickStatusFilter = {},
                 onClickTypeFilter = {},
+                isFabAllowed = true,
                 listState = rememberLazyListState(),
                 uiState = DiscussionListState(
                     discussions = List(4) {

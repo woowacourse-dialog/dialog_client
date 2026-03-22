@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.on.dialog.designsystem.component.DialogTopAppBar
 import com.on.dialog.designsystem.component.LoadingIndicator
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
 import com.on.dialog.designsystem.icon.DialogIcons
@@ -31,11 +30,11 @@ import com.on.dialog.scrap.impl.viewmodel.ScrapState
 import com.on.dialog.scrap.impl.viewmodel.ScrapViewModel
 import com.on.dialog.ui.component.CommonStateAction
 import com.on.dialog.ui.component.CommonStateView
+import com.on.dialog.ui.component.DefaultDialogTopBar
 import com.on.dialog.ui.extensions.shouldLoadNextPage
 import dialog.feature.scrap.impl.generated.resources.Res
 import dialog.feature.scrap.impl.generated.resources.empty_description
 import dialog.feature.scrap.impl.generated.resources.empty_title
-import dialog.feature.scrap.impl.generated.resources.top_app_bar_title
 import dialog.feature.scrap.impl.generated.resources.unauthorized_primary_action
 import dialog.feature.scrap.impl.generated.resources.unauthorized_title
 import dialog.feature.scrap.impl.generated.resources.unauthorized_title_description
@@ -109,7 +108,7 @@ private fun ScrapScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
-        ScrapScreenTopAppBar()
+        DefaultDialogTopBar()
         Box {
             when (uiState) {
                 is ScrapState.Empty -> {
@@ -147,16 +146,6 @@ private fun ScrapScreen(
             }
         }
     }
-}
-
-@Composable
-private fun ScrapScreenTopAppBar(
-    modifier: Modifier = Modifier,
-) {
-    DialogTopAppBar(
-        title = stringResource(Res.string.top_app_bar_title),
-        modifier = modifier,
-    )
 }
 
 @Composable
