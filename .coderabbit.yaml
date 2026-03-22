@@ -14,9 +14,6 @@ reviews:
       - "main"
       - "develop"
   request_changes_workflow: true
-reviews:
-  profile: chill
-  request_changes_workflow: true
   high_level_summary: true
   changed_files_summary: false
   sequence_diagrams: false
