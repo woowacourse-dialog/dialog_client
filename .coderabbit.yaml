@@ -20,7 +20,7 @@ reviews:
   changed_files_summary: false
   sequence_diagrams: false
   assess_linked_issues: true
-  suggested_labels: false
+  suggested_labels: true
   auto_apply_labels: true
   suggested_reviewers: false
   auto_assign_reviewers: false
