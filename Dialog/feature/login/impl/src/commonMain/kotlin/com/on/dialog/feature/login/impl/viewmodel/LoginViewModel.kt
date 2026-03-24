@@ -20,6 +20,8 @@ class LoginViewModel(
                 jsessionId = intent.jsessionId,
                 isNewUser = intent.isNewUser,
             )
+
+            is LoginIntent.SelectLoginType -> updateState { copy(loginType = intent.loginType) }
         }
     }
 

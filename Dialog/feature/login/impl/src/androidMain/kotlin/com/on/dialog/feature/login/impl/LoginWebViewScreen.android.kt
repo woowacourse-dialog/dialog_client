@@ -7,14 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import com.on.dialog.feature.login.impl.model.LoginType
 import com.on.dialog.feature.login.impl.viewmodel.LoginState
 import io.github.aakira.napier.Napier
 
 @Composable
 actual fun LoginWebView(
     uiState: LoginState,
-    loginType: LoginType,
     onLoginSuccess: (jsessionId: String, isNewUser: Boolean) -> Unit,
     onLoginFailure: () -> Unit,
     onLoginCancel: () -> Unit,
@@ -57,7 +55,7 @@ actual fun LoginWebView(
                 }
             }
             // 로그인 URL 로드
-            webView.loadUrl(BuildKonfig.BASE_URL + loginType.loginUrl)
+            webView.loadUrl(BuildKonfig.BASE_URL + uiState.loginType.loginUrl)
 
             webView
         },

@@ -5,6 +5,6 @@ private const val LOGIN_BASE_URL = "api/oauth2/authorization/"
 enum class LoginType(
     val loginUrl: String,
 ) {
+    NONE(loginUrl = ""),
     GITHUB(loginUrl = LOGIN_BASE_URL + "github"),
-    GOOGLE(loginUrl = ""),
 }
