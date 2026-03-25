@@ -63,12 +63,8 @@ fun LoginScreen(
     when (uiState.loginType) {
         LoginType.NONE -> {
             LoginSelectionScreen(
-                onGithubLogin = {
-                    viewModel.onIntent(LoginIntent.SelectLoginType(LoginType.GITHUB))
-                },
-                onAppleLogin = {
-                    // TODO 애플 로그인 구현
-                },
+                onGithubLogin = { viewModel.onIntent(LoginIntent.SelectLoginType(LoginType.GITHUB)) },
+                onAppleLogin = { viewModel.onIntent(LoginIntent.SelectLoginType(LoginType.APPLE)) },
                 modifier = modifier,
             )
         }
@@ -92,6 +88,8 @@ fun LoginScreen(
                 modifier = modifier.fillMaxSize(),
             )
         }
+
+        LoginType.APPLE -> Unit
     }
 }
 
