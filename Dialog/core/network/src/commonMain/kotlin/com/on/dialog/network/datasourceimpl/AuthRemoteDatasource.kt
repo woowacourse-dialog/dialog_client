@@ -2,7 +2,9 @@ package com.on.dialog.network.datasourceimpl
 
 import com.on.dialog.network.common.safeApiCall
 import com.on.dialog.network.datasource.AuthDatasource
+import com.on.dialog.network.dto.auth.AppleLoginRequest
 import com.on.dialog.network.dto.auth.LoginCheckResponse
+import com.on.dialog.network.dto.auth.OAuthLoginResponse
 import com.on.dialog.network.dto.auth.SignupRequest
 import com.on.dialog.network.dto.auth.SignupResponse
 import com.on.dialog.network.service.AuthService
@@ -17,4 +19,8 @@ internal class AuthRemoteDatasource(
         safeApiCall { authService.getLoginStatus() }
 
     override suspend fun logout(): Result<Unit> = safeApiCall { authService.logout() }
+
+    override suspend fun postAppleLogin(request: AppleLoginRequest): Result<OAuthLoginResponse> = safeApiCall {
+        authService.postAppleLogin(request = request)
+    }
 }
