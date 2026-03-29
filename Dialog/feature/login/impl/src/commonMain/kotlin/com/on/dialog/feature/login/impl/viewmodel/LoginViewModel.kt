@@ -89,26 +89,28 @@ class LoginViewModel(
 
     private fun handleLoginType(loginType: LoginType) {
         when (loginType) {
-            LoginType.NONE, LoginType.GITHUB -> updateState { copy(loginType = loginType) }
+            LoginType.GITHUB -> updateState { copy(loginType = loginType) }
             LoginType.APPLE -> handleAppleLogin()
+            LoginType.NONE -> Unit
         }
     }
 
     private fun handleAppleLogin() {
-        viewModelScope.launch {
-            updateState { copy(isLoading = true) }
-            appleSignInHandler
-                .signIn()
-                .onSuccess { result: OAuthSignInResult -> handleAppleSignInHandlerSuccess(result) }
-                .onFailure {
-                    emitEffect(
-                        effect = LoginEffect.ShowSnackbar(
-                            stringResource = Res.string.error_apple_login,
-                            state = SnackbarState.NEGATIVE,
-                        ),
-                    )
-                }
-        }
+        viewModelScope
+            .launch {
+                updateState { copy(isLoading = true) }
+                appleSignInHandler
+                    .signIn()
+                    .onSuccess { result: OAuthSignInResult -> handleAppleSignInHandlerSuccess(result) }
+                    .onFailure {
+                        emitEffect(
+                            effect = LoginEffect.ShowSnackbar(
+                                stringResource = Res.string.error_apple_login,
+                                state = SnackbarState.NEGATIVE,
+                            ),
+                        )
+                    }
+            }.invokeOnCompletion { updateState { copy(isLoading = false) } }
     }
 
     private suspend fun handleAppleSignInHandlerSuccess(signInResult: OAuthSignInResult) {

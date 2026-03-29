@@ -95,6 +95,7 @@ class MyPageViewModel(
     private suspend fun handleLoadMyPageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
             checkLoginStatusUseCase()
+            updateState { copy(isLoggedIn = false) }
             emitEffect(
                 MyPageEffect.ShowSnackbar(
                     message = "로그인 후 이용할 수 있습니다.",
@@ -109,7 +110,6 @@ class MyPageViewModel(
                 ),
             )
         }
-        updateState { copy(isLoggedIn = false) }
     }
 
     private fun loadMyProfileImage() {
@@ -137,6 +137,7 @@ class MyPageViewModel(
     private suspend fun handleLoadMyProfileImageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
             checkLoginStatusUseCase()
+            updateState { copy(isLoggedIn = false) }
             emitEffect(
                 MyPageEffect.ShowSnackbar(
                     message = "로그인 후 이용할 수 있습니다.",
@@ -146,7 +147,6 @@ class MyPageViewModel(
         } else {
             Napier.d("내 프로필 이미지를 불러오는데 실패했습니다.")
         }
-        updateState { copy(isLoggedIn = false) }
     }
 
     private fun updateMyProfile(nickname: String, track: Track) {
@@ -219,6 +219,7 @@ class MyPageViewModel(
             authRepository
                 .logout()
                 .onSuccess {
+                    updateState { MyPageState() }
                     checkLoginStatusUseCase()
                     sessionRepository.clearUserId()
                     sessionRepository.clearSession()
