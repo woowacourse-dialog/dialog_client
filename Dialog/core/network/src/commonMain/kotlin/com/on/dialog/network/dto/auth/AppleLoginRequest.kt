@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class AppleLoginRequest(
+data class AppleLoginRequest(
     @SerialName("identityToken")
     val identityToken: String,
     @SerialName("firstName")

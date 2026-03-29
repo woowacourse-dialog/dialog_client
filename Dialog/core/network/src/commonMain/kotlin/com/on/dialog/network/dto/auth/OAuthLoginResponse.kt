@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class OAuthLoginResponse(
+data class OAuthLoginResponse(
     @SerialName("isRegistered")
     val isRegistered: Boolean,
     @SerialName("userId")
