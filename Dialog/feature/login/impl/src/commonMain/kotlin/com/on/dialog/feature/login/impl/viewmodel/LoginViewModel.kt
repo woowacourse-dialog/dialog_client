@@ -6,6 +6,7 @@ import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.domain.repository.AuthRepository
 import com.on.dialog.domain.repository.SessionRepository
 import com.on.dialog.domain.repository.UserRepository
+import com.on.dialog.domain.usecase.session.CheckLoginStatusUseCase
 import com.on.dialog.feature.login.impl.model.LoginType
 import com.on.dialog.feature.login.impl.model.OAuthSignInHandler
 import com.on.dialog.feature.login.impl.model.OAuthSignInResult
@@ -24,6 +25,7 @@ class LoginViewModel(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     private val appleSignInHandler: OAuthSignInHandler,
+    private val checkLoginStatusUseCase: CheckLoginStatusUseCase,
 ) : BaseViewModel<LoginIntent, LoginState, LoginEffect>(initialState = LoginState()) {
     override fun onIntent(intent: LoginIntent) {
         when (intent) {
@@ -37,25 +39,25 @@ class LoginViewModel(
     }
 
     private fun handleLoginSuccess(jsessionId: String, isNewUser: Boolean) {
-        if (isNewUser) {
-            updateState { copy(isLoginComplete = true, isNewUser = true) }
-            emitEffect(LoginEffect.NavigateToSignUp(jsessionId = jsessionId))
-            return
-        }
-        saveUserSession(jsessionId = jsessionId)
+        viewModelScope
+            .launch {
+                if (isNewUser) {
+                    updateState { copy(isLoginComplete = true, isNewUser = true) }
+                    emitEffect(LoginEffect.NavigateToSignUp(jsessionId = jsessionId))
+                    return@launch
+                }
+                saveUserSession(jsessionId = jsessionId)
+            }.invokeOnCompletion { updateState { LoginState() } }
     }
 
-    private fun saveUserSession(jsessionId: String) {
+    private suspend fun saveUserSession(jsessionId: String) {
         if (currentState.isLoginComplete) return
         updateState { copy(isLoading = true) }
 
-        viewModelScope
-            .launch {
-                sessionRepository
-                    .saveSession(jsessionId = jsessionId)
-                    .onSuccess { saveUserId() }
-                    .onFailure { handleSaveUserSessionFailure() }
-            }.invokeOnCompletion { updateState { LoginState() } }
+        sessionRepository
+            .saveSession(jsessionId = jsessionId)
+            .onSuccess { saveUserId() }
+            .onFailure { handleSaveUserSessionFailure() }
     }
 
     private suspend fun saveUserId() {
@@ -69,7 +71,8 @@ class LoginViewModel(
             }.onFailure { handleSaveUserSessionFailure() }
     }
 
-    private fun handleSaveUserSessionSuccess() {
+    private suspend fun handleSaveUserSessionSuccess() {
+        checkLoginStatusUseCase()
         updateState { copy(isLoginComplete = true, isNewUser = false) }
         emitEffect(LoginEffect.GoBack)
     }
@@ -115,8 +118,13 @@ class LoginViewModel(
                 firstName = signInResult.firstName,
                 lastName = signInResult.lastName,
             ).onSuccess { loginResult ->
-                // 애플 로그인은 POST 응답에서 setCookie로 JSESSION ID가 저장됨
-                handleLoginSuccess(jsessionId = "", isNewUser = !loginResult.isRegistered)
+                if (loginResult.isRegistered) {
+                    saveUserId()
+                } else {
+                    updateState { copy(isLoginComplete = true, isNewUser = true) }
+                    // 애플 로그인 시 POST 응답에서 setCookie로 JSESSIONID가 저장
+                    emitEffect(LoginEffect.NavigateToSignUp(jsessionId = ""))
+                }
             }.onFailure(::showErrorSnackbar)
     }
 

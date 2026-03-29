@@ -15,6 +15,7 @@ val loginModule = module {
             userRepository = get(),
             authRepository = get(),
             appleSignInHandler = get(qualifier = named<AuthQualifier.Apple>()),
+            checkLoginStatusUseCase = get(),
         )
     }
 

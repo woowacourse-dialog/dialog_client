@@ -33,7 +33,6 @@ internal class SessionDefaultRepository(
                 httpOnly = true,
             ),
         )
-        _isLoggedIn.value = true
     }
 
     override suspend fun clearSession(): Result<Unit> = runCatching {

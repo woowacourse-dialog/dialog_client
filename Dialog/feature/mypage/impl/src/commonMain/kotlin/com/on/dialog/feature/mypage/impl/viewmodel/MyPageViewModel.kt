@@ -76,7 +76,7 @@ class MyPageViewModel(
                 userRepository
                     .getMyUserInfo()
                     .onSuccess(::handleLoadMyPageSuccess)
-                    .onFailure(::handleLoadMyPageFailure)
+                    .onFailure { handleLoadMyPageFailure(it) }
             }.invokeOnCompletion {
                 updateState { copy(isLoading = false) }
             }
@@ -92,9 +92,9 @@ class MyPageViewModel(
         }
     }
 
-    private fun handleLoadMyPageFailure(throwable: Throwable) {
+    private suspend fun handleLoadMyPageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
-            updateState { copy(isLoggedIn = false) }
+            checkLoginStatusUseCase()
             emitEffect(
                 MyPageEffect.ShowSnackbar(
                     message = "로그인 후 이용할 수 있습니다.",
@@ -109,6 +109,7 @@ class MyPageViewModel(
                 ),
             )
         }
+        updateState { copy(isLoggedIn = false) }
     }
 
     private fun loadMyProfileImage() {
@@ -117,7 +118,7 @@ class MyPageViewModel(
                 userRepository
                     .getMyProfileImage()
                     .onSuccess(::handleLoadMyProfileImageSuccess)
-                    .onFailure(::handleLoadMyProfileImageFailure)
+                    .onFailure { handleLoadMyProfileImageFailure(it) }
             }.invokeOnCompletion {
                 updateState { copy(isLoading = false) }
             }
@@ -133,10 +134,9 @@ class MyPageViewModel(
         }
     }
 
-    private fun handleLoadMyProfileImageFailure(throwable: Throwable) {
+    private suspend fun handleLoadMyProfileImageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
-            sessionRepository.setLoggedIn(isLoggedIn = false)
-            updateState { copy(isLoggedIn = false) }
+            checkLoginStatusUseCase()
             emitEffect(
                 MyPageEffect.ShowSnackbar(
                     message = "로그인 후 이용할 수 있습니다.",
@@ -146,6 +146,7 @@ class MyPageViewModel(
         } else {
             Napier.d("내 프로필 이미지를 불러오는데 실패했습니다.")
         }
+        updateState { copy(isLoggedIn = false) }
     }
 
     private fun updateMyProfile(nickname: String, track: Track) {
@@ -218,9 +219,9 @@ class MyPageViewModel(
             authRepository
                 .logout()
                 .onSuccess {
-                    updateState { MyPageState() }
-                    sessionRepository.setLoggedIn(isLoggedIn = false)
+                    checkLoginStatusUseCase()
                     sessionRepository.clearUserId()
+                    sessionRepository.clearSession()
                 }.onFailure { result: Throwable ->
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
@@ -237,7 +238,9 @@ class MyPageViewModel(
             userRepository
                 .deleteAccount()
                 .onSuccess {
-                    updateState { MyPageState() }
+                    updateState { copy(isLoggedIn = false) }
+                    sessionRepository.clearUserId()
+                    sessionRepository.clearSession()
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = "회원 탈퇴에 성공했습니다.",
