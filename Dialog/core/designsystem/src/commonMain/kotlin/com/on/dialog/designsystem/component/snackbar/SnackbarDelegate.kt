@@ -20,10 +20,12 @@ class SnackbarDelegate(
     val coroutineScope: CoroutineScope,
 ) {
     private var snackbarJob: Job? = null
+    private var isShowingNonDismissable: Boolean = false
 
     fun showSnackbar(
         state: SnackbarState,
         message: String,
+        nonDismissable: Boolean = false,
         actionLabel: String? = null,
         withDismissAction: Boolean = actionLabel == null,
         duration: SnackbarDuration = SnackbarDuration.Short,
@@ -31,6 +33,7 @@ class SnackbarDelegate(
         onAction: () -> Unit = {},
     ) {
         snackbarJob?.cancel()
+        isShowingNonDismissable = nonDismissable
         val currentJob: Job =
             coroutineScope.launch {
                 val visuals = DialogSnackbarVisuals(
@@ -50,6 +53,8 @@ class SnackbarDelegate(
                 } catch (e: CancellationException) {
                     onDismiss()
                     throw e
+                } finally {
+                    isShowingNonDismissable = false
                 }
             }
         snackbarJob = currentJob
@@ -61,6 +66,7 @@ class SnackbarDelegate(
     }
 
     fun dismissCurrentSnackbar() {
+        if (isShowingNonDismissable) return
         snackbarJob?.cancel()
         snackbarJob = null
         snackbarHostState.currentSnackbarData?.dismiss()

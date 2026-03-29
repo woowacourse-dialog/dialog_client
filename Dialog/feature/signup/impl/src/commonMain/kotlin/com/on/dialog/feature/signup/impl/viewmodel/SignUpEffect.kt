@@ -12,5 +12,6 @@ interface SignUpEffect : UiEffect {
     data class ShowSnackbar(
         val stringResource: StringResource,
         val state: SnackbarState,
+        val nonDismissable: Boolean = false,
     ) : SignUpEffect
 }
