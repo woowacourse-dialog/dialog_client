@@ -16,14 +16,21 @@ import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.create
 import platform.UIKit.UIApplication
-import platform.UIKit.UIWindow
+import platform.UIKit.UIWindowScene
 import platform.darwin.NSObject
 import kotlin.coroutines.resume
 
 class AppleSignInHandler : OAuthSignInHandler {
-    // ASAuthorizationController.delegate는 weak 참조 → GC 방지를 위해 strong 참조 유지
+    // ASAuthorizationController.delegate/presentationContextProvider는 weak 참조 → GC 방지를 위해 strong 참조 유지
     private var delegate: NSObject? = null
     private var controller: ASAuthorizationController? = null
+    private var presentationContextProvider: ASAuthorizationControllerPresentationContextProvidingProtocol? = null
+
+    private fun clearReferences() {
+        delegate = null
+        controller = null
+        presentationContextProvider = null
+    }
 
     @OptIn(BetaInteropApi::class)
     override suspend fun signIn(): Result<OAuthSignInResult> = suspendCancellableCoroutine { continuation ->
@@ -40,6 +47,7 @@ class AppleSignInHandler : OAuthSignInHandler {
                 val credential = didCompleteWithAuthorization.credential
                     as? ASAuthorizationAppleIDCredential
                     ?: run {
+                        clearReferences()
                         continuation.resume(Result.failure(IllegalStateException("Invalid credential type")))
                         return
                     }
@@ -47,6 +55,7 @@ class AppleSignInHandler : OAuthSignInHandler {
                 // identityToken: NSData → UTF-8 String 변환 후 서버로 전송
                 val tokenData = credential.identityToken
                     ?: run {
+                        clearReferences()
                         continuation.resume(Result.failure(IllegalStateException("identityToken is null")))
                         return
                     }
@@ -54,11 +63,13 @@ class AppleSignInHandler : OAuthSignInHandler {
                 val identityToken =
                     NSString.create(data = tokenData, encoding = NSUTF8StringEncoding) as? String
                         ?: run {
+                            clearReferences()
                             continuation.resume(Result.failure(IllegalStateException("Failed to decode identityToken")))
                             return
                         }
 
                 // fullName은 최초 로그인 시에만 제공, 이후 로그인에서는 null
+                clearReferences()
                 continuation.resume(
                     Result.success(
                         OAuthSignInResult(
@@ -74,6 +85,7 @@ class AppleSignInHandler : OAuthSignInHandler {
                 controller: ASAuthorizationController,
                 didCompleteWithError: NSError,
             ) {
+                clearReferences()
                 continuation.resume(Result.failure(Exception(didCompleteWithError.localizedDescription)))
             }
         }
@@ -81,13 +93,14 @@ class AppleSignInHandler : OAuthSignInHandler {
 
         val authController = ASAuthorizationController(authorizationRequests = listOf(request))
         authController.delegate = appleDelegate
-        authController.presentationContextProvider = PresentationContextProvider()
+        val provider = PresentationContextProvider()
+        authController.presentationContextProvider = provider
+        presentationContextProvider = provider
         controller = authController
 
         // 코루틴 취소 시 참조 해제
         continuation.invokeOnCancellation {
-            delegate = null
-            controller = null
+            clearReferences()
         }
 
         authController.performRequests()
@@ -101,10 +114,11 @@ private class PresentationContextProvider :
     override fun presentationAnchorForAuthorizationController(
         controller: ASAuthorizationController,
     ): ASPresentationAnchor {
-        // 현재 활성화된 keyWindow 반환, 없으면 빈 UIWindow 폴백
-        return UIApplication.sharedApplication.windows
-            .filterIsInstance<UIWindow>()
-            .firstOrNull { it.isKeyWindow() }
-            ?: UIWindow()
+        // iOS 13+ multi-scene 환경: foregroundActive scene의 keyWindow 반환
+        return UIApplication.sharedApplication.connectedScenes
+            .filterIsInstance<UIWindowScene>()
+            .firstOrNull { it.activationState == platform.UIKit.UISceneActivationStateForegroundActive }
+            ?.keyWindow
+            ?: throw IllegalStateException("No valid window for presentation")
     }
 }
