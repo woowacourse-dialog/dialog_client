@@ -219,8 +219,8 @@ class MyPageViewModel(
                 .onSuccess {
                     updateState { MyPageState() }
                     checkLoginStatusUseCase()
-                    sessionRepository.clearUserId()
-                    sessionRepository.clearSession()
+                    clearUserId()
+                    clearSession()
                 }.onFailure { result: Throwable ->
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
@@ -237,16 +237,16 @@ class MyPageViewModel(
             userRepository
                 .deleteAccount()
                 .onSuccess {
-                    updateState { copy(isLoggedIn = false) }
-                    sessionRepository.clearUserId()
-                    sessionRepository.clearSession()
+                    updateState { MyPageState(isLoading = false) }
+                    clearUserId()
+                    clearSession()
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = "회원 탈퇴에 성공했습니다.",
                             state = SnackbarState.POSITIVE,
                         ),
                     )
-                }.onFailure { result: Throwable ->
+                }.onFailure {
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = "회원 탈퇴에 실패했습니다.",
@@ -255,5 +255,15 @@ class MyPageViewModel(
                     )
                 }
         }
+    }
+
+    private suspend fun clearUserId() {
+        sessionRepository.clearUserId()
+            .onFailure { Napier.e(message = it.message.orEmpty(), throwable = it) }
+    }
+
+    private suspend fun clearSession() {
+        sessionRepository.clearSession()
+            .onFailure { Napier.e(message = it.message.orEmpty(), throwable = it) }
     }
 }
