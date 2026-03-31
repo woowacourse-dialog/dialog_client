@@ -34,6 +34,11 @@ class LoginViewModel(
                 isNewUser = intent.isNewUser,
             )
 
+            is LoginIntent.LoginFailure -> showSnackbar(
+                message = intent.loginError.message,
+                state = SnackbarState.NEGATIVE,
+            )
+
             is LoginIntent.SelectLoginType -> handleLoginType(intent.loginType)
         }
     }

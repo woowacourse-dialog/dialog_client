@@ -3,6 +3,7 @@ package com.on.dialog.feature.login.impl
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.on.dialog.feature.login.impl.model.LoginError
 import com.on.dialog.feature.login.impl.model.LoginType
 import com.on.dialog.feature.login.impl.viewmodel.LoginState
 
@@ -19,7 +20,7 @@ import com.on.dialog.feature.login.impl.viewmodel.LoginState
 expect fun LoginWebView(
     uiState: LoginState,
     onLoginSuccess: (jsessionId: String, isNewUser: Boolean) -> Unit,
-    onLoginFailure: () -> Unit,
+    onLoginFailure: (error: LoginError) -> Unit,
     onLoginCancel: () -> Unit,
     modifier: Modifier = Modifier,
 )
@@ -29,7 +30,7 @@ fun LoginWebViewScreen(
     uiState: LoginState,
     goBack: () -> Unit,
     onLoginSuccess: (String, Boolean) -> Unit,
-    onLoginFailure: () -> Unit,
+    onLoginFailure: (error: LoginError) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LoginWebView(

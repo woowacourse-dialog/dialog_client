@@ -18,10 +18,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.on.dialog.core.common.Platform
 import com.on.dialog.core.common.currentPlatform
 import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
-import com.on.dialog.designsystem.component.snackbar.SnackbarState
 import com.on.dialog.designsystem.theme.DialogTheme
 import com.on.dialog.feature.login.impl.component.AppleLoginButton
 import com.on.dialog.feature.login.impl.component.GithubLoginButton
+import com.on.dialog.feature.login.impl.model.LoginError
 import com.on.dialog.feature.login.impl.model.LoginType
 import com.on.dialog.feature.login.impl.viewmodel.LoginEffect
 import com.on.dialog.feature.login.impl.viewmodel.LoginIntent
@@ -78,11 +78,8 @@ fun LoginScreen(
                         LoginIntent.LoginSuccess(jsessionId = jsessionId, isNewUser = isNewUser),
                     )
                 },
-                onLoginFailure = {
-                    snackbarHostState.showSnackbar(
-                        state = SnackbarState.NEGATIVE,
-                        message = "로그인 실패 (JSESSION ID 없음)",
-                    )
+                onLoginFailure = { error: LoginError ->
+                    viewModel.onIntent(LoginIntent.LoginFailure(loginError = error))
                     goBack()
                 },
                 modifier = modifier.fillMaxSize(),
