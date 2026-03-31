@@ -258,12 +258,14 @@ class MyPageViewModel(
     }
 
     private suspend fun clearUserId() {
-        sessionRepository.clearUserId()
+        sessionRepository
+            .clearUserId()
             .onFailure { Napier.e(message = it.message.orEmpty(), throwable = it) }
     }
 
     private suspend fun clearSession() {
-        sessionRepository.clearSession()
+        sessionRepository
+            .clearSession()
             .onFailure { Napier.e(message = it.message.orEmpty(), throwable = it) }
     }
 }
