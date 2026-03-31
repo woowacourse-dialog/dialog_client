@@ -95,7 +95,6 @@ class MyPageViewModel(
     private suspend fun handleLoadMyPageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
             checkLoginStatusUseCase()
-            updateState { copy(isLoggedIn = false) }
             emitEffect(
                 MyPageEffect.ShowSnackbar(
                     message = "로그인 후 이용할 수 있습니다.",
@@ -137,7 +136,6 @@ class MyPageViewModel(
     private suspend fun handleLoadMyProfileImageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
             checkLoginStatusUseCase()
-            updateState { copy(isLoggedIn = false) }
             emitEffect(
                 MyPageEffect.ShowSnackbar(
                     message = "로그인 후 이용할 수 있습니다.",
