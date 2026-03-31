@@ -12,7 +12,7 @@ class UserInfoResponse(
     @SerialName("nickname")
     val nickname: String,
     @SerialName("githubId")
-    val githubId: String?,
+    val githubId: String? = null,
     @SerialName("track")
     val track: String,
     @SerialName("isNotificationEnabled")
