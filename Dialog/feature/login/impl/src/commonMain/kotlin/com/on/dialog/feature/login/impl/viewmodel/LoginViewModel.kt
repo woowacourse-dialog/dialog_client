@@ -96,7 +96,7 @@ class LoginViewModel(
         when (loginType) {
             LoginType.GITHUB -> updateState { copy(loginType = loginType) }
             LoginType.APPLE -> handleAppleLogin()
-            LoginType.NONE -> Unit
+            LoginType.NONE -> updateState { copy(loginType = loginType) }
         }
     }
 
