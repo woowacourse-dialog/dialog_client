@@ -218,9 +218,9 @@ class MyPageViewModel(
                 .logout()
                 .onSuccess {
                     updateState { MyPageState() }
-                    checkLoginStatusUseCase()
                     clearUserId()
                     clearSession()
+                    checkLoginStatusUseCase()
                 }.onFailure { result: Throwable ->
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
