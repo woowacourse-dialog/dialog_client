@@ -33,7 +33,6 @@ class SnackbarDelegate(
         onAction: () -> Unit = {},
     ) {
         snackbarJob?.cancel()
-        isShowingNonDismissable = nonDismissable
         val currentJob: Job =
             coroutineScope.launch {
                 val visuals = DialogSnackbarVisuals(
@@ -53,13 +52,13 @@ class SnackbarDelegate(
                 } catch (e: CancellationException) {
                     onDismiss()
                     throw e
-                } finally {
-                    isShowingNonDismissable = false
                 }
             }
         snackbarJob = currentJob
+        isShowingNonDismissable = nonDismissable
         currentJob.invokeOnCompletion {
             if (snackbarJob === currentJob) {
+                isShowingNonDismissable = false
                 snackbarJob = null
             }
         }
