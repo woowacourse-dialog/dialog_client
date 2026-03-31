@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		026F91982F7BB4EE0038355D /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 026F91972F7BB4EE0038355D /* Sentry */; };
+		026F919A2F7BB4EE0038355D /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 026F91992F7BB4EE0038355D /* SentrySwiftUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		B7F3093FDC291BAB4224BB7F /* Dialog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dialog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -41,6 +46,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				026F91982F7BB4EE0038355D /* Sentry in Frameworks */,
+				026F919A2F7BB4EE0038355D /* SentrySwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +92,8 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
+				026F91972F7BB4EE0038355D /* Sentry */,
+				026F91992F7BB4EE0038355D /* SentrySwiftUI */,
 			);
 			productName = iosApp;
 			productReference = B7F3093FDC291BAB4224BB7F /* Dialog.app */;
@@ -114,6 +123,9 @@
 			);
 			mainGroup = 50BACB23DDCDB26012716101;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				026F91962F7BB4EE0038355D /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E91B7F7F87500C89FAA4B221 /* Products */;
 			projectDirPath = "";
@@ -152,7 +164,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode\n";
+			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\nif [ \"$CONFIGURATION\" = \"Release\" ]; then\n  ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode -Pbuildkonfig.flavor=release\nelse\n  ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -384,6 +396,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		026F91962F7BB4EE0038355D /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
+			requirement = {
+				kind = exactVersion;
+				version = 8.57.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		026F91972F7BB4EE0038355D /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 026F91962F7BB4EE0038355D /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
+		026F91992F7BB4EE0038355D /* SentrySwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 026F91962F7BB4EE0038355D /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = SentrySwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F5F46D63C209B3B7C05036D1 /* Project object */;
 }

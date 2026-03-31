@@ -1,3 +1,7 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 plugins {
     id("dialog.convention.kmp.application")
 }
@@ -18,6 +22,24 @@ kotlin {
             implementation(projects.feature.discussiondetail.impl)
             implementation(projects.feature.creatediscussion.impl)
         }
+    }
+}
+
+buildkonfig {
+    packageName = "com.on.dialog"
+
+    defaultConfigs {
+        buildConfigField(BOOLEAN, "IS_DEBUG", "true")
+        buildConfigField(STRING, "SENTRY_DSN", "")
+    }
+
+    defaultConfigs("release") {
+        buildConfigField(BOOLEAN, "IS_DEBUG", "false")
+        buildConfigField(
+            STRING,
+            "SENTRY_DSN",
+            "${gradleLocalProperties(rootDir, providers).getProperty("sentry_dsn")}"
+        )
     }
 }
 
