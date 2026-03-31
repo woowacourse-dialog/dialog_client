@@ -101,9 +101,10 @@ class LoginViewModel(
     }
 
     private fun handleAppleLogin() {
+        if (currentState.isLoading) return
+        updateState { copy(isLoading = true) }
         viewModelScope
             .launch {
-                updateState { copy(isLoading = true) }
                 appleSignInHandler
                     .signIn()
                     .onSuccess { result: OAuthSignInResult -> handleAppleSignInHandlerSuccess(result) }
