@@ -17,7 +17,7 @@ data class UserInfoUiModel(
         fun UserInfo.toUiModel() = UserInfoUiModel(
             id = id,
             nickname = nickname,
-            githubId = githubId,
+            githubId = githubId ?: "",
             track = track.toUiModel(),
             isNotificationEnabled = isNotificationEnabled,
         )

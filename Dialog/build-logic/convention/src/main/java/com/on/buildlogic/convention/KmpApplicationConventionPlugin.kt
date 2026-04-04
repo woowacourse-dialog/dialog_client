@@ -26,6 +26,8 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
  * - `org.jetbrains.kotlin.multiplatform`
  * - `com.android.application`
  * - `dialog.convention.kmp.compose`
+ * - `io.sentry.kotlin.multiplatform.gradle` — Sentry KMP SDK 및 iOS Cocoa 의존성 자동 설치
+ * - `com.codingfeline.buildkonfig` — 빌드 타입별 상수(DSN, IS_DEBUG 등) 주입
  *
  * ## Kotlin Multiplatform 설정
  * - `configureDialogTargets()`를 통해 Android / iOS 타겟을 구성한다.
@@ -34,6 +36,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
  * - `commonMain`
  *   - KMP 공통 의존성 주입을 위한 `koin-core`
  *   - 멀티플랫폼 로깅을 위한 `napier`
+ *   - 에러 모니터링을 위한 `sentry-kotlin-multiplatform` (Sentry Gradle Plugin이 자동 주입)
  *
  * - `androidMain`
  *   - Android 전용 Koin 확장 (`koin-android`)
@@ -67,6 +70,8 @@ internal class KmpApplicationConventionPlugin : Plugin<Project> {
             apply(PluginIds.KOTLIN_MULTIPLATFORM)
             apply(PluginIds.ANDROID_APPLICATION)
             apply("dialog.convention.kmp.compose")
+            apply(PluginIds.BUILD_KONFIG)
+            apply(PluginIds.SENTRY_KMP)
         }
 
         extensions.configure<KotlinMultiplatformExtension> {

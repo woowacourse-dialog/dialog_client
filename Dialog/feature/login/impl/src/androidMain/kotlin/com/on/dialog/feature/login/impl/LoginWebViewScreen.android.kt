@@ -7,16 +7,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import com.on.dialog.feature.login.impl.model.LoginType
+import com.on.dialog.feature.login.impl.model.LoginError
 import com.on.dialog.feature.login.impl.viewmodel.LoginState
 import io.github.aakira.napier.Napier
 
 @Composable
 actual fun LoginWebView(
     uiState: LoginState,
-    loginType: LoginType,
     onLoginSuccess: (jsessionId: String, isNewUser: Boolean) -> Unit,
-    onLoginFailure: () -> Unit,
+    onLoginFailure: (error: LoginError) -> Unit,
     onLoginCancel: () -> Unit,
     modifier: Modifier,
 ) {
@@ -57,7 +56,7 @@ actual fun LoginWebView(
                 }
             }
             // 로그인 URL 로드
-            webView.loadUrl(BuildKonfig.BASE_URL + loginType.loginUrl)
+            webView.loadUrl(BuildKonfig.BASE_URL + uiState.loginType.loginUrl)
 
             webView
         },
@@ -68,7 +67,7 @@ private fun handleLoginResult(
     url: String,
     cookieManager: CookieManager,
     onLoginSuccess: (String, Boolean) -> Unit,
-    onLoginFailure: () -> Unit,
+    onLoginFailure: (error: LoginError) -> Unit,
 ) {
     // 로그인 성공 페이지 감지
     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때
@@ -87,6 +86,6 @@ private fun handleLoginResult(
         onLoginSuccess(jsessionId, isNewUser)
     } else {
         Napier.w(tag = "LoginWebView", message = "⚠️ JSESSIONID not found in cookies")
-        onLoginFailure()
+        onLoginFailure(LoginError.JSESSION_NOT_FOUND)
     }
 }

@@ -76,7 +76,7 @@ class MyPageViewModel(
                 userRepository
                     .getMyUserInfo()
                     .onSuccess(::handleLoadMyPageSuccess)
-                    .onFailure(::handleLoadMyPageFailure)
+                    .onFailure { handleLoadMyPageFailure(it) }
             }.invokeOnCompletion {
                 updateState { copy(isLoading = false) }
             }
@@ -92,9 +92,9 @@ class MyPageViewModel(
         }
     }
 
-    private fun handleLoadMyPageFailure(throwable: Throwable) {
+    private suspend fun handleLoadMyPageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
-            updateState { copy(isLoggedIn = false) }
+            checkLoginStatusUseCase()
             emitEffect(
                 MyPageEffect.ShowSnackbar(
                     message = "로그인 후 이용할 수 있습니다.",
@@ -117,7 +117,7 @@ class MyPageViewModel(
                 userRepository
                     .getMyProfileImage()
                     .onSuccess(::handleLoadMyProfileImageSuccess)
-                    .onFailure(::handleLoadMyProfileImageFailure)
+                    .onFailure { handleLoadMyProfileImageFailure(it) }
             }.invokeOnCompletion {
                 updateState { copy(isLoading = false) }
             }
@@ -133,10 +133,9 @@ class MyPageViewModel(
         }
     }
 
-    private fun handleLoadMyProfileImageFailure(throwable: Throwable) {
+    private suspend fun handleLoadMyProfileImageFailure(throwable: Throwable) {
         if (throwable is NetworkError.Unauthorized) {
-            sessionRepository.setLoggedIn(isLoggedIn = false)
-            updateState { copy(isLoggedIn = false) }
+            checkLoginStatusUseCase()
             emitEffect(
                 MyPageEffect.ShowSnackbar(
                     message = "로그인 후 이용할 수 있습니다.",
@@ -219,8 +218,9 @@ class MyPageViewModel(
                 .logout()
                 .onSuccess {
                     updateState { MyPageState() }
-                    sessionRepository.setLoggedIn(isLoggedIn = false)
-                    sessionRepository.clearUserId()
+                    clearUserId()
+                    clearSession()
+                    checkLoginStatusUseCase()
                 }.onFailure { result: Throwable ->
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
@@ -237,14 +237,16 @@ class MyPageViewModel(
             userRepository
                 .deleteAccount()
                 .onSuccess {
-                    updateState { MyPageState() }
+                    updateState { MyPageState(isLoading = false) }
+                    clearUserId()
+                    clearSession()
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = "회원 탈퇴에 성공했습니다.",
                             state = SnackbarState.POSITIVE,
                         ),
                     )
-                }.onFailure { result: Throwable ->
+                }.onFailure {
                     emitEffect(
                         MyPageEffect.ShowSnackbar(
                             message = "회원 탈퇴에 실패했습니다.",
@@ -253,5 +255,17 @@ class MyPageViewModel(
                     )
                 }
         }
+    }
+
+    private suspend fun clearUserId() {
+        sessionRepository
+            .clearUserId()
+            .onFailure { Napier.e(message = it.message.orEmpty(), throwable = it) }
+    }
+
+    private suspend fun clearSession() {
+        sessionRepository
+            .clearSession()
+            .onFailure { Napier.e(message = it.message.orEmpty(), throwable = it) }
     }
 }

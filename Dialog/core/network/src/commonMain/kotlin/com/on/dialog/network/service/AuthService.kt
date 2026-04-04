@@ -1,6 +1,8 @@
 package com.on.dialog.network.service
 
+import com.on.dialog.network.dto.auth.AppleLoginRequest
 import com.on.dialog.network.dto.auth.LoginCheckResponse
+import com.on.dialog.network.dto.auth.OAuthLoginResponse
 import com.on.dialog.network.dto.auth.SignupRequest
 import com.on.dialog.network.dto.auth.SignupResponse
 import com.on.dialog.network.dto.common.DataResponse
@@ -20,4 +22,9 @@ interface AuthService {
 
     @DELETE("api/logout")
     suspend fun logout(): DataResponse<Unit>
+
+    @POST("api/auth/mobile/apple/login")
+    suspend fun postAppleLogin(
+        @Body request: AppleLoginRequest,
+    ): DataResponse<OAuthLoginResponse>
 }

@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.UIKitView
-import com.on.dialog.feature.login.impl.model.LoginType
+import com.on.dialog.feature.login.impl.model.LoginError
 import com.on.dialog.feature.login.impl.viewmodel.LoginState
 import io.github.aakira.napier.Napier
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -26,9 +26,8 @@ import platform.darwin.NSObject
 @Composable
 actual fun LoginWebView(
     uiState: LoginState,
-    loginType: LoginType,
     onLoginSuccess: (jsessionId: String, isNewUser: Boolean) -> Unit,
-    onLoginFailure: () -> Unit,
+    onLoginFailure: (error: LoginError) -> Unit,
     onLoginCancel: () -> Unit,
     modifier: Modifier,
 ) {
@@ -67,12 +66,12 @@ actual fun LoginWebView(
             webView.navigationDelegate = navigationDelegate
 
             // 로그인 URL 로드
-            val url = NSURL.URLWithString(BuildKonfig.BASE_URL + loginType.loginUrl)
+            val url = NSURL.URLWithString(BuildKonfig.BASE_URL + uiState.loginType.loginUrl)
             if (url != null) {
                 val request = NSURLRequest.requestWithURL(url)
                 webView.loadRequest(request)
             } else {
-                onLoginFailure()
+                onLoginFailure(LoginError.INVALID_URL)
             }
 
             webView
@@ -85,7 +84,7 @@ private fun handleLoginResult(
     url: String,
     config: WKWebViewConfiguration,
     onLoginSuccess: (String, Boolean) -> Unit,
-    onLoginFailure: () -> Unit,
+    onLoginFailure: (error: LoginError) -> Unit,
 ) {
     // 로그인 성공 페이지 감지
     // 조건 : 로그인 페이지가 아니고, 다이얼로그 url로 돌아왔을 때
@@ -107,7 +106,7 @@ private fun handleLoginResult(
                 onLoginSuccess(jsessionId, isNewUser)
             } else {
                 Napier.d(tag = "LoginWebView", message = "⚠️ JSESSIONID not found in cookies")
-                onLoginFailure()
+                onLoginFailure(LoginError.JSESSION_NOT_FOUND)
             }
         }
     }

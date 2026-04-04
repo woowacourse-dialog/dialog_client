@@ -13,4 +13,8 @@ internal object PluginIds {
     const val KMP_COMPOSE_CONVENTION = "dialog.convention.kmp.compose"
 
     const val KMP_LIBRARY_CONVENTION = "dialog.convention.kmp.library"
+
+    const val SENTRY_KMP = "io.sentry.kotlin.multiplatform.gradle"
+
+    const val BUILD_KONFIG = "com.codingfeline.buildkonfig"
 }

@@ -82,6 +82,7 @@ fun SignUpScreen(
                     snackbarHostState.showSnackbar(
                         message = getString(effect.stringResource),
                         state = effect.state,
+                        nonDismissable = effect.nonDismissable,
                     )
                 }
             }
