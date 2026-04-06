@@ -1,8 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-</dict>
+    <dict>
+        <key>CADisableMinimumFrameDurationOnPhone</key>
+        <true />
+        <key>ITSAppUsesNonExemptEncryption</key>
+        <false />
+        <key>UIRequiresFullScreen</key>
+        <true />
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>프로필 사진 변경을 위해 사진 라이브러리에 접근합니다.</string>
+    </dict>
 </plist>
