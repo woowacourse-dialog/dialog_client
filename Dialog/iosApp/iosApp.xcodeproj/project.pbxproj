@@ -115,9 +115,10 @@
 				};
 			};
 			buildConfigurationList = 9FE41FD9BDDEEEC10BD19D5E /* Build configuration list for PBXProject "iosApp" */;
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				ko,
 				en,
 				Base,
 			);
