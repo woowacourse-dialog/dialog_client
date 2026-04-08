@@ -1,9 +1,9 @@
 <a href="https://apps.apple.com/app/dialog/id6760887655">
-  <img width="250" alt="google_play" src="https://github.com/user-attachments/assets/0c95b6b3-678a-4e0e-8e6f-a503e62ae1ea" />
+  <img width="250" alt="app_store" src="https://github.com/user-attachments/assets/0c95b6b3-678a-4e0e-8e6f-a503e62ae1ea" />
 </a>
 &nbsp;
 <a href="https://play.google.com/store/apps/details?id=com.on.dialog">
-  <img width="250" alt="app_store" src="https://github.com/user-attachments/assets/faffb4d4-bab3-45a1-af55-7a9ec6a52b06" />
+  <img width="250" alt="google_play" src="https://github.com/user-attachments/assets/faffb4d4-bab3-45a1-af55-7a9ec6a52b06" />
 </a>
 
 # 👀 Dialog - 생각을 나누는 토론 플랫폼
