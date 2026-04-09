@@ -1,61 +1,55 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
+    id("dialog.convention.kmp.application")
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-    
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
-    
     sourceSets {
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-        }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(projects.core.data)
+            implementation(projects.core.domain)
+
+            implementation(projects.feature.main)
+            implementation(projects.feature.login.impl)
+            implementation(projects.feature.signup.impl)
+            implementation(projects.feature.scrap.impl)
+            implementation(projects.feature.mypage.impl)
+            implementation(projects.feature.mycreated.impl)
+            implementation(projects.feature.discussionlist.impl)
+            implementation(projects.feature.discussiondetail.impl)
+            implementation(projects.feature.creatediscussion.impl)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
+    }
+}
+
+buildkonfig {
+    packageName = "com.on.dialog"
+
+    defaultConfigs {
+        buildConfigField(BOOLEAN, "IS_DEBUG", "true")
+        buildConfigField(STRING, "SENTRY_DSN", "")
+    }
+
+    defaultConfigs("release") {
+        buildConfigField(BOOLEAN, "IS_DEBUG", "false")
+        buildConfigField(
+            STRING,
+            "SENTRY_DSN",
+            "${gradleLocalProperties(rootDir, providers).getProperty("sentry_dsn")}"
+        )
     }
 }
 
 android {
     namespace = "com.on.dialog"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.on.dialog"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
     }
     packaging {
         resources {
@@ -63,17 +57,26 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            isDebuggable = true
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = ".dev"
+            manifestPlaceholders += mapOf(
+                "appName" to "@string/app_name_dev",
+            )
+        }
+
         getByName("release") {
-            isMinifyEnabled = false
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            manifestPlaceholders += mapOf(
+                "appName" to "@string/app_name",
+            )
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
 }
-
-dependencies {
-    debugImplementation(compose.uiTooling)
-}
-

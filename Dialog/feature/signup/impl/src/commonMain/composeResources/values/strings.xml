@@ -1,0 +1,17 @@
+<resources>
+    <string name="track">트랙</string>
+    <string name="track_common">공통</string>
+    <string name="track_android">안드로이드</string>
+    <string name="track_backend">백엔드</string>
+    <string name="track_frontend">프론트엔드</string>
+    <string name="track_placeholder">트랙을 선택해주세요</string>
+    <string name="track_supporting_text">트랙은 필수 선택 항목입니다</string>
+
+    <string name="notification_confirm">푸시 알림 수신 동의</string>
+
+    <string name="signup">회원가입</string>
+    <string name="signup_success">🎉 회원가입에 성공했습니다.</string>
+    <string name="signup_failure">회원가입에 실패했습니다.</string>
+    
+    <string name="save_user_id_fail">다시 로그인 해주세요</string>
+</resources>

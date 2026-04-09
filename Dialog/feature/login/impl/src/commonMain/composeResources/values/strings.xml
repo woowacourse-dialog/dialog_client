@@ -1,0 +1,9 @@
+<resources>
+    <string name="error_save_session">로그인에 실패했습니다.</string>
+    <string name="error_jsession_not_found">로그인에 실패했습니다. (JSESSIONID 없음)</string>
+    <string name="error_invalid_url">로그인에 실패했습니다. (유효하지 않은 URL)</string>
+    <string name="error_apple_login">로그인 중 오류가 발생했습니다.</string>
+
+    <string name="login_with_apple">Apple로 계속하기</string>
+    <string name="login_with_github">GitHub로 계속하기</string>
+</resources>

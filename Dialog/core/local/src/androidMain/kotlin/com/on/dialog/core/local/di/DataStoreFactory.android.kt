@@ -1,0 +1,9 @@
+package com.on.dialog.core.local.di
+
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+
+internal fun createDataStore(context: Context): DataStore<Preferences> = createDataStore(
+    producePath = { context.filesDir.resolve(relative = DATA_STORE_PATH).absolutePath },
+)

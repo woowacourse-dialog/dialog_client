@@ -1,0 +1,101 @@
+package com.on.dialog.main
+
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.LocalOverscrollFactory
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
+import com.on.dialog.designsystem.component.snackbar.DialogSnackbar
+import com.on.dialog.designsystem.component.snackbar.LocalSnackbarDelegate
+import com.on.dialog.designsystem.theme.DialogTheme
+import com.on.dialog.feature.discussionlist.api.DiscussionListNavKey
+import com.on.dialog.main.component.DialogNavigationBar
+import com.on.dialog.main.component.ExitConfirmationHandler
+import com.on.dialog.main.navigation.SavedStateConfigurationProvider
+import com.on.dialog.main.navigation.appScreens
+import com.on.dialog.navigation.Navigator
+import com.on.dialog.navigation.rememberNavigationState
+import com.on.dialog.navigation.toEntries
+import org.koin.compose.koinInject
+
+@Composable
+fun MainApp(savedStateConfigurationProvider: SavedStateConfigurationProvider = koinInject()) {
+    val navigationState = rememberNavigationState(
+        startKey = DiscussionListNavKey,
+        topLevelKeys = TopLevel.routes.keys,
+        configuration = savedStateConfigurationProvider.savedStateConfiguration,
+    )
+
+    val appState: DialogAppState = rememberDialogAppState(navigationState = navigationState)
+    val navigator: Navigator = remember { Navigator(appState.navigationState) }
+
+    ExitConfirmationHandler(appState = appState)
+
+    DialogTheme {
+        Scaffold(
+            bottomBar = {
+                if (appState.shouldShowBottomBar) {
+                    DialogNavigationBar(
+                        items = TopLevel.routes,
+                        selectedKey = appState.currentScreenKey,
+                        onSelectedKeyChange = navigator::navigate,
+                    )
+                }
+            },
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = appState.snackbarHostState,
+                    snackbar = { snackbarData ->
+                        DialogSnackbar(snackbarData = snackbarData)
+                    },
+                )
+            },
+            contentWindowInsets = WindowInsets.systemBars,
+        ) { paddingValues ->
+            CompositionLocalProvider(
+                LocalSnackbarDelegate provides appState.snackbarDelegate,
+                LocalOverscrollFactory provides null,
+            ) {
+                NavDisplay(
+                    entries = appState.navigationState.toEntries { key ->
+                        entryProvider {
+                            appScreens(navigator, savedStateConfigurationProvider.providers)
+                        }.invoke(key)
+                    },
+                    onBack = {
+                        navigator.goBack()
+                    },
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .consumeWindowInsets(paddingValues)
+                        .background(DialogTheme.colorScheme.surfaceContainer),
+                    transitionSpec = {
+                        ContentTransform(
+                            targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                            initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
+                        )
+                    },
+                    popTransitionSpec = {
+                        ContentTransform(
+                            targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                            initialContentExit = fadeOut(animationSpec = tween(durationMillis = 300)),
+                        )
+                    },
+                )
+            }
+        }
+    }
+}

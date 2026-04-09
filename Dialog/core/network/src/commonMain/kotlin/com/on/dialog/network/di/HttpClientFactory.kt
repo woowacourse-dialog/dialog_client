@@ -1,0 +1,158 @@
+package com.on.dialog.network.di
+
+import com.on.dialog.core.network.BuildKonfig
+import com.on.dialog.domain.repository.SessionRepository
+import io.github.aakira.napier.Napier
+import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.CookiesStorage
+import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+
+expect fun createHttpClient(
+    cookiesStorage: CookiesStorage,
+    sessionRepository: SessionRepository,
+): HttpClient
+
+internal fun HttpClientConfig<*>.installContentNegotiation() {
+    /**
+     * HTTP 응답이 성공(2xx)이 아닐 경우
+     * 자동으로 예외를 발생시키기 위한 설정
+     *
+     * - ClientRequestException : 4xx (클라이언트 요청 오류)
+     * - ServerResponseException : 5xx (서버 오류)
+     * - IOException : 네트워크 오류
+     *
+     * 이 설정이 없으면 400 / 500 에러 응답도
+     * 정상 응답처럼 JSON 파싱을 시도하게 되어
+     * 의도하지 않은 파싱 오류가 발생할 수 있다.
+     */
+    expectSuccess = true
+
+    /**
+     * 모든 요청의 기본 Content-Type을 JSON으로 설정
+     *
+     * Retrofit의
+     * addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+     * 와 동일한 역할을 하며,
+     *
+     * 서버에 전송되는 요청 본문이
+     * application/json 타입임을 명시한다.
+     */
+    defaultRequest {
+        contentType(type = ContentType.Application.Json)
+    }
+
+    install(plugin = ContentNegotiation) {
+        json(
+            Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+                encodeDefaults = true
+                classDiscriminator = "discussionType"
+            },
+        )
+    }
+}
+
+internal fun HttpClientConfig<*>.installLogging() {
+    if (!BuildKonfig.IS_DEBUG) return
+    install(plugin = Logging) {
+        logger = PrettyLogger
+        level = LogLevel.ALL
+    }
+}
+
+internal fun HttpClientConfig<*>.installCookies(cookiesStorage: CookiesStorage) {
+    install(plugin = HttpCookies) {
+        // 커스텀 쿠키 스토리지 사용 (DataStore 기반)
+        storage = cookiesStorage
+    }
+}
+
+/**
+ * 401 Unauthorized 응답 수신 시 세션을 초기화하는 핸들러
+ *
+ * 서버 세션이 만료되어 401이 반환되면 [SessionRepository.clearSession]을 호출해
+ * 로컬에 저장된 쿠키와 로그인 상태를 초기화합니다.
+ */
+internal fun HttpClientConfig<*>.installUnauthorizedHandler(sessionRepository: SessionRepository) {
+    HttpResponseValidator {
+        handleResponseExceptionWithRequest { exception, _ ->
+            val response = (exception as? ClientRequestException)?.response
+                ?: return@handleResponseExceptionWithRequest
+            if (response.status == HttpStatusCode.Unauthorized) {
+                sessionRepository.clearSession()
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSerializationApi::class)
+private object PrettyLogger : Logger {
+    private val jsonConfiguration = Json {
+        prettyPrintIndent = "\t"
+        prettyPrint = true
+    }
+
+    override fun log(message: String) {
+        val replacedMessage: String = replaceBodyWithPrettyJson(message)
+        Napier.v(tag = "KtorLogger", message = replacedMessage)
+    }
+
+    private fun Json.prettyJson(json: String): String = try {
+        val parsed = parseToJsonElement(json)
+        encodeToString(JsonElement.serializer(), parsed)
+    } catch (e: Exception) {
+        Napier.e(tag = "KtorLogger", throwable = e, message = e.message.orEmpty())
+        json
+    }
+
+    private fun replaceBodyWithPrettyJson(message: String): String {
+        val startToken = "BODY START"
+        val endToken = "BODY END"
+
+        val startIndex: Int = message.indexOf(startToken)
+        val endIndex: Int = message.indexOf(endToken)
+
+        if (startIndex == -1 || endIndex == -1 || startIndex >= endIndex) {
+            return message
+        }
+
+        val bodyStart: Int = startIndex + startToken.length
+        val rawBody: String = message.substring(bodyStart, endIndex).trim()
+
+        val prettyBody: String =
+            if (rawBody.isBlank()) {
+                rawBody
+            } else {
+                jsonConfiguration.prettyJson(rawBody)
+            }
+
+        val before: String = message.take(bodyStart)
+        val after: String = message.substring(endIndex)
+
+        return buildString {
+            appendLine("----------".repeat(10))
+            append(before)
+            append("\n")
+            append(prettyBody.prependIndent("\t"))
+            append("\n")
+            appendLine(after)
+            appendLine("----------".repeat(10))
+        }
+    }
+}

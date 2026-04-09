@@ -1,0 +1,20 @@
+<resources>
+    <string name="discussion_type_online">온라인</string>
+    <string name="discussion_type_offline">오프라인</string>
+
+    <string name="discussion_list_track_filter_title">트랙</string>
+    <string name="discussion_list_status_filter_title">상태</string>
+    <string name="discussion_list_type_filter_title">타입</string>
+
+    <string name="discussion_status_recruiting">모집 중</string>
+    <string name="discussion_status_recruit_complete">모집 완료</string>
+    <string name="discussion_status_in_discussion">토론 중</string>
+    <string name="discussion_status_discussion_complete">토론 완료</string>
+
+    <!-- Empty View   -->
+    <string name="discussion_list_empty_view_title">진행 중이거나 모집 중인 토론이 없어요</string>
+    <string name="discussion_list_empty_view_body">필터를 해제해 보거나, 새로운 토론을 만들어 시작해 보세요.</string>
+    <string name="discussion_list_empty_view_create_discussion_button">토론 만들기</string>
+
+    <string name="discussion_list_filter_action_icon_content_description">필터</string>
+</resources>
